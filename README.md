@@ -1,2 +1,2 @@
-# opengotha
-opengotha since V3.40.01 (27/01/2015)
+# OpenGotha with [Russian Go Federation](http://gofederation.ru/) additions
+For original OpenGotha see <http://vannier.info/jeux/gotournaments/opengotha.htm>. This fork is meant to be used by Russian Go community.
