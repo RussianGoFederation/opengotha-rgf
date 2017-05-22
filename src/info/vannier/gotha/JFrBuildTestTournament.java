@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 public class JFrBuildTestTournament extends javax.swing.JFrame{
     private TournamentInterface tournament;
     
+    private volatile boolean running = true;
     /** Creates new form JFrBuildTestTournament */
     public JFrBuildTestTournament(TournamentInterface tournament) throws RemoteException{
 //        LogElements.incrementElement("export.build", "");
@@ -44,10 +45,15 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
         btnClose = new javax.swing.JButton();
         btnGenerateGames = new javax.swing.JButton();
         btnMakeTeams = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox();
+        jComboBox1 = new javax.swing.JComboBox<String>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Build test tournament");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
         getContentPane().setLayout(null);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 3, 14)); // NOI18N
@@ -107,10 +113,8 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
         });
         getContentPane().add(btnMakeTeams);
         btnMakeTeams.setBounds(150, 150, 410, 30);
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(jComboBox1);
-        jComboBox1.setBounds(30, 120, 56, 20);
+        jComboBox1.setBounds(30, 120, 28, 20);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -162,8 +166,13 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
     }//GEN-LAST:event_btnGenerateGamesActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-        dispose();
+        cleanClose();
     }//GEN-LAST:event_btnCloseActionPerformed
+
+    private void cleanClose(){
+        running = false;
+        dispose();
+    }
 
     private void btnBuildActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuildActionPerformed
         int system = TournamentParameterSet.TYPE_SWISS;
@@ -524,6 +533,10 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
         this.tournamentChanged();
 
     }//GEN-LAST:event_btnMakeTeamsActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        cleanClose();
+    }//GEN-LAST:event_formWindowClosing
 
     private void customInitComponents()throws RemoteException{       
         int w = JFrGotha.MEDIUM_FRAME_WIDTH;
