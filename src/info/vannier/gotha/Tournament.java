@@ -1094,26 +1094,29 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         cost += scoCost;
 
         // Main Criterion 3 : If different groups, make a directed Draw-up/Draw-down
+        // Modifs V3.44.05 (ideas from Tuomo Salo)
         long duddCost = 0;
         if (Math.abs(sP1.groupNumber - sP2.groupNumber) < 4
                 && sP1.groupNumber != sP2.groupNumber) {
-            // 4 scenarii
-            // scenario = 0 : One of the players has already been drawn in the same sense
-            // scenario = 1 : normal conditions (does not correct anything and no previous drawn in the same sense)
-            // scenario = 2 : it corrects a previous DU/DD
-            // scenario = 3 : it corrects a previous DU/DD for both
-            int scenario = 1;
+            // 5 scenarii
+            // scenario = 0 : Both players have already been drawn in the same sense
+            // scenario = 1 : One of the players has already been drawn in the same sense           
+            // scenario = 2 : Normal conditions (does not correct anything and no previous drawn in the same sense)
+            //                This case also occurs if one DU/DD is increased, while one is compensated
+            // scenario = 3 : It corrects a previous DU/DD            //        
+            // scenario = 4 : it corrects a previous DU/DD for both
+            int scenario = 2;
             if (sP1.nbDU > 0 && sP1.groupNumber > sP2.groupNumber) {
-                scenario = 0;
+                scenario--;
             }
             if (sP1.nbDD > 0 && sP1.groupNumber < sP2.groupNumber) {
-                scenario = 0;
+                scenario--;
             }
             if (sP2.nbDU > 0 && sP2.groupNumber > sP1.groupNumber) {
-                scenario = 0;
+                scenario--;
             }
             if (sP2.nbDD > 0 && sP2.groupNumber < sP1.groupNumber) {
-                scenario = 0;
+                scenario--;
             }
 
             if (scenario != 0 && sP1.nbDU > 0 && sP1.nbDD < sP1.nbDU && sP1.groupNumber < sP2.groupNumber) {
@@ -1130,8 +1133,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             }
 
             
-            // Modifs V3.33.04
-            long duddWeight = paiPS.getPaiMaDUDDWeight() / 4;
+            long duddWeight = paiPS.getPaiMaDUDDWeight() / 5;
 
             ScoredPlayer upperSP = (sP1.groupNumber < sP2.groupNumber) ? sP1 : sP2;
             ScoredPlayer lowerSP = (sP1.groupNumber < sP2.groupNumber) ? sP2 : sP1;
@@ -1140,9 +1142,6 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             } else if (paiPS.getPaiMaDUDDUpperMode() == PairingParameterSet.PAIMA_DUDD_MID) {
                 duddCost += duddWeight / 2 * (upperSP.groupSize - 1 - Math.abs(2 * upperSP.innerPlacement - upperSP.groupSize + 1)) / upperSP.groupSize;
             } else if (paiPS.getPaiMaDUDDUpperMode() == PairingParameterSet.PAIMA_DUDD_BOT) {
-//                if (upperSP.groupSize < 1){
-//                    System.out.println("sP1.getName() = " + sP1.getName() + "sP2.getName() = " + sP2.getName());
-//                }
                 duddCost += duddWeight / 2 * (upperSP.innerPlacement) / upperSP.groupSize;
             }
             if (paiPS.getPaiMaDUDDLowerMode() == PairingParameterSet.PAIMA_DUDD_TOP) {
@@ -1153,17 +1152,20 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 duddCost += duddWeight / 2 * (lowerSP.innerPlacement) / lowerSP.groupSize;
             }
 
-            if (scenario == 0) {
-//                duddCost = duddCost;
+            if (scenario == 0) {            
+                // Do nothing
             }
-            if (scenario == 1 || (scenario >= 1 && !paiPS.isPaiMaCompensateDUDD())){
-                duddCost += duddWeight;
+            else if (scenario == 1 ){
+                duddCost += 1 * duddWeight;
             }
-            else if (scenario == 2) {
+            else if (scenario == 2 || (scenario > 2 && !paiPS.isPaiMaCompensateDUDD())) {
                 duddCost += 2 * duddWeight;
             }
             else if (scenario == 3) {
                 duddCost += 3 * duddWeight;
+            }
+            else if (scenario == 4) {
+                duddCost += 4 * duddWeight;
             }
             
         }
@@ -2251,17 +2253,10 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 if (r == 0) {
                     sp.setNBWX2(r, 0);
                     sp.setMMSX2(r, 2 * sp.smms(gps));
-                    sp.setNBWVirtualX2(r, 0);
-                    sp.setMMSVirtualX2(r, 2 * sp.smms(gps));
                 } else {
                     sp.setNBWX2(r, sp.getNBWX2(r - 1));
                     sp.setMMSX2(r, sp.getMMSX2(r - 1));
-                    sp.setNBWVirtualX2(r, sp.getNBWVirtualX2(r - 1));
-                    sp.setMMSVirtualX2(r, sp.getMMSVirtualX2(r - 1));
                 }
-                
-//                if ( r == numberOfRoundsToCompute - 1)
-//                    System.out.println("r = " + r + " name = " + sp.getName() + " NBWX2 = " + sp.getNBWX2(r) + " NBWVirtualX2 = " + sp.getNBWVirtualX2(r));
             }
 
             // Points from games
@@ -2413,18 +2408,15 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                         break;
                 }
             }
+
         }
         for (ScoredPlayer sp : hmScoredPlayers.values()) {
+            int nbVPX2 = 0;
             for (int r = 0; r < numberOfRoundsToCompute; r++) {
-                if (!sp.gameWasPlayed(r)){ 
-                    sp.setNBWVirtualX2(r, sp.getNBWVirtualX2(r) + 1);
-                    sp.setMMSVirtualX2(r, sp.getMMSVirtualX2(r) + 1);
-                }
-            }
-            
-//            System.out.println(" name = " + sp.getName() + " NBWX2 = " + sp.getNBWX2(2) + " NBWVirtualX2 = " + sp.getNBWVirtualX2(2));
-
-
+                if (!sp.gameWasPlayed(r)) nbVPX2++;
+                sp.setNBWVirtualX2(r, sp.getNBWVirtualX2(r) + nbVPX2);
+                sp.setMMSVirtualX2(r, sp.getMMSVirtualX2(r) + nbVPX2);  
+            } 
         }
 
         // 3) CUSSW and CUSSM
@@ -2529,7 +2521,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                         int result = getWX2(g, sp);                       
                         ScoredPlayer sOpp = hmScoredPlayers.get(opp.getKeyString());
                         
-                       if (bVirtual){
+                        if (bVirtual){
                             osmX2[rr] = sOpp.getMMSVirtualX2(r);
                             ostsX2[rr] = sOpp.getSTSVirtualX2(r);
                         }
@@ -2538,8 +2530,8 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                             ostsX2[rr] = sOpp.getSTSX2(r);
                         }                       
                          
-                        osmX2[rr] = sOpp.getMMSX2(r);
-                        ostsX2[rr] = sOpp.getSTSX2(r);
+                        // osmX2[rr] = sOpp.getMMSX2(r);
+                        // ostsX2[rr] = sOpp.getSTSX2(r);
                         
                         if (g.getWhitePlayer().hasSameKeyString(sp)) {
                             osmX2[rr] += 2 * g.getHandicap();

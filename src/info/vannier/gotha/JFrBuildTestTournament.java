@@ -4,8 +4,6 @@
 
 package info.vannier.gotha;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -21,7 +19,6 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
     private volatile boolean running = true;
     /** Creates new form JFrBuildTestTournament */
     public JFrBuildTestTournament(TournamentInterface tournament) throws RemoteException{
-//        LogElements.incrementElement("export.build", "");
         this.tournament = tournament;
                 
         initComponents();
@@ -37,15 +34,14 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        cbxSystem = new javax.swing.JComboBox();
-        cbxPlayers = new javax.swing.JComboBox();
+        cbxSystem = new javax.swing.JComboBox<>();
+        cbxPlayers = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnBuild = new javax.swing.JButton();
         btnClose = new javax.swing.JButton();
         btnGenerateGames = new javax.swing.JButton();
         btnMakeTeams = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<String>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Build test tournament");
@@ -62,11 +58,11 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
         getContentPane().add(jLabel1);
         jLabel1.setBounds(20, 20, 340, 20);
 
-        cbxSystem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "McMahon", "Swiss", "SwissCat" }));
+        cbxSystem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "McMahon", "Swiss", "SwissCat" }));
         getContentPane().add(cbxSystem);
         cbxSystem.setBounds(20, 70, 120, 20);
 
-        cbxPlayers.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "4 players, 4D to 1D", "4 players, 2D to 1D", "8 players, 10K", "16 players, 1K to 4K", "16 players, 1K to 4K, club issues", "64 players, 6D to 2K, MMG issues", "64 players, 1K to 16K", "64 players, 1K to 16K, parity issue", "64 players, 1K to 8K, diff ratings", "64 players, 1K to 8K, imparity, diff ratings", "500 players", "1200 players" }));
+        cbxPlayers.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "4 players, 4D to 1D", "4 players, 2D to 1D", "8 players, 10K", "16 players, 1K to 4K", "16 players, 1K to 4K, club issues", "64 players, 6D to 2K, MMG issues", "64 players, 1K to 16K", "64 players, 1K to 17K, parity issue", "64 players, 1K to 8K, diff ratings", "64 players, 1K to 8K, imparity, diff ratings", "500 players", "1200 players" }));
         getContentPane().add(cbxPlayers);
         cbxPlayers.setBounds(150, 70, 260, 20);
 
@@ -113,8 +109,6 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
         });
         getContentPane().add(btnMakeTeams);
         btnMakeTeams.setBounds(150, 150, 410, 30);
-        getContentPane().add(jComboBox1);
-        jComboBox1.setBounds(30, 120, 28, 20);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -539,16 +533,8 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
     }//GEN-LAST:event_formWindowClosing
 
     private void customInitComponents()throws RemoteException{       
-        int w = JFrGotha.MEDIUM_FRAME_WIDTH;
-        int h = JFrGotha.MEDIUM_FRAME_HEIGHT;
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((dim.width - w)/2, (dim.height -h)/2, w, h);
-
-        setIconImage(Gotha.getIconImage());
-//        
-//        javax.swing.JComboBox<String> cbx = new javax.swing.JComboBox<String>();
-//        cbx.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "I1", "I2", "I3" }));
     }
+    
     private String generateName(int i){
         int i2 = 'A' + (i % 26);
         int i1 = 'A' + (i/26)%26;
@@ -571,9 +557,8 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnGenerateGames;
     private javax.swing.JButton btnMakeTeams;
-    private javax.swing.JComboBox cbxPlayers;
-    private javax.swing.JComboBox cbxSystem;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox<String> cbxPlayers;
+    private javax.swing.JComboBox<String> cbxSystem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -56,7 +56,6 @@ public class JFrPlayersManager extends javax.swing.JFrame {
      * Creates new form JFrPlayersManager
      */
     public JFrPlayersManager(TournamentInterface tournament) throws RemoteException {
-//        LogElements.incrementElement("players.manager", "");
         this.tournament = tournament;
 
         initComponents();
@@ -92,13 +91,6 @@ public class JFrPlayersManager extends javax.swing.JFrame {
      * Unlike initComponents, customInitComponents is editable
      */
     private void customInitComponents() throws RemoteException {
-        int w = JFrGotha.BIG_FRAME_WIDTH;
-        int h = JFrGotha.BIG_FRAME_HEIGHT;
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((dim.width - w) / 2, (dim.height - h) / 2, w, h);
-
-        setIconImage(Gotha.getIconImage());
-
         AutoCompletion.enable(cbxRatingList);
 
         this.pgbRatingList.setVisible(false);
@@ -119,6 +111,8 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         initRatingListControls();
         resetPlayerControls();
         initPnlRegisteredPlayers();
+        
+        this.updateAllViews();
     }
 
     private void initCountriesList(){
@@ -398,15 +392,15 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         lblFfgLicenceStatus = new javax.swing.JLabel();
         rdbFirstCharacters = new javax.swing.JRadioButton();
         rdbLevenshtein = new javax.swing.JRadioButton();
-        cbxRatingList = new javax.swing.JComboBox();
+        cbxRatingList = new javax.swing.JComboBox<>();
         txfPlayerNameChoice = new java.awt.TextField();
         scpPlayerNameChoice = new javax.swing.JScrollPane();
-        lstPlayerNameChoice = new javax.swing.JList();
+        lstPlayerNameChoice = new javax.swing.JList<>();
         txfSMMSCorrection = new javax.swing.JTextField();
         ckbWelcomeSheet = new javax.swing.JCheckBox();
         scpWelcomeSheet = new javax.swing.JScrollPane();
         txpWelcomeSheet = new javax.swing.JTextPane();
-        cbxCountry = new javax.swing.JComboBox();
+        cbxCountry = new javax.swing.JComboBox<>();
         pgbRatingList = new javax.swing.JProgressBar();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -672,7 +666,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         rdbLevenshtein.setBounds(20, 160, 220, 20);
 
         cbxRatingList.setMaximumRowCount(9);
-        cbxRatingList.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "" }));
+        cbxRatingList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
         cbxRatingList.setToolTipText("");
         cbxRatingList.setEnabled(false);
         cbxRatingList.addItemListener(new java.awt.event.ItemListener() {
@@ -726,7 +720,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
 
         cbxCountry.setEditable(true);
         cbxCountry.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cbxCountry.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " " }));
+        cbxCountry.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
         pnlPlayer.add(cbxCountry);
         cbxCountry.setBounds(70, 310, 50, 21);
 
@@ -1179,7 +1173,6 @@ public class JFrPlayersManager extends javax.swing.JFrame {
     }//GEN-LAST:event_txfPlayerNameChoiceTextValueChanged
 
     private void rdbLevenshteinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbLevenshteinActionPerformed
-//        LogElements.incrementElement("players.manager.levenshtein", "");
         this.resetControlsForLevenshteinSearching();
 
     }//GEN-LAST:event_rdbLevenshteinActionPerformed
@@ -1364,7 +1357,6 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         }
         // Print Welcome sheet
         if (this.ckbWelcomeSheet.isSelected()) {
-//            LogElements.incrementElement("players.manager.welcomesheet", "");
             instanciateWelcomeSheet(new File(Gotha.runningDirectory, "welcomesheet/welcomesheet.html"), 
                     new File(Gotha.runningDirectory, "welcomesheet/actualwelcomesheet.html"), p);
             try {
@@ -1470,8 +1462,6 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         if (this.rdbFFG.isSelected()) rlType = RatingList.TYPE_FFG;
         if (this.rdbAGA.isSelected()) rlType = RatingList.TYPE_AGA;
 
-//        LogElements.incrementElement("players.manager.updateratinglist", "" + rlType);
-        
         String strDefaultURL;
         File fDefaultFile;
         String strPrompt;
@@ -1580,8 +1570,8 @@ public class JFrPlayersManager extends javax.swing.JFrame {
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSearchId;
     private javax.swing.JButton btnUpdateRatingList;
-    private javax.swing.JComboBox cbxCountry;
-    private javax.swing.JComboBox cbxRatingList;
+    private javax.swing.JComboBox<String> cbxCountry;
+    private javax.swing.JComboBox<String> cbxRatingList;
     private javax.swing.JCheckBox ckbRatingList;
     private javax.swing.JCheckBox ckbWelcomeSheet;
     private javax.swing.ButtonGroup grpAlgo;
@@ -1606,7 +1596,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
     private javax.swing.JLabel lblFfgLicenceStatus;
     private javax.swing.JLabel lblPhoto;
     private javax.swing.JLabel lblRatingList;
-    private javax.swing.JList lstPlayerNameChoice;
+    private javax.swing.JList<String> lstPlayerNameChoice;
     private javax.swing.JMenuItem mniCancel;
     private javax.swing.JMenuItem mniModifyPlayer;
     private javax.swing.JMenuItem mniRemovePlayer;

@@ -5,7 +5,9 @@
 package info.vannier.gotha;
 
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -13,7 +15,6 @@ import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,7 +22,6 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -68,7 +68,6 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
     
     public JFrTournamentOptions(TournamentInterface tournament) throws RemoteException{
-//        LogElements.incrementElement("options.tournament", "");
         this.tournament = tournament;
         
         initComponents();
@@ -110,13 +109,13 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         dlgEditClubsGroups = new javax.swing.JDialog();
         btnDlgEditClubsGroupsClose = new javax.swing.JButton();
         scpClubs = new javax.swing.JScrollPane();
-        lstClubs = new javax.swing.JList();
+        lstClubs = new javax.swing.JList<>();
         jLabel41 = new javax.swing.JLabel();
         scpClubsGroups = new javax.swing.JScrollPane();
-        lstClubsGroups = new javax.swing.JList();
+        lstClubsGroups = new javax.swing.JList<>();
         jLabel25 = new javax.swing.JLabel();
         scpClubsInSelectedGroup = new javax.swing.JScrollPane();
-        lstClubsInSelectedGroup = new javax.swing.JList();
+        lstClubsInSelectedGroup = new javax.swing.JList<>();
         jLabel42 = new javax.swing.JLabel();
         btnAddGroup = new javax.swing.JButton();
         btnRemoveGroup = new javax.swing.JButton();
@@ -193,13 +192,13 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         btnHelpHandicap = new javax.swing.JButton();
         pnlPla = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
-        cbxCrit1 = new javax.swing.JComboBox();
+        cbxCrit1 = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
-        cbxCrit2 = new javax.swing.JComboBox();
+        cbxCrit2 = new javax.swing.JComboBox<>();
         jLabel13 = new javax.swing.JLabel();
-        cbxCrit3 = new javax.swing.JComboBox();
+        cbxCrit3 = new javax.swing.JComboBox<>();
         jLabel14 = new javax.swing.JLabel();
-        cbxCrit4 = new javax.swing.JComboBox();
+        cbxCrit4 = new javax.swing.JComboBox<>();
         pnlGlossary = new javax.swing.JPanel();
         scpGlossary = new javax.swing.JScrollPane();
         tblGlossary = new javax.swing.JTable();
@@ -260,17 +259,17 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         btnHelpPairing = new javax.swing.JButton();
         pnlTPL = new javax.swing.JPanel();
         jLabel31 = new javax.swing.JLabel();
-        cbxTeamCrit1 = new javax.swing.JComboBox();
+        cbxTeamCrit1 = new javax.swing.JComboBox<>();
         jLabel32 = new javax.swing.JLabel();
-        cbxTeamCrit2 = new javax.swing.JComboBox();
+        cbxTeamCrit2 = new javax.swing.JComboBox<>();
         jLabel33 = new javax.swing.JLabel();
-        cbxTeamCrit3 = new javax.swing.JComboBox();
+        cbxTeamCrit3 = new javax.swing.JComboBox<>();
         jLabel34 = new javax.swing.JLabel();
-        cbxTeamCrit4 = new javax.swing.JComboBox();
+        cbxTeamCrit4 = new javax.swing.JComboBox<>();
         jLabel35 = new javax.swing.JLabel();
-        cbxTeamCrit5 = new javax.swing.JComboBox();
+        cbxTeamCrit5 = new javax.swing.JComboBox<>();
         jLabel36 = new javax.swing.JLabel();
-        cbxTeamCrit6 = new javax.swing.JComboBox();
+        cbxTeamCrit6 = new javax.swing.JComboBox<>();
         pnlTeamGlossary = new javax.swing.JPanel();
         scpTeamGlossary = new javax.swing.JScrollPane();
         tblTeamGlossary = new javax.swing.JTable();
@@ -368,10 +367,10 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         dlgEditClubsGroups.getContentPane().add(btnDlgEditClubsGroupsClose);
         btnDlgEditClubsGroupsClose.setBounds(10, 480, 770, 23);
 
-        lstClubs.setModel(new javax.swing.AbstractListModel() {
+        lstClubs.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         scpClubs.setViewportView(lstClubs);
 
@@ -382,10 +381,10 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         dlgEditClubsGroups.getContentPane().add(jLabel41);
         jLabel41.setBounds(640, 40, 110, 14);
 
-        lstClubsGroups.setModel(new javax.swing.AbstractListModel() {
+        lstClubsGroups.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         lstClubsGroups.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         lstClubsGroups.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -833,7 +832,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         ckbRoundDown.setBounds(10, 110, 260, 23);
 
         ckbCountNPG.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ckbCountNPG.setText("For SOS, count not played games As Half Point");
+        ckbCountNPG.setText("For SOS, count not played games as half point");
         ckbCountNPG.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 ckbCountNPGFocusLost(evt);
@@ -1022,7 +1021,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlPla.add(jLabel11);
         jLabel11.setBounds(20, 20, 80, 20);
 
-        cbxCrit1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxCrit1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbxCrit1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbxCritFocusLost(evt);
@@ -1035,7 +1034,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlPla.add(jLabel12);
         jLabel12.setBounds(120, 20, 80, 20);
 
-        cbxCrit2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxCrit2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbxCrit2.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbxCritFocusLost(evt);
@@ -1048,7 +1047,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlPla.add(jLabel13);
         jLabel13.setBounds(220, 20, 80, 20);
 
-        cbxCrit3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxCrit3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbxCrit3.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbxCritFocusLost(evt);
@@ -1061,7 +1060,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlPla.add(jLabel14);
         jLabel14.setBounds(320, 20, 80, 20);
 
-        cbxCrit4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxCrit4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbxCrit4.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbxCritFocusLost(evt);
@@ -1614,7 +1613,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTPL.add(jLabel31);
         jLabel31.setBounds(20, 20, 80, 20);
 
-        cbxTeamCrit1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTeamCrit1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbxTeamCrit1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbxTeamCritFocusLost(evt);
@@ -1627,7 +1626,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTPL.add(jLabel32);
         jLabel32.setBounds(120, 20, 80, 20);
 
-        cbxTeamCrit2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTeamCrit2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbxTeamCrit2.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbxTeamCritFocusLost(evt);
@@ -1640,7 +1639,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTPL.add(jLabel33);
         jLabel33.setBounds(220, 20, 80, 20);
 
-        cbxTeamCrit3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTeamCrit3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbxTeamCrit3.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbxTeamCritFocusLost(evt);
@@ -1653,7 +1652,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTPL.add(jLabel34);
         jLabel34.setBounds(320, 20, 80, 20);
 
-        cbxTeamCrit4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTeamCrit4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbxTeamCrit4.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbxTeamCritFocusLost(evt);
@@ -1666,10 +1665,15 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTPL.add(jLabel35);
         jLabel35.setBounds(430, 20, 80, 20);
 
-        cbxTeamCrit5.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTeamCrit5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbxTeamCrit5.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbxTeamCritFocusLost(evt);
+            }
+        });
+        cbxTeamCrit5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxTeamCrit5ActionPerformed(evt);
             }
         });
         pnlTPL.add(cbxTeamCrit5);
@@ -1679,7 +1683,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTPL.add(jLabel36);
         jLabel36.setBounds(530, 20, 80, 20);
 
-        cbxTeamCrit6.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTeamCrit6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbxTeamCrit6.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbxTeamCritFocusLost(evt);
@@ -1811,15 +1815,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
     }//GEN-LAST:event_btnDlgChangeSystemOKActionPerformed
 
     private void btnChangeSystemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeSystemActionPerformed
-        int w = JFrGotha.SMALL_FRAME_WIDTH;
-        int h = JFrGotha.SMALL_FRAME_HEIGHT;
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        dlgChangeSystem.setBounds((dim.width - w)/2, (dim.height -h)/2, w, h);
-        dlgChangeSystem.setTitle("Change tournament system");
-        dlgChangeSystem.setIconImage(Gotha.getIconImage());
-        
         this.ckbResetParameters.setSelected(false);
-
         this.lblNewSystem.setEnabled(true);
         this.rdbMcMahon.setEnabled(true);
         this.rdbSwiss.setEnabled(true);
@@ -1837,8 +1833,18 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         if (tournamentType == TournamentParameterSet.TYPE_SWISSCAT) rdbSwissCat.setSelected(true);
          
         dlgChangeSystem.setVisible(true);
+        dlgChangeSystem.setTitle("Change tournament system");
+        this.displayFrame(dlgChangeSystem, JFrGotha.SMALL_FRAME_WIDTH, JFrGotha.SMALL_FRAME_HEIGHT);
 
     }//GEN-LAST:event_btnChangeSystemActionPerformed
+    
+    private void displayFrame(Window win, int w, int h){
+        Rectangle newRect = this.getBounds();
+        win.setLocation(newRect.x + 10, newRect.y + 60);
+        win.setSize(w, h);
+        win.setVisible(true);
+        win.setIconImage(Gotha.getIconImage());
+    }
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
         TournamentPrinting.printTournamentParameters(tournament);
@@ -3023,6 +3029,10 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         }
     }//GEN-LAST:event_ckbCountNPGFocusLost
 
+    private void cbxTeamCrit5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTeamCrit5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxTeamCrit5ActionPerformed
+
     private void updHdBase(){
         TournamentParameterSet tps;
         try {
@@ -3059,6 +3069,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         initPnlPla();
         initPnlPai();
         initPnlTPl();
+        this.updateAllViews();
     }
     
     private void initPnlGen()throws RemoteException{
@@ -3071,10 +3082,10 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
     private void initPnlPla()throws RemoteException{       
         // Fill criterion combo boxes
         String[] strCritLN = PlacementParameterSet.criteriaLongNames();
-        cbxCrit1.setModel(new DefaultComboBoxModel(strCritLN));
-        cbxCrit2.setModel(new DefaultComboBoxModel(strCritLN));
-        cbxCrit3.setModel(new DefaultComboBoxModel(strCritLN));
-        cbxCrit4.setModel(new DefaultComboBoxModel(strCritLN));
+        cbxCrit1.setModel(new DefaultComboBoxModel<String>(strCritLN));
+        cbxCrit2.setModel(new DefaultComboBoxModel<String>(strCritLN));
+        cbxCrit3.setModel(new DefaultComboBoxModel<String>(strCritLN));
+        cbxCrit4.setModel(new DefaultComboBoxModel<String>(strCritLN));
         
         // For any type of tournament crit 1 should not be modified
         cbxCrit1.setEnabled(false);
@@ -3108,12 +3119,12 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         // Fill criterion combo boxes
         String[] strCritLN = TeamPlacementParameterSet.criteriaLongNames();
 
-        cbxTeamCrit1.setModel(new DefaultComboBoxModel(strCritLN));
-        cbxTeamCrit2.setModel(new DefaultComboBoxModel(strCritLN));
-        cbxTeamCrit3.setModel(new DefaultComboBoxModel(strCritLN));
-        cbxTeamCrit4.setModel(new DefaultComboBoxModel(strCritLN));
-        cbxTeamCrit5.setModel(new DefaultComboBoxModel(strCritLN));
-        cbxTeamCrit6.setModel(new DefaultComboBoxModel(strCritLN));
+        cbxTeamCrit1.setModel(new DefaultComboBoxModel<String>(strCritLN));
+        cbxTeamCrit2.setModel(new DefaultComboBoxModel<String>(strCritLN));
+        cbxTeamCrit3.setModel(new DefaultComboBoxModel<String>(strCritLN));
+        cbxTeamCrit4.setModel(new DefaultComboBoxModel<String>(strCritLN));
+        cbxTeamCrit5.setModel(new DefaultComboBoxModel<String>(strCritLN));
+        cbxTeamCrit6.setModel(new DefaultComboBoxModel<String>(strCritLN));
 
         // For any type of tournament crit 1 should not be modified
         cbxTeamCrit1.setEnabled(false);
@@ -3564,16 +3575,16 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
     private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnRemoveClub;
     private javax.swing.JButton btnRemoveGroup;
-    private javax.swing.JComboBox cbxCrit1;
-    private javax.swing.JComboBox cbxCrit2;
-    private javax.swing.JComboBox cbxCrit3;
-    private javax.swing.JComboBox cbxCrit4;
-    private javax.swing.JComboBox cbxTeamCrit1;
-    private javax.swing.JComboBox cbxTeamCrit2;
-    private javax.swing.JComboBox cbxTeamCrit3;
-    private javax.swing.JComboBox cbxTeamCrit4;
-    private javax.swing.JComboBox cbxTeamCrit5;
-    private javax.swing.JComboBox cbxTeamCrit6;
+    private javax.swing.JComboBox<String> cbxCrit1;
+    private javax.swing.JComboBox<String> cbxCrit2;
+    private javax.swing.JComboBox<String> cbxCrit3;
+    private javax.swing.JComboBox<String> cbxCrit4;
+    private javax.swing.JComboBox<String> cbxTeamCrit1;
+    private javax.swing.JComboBox<String> cbxTeamCrit2;
+    private javax.swing.JComboBox<String> cbxTeamCrit3;
+    private javax.swing.JComboBox<String> cbxTeamCrit4;
+    private javax.swing.JComboBox<String> cbxTeamCrit5;
+    private javax.swing.JComboBox<String> cbxTeamCrit6;
     private javax.swing.JCheckBox ckbAddSortOnRating;
     private javax.swing.JCheckBox ckbAvoid2DUDD;
     private javax.swing.JCheckBox ckbAvoidMixingCategories;
@@ -3652,9 +3663,9 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
     private javax.swing.JLabel lblNewSystem;
     private javax.swing.JLabel lblRecommended;
     private javax.swing.JLabel lblSystemName;
-    private javax.swing.JList lstClubs;
-    private javax.swing.JList lstClubsGroups;
-    private javax.swing.JList lstClubsInSelectedGroup;
+    private javax.swing.JList<String> lstClubs;
+    private javax.swing.JList<String> lstClubsGroups;
+    private javax.swing.JList<String> lstClubsInSelectedGroup;
     private javax.swing.JPanel pnlBase;
     private javax.swing.JPanel pnlCategories;
     private javax.swing.JPanel pnlDUDD;

@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -52,7 +53,6 @@ public class JFrGamesPair extends javax.swing.JFrame {
      * Creates new form JFrGamesPair
      */
     public JFrGamesPair(TournamentInterface tournament) throws RemoteException {
-//        LogElements.incrementElement("games.pair", "");
         this.tournament = tournament;
         processedRoundNumber = tournament.presumablyCurrentRoundNumber();
         initComponents();
@@ -67,7 +67,6 @@ public class JFrGamesPair extends javax.swing.JFrame {
         taskPerformer = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-//                System.out.println("actionPerformed");
                 if (!running){
                     timer.stop();
                 }
@@ -88,14 +87,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
      * initialize the form.
      * Unlike initComponents, customInitComponents is editable
      */
-    private void customInitComponents() throws RemoteException {
-        int w = JFrGotha.MEDIUM_FRAME_WIDTH;
-        int h = JFrGotha.MEDIUM_FRAME_HEIGHT;
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((dim.width - w) / 2, (dim.height - h) / 2, w, h);
-
-        setIconImage(Gotha.getIconImage());
-        
+    private void customInitComponents() throws RemoteException {    
         getRootPane().setDefaultButton(btnSearch);
         initPlayersComponents();
         initPreviousGamesComponents();
@@ -553,12 +545,13 @@ public class JFrGamesPair extends javax.swing.JFrame {
         ckbIntraClub = new javax.swing.JCheckBox();
         btnGenerateReport = new javax.swing.JButton();
         btnDlgPairingReportClose = new javax.swing.JButton();
-        ckbUnbalancedMMSDUDDPlayers = new javax.swing.JCheckBox();
+        ckbMMSDUDD = new javax.swing.JCheckBox();
         scpReport = new javax.swing.JScrollPane();
         txaReport = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
         ckbUnbalancedWB = new javax.swing.JCheckBox();
         txfUnbalancedWB = new javax.swing.JTextField();
+        ckbMMSWeightedDUDD = new javax.swing.JCheckBox();
         pupPairablePlayers = new javax.swing.JPopupMenu();
         mniSortByName = new javax.swing.JMenuItem();
         mniSortByRank = new javax.swing.JMenuItem();
@@ -688,14 +681,14 @@ public class JFrGamesPair extends javax.swing.JFrame {
         dlgPairingReport.getContentPane().add(ckbIntraClub);
         ckbIntraClub.setBounds(10, 130, 260, 23);
 
-        btnGenerateReport.setText("Generate report");
+        btnGenerateReport.setText("Generate/Refresh report");
         btnGenerateReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGenerateReportActionPerformed(evt);
             }
         });
         dlgPairingReport.getContentPane().add(btnGenerateReport);
-        btnGenerateReport.setBounds(10, 290, 300, 23);
+        btnGenerateReport.setBounds(10, 340, 300, 23);
 
         btnDlgPairingReportClose.setText("Close");
         btnDlgPairingReportClose.addActionListener(new java.awt.event.ActionListener() {
@@ -706,10 +699,10 @@ public class JFrGamesPair extends javax.swing.JFrame {
         dlgPairingReport.getContentPane().add(btnDlgPairingReportClose);
         btnDlgPairingReportClose.setBounds(10, 480, 770, 23);
 
-        ckbUnbalancedMMSDUDDPlayers.setSelected(true);
-        ckbUnbalancedMMSDUDDPlayers.setText("Unbalanced MMS draw up/down players  ");
-        dlgPairingReport.getContentPane().add(ckbUnbalancedMMSDUDDPlayers);
-        ckbUnbalancedMMSDUDDPlayers.setBounds(10, 210, 260, 23);
+        ckbMMSDUDD.setSelected(true);
+        ckbMMSDUDD.setText("MMS draw up/down");
+        dlgPairingReport.getContentPane().add(ckbMMSDUDD);
+        ckbMMSDUDD.setBounds(10, 210, 260, 23);
 
         txaReport.setColumns(20);
         txaReport.setLineWrap(true);
@@ -727,12 +720,16 @@ public class JFrGamesPair extends javax.swing.JFrame {
         ckbUnbalancedWB.setText("White/Black unbalance greater than");
         ckbUnbalancedWB.setToolTipText("in no-handicap games only");
         dlgPairingReport.getContentPane().add(ckbUnbalancedWB);
-        ckbUnbalancedWB.setBounds(10, 240, 260, 23);
+        ckbUnbalancedWB.setBounds(10, 290, 260, 23);
 
         txfUnbalancedWB.setText("1");
         txfUnbalancedWB.setEnabled(false);
         dlgPairingReport.getContentPane().add(txfUnbalancedWB);
-        txfUnbalancedWB.setBounds(282, 240, 20, 20);
+        txfUnbalancedWB.setBounds(280, 290, 20, 20);
+
+        ckbMMSWeightedDUDD.setText("MMS weighted draw up/down");
+        dlgPairingReport.getContentPane().add(ckbMMSWeightedDUDD);
+        ckbMMSWeightedDUDD.setBounds(10, 240, 260, 23);
 
         pupPairablePlayers.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
@@ -1420,17 +1417,30 @@ public class JFrGamesPair extends javax.swing.JFrame {
 }//GEN-LAST:event_btnHelpActionPerformed
 
     private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
-//        LogElements.incrementElement("games.pairingreport", "");
-        int w = JFrGotha.MEDIUM_FRAME_WIDTH;
-        int h = JFrGotha.MEDIUM_FRAME_HEIGHT;
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        dlgPairingReport.setBounds((dim.width - w) / 2, (dim.height - h) / 2, w, h);
+//        int w = JFrGotha.MEDIUM_FRAME_WIDTH;
+//        int h = JFrGotha.MEDIUM_FRAME_HEIGHT;
+//        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+//        dlgPairingReport.setBounds((dim.width - w) / 2, (dim.height - h) / 2, w, h);
+//        dlgPairingReport.setTitle("Pairing report");
+//        dlgPairingReport.setIconImage(Gotha.getIconImage());
+//        dlgPairingReport.setVisible(true);
+        displayFrame(dlgPairingReport, JFrGotha.MEDIUM_FRAME_WIDTH, JFrGotha.MEDIUM_FRAME_HEIGHT);
         dlgPairingReport.setTitle("Pairing report");
-        dlgPairingReport.setIconImage(Gotha.getIconImage());
-        dlgPairingReport.setVisible(true);
+        generateReport();
     }//GEN-LAST:event_btnReportActionPerformed
 
+    private void displayFrame(Window win, int w, int h){
+        Rectangle newRect = this.getBounds();
+        win.setLocation(newRect.x + 10, newRect.y + 60);
+        win.setSize(w, h);
+        win.setVisible(true);
+        win.setIconImage(Gotha.getIconImage());
+    }
+    
     private void btnGenerateReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateReportActionPerformed
+        generateReport();
+    }//GEN-LAST:event_btnGenerateReportActionPerformed
+    private void generateReport(){
         String strReport = "";
         strReport += "Round " + (processedRoundNumber + 1) + "\n\n";
 
@@ -1451,8 +1461,11 @@ public class JFrGamesPair extends javax.swing.JFrame {
         if (this.ckbIntraCountry.isSelected()) {
             strReport += Pairing.intraCountryPairingReport(tournament, processedRoundNumber) + "\n\n";
         }
-        if (this.ckbUnbalancedMMSDUDDPlayers.isSelected()) {
-            strReport += Pairing.unbalancedMMSDUDDPlayersReport(tournament, processedRoundNumber) + "\n\n";
+        if (this.ckbMMSDUDD.isSelected()) {
+            strReport += Pairing.mmsDUDDReport(tournament, processedRoundNumber) + "\n\n";
+        }
+        if (this.ckbMMSWeightedDUDD.isSelected()) {
+            strReport += Pairing.mmsWeightedDUDDReport(tournament, processedRoundNumber) + "\n\n";
         }
         if (this.ckbUnbalancedWB.isSelected()) {
             int unbalancedWBThreshold = Integer.parseInt(this.txfUnbalancedWB.getText());
@@ -1460,8 +1473,8 @@ public class JFrGamesPair extends javax.swing.JFrame {
         }
 
         txaReport.setText(strReport);
-    }//GEN-LAST:event_btnGenerateReportActionPerformed
-
+    
+    }
     private void btnDlgPairingReportCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDlgPairingReportCloseActionPerformed
         this.dlgPairingReport.dispose();
     }//GEN-LAST:event_btnDlgPairingReportCloseActionPerformed
@@ -1709,9 +1722,10 @@ public class JFrGamesPair extends javax.swing.JFrame {
     private javax.swing.JCheckBox ckbHandicapGreaterThan;
     private javax.swing.JCheckBox ckbIntraClub;
     private javax.swing.JCheckBox ckbIntraCountry;
+    private javax.swing.JCheckBox ckbMMSDUDD;
     private javax.swing.JCheckBox ckbMMSGreaterThan;
+    private javax.swing.JCheckBox ckbMMSWeightedDUDD;
     private javax.swing.JCheckBox ckbNotShownUp;
-    private javax.swing.JCheckBox ckbUnbalancedMMSDUDDPlayers;
     private javax.swing.JCheckBox ckbUnbalancedWB;
     private javax.swing.JDialog dlgPairingReport;
     private javax.swing.JButton jButton1;
