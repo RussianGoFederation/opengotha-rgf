@@ -17,6 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
+import static ru.gofederation.gotha.model.RatingOrigin.EGF;
+
 /**
  *
  * @author Luc Vannier
@@ -286,7 +288,7 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
             Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
         }
         for(Player p : alPlayers){
-            if (p.getRatingOrigin().equals("EGF")) continue;
+            if (p.getRatingOrigin() == EGF) continue;
             p.setRating(p.getRating() + 2050);
             try {
                 tournament.modifyPlayer(p, p);

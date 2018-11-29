@@ -19,6 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.*;
+import ru.gofederation.gotha.util.GothaLocale;
+
+import static ru.gofederation.gotha.model.RatingOrigin.EGF;
 
 /**
  *
@@ -51,9 +54,12 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
     
     int activeRow = 0;
 
+	private GothaLocale locale;
 
     /** Creates new form JFrUpdateRatings */
     public JFrUpdateRatings(TournamentInterface tournament) throws RemoteException{
+		this.locale = GothaLocale.getCurrentLocale();
+
         this.tournament = tournament;
         initComponents();
         customInitComponents();
@@ -125,13 +131,13 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
     }
 
     private void initPnlPlayers()throws RemoteException{
-        JFrGotha.formatColumn(this.tblPlayers, NAME_COL, "Last name", 110, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(this.tblPlayers, FIRSTNAME_COL, "First name", 70, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(this.tblPlayers, COUNTRY_COL, "Co", 30, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(this.tblPlayers, CLUB_COL, "Club", 40, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(this.tblPlayers, RANK_COL, "Rk", 30, JLabel.RIGHT, JLabel.RIGHT); 
-        JFrGotha.formatColumn(this.tblPlayers, RATINGORIGIN_COL, "Ori", 30, JLabel.RIGHT, JLabel.RIGHT); 
-        JFrGotha.formatColumn(this.tblPlayers, RATING_COL, "Rt", 40, JLabel.RIGHT, JLabel.RIGHT); 
+        JFrGotha.formatColumn(this.tblPlayers, NAME_COL, locale.getString("player.last_name"), 110, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(this.tblPlayers, FIRSTNAME_COL, locale.getString("player.first_name"), 70, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(this.tblPlayers, COUNTRY_COL, locale.getString("player.country"), 30, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(this.tblPlayers, CLUB_COL, locale.getString("player.club"), 40, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(this.tblPlayers, RANK_COL, locale.getString("player.rank"), 30, JLabel.RIGHT, JLabel.RIGHT);
+        JFrGotha.formatColumn(this.tblPlayers, RATINGORIGIN_COL, locale.getString("player.rating_origin"), 30, JLabel.RIGHT, JLabel.RIGHT);
+        JFrGotha.formatColumn(this.tblPlayers, RATING_COL, locale.getString("player.rating"), 40, JLabel.RIGHT, JLabel.RIGHT);
 
         this.updatePnlPlayers(alSelectedPlayersToKeepSelected);
 
@@ -246,7 +252,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
         getContentPane().setLayout(null);
 
         btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.setText("help");
+        btnHelp.setText(locale.getString("btn.help")); // NOI18N
         btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpActionPerformed(evt);
@@ -255,7 +261,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
         getContentPane().add(btnHelp);
         btnHelp.setBounds(50, 470, 110, 30);
 
-        btnClose.setText("Close");
+        btnClose.setText(locale.getString("btn.close")); // NOI18N
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -264,7 +270,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
         getContentPane().add(btnClose);
         btnClose.setBounds(200, 470, 550, 30);
 
-        pnlPlayersList.setBorder(javax.swing.BorderFactory.createTitledBorder("Players"));
+        pnlPlayersList.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("player.players"))); // NOI18N
         pnlPlayersList.setLayout(null);
 
         cbxRatingList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -277,7 +283,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
         pnlPlayersList.add(cbxRatingList);
         cbxRatingList.setBounds(10, 410, 220, 20);
 
-        btnPrint.setText("Print ...");
+        btnPrint.setText(locale.getString("btn.print")); // NOI18N
         btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintActionPerformed(evt);
@@ -328,7 +334,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
         pnlPlayersList.add(scpPlayers);
         scpPlayers.setBounds(10, 110, 690, 240);
 
-        btnUpdateAllRatings.setText("For all players, update obsolete ratings (red) with EGF rating (blue)");
+        btnUpdateAllRatings.setText(locale.getString("player.update_rating_all")); // NOI18N
         btnUpdateAllRatings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateAllRatingsActionPerformed(evt);
@@ -337,7 +343,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
         pnlPlayersList.add(btnUpdateAllRatings);
         btnUpdateAllRatings.setBounds(10, 360, 690, 20);
 
-        btnUpdateSelRatings.setText("For selected players, update obsolete ratings (red) with EGF rating (blue)");
+        btnUpdateSelRatings.setText(locale.getString("player.update_rating_selected")); // NOI18N
         btnUpdateSelRatings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateSelRatingsActionPerformed(evt);
@@ -346,7 +352,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
         pnlPlayersList.add(btnUpdateSelRatings);
         btnUpdateSelRatings.setBounds(10, 390, 690, 20);
 
-        btnUpdateRatingList.setText("update EGF rating list from ...");
+        btnUpdateRatingList.setText(locale.getString("rating_list.btn_update_from")); // NOI18N
         btnUpdateRatingList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateRatingListActionPerformed(evt);
@@ -366,7 +372,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
         lblRatingList.setBounds(480, 40, 220, 14);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jLabel1.setText("Rating list to be used");
+        jLabel1.setText(locale.getString("player.rating_list_to_be_used")); // NOI18N
         pnlPlayersList.add(jLabel1);
         jLabel1.setBounds(20, 20, 220, 23);
 
@@ -538,7 +544,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
         }
         
         if (alP.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please, select at least one player", "Message",
+            JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -571,11 +577,11 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
                 int newRating = Integer.parseInt(strNewRating);
                 if (newRating == p.getRating()){
                     p.setEgfPin(egfPin);               
-                    p.setRatingOrigin("EGF");
+                    p.setRatingOrigin(EGF);
                 }
                 else{                
                     p.setEgfPin(egfPin);               
-                    p.setRatingOrigin("EGF");
+                    p.setRatingOrigin(EGF);
                     p.setRating(newRating);
                 }
                 tournament.modifyPlayer(p, p);
@@ -593,7 +599,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
         
         if (alP.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please, select at least one player", "Message",
+            JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -616,8 +622,8 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
     private void btnUpdateRatingListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateRatingListActionPerformed
         int rlType = RatingList.TYPE_UNDEFINED;
         if (!Gotha.isRatingListsDownloadEnabled()){
-            String strMessage = "Access to Rating lists is currently disabled.\nSee Options .. Preferences menu item";
-            JOptionPane.showMessageDialog(this, strMessage, "Message", JOptionPane.ERROR_MESSAGE);
+            String strMessage = locale.getString("rating_list.disabled");
+            JOptionPane.showMessageDialog(this, strMessage, locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (this.rdbEGF.isSelected()) rlType = RatingList.TYPE_EGF;
@@ -652,13 +658,13 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
         try {
             String str = JOptionPane.showInputDialog(strPrompt, strDefaultURL);
             if (str == null ) return;
-            this.lblRatingList.setText("Download in progress");
+            this.lblRatingList.setText(locale.getString("rating_list.download_in_progress"));
             lblRatingList.paintImmediately(0, 0, lblRatingList.getWidth(), lblRatingList.getHeight());
             Gotha.download(this.pgbRatingList, str, fDefaultFile);
         } catch (MalformedURLException ex) {
-            JOptionPane.showMessageDialog(this, "Malformed URL\nRating list could not be loaded", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("rating_list.error.malformed_url"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Unreachable file\nRating list could not be loaded", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("rating_list.error.unreachable_file"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         }
         this.useRatingList(rlType);        
 
@@ -709,9 +715,9 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
         
         this.useRatingList(rlType);
             
-        this.btnUpdateRatingList.setText("Update " + strRLType + " rating list from ...");
-        this.btnUpdateAllRatings.setText("For all players, update obsolete ratings (red) with " + strRLType + " rating (blue)");
-        this.btnUpdateSelRatings.setText("For selected players, update obsolete ratings (red) with " + strRLType + " rating (blue)");
+        this.btnUpdateRatingList.setText(locale.format("rating_list.btn_update_from", strRLType));
+        this.btnUpdateAllRatings.setText(locale.format("player.update_rating_all", strRLType));
+        this.btnUpdateSelRatings.setText(locale.format("player.update_rating_selected", strRLType));
         
         this.updateSCPPlayersColTitles();
     }
@@ -878,7 +884,7 @@ class PlayersURTableCellRenderer extends JLabel implements TableCellRenderer {
         if (colIndex == JFrUpdateRatings.RATING_COL){           
             Integer nRating = (Integer)model.getValueAt(rowIndex, JFrUpdateRatings.RATING_COL);
             int rating = nRating.intValue();
-            String ratingOrigin = (String)model.getValueAt(rowIndex, JFrUpdateRatings.RATINGORIGIN_COL);
+            String ratingOrigin = model.getValueAt(rowIndex, JFrUpdateRatings.RATINGORIGIN_COL).toString();
             
             int newRating = -9999;
             try{
@@ -901,7 +907,7 @@ class PlayersURTableCellRenderer extends JLabel implements TableCellRenderer {
        if (colIndex == JFrUpdateRatings.NEWRATING_COL){           
             Integer nRating = (Integer)model.getValueAt(rowIndex, JFrUpdateRatings.RATING_COL);
             int rating = nRating.intValue();
-            String ratingOrigin = (String)model.getValueAt(rowIndex, JFrUpdateRatings.RATINGORIGIN_COL);
+            String ratingOrigin = model.getValueAt(rowIndex, JFrUpdateRatings.RATINGORIGIN_COL).toString();
             
             int newRating = -9999;
             try{

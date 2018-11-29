@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.nio.file.Files;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
+
 import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +22,8 @@ import java.util.prefs.Preferences;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.*;
+
+import ru.gofederation.gotha.util.GothaLocale;
 
 /**
  *
@@ -78,12 +82,16 @@ public class JFrGotha extends javax.swing.JFrame {
     private ControlPanelTableCellRenderer cpTableCellRenderer = new ControlPanelTableCellRenderer();
     private TeamsPanelTableCellRenderer tpTableCellRenderer = new TeamsPanelTableCellRenderer();
 
+	private GothaLocale locale;
+
     /**
      * Creates new form jFrGotha
      * @param tournament
      * @throws java.rmi.RemoteException
      */
     public JFrGotha(TournamentInterface tournament) throws RemoteException {
+		this.locale = GothaLocale.getCurrentLocale();
+
         this.tournament = tournament;
 
         initComponents();
@@ -119,8 +127,8 @@ public class JFrGotha extends javax.swing.JFrame {
                 try {
                     boolean b = tournament.clockIn(Gotha.clientName);
                     if (!b && Gotha.runningMode == Gotha.RUNNING_MODE_CLI) {
-                        JOptionPane.showMessageDialog(null, "Connection to Server has been reset for current tournament\nOpenGotha will stop",
-                                "Message", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, locale.getString("error.client_connection_tournament_reset"),
+                                locale.getString("alert.warning"), JOptionPane.ERROR_MESSAGE);
                         exitOpenGotha();
 
                     }
@@ -130,8 +138,8 @@ public class JFrGotha extends javax.swing.JFrame {
                        saveTournamentToAWorkFile();
                     }
                 } catch (RemoteException ex) {
-                    JOptionPane.showMessageDialog(null, "Connection to Server has been reset\nOpenGotha will stop",
-                            "Message", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, locale.getString("error.client_connection_reset"),
+                            locale.getString("alert.warning"), JOptionPane.ERROR_MESSAGE);
                     exitOpenGotha();
                 }
             }
@@ -297,13 +305,13 @@ public class JFrGotha extends javax.swing.JFrame {
 
         dlgNew.getContentPane().setLayout(null);
 
-        pnlSystem.setBorder(javax.swing.BorderFactory.createTitledBorder("System"));
+        pnlSystem.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.system"))); // NOI18N
         pnlSystem.setLayout(null);
 
         grpPS.add(rdbMcMahon);
         rdbMcMahon.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbMcMahon.setText("McMahon");
-        rdbMcMahon.setToolTipText("Players will be paired according to their rank! The winner will be the strongest");
+        rdbMcMahon.setText(locale.getString("tournament.system.mcmahon")); // NOI18N
+        rdbMcMahon.setToolTipText(locale.getString("tournament.system.mcmahon_tooltip")); // NOI18N
         rdbMcMahon.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbMcMahon.setMargin(new java.awt.Insets(0, 0, 0, 0));
         pnlSystem.add(rdbMcMahon);
@@ -311,8 +319,8 @@ public class JFrGotha extends javax.swing.JFrame {
 
         grpPS.add(rdbSwiss);
         rdbSwiss.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbSwiss.setText("Swiss");
-        rdbSwiss.setToolTipText("Good system for championships");
+        rdbSwiss.setText(locale.getString("tournament.system.swiss")); // NOI18N
+        rdbSwiss.setToolTipText(locale.getString("tournament.system.swiss_tooltip")); // NOI18N
         rdbSwiss.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbSwiss.setMargin(new java.awt.Insets(0, 0, 0, 0));
         pnlSystem.add(rdbSwiss);
@@ -320,15 +328,15 @@ public class JFrGotha extends javax.swing.JFrame {
 
         grpPS.add(rdbSwissCat);
         rdbSwissCat.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbSwissCat.setText("Swiss with categories");
-        rdbSwissCat.setToolTipText("Because of possible games with a big rank difference, this system is not usually recommended");
+        rdbSwissCat.setText(locale.getString("tournament.system.swiss_cat")); // NOI18N
+        rdbSwissCat.setToolTipText(locale.getString("tournament.system.swiss_cat_tooltip")); // NOI18N
         rdbSwissCat.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbSwissCat.setMargin(new java.awt.Insets(0, 0, 0, 0));
         pnlSystem.add(rdbSwissCat);
         rdbSwissCat.setBounds(50, 90, 170, 13);
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel13.setText("Number of rounds");
+        jLabel13.setText(locale.getString("tournament.number_of_rounds")); // NOI18N
         pnlSystem.add(jLabel13);
         jLabel13.setBounds(50, 140, 120, 13);
 
@@ -337,26 +345,26 @@ public class JFrGotha extends javax.swing.JFrame {
         txfNumberOfRounds.setBounds(190, 140, 30, 20);
 
         lblRecommended.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lblRecommended.setText("(recommended for ancilliary standings only)");
+        lblRecommended.setText(locale.getString("tournament.system.swiss_cat_recommended")); // NOI18N
         pnlSystem.add(lblRecommended);
         lblRecommended.setBounds(60, 100, 240, 13);
 
         dlgNew.getContentPane().add(pnlSystem);
         pnlSystem.setBounds(410, 10, 300, 220);
 
-        pnlTournamentDetails.setBorder(javax.swing.BorderFactory.createTitledBorder("Tournament details"));
+        pnlTournamentDetails.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.details"))); // NOI18N
         pnlTournamentDetails.setLayout(null);
 
-        jLabel8.setText("Short name");
+        jLabel8.setText(locale.getString("tournament.short_name")); // NOI18N
         pnlTournamentDetails.add(jLabel8);
         jLabel8.setBounds(10, 60, 80, 14);
 
         txfShortName.setText("tournamentshortname");
-        txfShortName.setToolTipText("default file mame and RMI name.");
+        txfShortName.setToolTipText(locale.getString("tournament.short_name.tooltip")); // NOI18N
         pnlTournamentDetails.add(txfShortName);
         txfShortName.setBounds(100, 60, 180, 20);
 
-        jLabel10.setText("Name");
+        jLabel10.setText(locale.getString("tournament.name")); // NOI18N
         pnlTournamentDetails.add(jLabel10);
         jLabel10.setBounds(10, 30, 80, 14);
 
@@ -365,7 +373,7 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlTournamentDetails.add(txfName);
         txfName.setBounds(100, 30, 180, 20);
 
-        jLabel11.setText("Location");
+        jLabel11.setText(locale.getString("tournament.location")); // NOI18N
         pnlTournamentDetails.add(jLabel11);
         jLabel11.setBounds(10, 90, 80, 14);
 
@@ -373,7 +381,7 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlTournamentDetails.add(txfLocation);
         txfLocation.setBounds(100, 90, 180, 20);
 
-        jLabel12.setText("Begin date");
+        jLabel12.setText(locale.getString("tournament.begin_date")); // NOI18N
         pnlTournamentDetails.add(jLabel12);
         jLabel12.setBounds(10, 160, 80, 14);
 
@@ -381,7 +389,7 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlTournamentDetails.add(txfBeginDate);
         txfBeginDate.setBounds(100, 160, 110, 20);
 
-        jLabel19.setText("End date");
+        jLabel19.setText(locale.getString("tournament.end_date")); // NOI18N
         pnlTournamentDetails.add(jLabel19);
         jLabel19.setBounds(10, 180, 80, 14);
 
@@ -389,7 +397,7 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlTournamentDetails.add(txfEndDate);
         txfEndDate.setBounds(100, 180, 110, 20);
 
-        jLabel20.setText("Director");
+        jLabel20.setText(locale.getString("tournament.director")); // NOI18N
         pnlTournamentDetails.add(jLabel20);
         jLabel20.setBounds(10, 120, 80, 14);
 
@@ -400,7 +408,7 @@ public class JFrGotha extends javax.swing.JFrame {
         dlgNew.getContentPane().add(pnlTournamentDetails);
         pnlTournamentDetails.setBounds(100, 10, 300, 220);
 
-        btnDlgNewOK.setText("OK");
+        btnDlgNewOK.setText(locale.getString("btn.ok")); // NOI18N
         btnDlgNewOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDlgNewOKActionPerformed(evt);
@@ -409,7 +417,7 @@ public class JFrGotha extends javax.swing.JFrame {
         dlgNew.getContentPane().add(btnDlgNewOK);
         btnDlgNewOK.setBounds(250, 260, 290, 30);
 
-        btnDlgNewCancel.setText("Cancel");
+        btnDlgNewCancel.setText(locale.getString("btn.cancel")); // NOI18N
         btnDlgNewCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDlgNewCancelActionPerformed(evt);
@@ -419,7 +427,7 @@ public class JFrGotha extends javax.swing.JFrame {
         btnDlgNewCancel.setBounds(560, 260, 130, 30);
 
         btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.setText("help");
+        btnHelp.setText(locale.getString("btn.help")); // NOI18N
         btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpActionPerformed(evt);
@@ -524,7 +532,7 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlWelcome.add(lblFlowChart);
         lblFlowChart.setBounds(20, 320, 760, 190);
 
-        tpnGotha.addTab("Welcome", pnlWelcome);
+        tpnGotha.addTab(locale.getString("welcome"), pnlWelcome); // NOI18N
 
         pnlControlPanel.setLayout(null);
 
@@ -572,22 +580,22 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlControlPanel.add(pnlIntControlPanel);
         pnlIntControlPanel.setBounds(0, 0, 790, 470);
 
-        tpnGotha.addTab("Control Panel", pnlControlPanel);
+        tpnGotha.addTab(locale.getString("control_panel"), pnlControlPanel); // NOI18N
 
         pnlStandings.setLayout(null);
 
         pnlIntStandings.setLayout(null);
 
-        lblStandingsAfter.setText("Standings after round");
+        lblStandingsAfter.setText(locale.getString("standings.after_round")); // NOI18N
         pnlIntStandings.add(lblStandingsAfter);
         lblStandingsAfter.setBounds(10, 40, 140, 14);
 
-        pnlPS.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Placement parameter set"));
+        pnlPS.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), locale.getString("standings.pps"))); // NOI18N
         pnlPS.setLayout(null);
 
         grpPS.add(rdbCurrentPS);
         rdbCurrentPS.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbCurrentPS.setText("use current set");
+        rdbCurrentPS.setText(locale.getString("standings.pps.current")); // NOI18N
         rdbCurrentPS.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbCurrentPS.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbCurrentPS.addActionListener(new java.awt.event.ActionListener() {
@@ -600,7 +608,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
         grpPS.add(rdbTemporaryPS);
         rdbTemporaryPS.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbTemporaryPS.setText("use temporary set");
+        rdbTemporaryPS.setText(locale.getString("standings.pps.temporary")); // NOI18N
         rdbTemporaryPS.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbTemporaryPS.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbTemporaryPS.addActionListener(new java.awt.event.ActionListener() {
@@ -622,12 +630,12 @@ public class JFrGotha extends javax.swing.JFrame {
         cbxCrit1.setBounds(60, 70, 120, 20);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel3.setText("Crit 1");
+        jLabel3.setText(locale.getString("standings.pps.crit1")); // NOI18N
         pnlPS.add(jLabel3);
         jLabel3.setBounds(10, 70, 34, 13);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel4.setText("Crit 2");
+        jLabel4.setText(locale.getString("standings.pps.crit2")); // NOI18N
         pnlPS.add(jLabel4);
         jLabel4.setBounds(10, 100, 34, 13);
 
@@ -642,7 +650,7 @@ public class JFrGotha extends javax.swing.JFrame {
         cbxCrit2.setBounds(60, 100, 120, 20);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel5.setText("Crit 3");
+        jLabel5.setText(locale.getString("standings.pps.crit3")); // NOI18N
         pnlPS.add(jLabel5);
         jLabel5.setBounds(10, 130, 34, 13);
 
@@ -657,7 +665,7 @@ public class JFrGotha extends javax.swing.JFrame {
         cbxCrit3.setBounds(60, 130, 120, 20);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel6.setText("Crit 4");
+        jLabel6.setText(locale.getString("standings.pps.crit4")); // NOI18N
         pnlPS.add(jLabel6);
         jLabel6.setBounds(10, 160, 34, 13);
 
@@ -692,7 +700,7 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlIntStandings.add(scpStandings);
         scpStandings.setBounds(190, 10, 600, 500);
 
-        btnPrintStandings.setText("Print...");
+        btnPrintStandings.setText(locale.getString("btn.print")); // NOI18N
         btnPrintStandings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintStandingsActionPerformed(evt);
@@ -701,7 +709,7 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlIntStandings.add(btnPrintStandings);
         btnPrintStandings.setBounds(0, 470, 190, 30);
 
-        lblUpdateTime.setText("updated at : ");
+        lblUpdateTime.setText(locale.getString("standings.update_time")); // NOI18N
         pnlIntStandings.add(lblUpdateTime);
         lblUpdateTime.setBounds(10, 300, 170, 14);
 
@@ -713,13 +721,13 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlIntStandings.add(spnRoundNumber);
         spnRoundNumber.setBounds(150, 30, 40, 30);
 
-        jLabel7.setText("Search for a player");
+        jLabel7.setText(locale.getString("player.search")); // NOI18N
         pnlIntStandings.add(jLabel7);
         jLabel7.setBounds(10, 360, 150, 14);
         pnlIntStandings.add(txfSearchPlayer);
         txfSearchPlayer.setBounds(10, 380, 150, 20);
 
-        btnSearch.setText("Search/Next");
+        btnSearch.setText(locale.getString("player.btn_search")); // NOI18N
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);
@@ -731,7 +739,7 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlStandings.add(pnlIntStandings);
         pnlIntStandings.setBounds(0, 0, 790, 520);
 
-        tpnGotha.addTab("Standings", pnlStandings);
+        tpnGotha.addTab(locale.getString("standings"), pnlStandings); // NOI18N
 
         pnlTeamsPanel.setLayout(null);
 
@@ -770,22 +778,22 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlTeamsPanel.add(pnlIntTeamsPanel);
         pnlIntTeamsPanel.setBounds(0, 0, 0, 0);
 
-        tpnGotha.addTab("Teams Panel", pnlTeamsPanel);
+        tpnGotha.addTab(locale.getString("teams_panel"), pnlTeamsPanel); // NOI18N
 
         pnlTeamsStandings.setLayout(null);
 
         pnlIntTeamsStandings.setLayout(null);
 
-        lblTeamsStandingsAfter.setText("Standings after round");
+        lblTeamsStandingsAfter.setText(locale.getString("standings.after_round")); // NOI18N
         pnlIntTeamsStandings.add(lblTeamsStandingsAfter);
         lblTeamsStandingsAfter.setBounds(10, 40, 140, 14);
 
-        pnlTeamPS.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Team placement parameter set"));
+        pnlTeamPS.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), locale.getString("standings.tpps"))); // NOI18N
         pnlTeamPS.setLayout(null);
 
         grpTeamPS.add(rdbCurrentTeamPS);
         rdbCurrentTeamPS.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbCurrentTeamPS.setText("use current set");
+        rdbCurrentTeamPS.setText(locale.getString("standings.pps.current")); // NOI18N
         rdbCurrentTeamPS.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbCurrentTeamPS.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbCurrentTeamPS.addActionListener(new java.awt.event.ActionListener() {
@@ -798,7 +806,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
         grpTeamPS.add(rdbTemporaryTeamPS);
         rdbTemporaryTeamPS.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbTemporaryTeamPS.setText("use temporary set");
+        rdbTemporaryTeamPS.setText(locale.getString("standings.pps.temporary")); // NOI18N
         rdbTemporaryTeamPS.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbTemporaryTeamPS.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbTemporaryTeamPS.addActionListener(new java.awt.event.ActionListener() {
@@ -810,7 +818,7 @@ public class JFrGotha extends javax.swing.JFrame {
         rdbTemporaryTeamPS.setBounds(10, 40, 170, 13);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel9.setText("Crit 1");
+        jLabel9.setText(locale.getString("standings.pps.crit1")); // NOI18N
         pnlTeamPS.add(jLabel9);
         jLabel9.setBounds(10, 70, 34, 13);
 
@@ -825,7 +833,7 @@ public class JFrGotha extends javax.swing.JFrame {
         cbxTeamCrit1.setBounds(60, 70, 120, 20);
 
         jLabel14.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel14.setText("Crit 2");
+        jLabel14.setText(locale.getString("standings.pps.crit2")); // NOI18N
         pnlTeamPS.add(jLabel14);
         jLabel14.setBounds(10, 100, 34, 13);
 
@@ -840,7 +848,7 @@ public class JFrGotha extends javax.swing.JFrame {
         cbxTeamCrit2.setBounds(60, 100, 120, 20);
 
         jLabel15.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel15.setText("Crit 3");
+        jLabel15.setText(locale.getString("standings.pps.crit3")); // NOI18N
         pnlTeamPS.add(jLabel15);
         jLabel15.setBounds(10, 130, 34, 13);
 
@@ -855,7 +863,7 @@ public class JFrGotha extends javax.swing.JFrame {
         cbxTeamCrit3.setBounds(60, 130, 120, 20);
 
         jLabel16.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel16.setText("Crit 4");
+        jLabel16.setText(locale.getString("standings.pps.crit4")); // NOI18N
         pnlTeamPS.add(jLabel16);
         jLabel16.setBounds(10, 160, 34, 13);
 
@@ -870,7 +878,7 @@ public class JFrGotha extends javax.swing.JFrame {
         cbxTeamCrit4.setBounds(60, 160, 120, 20);
 
         jLabel17.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel17.setText("Crit 5");
+        jLabel17.setText(locale.getString("standings.pps.crit5")); // NOI18N
         pnlTeamPS.add(jLabel17);
         jLabel17.setBounds(10, 190, 34, 13);
 
@@ -885,7 +893,7 @@ public class JFrGotha extends javax.swing.JFrame {
         cbxTeamCrit5.setBounds(60, 190, 120, 20);
 
         jLabel18.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel18.setText("Crit 6");
+        jLabel18.setText(locale.getString("standings.pps.crit6")); // NOI18N
         pnlTeamPS.add(jLabel18);
         jLabel18.setBounds(10, 220, 34, 13);
 
@@ -921,7 +929,7 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlIntTeamsStandings.add(scpTeamsStandings);
         scpTeamsStandings.setBounds(190, 10, 600, 500);
 
-        lblTeamUpdateTime.setText("updated at : ");
+        lblTeamUpdateTime.setText(locale.getString("standings.update_time")); // NOI18N
         pnlIntTeamsStandings.add(lblTeamUpdateTime);
         lblTeamUpdateTime.setBounds(10, 360, 170, 14);
 
@@ -933,7 +941,7 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlIntTeamsStandings.add(spnTeamRoundNumber);
         spnTeamRoundNumber.setBounds(150, 30, 40, 30);
 
-        btnPrintTeamsStandings.setText("Print...");
+        btnPrintTeamsStandings.setText(locale.getString("btn.print")); // NOI18N
         btnPrintTeamsStandings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintTeamsStandingsActionPerformed(evt);
@@ -945,19 +953,19 @@ public class JFrGotha extends javax.swing.JFrame {
         pnlTeamsStandings.add(pnlIntTeamsStandings);
         pnlIntTeamsStandings.setBounds(0, 0, 790, 570);
 
-        tpnGotha.addTab("Teams Standings", pnlTeamsStandings);
+        tpnGotha.addTab(locale.getString("team_standings"), pnlTeamsStandings); // NOI18N
 
         getContentPane().add(tpnGotha);
         tpnGotha.setBounds(10, 10, 970, 550);
 
         mnuMain.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
-        mnuTournament.setText("Tournament");
+        mnuTournament.setText(locale.getString("menu.tournament")); // NOI18N
         mnuTournament.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         mniNew.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         mniNew.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniNew.setText("New...");
+        mniNew.setText(locale.getString("menu.tournament.new")); // NOI18N
         mniNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniNewActionPerformed(evt);
@@ -967,7 +975,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
         mniOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         mniOpen.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniOpen.setText("Open...");
+        mniOpen.setText(locale.getString("menu.tournament.open")); // NOI18N
         mniOpen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniOpenActionPerformed(evt);
@@ -975,13 +983,13 @@ public class JFrGotha extends javax.swing.JFrame {
         });
         mnuTournament.add(mniOpen);
 
-        mnuOpenRecent.setText("Open Recent ... ");
+        mnuOpenRecent.setText(locale.getString("menu.tournament.recent")); // NOI18N
         mnuOpenRecent.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         mnuTournament.add(mnuOpenRecent);
 
         mniSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         mniSave.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniSave.setText("Save");
+        mniSave.setText(locale.getString("menu.tournament.save")); // NOI18N
         mniSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniSaveActionPerformed(evt);
@@ -991,7 +999,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
         mniSaveAs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         mniSaveAs.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniSaveAs.setText("Save as ...");
+        mniSaveAs.setText(locale.getString("menu.tournament.save_as")); // NOI18N
         mniSaveAs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniSaveAsActionPerformed(evt);
@@ -1000,7 +1008,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuTournament.add(mniSaveAs);
 
         mniSaveACopy.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniSaveACopy.setText("Save a copy ...");
+        mniSaveACopy.setText(locale.getString("menu.tournament.save_copy")); // NOI18N
         mniSaveACopy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniSaveACopyActionPerformed(evt);
@@ -1009,7 +1017,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuTournament.add(mniSaveACopy);
 
         mniClose.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniClose.setText("Close");
+        mniClose.setText(locale.getString("menu.tournament.close")); // NOI18N
         mniClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniCloseActionPerformed(evt);
@@ -1018,11 +1026,11 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuTournament.add(mniClose);
         mnuTournament.add(jSeparator1);
 
-        mnuImport.setText("Import ...");
+        mnuImport.setText(locale.getString("menu.tournament.import")); // NOI18N
         mnuImport.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         mniImportH9.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniImportH9.setText("Import Players and Games from h9 file");
+        mniImportH9.setText(locale.getString("menu.tournament.import.h9")); // NOI18N
         mniImportH9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniImportH9ActionPerformed(evt);
@@ -1031,7 +1039,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuImport.add(mniImportH9);
 
         mniImportTou.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniImportTou.setText("Import Players and Games from Tou file");
+        mniImportTou.setText(locale.getString("menu.tournament.import.tou")); // NOI18N
         mniImportTou.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniImportTouActionPerformed(evt);
@@ -1040,7 +1048,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuImport.add(mniImportTou);
 
         mniImportWallist.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniImportWallist.setText("Import Players and Games from Wallist file");
+        mniImportWallist.setText(locale.getString("menu.tournament.import.wallist")); // NOI18N
         mniImportWallist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniImportWallistActionPerformed(evt);
@@ -1049,7 +1057,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuImport.add(mniImportWallist);
 
         mniImportVBS.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniImportVBS.setText("Import Players From vBar-separated File");
+        mniImportVBS.setText(locale.getString("menu.tournament.import.vbar")); // NOI18N
         mniImportVBS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniImportVBSActionPerformed(evt);
@@ -1058,7 +1066,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuImport.add(mniImportVBS);
 
         mniImportXML.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniImportXML.setText("Import Tournament from XML File");
+        mniImportXML.setText(locale.getString("menu.tournament.import.xml")); // NOI18N
         mniImportXML.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniImportXMLActionPerformed(evt);
@@ -1069,7 +1077,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuTournament.add(mnuImport);
 
         mniExport.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniExport.setText("Export...");
+        mniExport.setText(locale.getString("menu.tournament.export")); // NOI18N
         mniExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniExportActionPerformed(evt);
@@ -1079,7 +1087,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuTournament.add(jSeparator2);
 
         mniExit.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniExit.setText("Exit");
+        mniExit.setText(locale.getString("menu.tournament.exit")); // NOI18N
         mniExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniExitActionPerformed(evt);
@@ -1089,7 +1097,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuTournament.add(jSeparator4);
 
         mniBuildTestTournament.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniBuildTestTournament.setText("Build test tournament");
+        mniBuildTestTournament.setText(locale.getString("menu.tournament.build_test")); // NOI18N
         mniBuildTestTournament.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniBuildTestTournamentActionPerformed(evt);
@@ -1099,12 +1107,12 @@ public class JFrGotha extends javax.swing.JFrame {
 
         mnuMain.add(mnuTournament);
 
-        mnuPlayers.setText("Players");
+        mnuPlayers.setText(locale.getString("menu.players")); // NOI18N
         mnuPlayers.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         mniPlayersManager.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_MASK));
         mniPlayersManager.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniPlayersManager.setText("Players Manager");
+        mniPlayersManager.setText(locale.getString("menu.players.manager")); // NOI18N
         mniPlayersManager.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniPlayersManagerActionPerformed(evt);
@@ -1114,7 +1122,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
         mniPlayersQuickCheck.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         mniPlayersQuickCheck.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniPlayersQuickCheck.setText("Players Quick check");
+        mniPlayersQuickCheck.setText(locale.getString("menu.players.check")); // NOI18N
         mniPlayersQuickCheck.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniPlayersQuickCheckActionPerformed(evt);
@@ -1123,7 +1131,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuPlayers.add(mniPlayersQuickCheck);
 
         mniUpdateRatings.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniUpdateRatings.setText("Update ratings");
+        mniUpdateRatings.setText(locale.getString("menu.players.update_ratings")); // NOI18N
         mniUpdateRatings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniUpdateRatingsActionPerformed(evt);
@@ -1132,7 +1140,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuPlayers.add(mniUpdateRatings);
 
         mniMMGroups.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniMMGroups.setText("McMahon groups");
+        mniMMGroups.setText(locale.getString("menu.players.mcmahon_groups")); // NOI18N
         mniMMGroups.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniMMGroupsActionPerformed(evt);
@@ -1142,7 +1150,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuPlayers.add(jSeparator5);
 
         mniTeamsManager.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniTeamsManager.setText("Teams Manager");
+        mniTeamsManager.setText(locale.getString("menu.players.teams_manager")); // NOI18N
         mniTeamsManager.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniTeamsManagerActionPerformed(evt);
@@ -1152,12 +1160,12 @@ public class JFrGotha extends javax.swing.JFrame {
 
         mnuMain.add(mnuPlayers);
 
-        mnuGames.setText("Games");
+        mnuGames.setText(locale.getString("menu.games")); // NOI18N
         mnuGames.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         mniPair.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
         mniPair.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniPair.setText("Pair");
+        mniPair.setText(locale.getString("menu.games.pair")); // NOI18N
         mniPair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniPairActionPerformed(evt);
@@ -1167,7 +1175,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
         mniResults.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         mniResults.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniResults.setText("Results");
+        mniResults.setText(locale.getString("menu.games.results")); // NOI18N
         mniResults.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniResultsActionPerformed(evt);
@@ -1176,7 +1184,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuGames.add(mniResults);
 
         mniRR.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniRR.setText("Round-robin");
+        mniRR.setText(locale.getString("menu.games.round_robin")); // NOI18N
         mniRR.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniRRActionPerformed(evt);
@@ -1186,7 +1194,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuGames.add(jSeparator6);
 
         mniTeamsPairing.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniTeamsPairing.setText("Teams Pairing");
+        mniTeamsPairing.setText(locale.getString("menu.games.teams_pairing")); // NOI18N
         mniTeamsPairing.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniTeamsPairingActionPerformed(evt);
@@ -1196,11 +1204,11 @@ public class JFrGotha extends javax.swing.JFrame {
 
         mnuMain.add(mnuGames);
 
-        mnuPublish.setText("Publish");
+        mnuPublish.setText(locale.getString("menu.publish")); // NOI18N
         mnuPublish.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         mniPublish.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniPublish.setText("Publish ...");
+        mniPublish.setText(locale.getString("menu.publish.publish")); // NOI18N
         mniPublish.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniPublishActionPerformed(evt);
@@ -1210,11 +1218,11 @@ public class JFrGotha extends javax.swing.JFrame {
 
         mnuMain.add(mnuPublish);
 
-        mnuOptions.setText("Options");
+        mnuOptions.setText(locale.getString("menu.options")); // NOI18N
         mnuOptions.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         mniTournamentOptions.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniTournamentOptions.setText("Tournament Options");
+        mniTournamentOptions.setText(locale.getString("menu.options.tournament")); // NOI18N
         mniTournamentOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniTournamentOptionsActionPerformed(evt);
@@ -1223,7 +1231,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuOptions.add(mniTournamentOptions);
 
         mniGamesOptions.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniGamesOptions.setText("Games Options");
+        mniGamesOptions.setText(locale.getString("menu.options.games")); // NOI18N
         mniGamesOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniGamesOptionsActionPerformed(evt);
@@ -1233,7 +1241,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuOptions.add(jSeparator7);
 
         mniPreferences.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniPreferences.setText("Preferences");
+        mniPreferences.setText(locale.getString("menu.options.preferences")); // NOI18N
         mniPreferences.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniPreferencesActionPerformed(evt);
@@ -1243,11 +1251,11 @@ public class JFrGotha extends javax.swing.JFrame {
 
         mnuMain.add(mnuOptions);
 
-        mnuTools.setText("Tools");
+        mnuTools.setText(locale.getString("menu.tools")); // NOI18N
         mnuTools.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         mniDiscardRounds.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniDiscardRounds.setText("Discard rounds");
+        mniDiscardRounds.setText(locale.getString("menu.tools.discard_rounds")); // NOI18N
         mniDiscardRounds.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniDiscardRoundsActionPerformed(evt);
@@ -1257,7 +1265,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuTools.add(jSeparator3);
 
         mniRMI.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniRMI.setText("RMI Manager");
+        mniRMI.setText(locale.getString("menu.tools.rmi")); // NOI18N
         mniRMI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniRMIActionPerformed(evt);
@@ -1266,7 +1274,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuTools.add(mniRMI);
 
         mniMemory.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniMemory.setText("Memory Manager");
+        mniMemory.setText(locale.getString("menu.tools.memory")); // NOI18N
         mniMemory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniMemoryActionPerformed(evt);
@@ -1276,7 +1284,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuTools.add(jSeparator8);
 
         mniExperimentalTools.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniExperimentalTools.setText("Experimental tools");
+        mniExperimentalTools.setText(locale.getString("menu.tools.experimental")); // NOI18N
         mniExperimentalTools.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniExperimentalToolsActionPerformed(evt);
@@ -1286,12 +1294,12 @@ public class JFrGotha extends javax.swing.JFrame {
 
         mnuMain.add(mnuTools);
 
-        mnuHelp.setText("Help");
+        mnuHelp.setText(locale.getString("menu.help")); // NOI18N
         mnuHelp.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
 
         mniOpenGothaHelp.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
         mniOpenGothaHelp.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniOpenGothaHelp.setText("OpenGotha help");
+        mniOpenGothaHelp.setText(locale.getString("menu.help.help")); // NOI18N
         mniOpenGothaHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniOpenGothaHelpActionPerformed(evt);
@@ -1300,7 +1308,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mnuHelp.add(mniOpenGothaHelp);
 
         mniHelpAbout.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        mniHelpAbout.setText("About OpenGotha");
+        mniHelpAbout.setText(locale.getString("menu.help.about")); // NOI18N
         mniHelpAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniHelpAboutActionPerformed(evt);
@@ -1317,7 +1325,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
     private void mniGamesOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniGamesOptionsActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -1344,12 +1352,12 @@ public class JFrGotha extends javax.swing.JFrame {
 
     private void mniMMGroupsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniMMGroupsActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
             if (tournament.tournamentType() != TournamentParameterSet.TYPE_MCMAHON) {
-                JOptionPane.showMessageDialog(this, "McMahon Groups are relevant only in McMahon tournaments", "Message", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, locale.getString("error.mcmahon_groups_only_relevant_to_mcmahon_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
                 return;
 
             }
@@ -1367,7 +1375,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
     private void mniBuildTestTournamentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniBuildTestTournamentActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
@@ -1380,7 +1388,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
     private void mniCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniCloseActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -1556,7 +1564,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
     private void mniResultsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniResultsActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
@@ -1569,7 +1577,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
     private void mniPairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniPairActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
@@ -1583,7 +1591,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
     private void mniPlayersQuickCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniPlayersQuickCheckActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
@@ -1739,14 +1747,11 @@ public class JFrGotha extends javax.swing.JFrame {
                         f = new File(strFile);
                         openTournament(f);
                     } catch (FileNotFoundException ex) {
-                        JOptionPane.showMessageDialog(null, " File not found", "Message", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, locale.getString("error.file_not_found"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
                         // Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (Exception ex) {
-                        String strMessage = "Some problem occured with file : " + f.getName();
-                        strMessage += "\nThe file was not found or The content of this file does not comply with OpenGotha Data version " + Gotha.GOTHA_DATA_VERSION;
-                        strMessage += "\nHint : Read the Compatibility issues in the OpenGotha help";
-                        strMessage += "\n\nThe tournament has not been opened";
-                        JOptionPane.showMessageDialog(JFrGotha.this, strMessage, "Message", JOptionPane.ERROR_MESSAGE);
+                        String strMessage = locale.format("error.file_reading_error", f.getName(), Gotha.GOTHA_DATA_VERSION);
+                        JOptionPane.showMessageDialog(JFrGotha.this, strMessage, locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
                         JFrGotha.this.removeAllRecentTournament();
                     }
                 }
@@ -1798,10 +1803,10 @@ public class JFrGotha extends javax.swing.JFrame {
         String strTitle = Gotha.getGothaVersionnedName() + " ";
         switch (Gotha.runningMode) {
             case Gotha.RUNNING_MODE_SRV:
-                strTitle += "Server. " + " ";
+                strTitle += locale.getString("start.server") + ".  ";
                 break;
             case Gotha.RUNNING_MODE_CLI:
-                strTitle += "Client. " + " ";
+                strTitle += locale.getString("start.client") + ".  ";
         }
 
         if (tournament != null) {
@@ -1824,10 +1829,10 @@ public class JFrGotha extends javax.swing.JFrame {
         tcm.getColumn(3).setPreferredWidth(100);
 
         // Headers
-        JFrGotha.formatHeader(this.tblControlPanel, 0, "Round", JLabel.RIGHT);
-        JFrGotha.formatHeader(this.tblControlPanel, 1, "Participants", JLabel.CENTER);
-        JFrGotha.formatHeader(this.tblControlPanel, 2, "Assigned players", JLabel.CENTER);
-        JFrGotha.formatHeader(this.tblControlPanel, 3, "Entered results", JLabel.CENTER);
+        JFrGotha.formatHeader(this.tblControlPanel, 0, locale.getString("game.round"), JLabel.RIGHT);
+        JFrGotha.formatHeader(this.tblControlPanel, 1, locale.getString("player.participants"), JLabel.CENTER);
+        JFrGotha.formatHeader(this.tblControlPanel, 2, locale.getString("control_panel.assigned"), JLabel.CENTER);
+        JFrGotha.formatHeader(this.tblControlPanel, 3, locale.getString("control_panel.entered_results"), JLabel.CENTER);
 
         // Set the renderer for tblControlPanel
         tblControlPanel.setDefaultRenderer(Object.class, this.cpTableCellRenderer);
@@ -1849,13 +1854,13 @@ public class JFrGotha extends javax.swing.JFrame {
 
         // Headers
         JFrGotha.formatHeader(this.tblTeamsPanel, TM_TEAM_NUMBER_COL, "Nr", JLabel.RIGHT);
-        JFrGotha.formatHeader(this.tblTeamsPanel, TM_TEAM_NAME_COL, "Team name", JLabel.LEFT);
-        JFrGotha.formatHeader(this.tblTeamsPanel, TM_BOARD_NUMBER_COL, "Board", JLabel.RIGHT);
-        JFrGotha.formatHeader(this.tblTeamsPanel, TM_PL_NAME_COL, "Player name", JLabel.LEFT);
-        JFrGotha.formatHeader(this.tblTeamsPanel, TM_PL_COUNTRY_COL, "Co", JLabel.CENTER);
-        JFrGotha.formatHeader(this.tblTeamsPanel, TM_PL_CLUB_COL, "Club", JLabel.CENTER);
-        JFrGotha.formatHeader(this.tblTeamsPanel, TM_PL_RATING_COL, "Rating", JLabel.CENTER);
-        JFrGotha.formatHeader(this.tblTeamsPanel, TM_PL_ROUNDS_COL, "Rounds", JLabel.LEFT);
+        JFrGotha.formatHeader(this.tblTeamsPanel, TM_TEAM_NAME_COL, locale.getString("player.teams.name"), JLabel.LEFT);
+        JFrGotha.formatHeader(this.tblTeamsPanel, TM_BOARD_NUMBER_COL, locale.getString("game.board"), JLabel.RIGHT);
+        JFrGotha.formatHeader(this.tblTeamsPanel, TM_PL_NAME_COL, locale.getString("player.teams.player_name"), JLabel.LEFT);
+        JFrGotha.formatHeader(this.tblTeamsPanel, TM_PL_COUNTRY_COL, locale.getString("player.country"), JLabel.CENTER);
+        JFrGotha.formatHeader(this.tblTeamsPanel, TM_PL_CLUB_COL, locale.getString("player.club"), JLabel.CENTER);
+        JFrGotha.formatHeader(this.tblTeamsPanel, TM_PL_RATING_COL, locale.getString("player.rating"), JLabel.CENTER);
+        JFrGotha.formatHeader(this.tblTeamsPanel, TM_PL_ROUNDS_COL, locale.getString("game.rounds"), JLabel.LEFT);
 
         // Set the renderer for tblControlPanel
         tblTeamsPanel.setDefaultRenderer(Object.class, this.tpTableCellRenderer);
@@ -2106,10 +2111,7 @@ public class JFrGotha extends javax.swing.JFrame {
         }
 
         java.util.Date dh = new java.util.Date(lastDisplayedStandingsUpdateTime);
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-
-        String strTime = sdf.format(dh);
-        lblUpdateTime.setText("updated at : " + strTime);
+		lblUpdateTime.setText(this.locale.format("standings.update_time", dh));
     }
 
     private void updateTeamsStandingsComponents() throws RemoteException {
@@ -2227,10 +2229,7 @@ public class JFrGotha extends javax.swing.JFrame {
         }
 
         java.util.Date dh = new java.util.Date(lastDisplayedTeamsStandingsUpdateTime);
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-
-        String strTime = sdf.format(dh);
-        lblTeamUpdateTime.setText("updated at : " + strTime);
+		lblTeamUpdateTime.setText(this.locale.format("standings.update_time", dh));
     }
     
     private void updateWelcomePanel() throws RemoteException {        
@@ -2304,18 +2303,13 @@ public class JFrGotha extends javax.swing.JFrame {
 
         int nbPreliminary = 0;
         for (Player p : alPlayers) {
-            if (p.getRegisteringStatus().compareTo("PRE") == 0) {
+            if (p.getRegisteringStatus() == PRELIMINARY) {
                 nbPreliminary++;
 
             }
         }
-        if (nbPreliminary == 1) {
-            lblWarningPRE.setText("Warning ! " + nbPreliminary
-                    + " player has a Preliminary registering status");
-        }
-        if (nbPreliminary > 1) {
-            lblWarningPRE.setText("Warning ! " + nbPreliminary
-                    + " players have a Preliminary registering status");
+        if (nbPreliminary >= 1) {
+            lblWarningPRE.setText(locale.format("control_panel.players_preliminary", nbPreliminary));
         }
     }
 
@@ -2420,8 +2414,8 @@ public class JFrGotha extends javax.swing.JFrame {
                 return true;
             }
 
-            int response = JOptionPane.showConfirmDialog(this, "Do you want to save current tournament ?",
-                    "Message", JOptionPane.YES_NO_CANCEL_OPTION);
+            int response = JOptionPane.showConfirmDialog(this, locale.getString("tournament.confirm_save"),
+                    locale.getString("alert.message"), JOptionPane.YES_NO_CANCEL_OPTION);
             if (response == JOptionPane.CANCEL_OPTION) {
                 return false;
             }
@@ -2463,7 +2457,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
     private File saveTournament(TournamentInterface t, File f) {
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return null;
         }
         // if current extension is not .xml, add .xml
@@ -2496,7 +2490,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
     private void mniPlayersManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniPlayersManagerActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
@@ -2509,7 +2503,7 @@ public class JFrGotha extends javax.swing.JFrame {
 
     private void mniSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSaveAsActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         
@@ -2619,7 +2613,7 @@ public class JFrGotha extends javax.swing.JFrame {
  
 private void mniRRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRRActionPerformed
     if (tournament == null) {
-        JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         return;
     }
     try {
@@ -2642,7 +2636,7 @@ private void mniOpenGothaHelpActionPerformed(java.awt.event.ActionEvent evt) {//
 
 private void mniImportXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniImportXMLActionPerformed
     if (tournament == null) {
-        JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         return;
     }
 
@@ -2671,7 +2665,7 @@ private void btnDlgImportXMLOKActionPerformed(java.awt.event.ActionEvent evt) {/
             this.chkPlayers.isSelected(), this.chkGames.isSelected(), this.chkTournamentParameters.isSelected(), this.chkTeams.isSelected(), this.chkClubsGroups.isSelected());
 
     this.tournamentChanged();
-    JOptionPane.showMessageDialog(this, strReport, "Message", JOptionPane.INFORMATION_MESSAGE);
+    JOptionPane.showMessageDialog(this, strReport, locale.getString("alert.message"), JOptionPane.INFORMATION_MESSAGE);
 }//GEN-LAST:event_btnDlgImportXMLOKActionPerformed
 
 private void btnDlgImportXMLCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDlgImportXMLCancelActionPerformed
@@ -2713,8 +2707,8 @@ private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     tblStandings.clearSelection();
     if (rowNumber == -1) {
         JOptionPane.showMessageDialog(this,
-                "No player with the specified name was found in the Standings table ",
-                "Message", JOptionPane.ERROR_MESSAGE);
+                locale.getString("player.search.not_found"),
+                locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
     } else {
         tblStandings.setRowSelectionAllowed(true);
         tblStandings.clearSelection();
@@ -2738,7 +2732,7 @@ private void mniImportH9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
      */
     private void importPlainFile(String importType) {
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -2757,8 +2751,7 @@ private void mniImportH9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         try {
             ExternalDocument.importPlayersAndGamesFromPlainFile(f, importType, alPlayers, alGames);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Errors occured in reading " + f.getName()
-                    + "\nImport process has been aborted", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.format("error.import_error", f.getName()), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         int nbErrors = 0;
@@ -2770,15 +2763,15 @@ private void mniImportH9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             } catch (TournamentException te) {
                 nbErrors++;
                 if (nbErrors <= 3) {
-                    JOptionPane.showMessageDialog(this, te.getMessage(), "Message", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, te.getMessage(), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
                 }
                 if (nbErrors == 4) {
-                    JOptionPane.showMessageDialog(this, "More than 3 errors have been detected", "Message", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, locale.getString("error.import_more_than_3_errors"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
         if (nbErrors > 0) {
-            JOptionPane.showMessageDialog(this, "Due to errors on players, games have not been imported", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.games_not_imported_because_errors_on_players"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         } else {
             for (Game g : alGames) {
                 try {
@@ -2804,7 +2797,7 @@ private void mniImportH9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
      */
     private void importVBSFile() {
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -2818,8 +2811,7 @@ private void mniImportH9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         try {
             ExternalDocument.importPlayersFromVBSFile(f, alPlayers);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Errors occured in reading " + f.getName()
-                    + "\nImport process has been aborted", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.format("error.import_error", f.getName()), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         int nbErrors = 0;
@@ -2834,12 +2826,12 @@ private void mniImportH9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     JOptionPane.showMessageDialog(this, te.getMessage(), "Message", JOptionPane.ERROR_MESSAGE);
                 }
                 if (nbErrors == 4) {
-                    JOptionPane.showMessageDialog(this, "More than 3 errors have been detected", "Message", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, locale.getString("error.import_more_than_3_errors"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
         if (nbErrors > 0) {
-            JOptionPane.showMessageDialog(this, "Due to errors on players, games have not been imported", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.games_not_imported_because_errors_on_players"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         }
 
         this.tournamentChanged();
@@ -2856,7 +2848,7 @@ private void mniImportWallistActionPerformed(java.awt.event.ActionEvent evt) {//
 
 private void mniTeamsManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniTeamsManagerActionPerformed
     if (tournament == null) {
-        JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         return;
     }
     try {
@@ -2897,7 +2889,7 @@ private void cbxTeamCritActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
 private void mniTeamsPairingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniTeamsPairingActionPerformed
     if (tournament == null) {
-        JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         return;
     }
     try {
@@ -2933,13 +2925,10 @@ private void mniOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         // update Preferences
         this.addRecentTournament(f.getAbsolutePath());
     } catch (FileNotFoundException ex) {
-        JOptionPane.showMessageDialog(this, " File not found", "Message", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, locale.getString("error.file_not_found"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
     } catch (Exception ex) {
-        String strMessage = "Some problem occured with file : " + f.getName();
-        strMessage += "\nThe file was not found or The content of this file does not comply with OpenGotha Data version " + Gotha.GOTHA_DATA_VERSION;
-        strMessage += "\nHint : Read the Compatibility issues in the OpenGotha help";
-        strMessage += "\n\nThe tournament has not been opened";
-        JOptionPane.showMessageDialog(JFrGotha.this, strMessage, "Message", JOptionPane.ERROR_MESSAGE);
+        String strMessage = locale.format("error.file_reading_error", f.getName(), Gotha.GOTHA_DATA_VERSION);
+        JOptionPane.showMessageDialog(JFrGotha.this, strMessage, locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         JFrGotha.this.removeAllRecentTournament();
     }
 
@@ -2955,7 +2944,7 @@ private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:even
 
 private void mniUpdateRatingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniUpdateRatingsActionPerformed
     if (tournament == null) {
-        JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         return;
     }
 
@@ -2984,7 +2973,7 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 
     private void mniDiscardRoundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniDiscardRoundsActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
@@ -2998,7 +2987,7 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 
     private void mniSaveACopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSaveACopyActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         Preferences prefsRoot = Preferences.userRoot();
@@ -3025,7 +3014,7 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 
     private void mniPublishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniPublishActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
@@ -3037,13 +3026,12 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     }//GEN-LAST:event_mniPublishActionPerformed
 
     private void mniExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniExportActionPerformed
-        String strMessage = "Html exports are available from the Publish menu";
-        JOptionPane.showMessageDialog(this, strMessage, "Message", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, locale.getString("error.html_exports_in_publish_menu"), locale.getString("alert.message"), JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_mniExportActionPerformed
 
     private void mniSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSaveActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         
@@ -3098,10 +3086,8 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         long timeF = f.lastModified();
         long timeFW = fW.lastModified();
         if (timeFW - timeF > 2 * JFrGotha.REFRESH_DELAY){
-            String strMes = "A work file has been found which is more recent than the regularly saved tournament file.\n";
-            strMes += "\n Do you want to restore tournament from the work file ? (click OK)";
-            strMes += "\n Or do you want to keep the regularly saved tournament file ? (click Cancel)";
-            int rep = JOptionPane.showConfirmDialog(this, strMes, "Recover " + strNE + " ?", JOptionPane.OK_CANCEL_OPTION);
+            String strMes = locale.getString("error.confirm_recover_work_file");
+            int rep = JOptionPane.showConfirmDialog(this, locale.getString("error.confirm_recover_work_file"), locale.format("error.confirm_recover", strNE), JOptionPane.OK_CANCEL_OPTION);
             if (rep == JOptionPane.OK_OPTION) Files.copy(fW.toPath(), f.toPath(), REPLACE_EXISTING);  
             else Files.delete(fW.toPath());
         }
@@ -3124,9 +3110,8 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             }
             TournamentInterface oldT = GothaRMIServer.getTournament(tKN);
             if (oldT != null) {
-                String strMessage = tKN + " is already opened on this server";
-                strMessage += "\nIt will not be opened again";
-                JOptionPane.showMessageDialog(this, strMessage, "Message", JOptionPane.WARNING_MESSAGE);
+                String strMessage = locale.format("error.tournament_already_opened_on_server", tKN);
+                JOptionPane.showMessageDialog(this, strMessage, locale.getString("alert.message"), JOptionPane.WARNING_MESSAGE);
                 return;
             }
         }
@@ -3211,8 +3196,8 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 
         updateTitle();
 
-        int idxTP = tpnGotha.indexOfTab("Teams Panel");
-        int idxTS = tpnGotha.indexOfTab("Teams Standings");
+        int idxTP = tpnGotha.indexOfComponent(pnlTeamsPanel);
+        int idxTS = tpnGotha.indexOfComponent(pnlTeamsStandings);
         if (idxTP > 0) {
             this.tpnGotha.setEnabledAt(idxTP, false);
         }

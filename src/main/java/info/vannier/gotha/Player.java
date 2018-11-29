@@ -3,6 +3,13 @@
  */
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.RatingOrigin;
+
+import static ru.gofederation.gotha.model.RatingOrigin.AGA;
+import static ru.gofederation.gotha.model.RatingOrigin.FFG;
+import static ru.gofederation.gotha.model.RatingOrigin.UNDEF;
+
 public class Player implements java.io.Serializable{
     private static final long serialVersionUID = Gotha.GOTHA_DATA_VERSION;
     private String name;
@@ -31,14 +38,7 @@ public class Player implements java.io.Serializable{
 
     private int rating = MIN_RATING;
     
-    /**
-     * Either "EGF" or "FFG" or "MAN" or "INI"
-     * "EGF" for rating coming from European Go DataBase
-     * "FFG" for rating coming from FFG Rating list
-     * "MAN" for rating specified by the organiser or imported from vBar-separated file
-     * "INI" for rating computed from rank
-     */
-    private String ratingOrigin = "";
+    private RatingOrigin ratingOrigin = UNDEF;
         
     /**
      * strGrade is relevant when player is registered from EGF rating list
@@ -55,11 +55,7 @@ public class Player implements java.io.Serializable{
        
     private boolean[] participating = new boolean[Gotha.MAX_NUMBER_OF_ROUNDS];
     
-    /**
-     * "PRE" for Preregistering
-     * "FIN" for Final Registering
-     */
-    private String registeringStatus;
+    private PlayerRegistrationStatus registeringStatus;
         
     /** Creates a new instance of Player */
     public Player() {
@@ -70,8 +66,8 @@ public class Player implements java.io.Serializable{
      
     public Player(String name, String firstName, String country, String club, String egfPin, String ffgLicence, String ffgLicenceStatus,
             String agaId, String agaExpirationDate,
-            int rank,  int rating, String ratingOrigin, String strGrade, int smmsCorrection, 
-            String registeringStatus) throws PlayerException{
+            int rank,  int rating, RatingOrigin ratingOrigin, String strGrade, int smmsCorrection,
+            PlayerRegistrationStatus registeringStatus) throws PlayerException{
         if (name.length() < 1) throw new PlayerException("Player's name should have at least 1 character");
         this.name = name;
         if (firstName.length() < 1) throw new PlayerException("Player's first name should have at least 1 character");
@@ -244,20 +240,20 @@ public class Player implements java.io.Serializable{
         this.rating = val;
     }
     
-    public String getRatingOrigin() {
+    public RatingOrigin getRatingOrigin() {
         return ratingOrigin;
     }
     
-    public void setRatingOrigin(String val) {
+    public void setRatingOrigin(RatingOrigin val) {
         this.ratingOrigin = val;
     }
     public String getStrRawRating() {
         int r = getRating();
         String strRR = "" + r;
-        if (getRatingOrigin().equals("FFG")){
+        if (getRatingOrigin() == FFG){
             strRR = "" + (r - 2050);
         }
-        if (getRatingOrigin().equals("AGA")){
+        if (getRatingOrigin() == AGA){
             r = r -2050;
             if (r >= 0) r = r + 100;
             if (r < 0) r = r - 100;
@@ -298,11 +294,11 @@ public class Player implements java.io.Serializable{
         this.participating[roundNumber] = val;
     }
        
-    public String getRegisteringStatus() {
+    public PlayerRegistrationStatus getRegisteringStatus() {
         return registeringStatus;
     }
     
-    public void setRegisteringStatus(String val) {
+    public void setRegisteringStatus(PlayerRegistrationStatus val) {
         this.registeringStatus = val;
     }
     

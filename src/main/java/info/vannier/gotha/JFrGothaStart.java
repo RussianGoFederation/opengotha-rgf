@@ -3,6 +3,8 @@
  */
 package info.vannier.gotha;
 
+import net.miginfocom.swing.MigLayout;
+
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
@@ -12,6 +14,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import ru.gofederation.gotha.util.GothaLocale;
 
 /**
  *
@@ -19,8 +22,12 @@ import javax.swing.JOptionPane;
  */
 public class JFrGothaStart extends javax.swing.JFrame {
 
+	private GothaLocale locale;
+
     /** Creates new form JFrGothaStart */
     public JFrGothaStart() {
+		this.locale = GothaLocale.getCurrentLocale();
+
         // Log Platform and JDK elements
         
         String strOS = System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version");
@@ -34,11 +41,10 @@ public class JFrGothaStart extends javax.swing.JFrame {
         File dir = findADirectoryContaining(rootDir, "tournamentfiles");
 
         if (dir == null) {
-            String str = JOptionPane.showInputDialog(this, "Please enter the OpenGotha directory path" +
-                    "\nThis is where opengotha.jar, tournamentfiles, etc. have been installed",
+            String str = JOptionPane.showInputDialog(this, locale.getString("start.input_workdir"),
                     rootDir.toString());
             if (!new File(str, "tournamentfiles").exists())
-                JOptionPane.showMessageDialog(this, "This path does not look correct. Some path issues may occur!", "Message",
+                JOptionPane.showMessageDialog(this, locale.getString("start.input_workdir_error"), locale.getString("alert.message"),
                         JOptionPane.WARNING_MESSAGE);
             dir = new File(str);
         }
@@ -66,59 +72,55 @@ public class JFrGothaStart extends javax.swing.JFrame {
         rdbServer = new javax.swing.JRadioButton();
         rdbClient = new javax.swing.JRadioButton();
         btnHelp = new javax.swing.JButton();
+        pnlLocale = new javax.swing.JPanel();
+        languageComboBox = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Gotha start");
         setResizable(false);
-        getContentPane().setLayout(null);
+        getContentPane().setLayout(new MigLayout("flowy", ":push[fill, sgx column, 170lp]20lp[fill, sgx column]:push", "[grow 100][grow 0]unrel:push[grow 0]rel[grow 0][grow 100]"));
 
-        btnStart.setText("Start");
-        btnStart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStartActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnStart);
-        btnStart.setBounds(185, 260, 170, 30);
-
-        pnlRunningMode.setBorder(javax.swing.BorderFactory.createTitledBorder("Running mode"));
-        pnlRunningMode.setLayout(null);
+        pnlRunningMode.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("start.mode"))); // NOI18N
+        pnlRunningMode.setLayout(new MigLayout("gap 15lp, ins 10lp, flowy"));
 
         grpRunningMode.add(rdbSAL);
         rdbSAL.setSelected(true);
-        rdbSAL.setText("Stand-Alone");
-        rdbSAL.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        rdbSAL.setMargin(new java.awt.Insets(0, 0, 0, 0));
         pnlRunningMode.add(rdbSAL);
-        rdbSAL.setBounds(20, 40, 120, 15);
 
         grpRunningMode.add(rdbServer);
-        rdbServer.setText("Server");
-        rdbServer.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        rdbServer.setMargin(new java.awt.Insets(0, 0, 0, 0));
         pnlRunningMode.add(rdbServer);
-        rdbServer.setBounds(20, 80, 120, 15);
 
         grpRunningMode.add(rdbClient);
-        rdbClient.setText("Client");
-        rdbClient.setToolTipText("For LAN clients");
-        rdbClient.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        rdbClient.setMargin(new java.awt.Insets(0, 0, 0, 0));
         pnlRunningMode.add(rdbClient);
-        rdbClient.setBounds(20, 120, 120, 15);
 
-        getContentPane().add(pnlRunningMode);
-        pnlRunningMode.setBounds(185, 30, 170, 160);
+        getContentPane().add(pnlRunningMode, "skip, spany 3, wrap");
+
+        pnlLocale.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("start.language"))); // NOI18N
+        pnlLocale.setLayout(new MigLayout("ins 10lp"));
+
+        languageComboBox.setModel(ru.gofederation.gotha.util.GothaLocale.getCurrentLocale());
+        languageComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                languageComboBoxActionPerformed(evt);
+            }
+        });
+        pnlLocale.add(languageComboBox, "w 120lp");
+
+        getContentPane().add(pnlLocale, "skip");
 
         btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.setText("help");
         btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpActionPerformed(evt);
             }
         });
-        getContentPane().add(btnHelp);
-        btnHelp.setBounds(185, 220, 170, 25);
+        getContentPane().add(btnHelp, "sg buttons");
+
+        btnStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStartActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnStart, "sg buttons");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -130,8 +132,24 @@ public class JFrGothaStart extends javax.swing.JFrame {
         setBounds((dim.width - w) / 2, (dim.height - h) / 2, w, h);
 
         setIconImage(Gotha.getIconImage());
-        setTitle("OpenGotha");
+
+		updateLocale();
     }
+
+	private void updateLocale() {
+		locale = GothaLocale.getCurrentLocale();
+		Gotha.locale = locale.getLocale();
+
+		setTitle(locale.getString("start.window_title"));
+		btnStart.setText(locale.getString("start.btn_start"));
+		pnlRunningMode.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("start.mode")));
+		rdbSAL.setText(locale.getString("start.standalone"));
+		rdbServer.setText(locale.getString("start.server"));
+		rdbClient.setText(locale.getString("start.client"));
+		rdbClient.setToolTipText(locale.getString("start.client.tooltip"));
+		btnHelp.setText(locale.getString("btn.help"));
+		pnlLocale.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("start.language")));
+	}
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
         Gotha.locale = new Locale("en");
@@ -148,7 +166,7 @@ public class JFrGothaStart extends javax.swing.JFrame {
 
             String strIPAd = Gotha.getBestIPAd().toString();
             strIPAd = strIPAd.replace("/", "");
-            strIPAd = JOptionPane.showInputDialog("Please, enter IP address of this server in Dot-decimal notation (xxx.xxx.xxx.xxx)", strIPAd);
+            strIPAd = JOptionPane.showInputDialog(locale.getString("start.input_this_server_ip"), strIPAd);
             if (strIPAd == null) return;
 
             System.setProperty("java.rmi.server.hostname", strIPAd);
@@ -163,19 +181,17 @@ public class JFrGothaStart extends javax.swing.JFrame {
             } catch (java.net.UnknownHostException ex) {
                             Logger.getLogger(JFrGothaStart.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Gotha.serverName = JOptionPane.showInputDialog("Enter Server address", strSN);
+            Gotha.serverName = JOptionPane.showInputDialog(locale.getString("start.input_server_address"), strSN);
 
             String[] lstTou = GothaRMIClient.tournamentNamesList(Gotha.serverName);
             String strTN = "";
             if (lstTou == null || lstTou.length == 0){
-                String strMessage = "No tournament found on " + strSN;
-                strMessage += "\nBe sure that at least one tournament is open on " + strSN;
-                strMessage += "\nThen try again";
+                String strMessage = locale.format("start.no_tournaments_found_on_server", strSN);
                 JOptionPane.showMessageDialog(this, strMessage);
                 return;
             }
             if (lstTou.length > 0) {
-                strTN = (String) JOptionPane.showInputDialog(this, "Please, choose a tournament", "OpenGotha",
+                strTN = (String) JOptionPane.showInputDialog(this, locale.getString("start.select_tournament"), "OpenGotha",
                         JOptionPane.INFORMATION_MESSAGE, null, lstTou, lstTou[0]);
             }
             
@@ -210,6 +226,10 @@ public class JFrGothaStart extends javax.swing.JFrame {
     private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHelpActionPerformed
         Gotha.displayGothaHelp("Starting OpenGotha");
     }//GEN-LAST:event_btnHelpActionPerformed
+
+    private void languageComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_languageComboBoxActionPerformed
+        updateLocale();
+    }//GEN-LAST:event_languageComboBoxActionPerformed
 
     /**
      * Recursively searches for a directory containing a directory whose name is strFile
@@ -253,6 +273,8 @@ public class JFrGothaStart extends javax.swing.JFrame {
     private javax.swing.JButton btnStart;
     private javax.swing.ButtonGroup grpLanguage;
     private javax.swing.ButtonGroup grpRunningMode;
+    private javax.swing.JComboBox<ru.gofederation.gotha.util.GothaLocale> languageComboBox;
+    private javax.swing.JPanel pnlLocale;
     private javax.swing.JPanel pnlRunningMode;
     private javax.swing.JRadioButton rdbClient;
     private javax.swing.JRadioButton rdbSAL;

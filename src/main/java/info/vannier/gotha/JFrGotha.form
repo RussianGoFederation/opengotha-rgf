@@ -14,7 +14,9 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="System"/>
+                <TitledBorder title="System">
+                  <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="tournament.system" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </TitledBorder>
               </Border>
             </Property>
           </Properties>
@@ -36,8 +38,12 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="10" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="McMahon"/>
-                <Property name="toolTipText" type="java.lang.String" value="Players will be paired according to their rank! The winner will be the strongest"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.system.mcmahon" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.system.mcmahon_tooltip" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                     <EmptyBorder bottom="0" left="0" right="0" top="0"/>
@@ -61,8 +67,12 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="10" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Swiss"/>
-                <Property name="toolTipText" type="java.lang.String" value="Good system for championships"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.system.swiss" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.system.swiss_tooltip" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                     <EmptyBorder bottom="0" left="0" right="0" top="0"/>
@@ -86,8 +96,12 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="10" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Swiss with categories"/>
-                <Property name="toolTipText" type="java.lang.String" value="Because of possible games with a big rank difference, this system is not usually recommended"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.system.swiss_cat" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.system.swiss_cat_tooltip" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                     <EmptyBorder bottom="0" left="0" right="0" top="0"/>
@@ -108,7 +122,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="10" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Number of rounds"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.number_of_rounds" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -131,7 +147,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="10" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="(recommended for ancilliary standings only)"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.system.swiss_cat_recommended" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -145,7 +163,9 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Tournament details"/>
+                <TitledBorder title="Tournament details">
+                  <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="tournament.details" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </TitledBorder>
               </Border>
             </Property>
           </Properties>
@@ -161,7 +181,9 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Short name"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.short_name" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -172,7 +194,9 @@
             <Component class="javax.swing.JTextField" name="txfShortName">
               <Properties>
                 <Property name="text" type="java.lang.String" value="tournamentshortname"/>
-                <Property name="toolTipText" type="java.lang.String" value="default file mame and RMI name."/>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.short_name.tooltip" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -182,7 +206,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel10">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Name"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.name" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -203,7 +229,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel11">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Location"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.location" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -223,7 +251,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel12">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Begin date"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.begin_date" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -243,7 +273,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel19">
               <Properties>
-                <Property name="text" type="java.lang.String" value="End date"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.end_date" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -263,7 +295,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel20">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Director"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.director" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -285,7 +319,9 @@
         </Container>
         <Component class="javax.swing.JButton" name="btnDlgNewOK">
           <Properties>
-            <Property name="text" type="java.lang.String" value="OK"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="btn.ok" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDlgNewOKActionPerformed"/>
@@ -298,7 +334,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnDlgNewCancel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Cancel"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="btn.cancel" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDlgNewCancelActionPerformed"/>
@@ -314,7 +352,9 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/info/vannier/gotha/gothalogo16.jpg"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="help"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="btn.help" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHelpActionPerformed"/>
@@ -486,7 +526,9 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="mnuTournament">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Tournament"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="menu.tournament" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="11" style="0"/>
             </Property>
@@ -500,7 +542,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="New..."/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tournament.new" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniNewActionPerformed"/>
@@ -514,7 +558,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Open..."/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tournament.open" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniOpenActionPerformed"/>
@@ -522,7 +568,9 @@
             </MenuItem>
             <Menu class="javax.swing.JMenu" name="mnuOpenRecent">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Open Recent ... "/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tournament.recent" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
@@ -536,7 +584,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Save"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tournament.save" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniSaveActionPerformed"/>
@@ -550,7 +600,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Save as ..."/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tournament.save_as" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniSaveAsActionPerformed"/>
@@ -561,7 +613,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Save a copy ..."/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tournament.save_copy" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniSaveACopyActionPerformed"/>
@@ -572,7 +626,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Close"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tournament.close" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniCloseActionPerformed"/>
@@ -582,7 +638,9 @@
             </MenuItem>
             <Menu class="javax.swing.JMenu" name="mnuImport">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Import ..."/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tournament.import" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
@@ -593,7 +651,9 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="11" style="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Import Players and Games from h9 file"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="menu.tournament.import.h9" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniImportH9ActionPerformed"/>
@@ -604,7 +664,9 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="11" style="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Import Players and Games from Tou file"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="menu.tournament.import.tou" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniImportTouActionPerformed"/>
@@ -615,7 +677,9 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="11" style="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Import Players and Games from Wallist file"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="menu.tournament.import.wallist" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniImportWallistActionPerformed"/>
@@ -626,7 +690,9 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="11" style="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Import Players From vBar-separated File"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="menu.tournament.import.vbar" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniImportVBSActionPerformed"/>
@@ -637,7 +703,9 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="11" style="0"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Import Tournament from XML File"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="menu.tournament.import.xml" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniImportXMLActionPerformed"/>
@@ -650,7 +718,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Export..."/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tournament.export" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniExportActionPerformed"/>
@@ -663,7 +733,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Exit"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tournament.exit" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniExitActionPerformed"/>
@@ -676,7 +748,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Build test tournament"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tournament.build_test" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniBuildTestTournamentActionPerformed"/>
@@ -686,7 +760,9 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="mnuPlayers">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Players"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="menu.players" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="11" style="0"/>
             </Property>
@@ -700,7 +776,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Players Manager"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.players.manager" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniPlayersManagerActionPerformed"/>
@@ -714,7 +792,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Players Quick check"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.players.check" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniPlayersQuickCheckActionPerformed"/>
@@ -725,7 +805,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Update ratings"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.players.update_ratings" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniUpdateRatingsActionPerformed"/>
@@ -736,7 +818,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="McMahon groups"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.players.mcmahon_groups" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniMMGroupsActionPerformed"/>
@@ -749,7 +833,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Teams Manager"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.players.teams_manager" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniTeamsManagerActionPerformed"/>
@@ -759,7 +845,9 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="mnuGames">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Games"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="menu.games" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="11" style="0"/>
             </Property>
@@ -773,7 +861,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Pair"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.games.pair" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniPairActionPerformed"/>
@@ -787,7 +877,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Results"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.games.results" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniResultsActionPerformed"/>
@@ -798,7 +890,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Round-robin"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.games.round_robin" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniRRActionPerformed"/>
@@ -811,7 +905,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Teams Pairing"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.games.teams_pairing" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniTeamsPairingActionPerformed"/>
@@ -821,7 +917,9 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="mnuPublish">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Publish"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="menu.publish" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="11" style="0"/>
             </Property>
@@ -832,7 +930,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Publish ..."/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.publish.publish" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniPublishActionPerformed"/>
@@ -842,7 +942,9 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="mnuOptions">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Options"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="menu.options" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="11" style="0"/>
             </Property>
@@ -853,7 +955,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Tournament Options"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.options.tournament" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniTournamentOptionsActionPerformed"/>
@@ -864,7 +968,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Games Options"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.options.games" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniGamesOptionsActionPerformed"/>
@@ -877,7 +983,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Preferences"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.options.preferences" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniPreferencesActionPerformed"/>
@@ -887,7 +995,9 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="mnuTools">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Tools"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="menu.tools" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="11" style="0"/>
             </Property>
@@ -898,7 +1008,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Discard rounds"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tools.discard_rounds" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniDiscardRoundsActionPerformed"/>
@@ -911,7 +1023,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="RMI Manager"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tools.rmi" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniRMIActionPerformed"/>
@@ -922,7 +1036,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Memory Manager"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tools.memory" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniMemoryActionPerformed"/>
@@ -935,7 +1051,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Experimental tools"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.tools.experimental" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniExperimentalToolsActionPerformed"/>
@@ -945,7 +1063,9 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="mnuHelp">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Help"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="menu.help" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="11" style="0"/>
             </Property>
@@ -959,7 +1079,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="OpenGotha help"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.help.help" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniOpenGothaHelpActionPerformed"/>
@@ -970,7 +1092,9 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="About OpenGotha"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="menu.help.about" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniHelpAboutActionPerformed"/>
@@ -1030,7 +1154,9 @@
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Welcome">
-                <Property name="tabTitle" type="java.lang.String" value="Welcome"/>
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="welcome" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -1074,7 +1200,9 @@
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Control Panel">
-                <Property name="tabTitle" type="java.lang.String" value="Control Panel"/>
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="control_panel" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -1145,7 +1273,9 @@
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Standings">
-                <Property name="tabTitle" type="java.lang.String" value="Standings"/>
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="standings" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -1167,7 +1297,9 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="lblStandingsAfter">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Standings after round"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="standings.after_round" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1183,6 +1315,7 @@
                           <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                             <EtchetBorder/>
                           </Border>
+                          <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="standings.pps" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
                         </TitledBorder>
                       </Border>
                     </Property>
@@ -1205,7 +1338,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="use current set"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.current" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                             <EmptyBorder bottom="0" left="0" right="0" top="0"/>
@@ -1232,7 +1367,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="use temporary set"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.temporary" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                             <EmptyBorder bottom="0" left="0" right="0" top="0"/>
@@ -1280,7 +1417,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Crit 1"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.crit1" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1293,7 +1432,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Crit 2"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.crit2" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1330,7 +1471,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Crit 3"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.crit3" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1367,7 +1510,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Crit 4"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.crit4" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1457,7 +1602,9 @@
                 </Container>
                 <Component class="javax.swing.JButton" name="btnPrintStandings">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Print..."/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="btn.print" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintStandingsActionPerformed"/>
@@ -1470,7 +1617,9 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblUpdateTime">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="updated at : "/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="standings.update_time" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1490,7 +1639,9 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel7">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Search for a player"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="player.search" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1507,7 +1658,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnSearch">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Search/Next"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="player.btn_search" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSearchActionPerformed"/>
@@ -1526,7 +1679,9 @@
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Teams Panel">
-                <Property name="tabTitle" type="java.lang.String" value="Teams Panel"/>
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="teams_panel" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -1588,7 +1743,9 @@
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Teams Standings">
-                <Property name="tabTitle" type="java.lang.String" value="Teams Standings"/>
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="team_standings" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -1610,7 +1767,9 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="lblTeamsStandingsAfter">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Standings after round"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="standings.after_round" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1626,6 +1785,7 @@
                           <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                             <EtchetBorder/>
                           </Border>
+                          <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="standings.tpps" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
                         </TitledBorder>
                       </Border>
                     </Property>
@@ -1648,7 +1808,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="use current set"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.current" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                             <EmptyBorder bottom="0" left="0" right="0" top="0"/>
@@ -1675,7 +1837,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="use temporary set"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.temporary" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                             <EmptyBorder bottom="0" left="0" right="0" top="0"/>
@@ -1699,7 +1863,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Crit 1"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.crit1" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1736,7 +1902,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Crit 2"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.crit2" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1773,7 +1941,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Crit 3"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.crit3" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1810,7 +1980,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Crit 4"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.crit4" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1847,7 +2019,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Crit 5"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.crit5" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1884,7 +2058,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Crit 6"/>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="l10n/strings.properties" key="standings.pps.crit6" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                        </Property>
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1973,7 +2149,9 @@
                 </Container>
                 <Component class="javax.swing.JLabel" name="lblTeamUpdateTime">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="updated at : "/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="standings.update_time" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -1993,7 +2171,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnPrintTeamsStandings">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Print..."/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="btn.print" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintTeamsStandingsActionPerformed"/>

@@ -40,7 +40,9 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/info/vannier/gotha/gothalogo16.jpg"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="help"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="l10n/strings.properties" key="btn.help" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHelpActionPerformed"/>
@@ -53,7 +55,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnClose">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Close"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="l10n/strings.properties" key="btn.close" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCloseActionPerformed"/>
@@ -68,7 +72,9 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Players"/>
+            <TitledBorder title="Players">
+              <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="player.players" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </TitledBorder>
           </Border>
         </Property>
       </Properties>
@@ -108,7 +114,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnPrint">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Print ..."/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="btn.print" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintActionPerformed"/>
@@ -156,7 +164,9 @@
         </Container>
         <Component class="javax.swing.JButton" name="btnUpdateAllRatings">
           <Properties>
-            <Property name="text" type="java.lang.String" value="For all players, update obsolete ratings (red) with EGF rating (blue)"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.update_rating_all" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateAllRatingsActionPerformed"/>
@@ -169,7 +179,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnUpdateSelRatings">
           <Properties>
-            <Property name="text" type="java.lang.String" value="For selected players, update obsolete ratings (red) with EGF rating (blue)"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.update_rating_selected" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateSelRatingsActionPerformed"/>
@@ -182,7 +194,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnUpdateRatingList">
           <Properties>
-            <Property name="text" type="java.lang.String" value="update EGF rating list from ..."/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="rating_list.btn_update_from" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateRatingListActionPerformed"/>
@@ -222,7 +236,9 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="16" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Rating list to be used"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.rating_list_to_be_used" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -236,7 +252,9 @@
               <ComponentRef name="grpRatingList"/>
             </Property>
             <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" value="EGF"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="rating_list.egf" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rdbRLChangeEvent"/>
@@ -252,7 +270,9 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="grpRatingList"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="FFG"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="rating_list.ffg" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rdbRLChangeEvent"/>
@@ -268,7 +288,9 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="grpRatingList"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="AGA"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="rating_list.aga" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rdbRLChangeEvent"/>

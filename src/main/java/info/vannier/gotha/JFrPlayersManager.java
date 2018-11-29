@@ -27,6 +27,15 @@ import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
+import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.RatingOrigin;
+import ru.gofederation.gotha.util.GothaLocale;
+
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
+import static ru.gofederation.gotha.model.RatingOrigin.AGA;
+import static ru.gofederation.gotha.model.RatingOrigin.FFG;
+
 /**
  *
  * @author  Luc Vannier
@@ -51,11 +60,14 @@ public class JFrPlayersManager extends javax.swing.JFrame {
     private TournamentInterface tournament;
     /** Rating List */
     private RatingList ratingList = new RatingList();
-    
+
+    private GothaLocale locale;
+
     /**
      * Creates new form JFrPlayersManager
      */
     public JFrPlayersManager(TournamentInterface tournament) throws RemoteException {
+        this.locale = GothaLocale.getCurrentLocale();
         this.tournament = tournament;
 
         initComponents();
@@ -104,14 +116,14 @@ public class JFrPlayersManager extends javax.swing.JFrame {
             pnlParticipation.add(tabCkbParticipation[i]);
             tabCkbParticipation[i].setBounds((i % 5) * 42 + 4, (i / 5) * 20 + 20, 40, 15);
         }
-               
+
         getRootPane().setDefaultButton(btnRegister);
 
         initCountriesList();
         initRatingListControls();
         resetPlayerControls();
         initPnlRegisteredPlayers();
-        
+
         this.updateAllViews();
     }
 
@@ -131,7 +143,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
             cbxCountry.addItem(c.getAlpha2Code());
         }
     }
-    
+
     private void initRatingListControls(){
         // Use the preferred rating list as in Preferences
         Preferences prefs = Preferences.userRoot().node(Gotha.strPreferences + "/playersmanager");
@@ -153,25 +165,25 @@ public class JFrPlayersManager extends javax.swing.JFrame {
             case RatingList.TYPE_FFG :
                 this.rdbFFG.setSelected(true); break;
             case RatingList.TYPE_AGA :
-                this.rdbAGA.setSelected(true); 
+                this.rdbAGA.setSelected(true);
                 this.btnSearchId.setVisible(true);
                 this.txfSearchId.setVisible(true); break;
-        }     
+        }
 
         this.resetRatingListControls();
     }
-    
+
 
     private void initPnlRegisteredPlayers() throws RemoteException {
         JFrGotha.formatColumn(tblRegisteredPlayers, REG_COL, "R", 10, JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, NAME_COL, "Last name", 110, JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, FIRSTNAME_COL, "First name", 80, JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, COUNTRY_COL, "Co",30,  JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, CLUB_COL, "Club", 40, JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, RANK_COL, "Rk", 30, JLabel.RIGHT, JLabel.RIGHT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, RATING_COL, "Rating",  40, JLabel.RIGHT, JLabel.RIGHT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, GRADE_COL, "Grade",  25, JLabel.RIGHT, JLabel.RIGHT);
-                
+        JFrGotha.formatColumn(tblRegisteredPlayers, NAME_COL, locale.getString("player.last_name"), 110, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tblRegisteredPlayers, FIRSTNAME_COL, locale.getString("player.first_name"), 80, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tblRegisteredPlayers, COUNTRY_COL, locale.getString("player.country"),30,  JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tblRegisteredPlayers, CLUB_COL, locale.getString("player.club"), 40, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tblRegisteredPlayers, RANK_COL, locale.getString("player.rank"), 30, JLabel.RIGHT, JLabel.RIGHT);
+        JFrGotha.formatColumn(tblRegisteredPlayers, RATING_COL, locale.getString("player.rating"),  40, JLabel.RIGHT, JLabel.RIGHT);
+        JFrGotha.formatColumn(tblRegisteredPlayers, GRADE_COL, locale.getString("player.grade"),  25, JLabel.RIGHT, JLabel.RIGHT);
+
         // Single selection
         tblRegisteredPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         updatePnlRegisteredPlayers(tournament.playersList());
@@ -181,15 +193,20 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         int nbPreliminary = 0;
         int nbFinal = 0;
         for (Player p : playersList) {
-            if (p.getRegisteringStatus().compareTo("PRE") == 0) {
+            if (p.getRegisteringStatus() == PRELIMINARY) {
                 nbPreliminary++;
             }
-            if (p.getRegisteringStatus().compareTo("FIN") == 0) {
+            if (p.getRegisteringStatus() == FINAL) {
                 nbFinal++;
             }
         }
         txfNbPlPre.setText("" + nbPreliminary);
         txfNbPlFin.setText("" + nbFinal);
+        lblPlPre.setText(locale.format("player.players.registered_preliminary", nbPreliminary));
+        lblPlFin.setText(locale.format("player.players.registered_final", nbFinal));
+
+        lblPlPre.setText(locale.format("player.players.registered_preliminary", nbPreliminary));
+        lblPlFin.setText(locale.format("player.players.registered_final", nbFinal));
         DefaultTableModel model = (DefaultTableModel) tblRegisteredPlayers.getModel();
         // sort
         ArrayList<Player> displayedPlayersList = new ArrayList<Player>(playersList);
@@ -200,7 +217,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         model.setRowCount(displayedPlayersList.size());
         for (Player p : displayedPlayersList) {
             int line = displayedPlayersList.indexOf(p);
-            model.setValueAt((p.getRegisteringStatus().compareTo("PRE") == 0) ? "P" : "F", line, JFrPlayersManager.REG_COL);
+            model.setValueAt((p.getRegisteringStatus() == PRELIMINARY) ? "P" : "F", line, JFrPlayersManager.REG_COL);
             model.setValueAt(p.getName(), line, JFrPlayersManager.NAME_COL);
             model.setValueAt(p.getFirstName(), line, JFrPlayersManager.FIRSTNAME_COL);
             model.setValueAt(Player.convertIntToKD(p.getRank()), line, JFrPlayersManager.RANK_COL);
@@ -212,9 +229,9 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         }
     }
 
-    private void resetRatingListControls() {                
+    private void resetRatingListControls() {
         boolean bRL = this.ckbRatingList.isSelected();
-               
+
         this.rdbEGF.setVisible(bRL);
         this.rdbFFG.setVisible(bRL);
         this.rdbAGA.setVisible(bRL);
@@ -223,7 +240,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         this.rdbLevenshtein.setVisible(bRL);
         this.btnSearchId.setVisible(false);
         this.txfSearchId.setVisible(false);
-                
+
         int rlType = RatingList.TYPE_UNDEFINED;
         if (bRL){
             if (this.rdbEGF.isSelected()) rlType = RatingList.TYPE_EGF;
@@ -235,7 +252,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         prefs.put("defaultratinglist", "" + rlType);
 
         this.useRatingList(rlType);
-                
+
         switch(rlType){
             case RatingList.TYPE_EGF :
                 this.btnUpdateRatingList.setText("Update EGF rating list from ...");
@@ -250,11 +267,11 @@ public class JFrPlayersManager extends javax.swing.JFrame {
                 break;
             default :
                 this.btnUpdateRatingList.setText("Update rating list");
-        }        
-        
+        }
+
         this.rdbRankFromGoR.setVisible(false);
         this.rdbRankFromGrade.setVisible(false);
-        
+
         if (ratingList.getRatingListType() == RatingList.TYPE_EGF) {
             this.rdbRankFromGoR.setVisible(true);
             this.rdbRankFromGrade.setVisible(true);
@@ -265,8 +282,8 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         if (ratingList.getRatingListType() == RatingList.TYPE_AGA) {
             this.rdbRankFromGoR.setSelected(true);
         }
-        
-        if (ratingList.getRatingListType() == RatingList.TYPE_UNDEFINED) {           
+
+        if (ratingList.getRatingListType() == RatingList.TYPE_UNDEFINED) {
             cbxRatingList.setEnabled(false);
             cbxRatingList.setVisible(true);
             txfPlayerNameChoice.setEnabled(false);
@@ -275,7 +292,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
             scpPlayerNameChoice.setVisible(false);
             lstPlayerNameChoice.setEnabled(false);
             lstPlayerNameChoice.setVisible(false);
-            
+
             txfName.requestFocusInWindow();
         } else {
             if (rdbFirstCharacters.isSelected()) {
@@ -283,7 +300,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
             } else {
                 resetControlsForLevenshteinSearching();
             }
-            
+
         }
     }
 
@@ -315,12 +332,12 @@ public class JFrPlayersManager extends javax.swing.JFrame {
             tabCkbParticipation[i].setEnabled(true);
         }
         Preferences prefs = Preferences.userRoot().node(Gotha.strPreferences + "/playersmanager");
-        String defRS = prefs.get("defaultregistration", "FIN" );
-        if (defRS.equals("PRE")) this.rdbPreliminary.setSelected(true);
+        String defRS = prefs.get("defaultregistration", FINAL.toString() );
+        if (defRS.equals(PRELIMINARY.toString())) this.rdbPreliminary.setSelected(true);
         else this.rdbFinal.setSelected(true);
         this.rdbPreliminary.setEnabled(true);
         this.rdbFinal.setEnabled(true);
-        this.btnRegister.setText(("Register"));
+        this.btnRegister.setText(locale.getString("player.btn_register"));
 
         setPnlParticipationVisibility();
     }
@@ -421,8 +438,8 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         txfGrade = new javax.swing.JTextField();
         pnlPlayersList = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        lblPlFin = new javax.swing.JLabel();
+        lblPlPre = new javax.swing.JLabel();
         txfNbPlFin = new javax.swing.JTextField();
         txfNbPlPre = new javax.swing.JTextField();
         scpRegisteredPlayers = new javax.swing.JScrollPane();
@@ -504,33 +521,33 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         });
         getContentPane().setLayout(null);
 
-        pnlPlayer.setBorder(javax.swing.BorderFactory.createTitledBorder("Player"));
+        pnlPlayer.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("player"))); // NOI18N
         pnlPlayer.setLayout(null);
 
-        jLabel2.setText("First name");
+        jLabel2.setText(locale.getString("player.first_name")); // NOI18N
         pnlPlayer.add(jLabel2);
         jLabel2.setBounds(10, 280, 60, 14);
 
-        jLabel3.setText("Origin");
+        jLabel3.setText(locale.getString("player.rating_origin")); // NOI18N
         jLabel3.setToolTipText("from 30K to 9D");
         pnlPlayer.add(jLabel3);
         jLabel3.setBounds(120, 370, 40, 14);
 
-        jLabel4.setText("Country");
-        jLabel4.setToolTipText("Country where the player lives (2 letters)");
+        jLabel4.setText(locale.getString("player.country")); // NOI18N
+        jLabel4.setToolTipText(locale.getString("player.country.tooltip")); // NOI18N
         pnlPlayer.add(jLabel4);
         jLabel4.setBounds(10, 310, 60, 14);
 
-        jLabel5.setText("Club");
+        jLabel5.setText(locale.getString("player.club")); // NOI18N
         jLabel5.setToolTipText("");
         pnlPlayer.add(jLabel5);
         jLabel5.setBounds(10, 330, 60, 14);
 
-        jLabel6.setText("FFG Lic");
+        jLabel6.setText(locale.getString("rating_list.ffg_lic")); // NOI18N
         pnlPlayer.add(jLabel6);
         jLabel6.setBounds(170, 435, 60, 15);
 
-        jLabel7.setText("EGF PIN");
+        jLabel7.setText(locale.getString("rating_list.egf_pin")); // NOI18N
         pnlPlayer.add(jLabel7);
         jLabel7.setBounds(10, 435, 60, 14);
 
@@ -581,13 +598,13 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         pnlPlayer.add(txfFfgLicenceStatus);
         txfFfgLicenceStatus.setBounds(290, 435, 15, 20);
 
-        pnlParticipation.setBorder(javax.swing.BorderFactory.createTitledBorder("Participation"));
+        pnlParticipation.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("player.participation"))); // NOI18N
         pnlParticipation.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         pnlParticipation.setLayout(null);
         pnlPlayer.add(pnlParticipation);
         pnlParticipation.setBounds(260, 240, 200, 120);
 
-        btnReset.setText("Reset");
+        btnReset.setText(locale.getString("player.btn_reset")); // NOI18N
         btnReset.setToolTipText("Reset form");
         btnReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -597,7 +614,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         pnlPlayer.add(btnReset);
         btnReset.setBounds(260, 470, 220, 30);
 
-        btnRegister.setText("Register");
+        btnRegister.setText(locale.getString("player.btn_register")); // NOI18N
         btnRegister.setToolTipText("Register player into tournament");
         btnRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -607,19 +624,19 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         pnlPlayer.add(btnRegister);
         btnRegister.setBounds(10, 510, 474, 30);
 
-        pnlRegistration.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Registration"));
+        pnlRegistration.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), locale.getString("player.registration"))); // NOI18N
         pnlRegistration.setLayout(null);
 
         grpRegistration.add(rdbPreliminary);
         rdbPreliminary.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbPreliminary.setText("Preliminary");
+        rdbPreliminary.setText(locale.getString("player.registration.preliminary")); // NOI18N
         pnlRegistration.add(rdbPreliminary);
         rdbPreliminary.setBounds(10, 14, 90, 21);
 
         grpRegistration.add(rdbFinal);
         rdbFinal.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         rdbFinal.setSelected(true);
-        rdbFinal.setText("Final");
+        rdbFinal.setText(locale.getString("player.registration.final")); // NOI18N
         pnlRegistration.add(rdbFinal);
         rdbFinal.setBounds(110, 14, 90, 21);
 
@@ -632,7 +649,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         pnlPlayer.add(lblRatingList);
         lblRatingList.setBounds(260, 10, 220, 14);
 
-        jLabel1.setText("Last name");
+        jLabel1.setText(locale.getString("player.last_name")); // NOI18N
         pnlPlayer.add(jLabel1);
         jLabel1.setBounds(10, 250, 60, 14);
 
@@ -708,8 +725,8 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         pnlPlayer.add(txfSMMSCorrection);
         txfSMMSCorrection.setBounds(220, 405, 20, 21);
 
-        ckbWelcomeSheet.setText("Print Welcome sheet");
-        ckbWelcomeSheet.setToolTipText("Welcome sheet can be edited in welcomesheet/welcomesheet.html");
+        ckbWelcomeSheet.setText(locale.getString("player.print_welcome_sheet")); // NOI18N
+        ckbWelcomeSheet.setToolTipText(locale.getString("player.print_welcome_sheet_tooltip")); // NOI18N
         pnlPlayer.add(ckbWelcomeSheet);
         ckbWelcomeSheet.setBounds(10, 540, 220, 23);
 
@@ -728,17 +745,17 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         pnlPlayer.add(pgbRatingList);
         pgbRatingList.setBounds(260, 30, 220, 17);
 
-        jLabel10.setText("Rank");
+        jLabel10.setText(locale.getString("player.rank")); // NOI18N
         jLabel10.setToolTipText("from 30K to 9D");
         pnlPlayer.add(jLabel10);
         jLabel10.setBounds(120, 410, 50, 14);
 
-        jLabel11.setText("Rating");
+        jLabel11.setText(locale.getString("player.rating")); // NOI18N
         jLabel11.setToolTipText("from 30K to 9D");
         pnlPlayer.add(jLabel11);
         jLabel11.setBounds(10, 370, 60, 14);
 
-        btnChangeRating.setText("Change rating");
+        btnChangeRating.setText(locale.getString("player.btn_change_rating")); // NOI18N
         btnChangeRating.setFocusable(false);
         btnChangeRating.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -770,7 +787,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         rdbRankFromGrade.setBounds(20, 205, 220, 20);
 
         ckbRatingList.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        ckbRatingList.setText("Use a rating list");
+        ckbRatingList.setText(locale.getString("rating_list.use")); // NOI18N
         ckbRatingList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 processRatingListChangeEvent(evt);
@@ -780,7 +797,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         ckbRatingList.setBounds(20, 20, 220, 23);
 
         grpRatingList.add(rdbFFG);
-        rdbFFG.setText("FFG");
+        rdbFFG.setText(locale.getString("rating_list.ffg")); // NOI18N
         rdbFFG.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 processRatingListChangeEvent(evt);
@@ -790,7 +807,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         rdbFFG.setBounds(70, 60, 130, 23);
 
         grpRatingList.add(rdbAGA);
-        rdbAGA.setText("AGA");
+        rdbAGA.setText(locale.getString("rating_list.aga")); // NOI18N
         rdbAGA.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 processRatingListChangeEvent(evt);
@@ -801,7 +818,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
 
         grpRatingList.add(rdbEGF);
         rdbEGF.setSelected(true);
-        rdbEGF.setText("EGF");
+        rdbEGF.setText(locale.getString("rating_list.egf")); // NOI18N
         rdbEGF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 processRatingListChangeEvent(evt);
@@ -830,7 +847,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         pnlPlayer.add(txfSearchId);
         txfSearchId.setBounds(390, 200, 90, 20);
 
-        jLabel12.setText("AGA ID");
+        jLabel12.setText(locale.getString("rating_list.aga_id")); // NOI18N
         pnlPlayer.add(jLabel12);
         jLabel12.setBounds(330, 435, 60, 14);
         pnlPlayer.add(txfAgaId);
@@ -844,9 +861,9 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         pnlPlayer.add(lblAgaExpirationDate);
         lblAgaExpirationDate.setBounds(390, 455, 90, 12);
 
-        jLabel13.setText("Grade");
+        jLabel13.setText(locale.getString("player.grade")); // NOI18N
         pnlPlayer.add(jLabel13);
-        jLabel13.setBounds(10, 405, 60, 14);
+        jLabel13.setBounds(10, 410, 60, 14);
 
         txfGrade.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -859,16 +876,16 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         getContentPane().add(pnlPlayer);
         pnlPlayer.setBounds(10, 0, 494, 560);
 
-        pnlPlayersList.setBorder(javax.swing.BorderFactory.createTitledBorder("Players"));
+        pnlPlayersList.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("player.players"))); // NOI18N
         pnlPlayersList.setLayout(null);
 
-        jLabel8.setText("Registered players. Final (F)");
-        pnlPlayersList.add(jLabel8);
-        jLabel8.setBounds(60, 50, 250, 20);
+        lblPlFin.setText(locale.getString("player.players.registered_final")); // NOI18N
+        pnlPlayersList.add(lblPlFin);
+        lblPlFin.setBounds(60, 50, 250, 20);
 
-        jLabel9.setText("Registered players. Preliminary (P)");
-        pnlPlayersList.add(jLabel9);
-        jLabel9.setBounds(60, 30, 250, 20);
+        lblPlPre.setText(locale.getString("player.players.registered_preliminary")); // NOI18N
+        pnlPlayersList.add(lblPlPre);
+        lblPlPre.setBounds(60, 30, 250, 20);
 
         txfNbPlFin.setEditable(false);
         txfNbPlFin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -917,7 +934,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         pnlPlayersList.add(scpRegisteredPlayers);
         scpRegisteredPlayers.setBounds(10, 80, 450, 390);
 
-        btnPrint.setText("Print ...");
+        btnPrint.setText(locale.getString("btn.print")); // NOI18N
         btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintActionPerformed(evt);
@@ -929,7 +946,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         getContentPane().add(pnlPlayersList);
         pnlPlayersList.setBounds(510, 0, 470, 520);
 
-        btnClose.setText("Close");
+        btnClose.setText(locale.getString("btn.close")); // NOI18N
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -939,7 +956,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         btnClose.setBounds(640, 530, 330, 30);
 
         btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.setText("help");
+        btnHelp.setText(locale.getString("btn.help")); // NOI18N
         btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpActionPerformed(evt);
@@ -1013,7 +1030,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         }
 
         updatePlayerControlsFromPlayerInModification();
-        this.btnRegister.setText("Save modification");
+        this.btnRegister.setText(locale.getString("player.btn_save"));
     }
 
     private void mniRemovePlayerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRemovePlayerActionPerformed
@@ -1083,7 +1100,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         if (evt.getModifiers() != InputEvent.BUTTON3_MASK) return;
         Point p = evt.getLocationOnScreen();
         pupRegisteredPlayers.setLocation(p);
-        pupRegisteredPlayers.setVisible(true);        
+        pupRegisteredPlayers.setVisible(true);
     }//GEN-LAST:event_tblRegisteredPlayersMouseClicked
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
@@ -1252,9 +1269,9 @@ public class JFrPlayersManager extends javax.swing.JFrame {
 
         Player p;
 
-        String strRegistration = "FIN";
+        PlayerRegistrationStatus registration = FINAL;
         if (grpRegistration.getSelection() == rdbPreliminary.getModel()) {
-            strRegistration = "PRE";
+            registration = PRELIMINARY;
         }
 
         int rating;
@@ -1291,10 +1308,10 @@ public class JFrPlayersManager extends javax.swing.JFrame {
                     lblAgaExpirationDate.getText(),
                     rank,
                     rating,
-                    strOrigin,
+                    RatingOrigin.fromString(strOrigin),
                     this.txfGrade.getText(),
                     smmsCorrection,
-                    strRegistration);
+                    registration);
 
             boolean[] bPart = new boolean[Gotha.MAX_NUMBER_OF_ROUNDS];
             
@@ -1319,10 +1336,10 @@ public class JFrPlayersManager extends javax.swing.JFrame {
             try {
                 tournament.addPlayer(p);
                 // Keep current registration status as default registration status
-                strRegistration = "FIN";
-                if (grpRegistration.getSelection() == rdbPreliminary.getModel()) strRegistration = "PRE";
+                registration = FINAL;
+                if (grpRegistration.getSelection() == rdbPreliminary.getModel()) registration = PRELIMINARY;
                 Preferences prefs = Preferences.userRoot().node(Gotha.strPreferences + "/playersmanager");
-                prefs.put("defaultregistration", strRegistration);
+                prefs.put("defaultregistration", registration.toString());
 
                 resetRatingListControls();
                 resetPlayerControls();
@@ -1339,7 +1356,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         } else if (this.playerMode == JFrPlayersManager.PLAYER_MODE_MODIF) {
             try {
                 if (tournament.isPlayerImplied(p)){
-                    p.setRegisteringStatus("FIN");
+                    p.setRegisteringStatus(FINAL);
                 }
                 tournament.modifyPlayer(playerInModification, p);
                 resetRatingListControls();
@@ -1391,7 +1408,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         this.pupRegisteredPlayers.setVisible(false);
-        
+
         this.ratingList = null;
         Runtime.getRuntime().gc();
     }//GEN-LAST:event_formWindowClosed
@@ -1447,7 +1464,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
 
     private void processRatingListChangeEvent(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processRatingListChangeEvent
         this.resetRatingListControls();
-        
+
 
     }//GEN-LAST:event_processRatingListChangeEvent
     // See also btnUpdateRatingListActionPerformed, which should stay a clone
@@ -1465,7 +1482,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         String strDefaultURL;
         File fDefaultFile;
         String strPrompt;
-        
+
         switch(rlType){
             case RatingList.TYPE_EGF:
                 strDefaultURL = "http://www.europeangodatabase.eu/EGD/EGD_2_0/downloads/allworld_lp.html";
@@ -1486,7 +1503,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
                 System.out.println("btnUpdateRatingListActionPerformed : Internal error");
                 return;
         }
-        
+
         try {
             String str = JOptionPane.showInputDialog(strPrompt, strDefaultURL);
             if (str == null ) return;
@@ -1498,7 +1515,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Unreachable file\nRating list could not be loaded", "Message", JOptionPane.ERROR_MESSAGE);
         }
-        this.useRatingList(rlType);        
+        this.useRatingList(rlType);
 
     }//GEN-LAST:event_btnUpdateRatingListActionPerformed
 
@@ -1514,7 +1531,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
             updatePnlRegisteredPlayers(tournament.playersList());
         } catch (RemoteException ex) {
             Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
     }//GEN-LAST:event_mniSortByGradeActionPerformed
 
     private void mniSortByRatingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSortByRatingActionPerformed
@@ -1524,7 +1541,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
             updatePnlRegisteredPlayers(tournament.playersList());
         } catch (RemoteException ex) {
             Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
     }//GEN-LAST:event_mniSortByRatingActionPerformed
 
     private void btnSearchIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchIdActionPerformed
@@ -1540,7 +1557,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         cleanClose();
     }//GEN-LAST:event_formWindowClosing
-    
+
     private void manageRankGradeAndRatingValues(){
         if (txfRank.getText().equals("") && !txfGrade.getText().equals("")){
             int r = Player.convertKDPToInt(txfGrade.getText());
@@ -1589,12 +1606,12 @@ public class JFrPlayersManager extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JLabel lblAgaExpirationDate;
     private javax.swing.JLabel lblFfgLicenceStatus;
     private javax.swing.JLabel lblPhoto;
+    private javax.swing.JLabel lblPlFin;
+    private javax.swing.JLabel lblPlPre;
     private javax.swing.JLabel lblRatingList;
     private javax.swing.JList<String> lstPlayerNameChoice;
     private javax.swing.JMenuItem mniCancel;
@@ -1674,9 +1691,10 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         txfFirstName.setText(rP.getFirstName());
         int stdRating = rP.getStdRating();
         txfRating.setText("" + stdRating);
-        String strRatingOrigin = rP.getRatingOrigin();
-        if (strRatingOrigin.equals("FFG")) strRatingOrigin += " : " + rP.getStrRawRating();
-        if (strRatingOrigin.equals("AGA")) strRatingOrigin += " : " + rP.getStrRawRating();
+        RatingOrigin ratingOrigin = rP.getRatingOrigin();
+        String strRatingOrigin = ratingOrigin.toString();
+        if (ratingOrigin == FFG) strRatingOrigin += " : " + rP.getStrRawRating();
+        if (ratingOrigin == AGA) strRatingOrigin += " : " + rP.getStrRawRating();
         txfRatingOrigin.setText(strRatingOrigin);
         this.txfSMMSCorrection.setText("" + 0);
         int rank = Player.rankFromRating(stdRating);
@@ -1729,12 +1747,13 @@ public class JFrPlayersManager extends javax.swing.JFrame {
 
         int rating = playerInModification.getRating();
         txfRating.setText("" + rating);
-        String strRatingOrigin = playerInModification.getRatingOrigin();
-        if (strRatingOrigin.equals("FFG")) strRatingOrigin += " : " + playerInModification.getStrRawRating();
-        if (strRatingOrigin.equals("AGA")) strRatingOrigin += " : " + playerInModification.getStrRawRating();
+        RatingOrigin ratingOrigin = playerInModification.getRatingOrigin();
+        String strRatingOrigin = ratingOrigin.toString();
+        if (ratingOrigin == FFG) strRatingOrigin += " : " + playerInModification.getStrRawRating();
+        if (ratingOrigin == AGA) strRatingOrigin += " : " + playerInModification.getStrRawRating();
         txfRatingOrigin.setText(strRatingOrigin);
         txfGrade.setText(playerInModification.getStrGrade());
-        
+
         int corr = playerInModification.getSmmsCorrection();
         String strCorr = "" + corr;
         if (corr > 0 ) strCorr = "+" + corr;
@@ -1774,7 +1793,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         for (int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++) {
             tabCkbParticipation[r].setSelected(bPart[r]);
         }
-        if (playerInModification.getRegisteringStatus().compareTo("FIN") == 0) {
+        if (playerInModification.getRegisteringStatus() == FINAL) {
             this.rdbFinal.setSelected(true);
         } else {
             this.rdbPreliminary.setSelected(true);
@@ -1829,12 +1848,12 @@ public class JFrPlayersManager extends javax.swing.JFrame {
             strLine = strLine.replaceAll("<club>", p.getClub());
             strLine = strLine.replaceAll("<rank>", Player.convertIntToKD(p.getRank()));
             int rawRating = p.getRating();
-            String ratingOrigin = p.getRatingOrigin();
-            if (ratingOrigin.compareTo("FFG") == 0) {
+            RatingOrigin ratingOrigin = p.getRatingOrigin();
+            if (ratingOrigin == FFG) {
                 rawRating -= 2050;
             }
             strLine = strLine.replaceAll("<rating>", Integer.valueOf(rawRating).toString());
-            strLine = strLine.replaceAll("<ratingorigin>", ratingOrigin);
+            strLine = strLine.replaceAll("<ratingorigin>", ratingOrigin.toString());
             boolean[] bPart = p.getParticipating();
             String strPart = "";
             int nbRounds = 0;

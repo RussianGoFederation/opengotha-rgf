@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
+
 public class Tournament extends UnicastRemoteObject implements TournamentInterface, java.io.Serializable {
 
     private static final long serialVersionUID = Gotha.GOTHA_DATA_VERSION;
@@ -156,7 +158,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         ArrayList<Player> alNotFRP = new ArrayList<Player>();
         ArrayList<Player> alP = playersList();
         for (Player p : alP) {
-            if (!p.getRegisteringStatus().equals("FIN")) {
+            if (p.getRegisteringStatus() != FINAL) {
                 alNotFRP.add(p);
             }
         }
@@ -172,7 +174,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         ArrayList<Player> alNotPP = new ArrayList<Player>();
         ArrayList<Player> alP = playersList();
         for (Player p : alP) {
-            if (!p.getRegisteringStatus().equals("FIN")) {
+            if (p.getRegisteringStatus() != FINAL) {
                 continue;
             }
 
@@ -192,7 +194,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         ArrayList<Player> alNotPP = new ArrayList<Player>();
         ArrayList<Player> alP = playersList();
         for (Player p : alP) {
-            if (!p.getRegisteringStatus().equals("FIN")) {
+            if (p.getRegisteringStatus() != FINAL) {
                 continue;
             }
             if (!p.getParticipating(roundNumber)) {
@@ -1795,7 +1797,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             if (p == null) {
                 return false;
             }
-            if (!p.getRegisteringStatus().equals("FIN")){
+            if (p.getRegisteringStatus() != FINAL){
                 return false;
             }
             if (!p.getParticipating(roundNumber)){

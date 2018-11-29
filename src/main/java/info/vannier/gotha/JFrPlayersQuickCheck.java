@@ -20,6 +20,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.*;
 
+import ru.gofederation.gotha.util.GothaLocale;
+
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
+
 /**
  *
  * @author  Administrateur
@@ -42,6 +47,8 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
     private ArrayList<Player> alSelectedPlayersToKeepSelected = new ArrayList<Player>(); 
 
     private TournamentInterface tournament;
+
+    private final GothaLocale locale = GothaLocale.getCurrentLocale();
     
      private int displayedStartingRoundNumber = 0;
     /**
@@ -98,8 +105,8 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         pnlInternal = new javax.swing.JPanel();
         btnClose = new javax.swing.JButton();
         pnlPlayersList = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        lblPlFin = new javax.swing.JLabel();
+        lblPlPre = new javax.swing.JLabel();
         txfNbPlFin = new javax.swing.JTextField();
         txfNbPlPre = new javax.swing.JTextField();
         scpRegisteredPlayers = new javax.swing.JScrollPane();
@@ -168,7 +175,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
 
         pnlInternal.setLayout(null);
 
-        btnClose.setText("Close");
+        btnClose.setText(locale.getString("btn.close")); // NOI18N
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -177,16 +184,16 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         pnlInternal.add(btnClose);
         btnClose.setBounds(130, 470, 650, 30);
 
-        pnlPlayersList.setBorder(javax.swing.BorderFactory.createTitledBorder("Players"));
+        pnlPlayersList.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("player.players"))); // NOI18N
         pnlPlayersList.setLayout(null);
 
-        jLabel8.setText("Registered players. Final (F)");
-        pnlPlayersList.add(jLabel8);
-        jLabel8.setBounds(60, 50, 250, 20);
+        lblPlFin.setText(locale.getString("player.players.registered_final")); // NOI18N
+        pnlPlayersList.add(lblPlFin);
+        lblPlFin.setBounds(60, 50, 250, 20);
 
-        jLabel9.setText("Registered players. Preliminary (P)");
-        pnlPlayersList.add(jLabel9);
-        jLabel9.setBounds(60, 30, 250, 20);
+        lblPlPre.setText(locale.getString("player.players.registered_preliminary")); // NOI18N
+        pnlPlayersList.add(lblPlPre);
+        lblPlPre.setBounds(60, 30, 250, 20);
 
         txfNbPlFin.setEditable(false);
         txfNbPlFin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -246,7 +253,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         pnlPlayersList.add(scpRegisteredPlayers);
         scpRegisteredPlayers.setBounds(10, 80, 480, 330);
 
-        btnPrint.setText("Print ...");
+        btnPrint.setText(locale.getString("btn.print")); // NOI18N
         btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintActionPerformed(evt);
@@ -260,7 +267,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         jCheckBox1.setBounds(250, 100, 15, 15);
         jCheckBox1.getAccessibleContext().setAccessibleName("chk1");
 
-        jLabel2.setText("Rounds :");
+        jLabel2.setText(locale.getString("player.check.rounds")); // NOI18N
         pnlPlayersList.add(jLabel2);
         jLabel2.setBounds(340, 50, 60, 14);
 
@@ -276,7 +283,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         pnlPlayersList.add(spnDisplayedStartingRoundNumber);
         spnDisplayedStartingRoundNumber.setBounds(409, 40, 40, 30);
 
-        jLabel4.setText("Participation");
+        jLabel4.setText(locale.getString("player.participation")); // NOI18N
         pnlPlayersList.add(jLabel4);
         jLabel4.setBounds(340, 20, 110, 14);
 
@@ -316,7 +323,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         pnlInternal.add(jLabel16);
         jLabel16.setBounds(520, 230, 20, 20);
 
-        btnRemovePrePlayers.setText("Remove all \"P\" players");
+        btnRemovePrePlayers.setText(locale.getString("player.check.btn_remove_preliminary")); // NOI18N
         btnRemovePrePlayers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemovePrePlayersActionPerformed(evt);
@@ -325,7 +332,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         pnlInternal.add(btnRemovePrePlayers);
         btnRemovePrePlayers.setBounds(520, 20, 260, 30);
 
-        btnIncreaseRank.setText("Increase rank of selected players");
+        btnIncreaseRank.setText(locale.getString("player.check.btn_increase_rank_selected")); // NOI18N
         btnIncreaseRank.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnIncreaseRankActionPerformed(evt);
@@ -334,7 +341,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         pnlInternal.add(btnIncreaseRank);
         btnIncreaseRank.setBounds(550, 280, 230, 20);
 
-        btnDecreaseRank.setText("Decrease rank of selected players");
+        btnDecreaseRank.setText(locale.getString("player.check.decrease_rank_selected")); // NOI18N
         btnDecreaseRank.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDecreaseRankActionPerformed(evt);
@@ -343,7 +350,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         pnlInternal.add(btnDecreaseRank);
         btnDecreaseRank.setBounds(550, 310, 230, 20);
 
-        btnSetRegToFin.setText("Set Registration status to Final");
+        btnSetRegToFin.setText(locale.getString("player.check.btn_set_final")); // NOI18N
         btnSetRegToFin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSetRegToFinActionPerformed(evt);
@@ -352,7 +359,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         pnlInternal.add(btnSetRegToFin);
         btnSetRegToFin.setBounds(550, 200, 230, 20);
 
-        btnSetRegToPre.setText("Set Registration status to Preliminary");
+        btnSetRegToPre.setText(locale.getString("player.check.btn_set_preliminary")); // NOI18N
         btnSetRegToPre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSetRegToPreActionPerformed(evt);
@@ -362,7 +369,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         btnSetRegToPre.setBounds(550, 230, 230, 20);
 
         btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.setText("help");
+        btnHelp.setText(locale.getString("btn.help")); // NOI18N
         btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpActionPerformed(evt);
@@ -371,7 +378,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         pnlInternal.add(btnHelp);
         btnHelp.setBounds(10, 470, 110, 30);
 
-        btnSetRanksFromRatings.setText("Set ranks according to ratings");
+        btnSetRanksFromRatings.setText(locale.getString("player.check.set_ranks_to_ratings")); // NOI18N
         btnSetRanksFromRatings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSetRanksFromRatingsActionPerformed(evt);
@@ -380,7 +387,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         pnlInternal.add(btnSetRanksFromRatings);
         btnSetRanksFromRatings.setBounds(550, 340, 230, 20);
 
-        btnSetRatingsFromRanks.setText("Set  ratings according to ranks");
+        btnSetRatingsFromRanks.setText(locale.getString("player.check.btn_set_ratings_to_ranks")); // NOI18N
         btnSetRatingsFromRanks.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSetRatingsFromRanksActionPerformed(evt);
@@ -389,7 +396,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         pnlInternal.add(btnSetRatingsFromRanks);
         btnSetRatingsFromRanks.setBounds(550, 390, 230, 20);
 
-        btnUpdateRatings.setText("Update ratings");
+        btnUpdateRatings.setText(locale.getString("player.check.btn_update_ratings")); // NOI18N
         btnUpdateRatings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateRatingsActionPerformed(evt);
@@ -398,7 +405,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         pnlInternal.add(btnUpdateRatings);
         btnUpdateRatings.setBounds(520, 70, 260, 30);
 
-        btnModifyRatings.setText("Modify ratings...");
+        btnModifyRatings.setText(locale.getString("player.check.btn_modify_ratings")); // NOI18N
         btnModifyRatings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnModifyRatingsActionPerformed(evt);
@@ -419,7 +426,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
         
         if (alP.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please, select at least one player", "Message",
+            JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -433,7 +440,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
         
         if (alP.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please, select at least one player", "Message",
+            JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -447,7 +454,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
         
         if (alP.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please, select at least one player", "Message",
+            JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -461,7 +468,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
         
         if (alP.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please, select at least one player", "Message",
+            JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -479,18 +486,18 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         }
         int nbP = 0;
         for (Player p: alP){
-            if (p.getRegisteringStatus().compareTo("PRE") == 0) nbP++;
+            if (p.getRegisteringStatus() == PRELIMINARY) nbP++;
         }
         if (nbP == 0) {
-            JOptionPane.showMessageDialog(this, "No player is in a preliminary status", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("player.check.no_player_preliminary"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
-        int response =  JOptionPane.showConfirmDialog(this, "" + nbP + " " + "players will be removed", "Message", JOptionPane.OK_CANCEL_OPTION);
+        int response =  JOptionPane.showConfirmDialog(this, locale.format("player.check.confirm_remove", nbP), locale.getString("alert.message"), JOptionPane.OK_CANCEL_OPTION);
         if (response == JOptionPane.OK_OPTION){
             int nbRemovedPlayers = 0;
             int nbNotRemovedPlayers = 0;
             for (Player p: alP){
-                if (p.getRegisteringStatus().compareTo("PRE") == 0){
+                if (p.getRegisteringStatus() == PRELIMINARY){
                     try {
                         tournament.removePlayer(p);
                         nbRemovedPlayers++;
@@ -504,11 +511,8 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             }
             
             if (nbNotRemovedPlayers != 0){
-                String strMessage;
-                if (nbNotRemovedPlayers == 1) strMessage = "player could not be removed";
-                else strMessage = "players could not be removed";
-                        JOptionPane.showMessageDialog(this, "" + nbNotRemovedPlayers + strMessage,
-                        "Message", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, locale.format("player.check.could_not_be_removed", nbNotRemovedPlayers),
+                            locale.getString("alert.message"), JOptionPane.WARNING_MESSAGE);
             }
             if (nbRemovedPlayers > 0){
                 this.tournamentChanged();
@@ -544,7 +548,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
 
         if (alP.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please, select at least one player", "Message",
+            JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -561,8 +565,8 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
     private void changePlayersRank(ArrayList<Player> alP, int deltaRank){
         boolean bSomethingHasChanged = false;
         int confirm = JOptionPane.OK_OPTION;                
-        if (alP.size() > 1) confirm = JOptionPane.showConfirmDialog(this, "Rank will be modified for " + alP.size() + " players", 
-                "Message", JOptionPane.OK_CANCEL_OPTION);
+        if (alP.size() > 1) confirm = JOptionPane.showConfirmDialog(this, locale.format("player.check.confirm_change_rank", alP.size()),
+                locale.getString("alert.message"), JOptionPane.OK_CANCEL_OPTION);
         if (confirm == JOptionPane.OK_OPTION){
             try {
                 for (Player p : alP){
@@ -595,9 +599,8 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
                 nbChanged++;
         }
         int confirm;                
-        String str = "Rank will be changed for " + nbChanged + " players";
-        confirm = JOptionPane.showConfirmDialog(this, str, 
-                "Message", JOptionPane.OK_CANCEL_OPTION);
+        confirm = JOptionPane.showConfirmDialog(this, locale.format("player.check.confirm_change_rank", nbChanged),
+                locale.getString("alert.message"), JOptionPane.OK_CANCEL_OPTION);
         if (confirm != JOptionPane.OK_OPTION) return;
 
         boolean bSomethingHasChanged = false;
@@ -634,8 +637,8 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         }
         int confirm;                
         String str = "Rating will be changed for " + nbChanged + " players";
-        confirm = JOptionPane.showConfirmDialog(this, str, 
-                "Message", JOptionPane.OK_CANCEL_OPTION);
+        confirm = JOptionPane.showConfirmDialog(this, locale.format("player.check.confirm_change_rating", nbChanged),
+                locale.getString("alert.message"), JOptionPane.OK_CANCEL_OPTION);
         if (confirm != JOptionPane.OK_OPTION) return;
 
         boolean bSomethingHasChanged = false;
@@ -667,11 +670,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
      */
     private void modifyRatings(ArrayList<Player> alP){
         int nb = alP.size();
-        String plural = "";
-        if (nb > 1) plural = "s";
-        String str = "Rating will be increased/decreased for " + nb + " player" + plural;
-        str+= "\nEnter the (+/-) modification value :";
-        String strResponse =  JOptionPane.showInputDialog(this, str, "0");
+        String strResponse =  JOptionPane.showInputDialog(this, locale.format("player.check.input_rating_delta", nb), "0");
         int delta;
         try{
             delta = Integer.parseInt(strResponse);
@@ -708,11 +707,11 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             int nbPlayersMod = 0;
             int nbPlayersPRE = 0;
             for (Player p : alP){
-                if (p.getRegisteringStatus().compareTo("PRE") == 0) nbPlayersPRE++;
+                if (p.getRegisteringStatus() == PRELIMINARY) nbPlayersPRE++;
                 else{
                     try {
                         if (!tournament.isPlayerImplied(p)){
-                            p.setRegisteringStatus("PRE");
+                            p.setRegisteringStatus(PRELIMINARY);
                             tournament.modifyPlayer(p, p);
                             nbPlayersMod++;
                         }
@@ -725,19 +724,15 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             }
             int nbPlayersNotModifiable = alP.size() - nbPlayersPRE - nbPlayersMod;
             if (nbPlayersNotModifiable >= 1){
-                String strMessage;
-                if (nbPlayersNotModifiable == 1) strMessage = "player could not be changed because already assigned";
-                else strMessage = "players could not be changed because already assigned";
-                strMessage = "" + nbPlayersNotModifiable + " " + strMessage;
-                JOptionPane.showMessageDialog(this, strMessage, "Message", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, locale.format("player.check.already_assigned", nbPlayersNotModifiable), locale.getString("alert.message"), JOptionPane.WARNING_MESSAGE);
             }
             if (nbPlayersMod != 0) bSomethingHasChanged = true;
         }
         if (newRegStatus == 'F'){
             int nbPlayersMod = 0;
             for (Player p : alP){
-                if (p.getRegisteringStatus().compareTo("FIN") != 0){
-                    p.setRegisteringStatus("FIN");
+                if (p.getRegisteringStatus() != FINAL){
+                    p.setRegisteringStatus(FINAL);
                     try {
                         tournament.modifyPlayer(p, p);
                     } catch (RemoteException ex) {
@@ -768,31 +763,25 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         if (evt.getKeyCode() == KeyEvent.VK_DELETE){
             ArrayList<Player> alP = this.selectedPlayersList(this.tblRegisteredPlayers);
             if (alP.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please, select at least one player", "Message",
+                JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                         JOptionPane.ERROR_MESSAGE); 
                 return;
             }
  
             int nbJ = alP.size();
-            String strMessage;
-            if (nbJ == 1) strMessage = "player will be removed";
-            else strMessage = "players will be removed";
-            if (JOptionPane.showConfirmDialog(this, "" + nbJ + " " + strMessage, "Message",
+            if (JOptionPane.showConfirmDialog(this, locale.format("player.check.confirm_remove", nbJ), locale.getString("alert.message"),
                     JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION) return;
             int nbPlayersRem = removePlayers(alP);
             int nbPlayersNotRem = alP.size() - nbPlayersRem;
             
-            strMessage = "";
+            StringBuilder sb = new StringBuilder();;
             int messageType = JOptionPane.INFORMATION_MESSAGE;
             if (nbPlayersNotRem >= 1){
-                if (nbPlayersNotRem <= 1) strMessage = "player could not be removed";
-                else strMessage = "players could not be removed";
-                strMessage = nbPlayersNotRem + strMessage + "\n";
+                sb.append(locale.format("player.check.could_not_be_removed", nbPlayersNotRem)).append("\n");
                 messageType = JOptionPane.WARNING_MESSAGE;
             }
-            if (nbPlayersRem == 1) strMessage += nbPlayersRem + " " + "player has been removed";
-            else strMessage += nbPlayersRem + " " + "players have been removed";
-            JOptionPane.showMessageDialog(this, strMessage, "Message", messageType);
+            sb.append(locale.format("player.check.removed", nbPlayersRem));
+            JOptionPane.showMessageDialog(this, sb, locale.getString("alert.message"), messageType);
             if (nbPlayersRem > 0){
                 this.tournamentChanged();
             }
@@ -857,7 +846,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
         
         if (alP.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please, select at least one player", "Message",
+            JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -871,7 +860,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
         
         if (alP.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please, select at least one player", "Message",
+            JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -894,7 +883,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
         
         if (alP.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please, select at least one player", "Message",
+            JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -946,12 +935,12 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         TableColumnModel tcm = this.tblRegisteredPlayers.getColumnModel();
                 
         JFrGotha.formatColumn(this.tblRegisteredPlayers, REG_COL, "R", 10, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(this.tblRegisteredPlayers, NAME_COL, "Last name",110, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(this.tblRegisteredPlayers, FIRSTNAME_COL, "First_name", 80, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(this.tblRegisteredPlayers, COUNTRY_COL, "Co", 30, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(this.tblRegisteredPlayers, CLUB_COL, "Club", 40, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(this.tblRegisteredPlayers, RANK_COL, "Rk", 30, JLabel.RIGHT, JLabel.RIGHT); 
-        JFrGotha.formatColumn(this.tblRegisteredPlayers, RATING_COL, "Rating", 40, JLabel.RIGHT, JLabel.RIGHT); 
+        JFrGotha.formatColumn(this.tblRegisteredPlayers, NAME_COL, locale.getString("player.last_name"),110, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(this.tblRegisteredPlayers, FIRSTNAME_COL, locale.getString("player.last_name"), 80, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(this.tblRegisteredPlayers, COUNTRY_COL, locale.getString("player.country_s"), 30, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(this.tblRegisteredPlayers, CLUB_COL, locale.getString("player.club="), 40, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(this.tblRegisteredPlayers, RANK_COL, locale.getString("player.rank_s"), 30, JLabel.RIGHT, JLabel.RIGHT);
+        JFrGotha.formatColumn(this.tblRegisteredPlayers, RATING_COL, locale.getString("player.rating"), 40, JLabel.RIGHT, JLabel.RIGHT);
         for (int r=0; r < MAX_NUMBER_OF_ROUNDS_DISPLAYED; r++){
             JFrGotha.formatColumn(this.tblRegisteredPlayers, PARTICIPATING_COL0 + r, "" + (r + 1), 15, JLabel.CENTER, JLabel.CENTER); 
             }
@@ -971,7 +960,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         try {
             if (!tournament.isOpen()) cleanClose();
             this.lastComponentsUpdateTime = tournament.getCurrentTournamentTime();
-            setTitle("Players Quick check. " + tournament.getFullName());        } catch (RemoteException ex) {
+            setTitle(locale.format("player.check.window_title", tournament.getFullName()));        } catch (RemoteException ex) {
             Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -997,12 +986,14 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         int nbPreliminary = 0;
         int nbFinal = 0;
         for (Player p : playersList){
-            if (p.getRegisteringStatus().compareTo("PRE") == 0) nbPreliminary++;
-            if (p.getRegisteringStatus().compareTo("FIN") == 0) nbFinal++;
+            if (p.getRegisteringStatus() == PRELIMINARY) nbPreliminary++;
+            if (p.getRegisteringStatus() == FINAL) nbFinal++;
         }
         txfNbPlPre.setText(""+ nbPreliminary);
         txfNbPlFin.setText(""+ nbFinal);
-        
+        lblPlPre.setText(locale.format("player.players.registered_preliminary", nbPreliminary));
+        lblPlFin.setText(locale.format("player.players.registered_final", nbFinal));
+
         DefaultTableModel model = (DefaultTableModel)tblRegisteredPlayers.getModel();
      
         ArrayList<Player> displayedPlayersList = new ArrayList<Player>(playersList);
@@ -1062,7 +1053,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         
         for (Player p:displayedPlayersList){
             int line = displayedPlayersList.indexOf(p); 
-            model.setValueAt((p.getRegisteringStatus().compareTo("PRE")==0)?"P":"F", line, JFrPlayersQuickCheck.REG_COL);
+            model.setValueAt((p.getRegisteringStatus()==PRELIMINARY)?"P":"F", line, JFrPlayersQuickCheck.REG_COL);
             model.setValueAt(p.getName(), line, JFrPlayersQuickCheck.NAME_COL);
             model.setValueAt(p.getFirstName(), line, JFrPlayersQuickCheck.FIRSTNAME_COL);
             model.setValueAt(p.getCountry(), line, JFrPlayersQuickCheck.COUNTRY_COL);
@@ -1157,10 +1148,10 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JLabel lblLastRound;
+    private javax.swing.JLabel lblPlFin;
+    private javax.swing.JLabel lblPlPre;
     private javax.swing.JMenuItem mniCancel;
     private javax.swing.JMenuItem mniSortByName;
     private javax.swing.JMenuItem mniSortByRank;

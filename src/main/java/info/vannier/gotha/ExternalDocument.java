@@ -25,6 +25,13 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
+import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.RatingOrigin;
+
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
+import static ru.gofederation.gotha.model.RatingOrigin.INI;
+
 /**
  * ExternalTournamentDocument enables importing Players and Games and tournament parameters from a file
  * 
@@ -168,10 +175,10 @@ public class ExternalDocument {
                         "", // AGA Expiration Date
                         Player.convertKDPToInt(strRank),
                         Player.convertKDPToInt(strRank) * 100,
-                        "INI",
+                        INI,
                         "",
                         0,
-                        "FIN");
+                        FINAL);
                 boolean[] bPart = new boolean[Gotha.MAX_NUMBER_OF_ROUNDS];
                 for (int i = 0; i < Gotha.MAX_NUMBER_OF_ROUNDS; i++) {
                     bPart[i] = true;
@@ -261,9 +268,9 @@ public class ExternalDocument {
 
             strRg = strRg.toLowerCase();
             if (strRg.charAt(0) == 'p') {
-                strRg = "PRE";
+                strRg = PRELIMINARY.toString();
             } else {
-                strRg = "FIN";
+                strRg = FINAL.toString();
             }
 
             Player p = null;
@@ -280,10 +287,10 @@ public class ExternalDocument {
                         "", // AGA Expiration Date
                         rk,
                         rt,
-                        strRatingOrigin,
+                        RatingOrigin.fromString(strRatingOrigin),
                         "",
                         0,
-                        strRg);
+                        PlayerRegistrationStatus.fromString(strRg));
                 boolean[] bPart = new boolean[Gotha.MAX_NUMBER_OF_ROUNDS];
                 for (int i = 0; i < Gotha.MAX_NUMBER_OF_ROUNDS; i++) {
                     bPart[i] = true;
@@ -629,11 +636,11 @@ public class ExternalDocument {
                     participating[r] = true;
                 }
             }
-            String registeringStatus = extractNodeValue(nnm, "registeringStatus", "FIN");
+            String registeringStatus = extractNodeValue(nnm, "registeringStatus", FINAL.toString());
             Player p = null;
             try {
                 p = new Player(name, firstName, country, club, egfPin, ffgLicence, ffgLicenceStatus,
-                        agaId, agaExpirationDate, rank, rating, ratingOrigin, strGrade, smmsCorrection, registeringStatus);
+                        agaId, agaExpirationDate, rank, rating, RatingOrigin.fromString(ratingOrigin), strGrade, smmsCorrection, PlayerRegistrationStatus.fromString(registeringStatus));
             } catch (PlayerException ex) {
                 Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -3084,7 +3091,7 @@ public class ExternalDocument {
             String strAgaExpirationDate = p.getAgaExpirationDate();
             String strRank = Player.convertIntToKD(p.getRank());
             String strRating = Integer.valueOf(p.getRating()).toString();
-            String strRatingOrigin = p.getRatingOrigin();
+            String strRatingOrigin = p.getRatingOrigin().toString();
             String strGrade = p.getStrGrade();
             String strSMMSCorrection = Integer.valueOf(p.getSmmsCorrection()).toString();
             boolean[] part = p.getParticipating();
@@ -3096,7 +3103,7 @@ public class ExternalDocument {
                     strParticipating += "0";
                 }
             }
-            String strRegisteringStatus = p.getRegisteringStatus();
+            String strRegisteringStatus = p.getRegisteringStatus().toString();
 
             Element emPlayer = document.createElement("Player");
             emPlayer.setAttribute("name", strName);

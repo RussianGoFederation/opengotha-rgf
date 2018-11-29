@@ -16,6 +16,10 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static ru.gofederation.gotha.model.RatingOrigin.AGA;
+import static ru.gofederation.gotha.model.RatingOrigin.EGF;
+import static ru.gofederation.gotha.model.RatingOrigin.FFG;
+
 public class RatingList {
     public static final int TYPE_UNDEFINED = 0;
     public static final int TYPE_EGF = 1;
@@ -104,7 +108,7 @@ public class RatingList {
                     int rating = new Integer(strLine.substring(71, 75).trim()).intValue();
                     String strGrade = strLine.substring(60,63);
                     RatedPlayer rP = new RatedPlayer(
-                            strPin, "", "", "", "", strName, strFirstName, strCountry, strClub, rating, strGrade, "EGF");
+                            strPin, "", "", "", "", strName, strFirstName, strCountry, strClub, rating, strGrade, EGF);
                     this.alRatedPlayers.add(rP);
                 }
             }
@@ -138,7 +142,7 @@ public class RatingList {
 //                    }
 
                      RatedPlayer rP = new RatedPlayer(
-                            "", strFfgLicence, strFfgLicenceStatus, "", "", strName, strFirstName, strCountry, strClub, rating, "", "FFG");
+                            "", strFfgLicence, strFfgLicenceStatus, "", "", strName, strFirstName, strCountry, strClub, rating, "", FFG);
                     this.alRatedPlayers.add(rP);
                 }
             }
@@ -195,7 +199,7 @@ public class RatingList {
                 }
                 
                 RatedPlayer rP = new RatedPlayer(
-                        "", "", "", agaID, agaExpirationDate, name, firstName, country, club, rawRating, "", "AGA");
+                        "", "", "", agaID, agaExpirationDate, name, firstName, country, club, rawRating, "", AGA);
                 this.alRatedPlayers.add(rP);
             }
         } 
@@ -237,7 +241,7 @@ public class RatingList {
         String strPlayerString = "";
         if (rp !=null){
             String strAGAID = "";
-            if (rp.getRatingOrigin().equals("AGA")) strAGAID = ":" + rp.getAgaId();
+            if (rp.getRatingOrigin() == AGA) strAGAID = ":" + rp.getAgaId();
             
             strPlayerString = rp.getName() + " " + rp.getFirstName() + strAGAID + " " +
                     rp.getCountry() + " " + rp.getClub() + " " + rp.getStrRawRating();

@@ -1,6 +1,10 @@
 package info.vannier.gotha;
 
 
+import ru.gofederation.gotha.model.RatingOrigin;
+
+import static ru.gofederation.gotha.model.RatingOrigin.AGA;
+import static ru.gofederation.gotha.model.RatingOrigin.FFG;
 
 public class RatedPlayer {
     private String egfPin;
@@ -14,7 +18,7 @@ public class RatedPlayer {
     private String club;
     private int rawRating;
     private String strGrade;  
-    private String ratingOrigin;
+    private RatingOrigin ratingOrigin;
     
 
     public RatedPlayer(
@@ -29,7 +33,7 @@ public class RatedPlayer {
             String club,
             int rawRating,
             String strGrade,
-            String ratingOrigin){
+            RatingOrigin ratingOrigin){
          this.egfPin = egfPin;
          this.ffgLicence = ffgLicence; 
          this.ffgLicenceStatus = ffgLicenceStatus;
@@ -89,7 +93,7 @@ public class RatedPlayer {
         int rr = getRawRating();
         String strRR = "" + rawRating;
                 
-        if (getRatingOrigin().equals("AGA")){
+        if (getRatingOrigin() == AGA){
             // Generate a eeee.ff string
             int e = rr /100;
             int f = Math.abs(rr %100);
@@ -104,8 +108,8 @@ public class RatedPlayer {
     
     public int getStdRating() {
         int stdRating = this.rawRating;
-        if (ratingOrigin.compareTo("FFG") == 0) stdRating = this.rawRating + 2050;
-        if(ratingOrigin.compareTo("AGA") == 0){
+        if (ratingOrigin == FFG) stdRating = this.rawRating + 2050;
+        if (ratingOrigin == AGA){
             if (this.rawRating >= 100) stdRating =  this.rawRating + 1950;
             if (this.rawRating <= -100) stdRating = this.rawRating + 2150;
             if (this.rawRating > -100 && this.rawRating < 100) stdRating = 2050;            
@@ -117,7 +121,7 @@ public class RatedPlayer {
         return stdRating;
     }
     
-    public String getRatingOrigin() {
+    public RatingOrigin getRatingOrigin() {
         return ratingOrigin;
     }
     

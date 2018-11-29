@@ -28,6 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+import ru.gofederation.gotha.util.GothaLocale;
 /**
  *
  * @author  Luc Vannier
@@ -42,7 +43,9 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
     private static final int CRITERION_DESCRIPTION = 2;
     
     private TournamentInterface tournament;    
-    
+
+	private GothaLocale locale;
+
     private volatile boolean running = true;
     javax.swing.Timer timer = null;
     private void setupRefreshTimer() {
@@ -68,6 +71,8 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
     
     public JFrTournamentOptions(TournamentInterface tournament) throws RemoteException{
+		this.locale = GothaLocale.getCurrentLocale();
+
         this.tournament = tournament;
         
         initComponents();
@@ -101,7 +106,6 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         jLabel19 = new javax.swing.JLabel();
         btnDlgChangeSystemOK = new javax.swing.JButton();
         btnDlgChangeSystemCancel = new javax.swing.JButton();
-        jLabel27 = new javax.swing.JLabel();
         lblRecommended = new javax.swing.JLabel();
         ckbResetParameters = new javax.swing.JCheckBox();
         grpNewSystem = new javax.swing.ButtonGroup();
@@ -283,8 +287,8 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         grpNewSystem.add(rdbMcMahon);
         rdbMcMahon.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         rdbMcMahon.setSelected(true);
-        rdbMcMahon.setText("McMahon");
-        rdbMcMahon.setToolTipText("Players will be paired according to their rank! The winner will be the strongest");
+        rdbMcMahon.setText(locale.getString("tournament.system.mcmahon")); // NOI18N
+        rdbMcMahon.setToolTipText(locale.getString("tournament.system.mcmahon_tooltip")); // NOI18N
         rdbMcMahon.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbMcMahon.setMargin(new java.awt.Insets(0, 0, 0, 0));
         dlgChangeSystem.getContentPane().add(rdbMcMahon);
@@ -292,8 +296,8 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         grpNewSystem.add(rdbSwiss);
         rdbSwiss.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbSwiss.setText("Swiss");
-        rdbSwiss.setToolTipText("Good system for championships");
+        rdbSwiss.setText(locale.getString("tournament.system.swiss")); // NOI18N
+        rdbSwiss.setToolTipText(locale.getString("tournament.system.swiss_tooltip")); // NOI18N
         rdbSwiss.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbSwiss.setMargin(new java.awt.Insets(0, 0, 0, 0));
         dlgChangeSystem.getContentPane().add(rdbSwiss);
@@ -301,24 +305,24 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         grpNewSystem.add(rdbSwissCat);
         rdbSwissCat.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbSwissCat.setText("Swiss with categories");
-        rdbSwissCat.setToolTipText("Because of possible games with a big rank difference, this system is not usually recommended");
+        rdbSwissCat.setText(locale.getString("tournament.system.swiss_cat")); // NOI18N
+        rdbSwissCat.setToolTipText(locale.getString("tournament.system.swiss_cat_tooltip")); // NOI18N
         rdbSwissCat.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbSwissCat.setMargin(new java.awt.Insets(0, 0, 0, 0));
         dlgChangeSystem.getContentPane().add(rdbSwissCat);
         rdbSwissCat.setBounds(180, 170, 170, 13);
 
-        lblNewSystem.setText("New system :");
+        lblNewSystem.setText(locale.getString("tournament.reset.new_system")); // NOI18N
         dlgChangeSystem.getContentPane().add(lblNewSystem);
         lblNewSystem.setBounds(180, 80, 110, 14);
 
         jLabel19.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel19.setText("Changing tournament system will reset system-specific settings");
+        jLabel19.setText(locale.getString("tournament.reset.change_system_will_reset_settings")); // NOI18N
         dlgChangeSystem.getContentPane().add(jLabel19);
-        jLabel19.setBounds(10, 220, 470, 20);
+        jLabel19.setBounds(60, 220, 420, 40);
 
-        btnDlgChangeSystemOK.setText("OK");
+        btnDlgChangeSystemOK.setText(locale.getString("btn.ok")); // NOI18N
         btnDlgChangeSystemOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDlgChangeSystemOKActionPerformed(evt);
@@ -327,7 +331,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         dlgChangeSystem.getContentPane().add(btnDlgChangeSystemOK);
         btnDlgChangeSystemOK.setBounds(60, 270, 150, 23);
 
-        btnDlgChangeSystemCancel.setText("Cancel");
+        btnDlgChangeSystemCancel.setText(locale.getString("btn.cancel")); // NOI18N
         btnDlgChangeSystemCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDlgChangeSystemCancelActionPerformed(evt);
@@ -336,18 +340,12 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         dlgChangeSystem.getContentPane().add(btnDlgChangeSystemCancel);
         btnDlgChangeSystemCancel.setBounds(330, 270, 150, 23);
 
-        jLabel27.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel27.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel27.setText("to their default value");
-        dlgChangeSystem.getContentPane().add(jLabel27);
-        jLabel27.setBounds(10, 240, 470, 20);
-
         lblRecommended.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lblRecommended.setText("(recommended for ancilliary standings only)");
+        lblRecommended.setText(locale.getString("tournament.system.swiss_cat_recommended")); // NOI18N
         dlgChangeSystem.getContentPane().add(lblRecommended);
         lblRecommended.setBounds(220, 180, 250, 13);
 
-        ckbResetParameters.setText("Keep current system but reset settings to their default values");
+        ckbResetParameters.setText(locale.getString("tournament.reset.keep_system_reset_settings")); // NOI18N
         ckbResetParameters.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ckbResetParametersActionPerformed(evt);
@@ -358,7 +356,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         dlgEditClubsGroups.getContentPane().setLayout(null);
 
-        btnDlgEditClubsGroupsClose.setText("Close");
+        btnDlgEditClubsGroupsClose.setText(locale.getString("btn.close")); // NOI18N
         btnDlgEditClubsGroupsClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDlgEditClubsGroupsCloseActionPerformed(evt);
@@ -377,7 +375,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         dlgEditClubsGroups.getContentPane().add(scpClubs);
         scpClubs.setBounds(640, 60, 110, 340);
 
-        jLabel41.setText("Known clubs");
+        jLabel41.setText(locale.getString("club_groups.known_clubs")); // NOI18N
         dlgEditClubsGroups.getContentPane().add(jLabel41);
         jLabel41.setBounds(640, 40, 110, 14);
 
@@ -397,7 +395,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         dlgEditClubsGroups.getContentPane().add(scpClubsGroups);
         scpClubsGroups.setBounds(40, 60, 220, 260);
 
-        jLabel25.setText("Clubs groups");
+        jLabel25.setText(locale.getString("club_groups.club_groups")); // NOI18N
         dlgEditClubsGroups.getContentPane().add(jLabel25);
         jLabel25.setBounds(40, 40, 220, 14);
 
@@ -406,11 +404,11 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         dlgEditClubsGroups.getContentPane().add(scpClubsInSelectedGroup);
         scpClubsInSelectedGroup.setBounds(310, 60, 220, 260);
 
-        jLabel42.setText("Clubs in selected group");
+        jLabel42.setText(locale.getString("club_groups.clubs_in_selected_group")); // NOI18N
         dlgEditClubsGroups.getContentPane().add(jLabel42);
         jLabel42.setBounds(310, 40, 220, 14);
 
-        btnAddGroup.setText("Add new group");
+        btnAddGroup.setText(locale.getString("club_groups.btn_new_group")); // NOI18N
         btnAddGroup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddGroupActionPerformed(evt);
@@ -419,7 +417,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         dlgEditClubsGroups.getContentPane().add(btnAddGroup);
         btnAddGroup.setBounds(40, 340, 220, 23);
 
-        btnRemoveGroup.setText("Remove selected group");
+        btnRemoveGroup.setText(locale.getString("club_groups.btn_remove_group")); // NOI18N
         btnRemoveGroup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoveGroupActionPerformed(evt);
@@ -428,7 +426,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         dlgEditClubsGroups.getContentPane().add(btnRemoveGroup);
         btnRemoveGroup.setBounds(40, 380, 220, 23);
 
-        btnAddClub.setText("Add club");
+        btnAddClub.setText(locale.getString("club_groups.btn_add_club")); // NOI18N
         btnAddClub.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddClubActionPerformed(evt);
@@ -437,7 +435,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         dlgEditClubsGroups.getContentPane().add(btnAddClub);
         btnAddClub.setBounds(310, 340, 220, 23);
 
-        btnRemoveClub.setText("Remove selected club");
+        btnRemoveClub.setText(locale.getString("club_groups.btn_remove_club")); // NOI18N
         btnRemoveClub.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoveClubActionPerformed(evt);
@@ -456,7 +454,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         });
         getContentPane().setLayout(null);
 
-        btnClose.setText("Close");
+        btnClose.setText(locale.getString("btn.close")); // NOI18N
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -467,18 +465,18 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         pnlGen.setLayout(null);
 
-        pnlCategories.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), "Categories"));
+        pnlCategories.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), locale.getString("tournament.system.swiss_cat.categories"))); // NOI18N
         pnlCategories.setLayout(null);
 
-        jLabel9.setText("Number of categories");
+        jLabel9.setText(locale.getString("tournament.system.swiss_cat.categories.number")); // NOI18N
         pnlCategories.add(jLabel9);
         jLabel9.setBounds(10, 30, 140, 14);
 
-        jLabel7.setText("Lower limits :");
+        jLabel7.setText(locale.getString("tournament.system.swiss_cat.categories.lower_limits")); // NOI18N
         pnlCategories.add(jLabel7);
         jLabel7.setBounds(10, 100, 100, 14);
 
-        btnAdjustCategoryLimits.setText("Adjust categories");
+        btnAdjustCategoryLimits.setText(locale.getString("tournament.system.swiss_cat.categories.btn_adjust")); // NOI18N
         btnAdjustCategoryLimits.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAdjustCategoryLimitsActionPerformed(evt);
@@ -503,7 +501,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTournamentDetails.setLayout(null);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel1.setText("Short name");
+        jLabel1.setText(locale.getString("tournament.short_name")); // NOI18N
         pnlTournamentDetails.add(jLabel1);
         jLabel1.setBounds(10, 40, 100, 13);
 
@@ -517,7 +515,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfShortName.setBounds(120, 40, 150, 20);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel2.setText("Full Name");
+        jLabel2.setText(locale.getString("tournament.name")); // NOI18N
         pnlTournamentDetails.add(jLabel2);
         jLabel2.setBounds(10, 20, 100, 13);
 
@@ -531,7 +529,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfName.setBounds(120, 20, 150, 20);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel3.setText("Location");
+        jLabel3.setText(locale.getString("tournament.location")); // NOI18N
         pnlTournamentDetails.add(jLabel3);
         jLabel3.setBounds(10, 60, 100, 13);
 
@@ -545,7 +543,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfLocation.setBounds(120, 60, 150, 20);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel4.setText("Begin date");
+        jLabel4.setText(locale.getString("tournament.begin_date")); // NOI18N
         pnlTournamentDetails.add(jLabel4);
         jLabel4.setBounds(10, 120, 100, 13);
 
@@ -559,7 +557,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfBeginDate.setBounds(120, 120, 110, 20);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel5.setText("Number of rounds");
+        jLabel5.setText(locale.getString("tournament.number_of_rounds")); // NOI18N
         pnlTournamentDetails.add(jLabel5);
         jLabel5.setBounds(10, 170, 120, 13);
 
@@ -573,7 +571,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfNumberOfRounds.setBounds(120, 170, 30, 20);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel8.setText("End date");
+        jLabel8.setText(locale.getString("tournament.end_date")); // NOI18N
         pnlTournamentDetails.add(jLabel8);
         jLabel8.setBounds(10, 140, 100, 13);
 
@@ -587,7 +585,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfEndDate.setBounds(120, 140, 110, 20);
 
         jLabel37.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel37.setText("Director");
+        jLabel37.setText(locale.getString("tournament.director")); // NOI18N
         pnlTournamentDetails.add(jLabel37);
         jLabel37.setBounds(10, 90, 100, 13);
 
@@ -603,15 +601,15 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTournamentDetails.setBounds(10, 40, 280, 200);
 
         lblSystemName.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        lblSystemName.setText("System");
+        lblSystemName.setText(locale.getString("tournament.system")); // NOI18N
         pnlGen.add(lblSystemName);
         lblSystemName.setBounds(300, 20, 280, 20);
 
-        pnlMcMahon.setBorder(javax.swing.BorderFactory.createTitledBorder("McMahon"));
+        pnlMcMahon.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.system.mcmahon"))); // NOI18N
         pnlMcMahon.setLayout(null);
 
         lblMMBar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lblMMBar.setText("McMahon Bar");
+        lblMMBar.setText(locale.getString("tournament.system.mcmahon.bar")); // NOI18N
         pnlMcMahon.add(lblMMBar);
         lblMMBar.setBounds(10, 20, 140, 13);
 
@@ -624,7 +622,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfMMBar.setBounds(150, 20, 30, 20);
 
         lblMMFloor.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lblMMFloor.setText("McMahon Floor");
+        lblMMFloor.setText(locale.getString("tournament.system.mcmahon.floor")); // NOI18N
         pnlMcMahon.add(lblMMFloor);
         lblMMFloor.setBounds(10, 50, 140, 13);
 
@@ -637,7 +635,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfMMFloor.setBounds(150, 50, 30, 20);
 
         lblMMZero.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lblMMZero.setText("McMahon Zero");
+        lblMMZero.setText(locale.getString("tournament.system.mcmahon.zero")); // NOI18N
         pnlMcMahon.add(lblMMZero);
         lblMMZero.setBounds(10, 110, 140, 13);
 
@@ -653,7 +651,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlGen.add(pnlMcMahon);
         pnlMcMahon.setBounds(300, 90, 250, 150);
 
-        pnlSpecialResults.setBorder(javax.swing.BorderFactory.createTitledBorder("Special Results"));
+        pnlSpecialResults.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.options.special_results"))); // NOI18N
         pnlSpecialResults.setLayout(null);
 
         grpAbsentNBW.add(rdbAbsentNBW0);
@@ -801,28 +799,28 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         rdbByeMMS2.setBounds(220, 80, 40, 15);
 
         jLabel15.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel15.setText("NBW for Absent player");
+        jLabel15.setText(locale.getString("tournament.options.special_results.nbw_absent")); // NOI18N
         pnlSpecialResults.add(jLabel15);
         jLabel15.setBounds(10, 20, 130, 13);
 
         jLabel16.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel16.setText("MMS for Absent player");
+        jLabel16.setText(locale.getString("tournament.options.special_results.mms_absent")); // NOI18N
         pnlSpecialResults.add(jLabel16);
         jLabel16.setBounds(10, 40, 130, 13);
 
         jLabel17.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel17.setText("NBW for Bye player ");
+        jLabel17.setText(locale.getString("tournament.options.special_results.nbw_bye")); // NOI18N
         pnlSpecialResults.add(jLabel17);
         jLabel17.setBounds(10, 60, 130, 13);
 
         jLabel18.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel18.setText("MMS for Bye player ");
+        jLabel18.setText(locale.getString("tournament.options.special_results.mms_bye")); // NOI18N
         pnlSpecialResults.add(jLabel18);
         jLabel18.setBounds(10, 80, 130, 13);
 
         ckbRoundDown.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         ckbRoundDown.setSelected(true);
-        ckbRoundDown.setText("Round down NBW and MMS scores");
+        ckbRoundDown.setText(locale.getString("tournament.options.special_results.round_down_nbw_mms")); // NOI18N
         ckbRoundDown.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 ckbRoundDownFocusLost(evt);
@@ -832,7 +830,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         ckbRoundDown.setBounds(10, 110, 260, 23);
 
         ckbCountNPG.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ckbCountNPG.setText("For SOS, count not played games as half point");
+        ckbCountNPG.setText(locale.getString("tournament.options.special_results.sos_half_point")); // NOI18N
         ckbCountNPG.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 ckbCountNPGFocusLost(evt);
@@ -844,7 +842,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlGen.add(pnlSpecialResults);
         pnlSpecialResults.setBounds(10, 250, 280, 180);
 
-        btnChangeSystem.setText("Change or Reset Tournament system");
+        btnChangeSystem.setText(locale.getString("tournament.options.btn_reset_system")); // NOI18N
         btnChangeSystem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnChangeSystemActionPerformed(evt);
@@ -854,7 +852,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         btnChangeSystem.setBounds(300, 50, 250, 30);
 
         btnHelpGeneral.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelpGeneral.setText("help");
+        btnHelpGeneral.setText(locale.getString("btn.help")); // NOI18N
         btnHelpGeneral.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpGeneralActionPerformed(evt);
@@ -863,7 +861,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlGen.add(btnHelpGeneral);
         btnHelpGeneral.setBounds(420, 400, 110, 30);
 
-        tpnParameters.addTab("General", pnlGen);
+        tpnParameters.addTab(locale.getString("tournament.options.general"), pnlGen); // NOI18N
 
         pnlHan.setLayout(null);
 
@@ -872,11 +870,11 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlHan.add(lblHandicap);
         lblHandicap.setBounds(10, 20, 300, 20);
 
-        pnlHandicap.setBorder(javax.swing.BorderFactory.createTitledBorder("Handicap"));
+        pnlHandicap.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.options.handicap"))); // NOI18N
         pnlHandicap.setLayout(null);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel6.setText("No handicap when both players' MMS above ");
+        jLabel6.setText(locale.getString("tournament.options.handicap.no_handicap_mms_above")); // NOI18N
         pnlHandicap.add(jLabel6);
         jLabel6.setBounds(10, 30, 220, 13);
 
@@ -891,7 +889,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         grpHdCorrection.add(rdbHdCorrection0);
         rdbHdCorrection0.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbHdCorrection0.setText("handicap not corrected");
+        rdbHdCorrection0.setText(locale.getString("tournament.options.handicap.correction.0")); // NOI18N
         rdbHdCorrection0.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbHdCorrection0.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbHdCorrection0.addActionListener(new java.awt.event.ActionListener() {
@@ -904,7 +902,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         grpHdCorrection.add(rdbHdCorrection1);
         rdbHdCorrection1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbHdCorrection1.setText("handicap -1");
+        rdbHdCorrection1.setText(locale.getString("tournament.options.handicap.correction.-1")); // NOI18N
         rdbHdCorrection1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbHdCorrection1.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbHdCorrection1.addActionListener(new java.awt.event.ActionListener() {
@@ -917,7 +915,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         grpHdCorrection.add(rdbHdCorrection2);
         rdbHdCorrection2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbHdCorrection2.setText("handicap -2");
+        rdbHdCorrection2.setText(locale.getString("tournament.options.handicap.correction.-2")); // NOI18N
         rdbHdCorrection2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbHdCorrection2.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbHdCorrection2.addActionListener(new java.awt.event.ActionListener() {
@@ -930,7 +928,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         grpHdCorrection.add(rdbHdCorrectionPlus1);
         rdbHdCorrectionPlus1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbHdCorrectionPlus1.setText("handicap +1");
+        rdbHdCorrectionPlus1.setText(locale.getString("tournament.options.handicap.correction.+1")); // NOI18N
         rdbHdCorrectionPlus1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbHdCorrectionPlus1.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbHdCorrectionPlus1.addActionListener(new java.awt.event.ActionListener() {
@@ -942,7 +940,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         rdbHdCorrectionPlus1.setBounds(20, 270, 180, 20);
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel10.setText("Handicap ceiling : ");
+        jLabel10.setText(locale.getString("tournament.options.handicap.ceiling")); // NOI18N
         pnlHandicap.add(jLabel10);
         jLabel10.setBounds(10, 310, 210, 13);
 
@@ -956,13 +954,13 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfHdCeiling.setBounds(230, 310, 40, 20);
 
         jLabel29.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel29.setText("Handicap based on :");
+        jLabel29.setText(locale.getString("tournament.options.handicap.based_on")); // NOI18N
         pnlHandicap.add(jLabel29);
         jLabel29.setBounds(10, 70, 140, 13);
 
         grpHdBase.add(rdbHdBaseMMS);
         rdbHdBaseMMS.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbHdBaseMMS.setText("McMahon score");
+        rdbHdBaseMMS.setText(locale.getString("tournament.options.handicap.based_on.mms")); // NOI18N
         rdbHdBaseMMS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rdbHdBaseMMSActionPerformed(evt);
@@ -973,7 +971,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         grpHdBase.add(rdbHdBaseRank);
         rdbHdBaseRank.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbHdBaseRank.setText("Rank");
+        rdbHdBaseRank.setText(locale.getString("tournament.options.handicap.based_on.rank")); // NOI18N
         rdbHdBaseRank.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rdbHdBaseRankActionPerformed(evt);
@@ -983,13 +981,13 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         rdbHdBaseRank.setBounds(20, 110, 150, 20);
 
         jLabel30.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel30.setText("Handicap correction");
+        jLabel30.setText(locale.getString("tournament.options.handicap.correction")); // NOI18N
         pnlHandicap.add(jLabel30);
         jLabel30.setBounds(10, 160, 160, 13);
 
         grpHdCorrection.add(rdbHdCorrection3);
         rdbHdCorrection3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbHdCorrection3.setText("handicap -3");
+        rdbHdCorrection3.setText(locale.getString("tournament.options.handicap.correction.-3")); // NOI18N
         rdbHdCorrection3.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbHdCorrection3.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbHdCorrection3.addActionListener(new java.awt.event.ActionListener() {
@@ -1004,7 +1002,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlHandicap.setBounds(10, 50, 300, 370);
 
         btnHelpHandicap.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelpHandicap.setText("help");
+        btnHelpHandicap.setText(locale.getString("btn.help")); // NOI18N
         btnHelpHandicap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpHandicapActionPerformed(evt);
@@ -1013,11 +1011,11 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlHan.add(btnHelpHandicap);
         btnHelpHandicap.setBounds(420, 400, 110, 30);
 
-        tpnParameters.addTab("Handicap", pnlHan);
+        tpnParameters.addTab(locale.getString("tournament.options.handicap"), pnlHan); // NOI18N
 
         pnlPla.setLayout(null);
 
-        jLabel11.setText("Criterion 1");
+        jLabel11.setText(locale.getString("tournament.options.placement.criterion1")); // NOI18N
         pnlPla.add(jLabel11);
         jLabel11.setBounds(20, 20, 80, 20);
 
@@ -1030,7 +1028,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlPla.add(cbxCrit1);
         cbxCrit1.setBounds(20, 40, 80, 20);
 
-        jLabel12.setText("Criterion 2");
+        jLabel12.setText(locale.getString("tournament.options.placement.criterion2")); // NOI18N
         pnlPla.add(jLabel12);
         jLabel12.setBounds(120, 20, 80, 20);
 
@@ -1043,7 +1041,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlPla.add(cbxCrit2);
         cbxCrit2.setBounds(120, 40, 80, 20);
 
-        jLabel13.setText("Criterion 3");
+        jLabel13.setText(locale.getString("tournament.options.placement.criterion3")); // NOI18N
         pnlPla.add(jLabel13);
         jLabel13.setBounds(220, 20, 80, 20);
 
@@ -1056,7 +1054,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlPla.add(cbxCrit3);
         cbxCrit3.setBounds(220, 40, 80, 20);
 
-        jLabel14.setText("Criterion 4");
+        jLabel14.setText(locale.getString("tournament.options.placement.criterion4")); // NOI18N
         pnlPla.add(jLabel14);
         jLabel14.setBounds(320, 20, 80, 20);
 
@@ -1069,7 +1067,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlPla.add(cbxCrit4);
         cbxCrit4.setBounds(320, 40, 80, 20);
 
-        pnlGlossary.setBorder(javax.swing.BorderFactory.createTitledBorder("Criteria glossary"));
+        pnlGlossary.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.options.placement.criteria_glossary"))); // NOI18N
         pnlGlossary.setLayout(null);
 
         tblGlossary.setModel(new javax.swing.table.DefaultTableModel(
@@ -1105,7 +1103,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         jScrollPane1.setBounds(410, 100, 350, 110);
 
         btnHelpPlacement.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelpPlacement.setText("help");
+        btnHelpPlacement.setText(locale.getString("btn.help")); // NOI18N
         btnHelpPlacement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpPlacementActionPerformed(evt);
@@ -1114,16 +1112,16 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlPla.add(btnHelpPlacement);
         btnHelpPlacement.setBounds(420, 400, 110, 30);
 
-        tpnParameters.addTab("Placement", pnlPla);
+        tpnParameters.addTab(locale.getString("tournament.options.placement"), pnlPla); // NOI18N
 
         pnlPai.setLayout(null);
 
-        pnlBase.setBorder(javax.swing.BorderFactory.createTitledBorder("Base Criteria"));
+        pnlBase.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.options.pairing.base_criteria"))); // NOI18N
         pnlBase.setLayout(null);
 
         ckbAvoidPairingSamePair.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         ckbAvoidPairingSamePair.setSelected(true);
-        ckbAvoidPairingSamePair.setText("Avoid pairing same pair twice");
+        ckbAvoidPairingSamePair.setText(locale.getString("tournament.options.pairing.base_criteria.avoid_pairing_twice")); // NOI18N
         ckbAvoidPairingSamePair.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         ckbAvoidPairingSamePair.setEnabled(false);
         ckbAvoidPairingSamePair.setMargin(new java.awt.Insets(0, 0, 0, 0));
@@ -1132,7 +1130,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         ckbBalanceWB.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         ckbBalanceWB.setSelected(true);
-        ckbBalanceWB.setText("Balance White and Black");
+        ckbBalanceWB.setText(locale.getString("tournament.options.pairing.base_criteria.balance_white_black")); // NOI18N
         ckbBalanceWB.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         ckbBalanceWB.setMargin(new java.awt.Insets(0, 0, 0, 0));
         ckbBalanceWB.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1146,7 +1144,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         grpRandom.add(rdbNoRandom);
         rdbNoRandom.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         rdbNoRandom.setSelected(true);
-        rdbNoRandom.setText("No random");
+        rdbNoRandom.setText(locale.getString("tournament.options.pairing.base_criteria.no_random")); // NOI18N
         rdbNoRandom.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbNoRandom.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbNoRandom.addActionListener(new java.awt.event.ActionListener() {
@@ -1164,7 +1162,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         grpRandom.add(rdbAcceptRandom);
         rdbAcceptRandom.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbAcceptRandom.setText("Accept random");
+        rdbAcceptRandom.setText(locale.getString("tournament.options.pairing.base_criteria.accept_random")); // NOI18N
         rdbAcceptRandom.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbAcceptRandom.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbAcceptRandom.addActionListener(new java.awt.event.ActionListener() {
@@ -1181,7 +1179,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         rdbAcceptRandom.setBounds(20, 70, 130, 20);
 
         ckbDeterministic.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ckbDeterministic.setText("deterministic random");
+        ckbDeterministic.setText(locale.getString("tournament.options.pairing.base_criteria.deterministic_random")); // NOI18N
         ckbDeterministic.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         ckbDeterministic.setMargin(new java.awt.Insets(0, 0, 0, 0));
         ckbDeterministic.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1195,12 +1193,12 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlPai.add(pnlBase);
         pnlBase.setBounds(420, 10, 350, 140);
 
-        pnlMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Main criteria"));
+        pnlMain.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.options.pairing.main_criteria"))); // NOI18N
         pnlMain.setLayout(null);
 
         ckbAvoidMixingCategories.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         ckbAvoidMixingCategories.setSelected(true);
-        ckbAvoidMixingCategories.setText("Avoid mixing categories");
+        ckbAvoidMixingCategories.setText(locale.getString("tournament.options.pairing.avoid_mix_cat")); // NOI18N
         ckbAvoidMixingCategories.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         ckbAvoidMixingCategories.setEnabled(false);
         ckbAvoidMixingCategories.setMargin(new java.awt.Insets(0, 0, 0, 0));
@@ -1209,22 +1207,22 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         ckbMinimizeScoreDifference.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         ckbMinimizeScoreDifference.setSelected(true);
-        ckbMinimizeScoreDifference.setText("Minimize score difference");
+        ckbMinimizeScoreDifference.setText(locale.getString("tournament.options.pairing.minimize_score_difference")); // NOI18N
         ckbMinimizeScoreDifference.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         ckbMinimizeScoreDifference.setEnabled(false);
         ckbMinimizeScoreDifference.setMargin(new java.awt.Insets(0, 0, 0, 0));
         pnlMain.add(ckbMinimizeScoreDifference);
         ckbMinimizeScoreDifference.setBounds(10, 40, 290, 13);
 
-        pnlDUDD.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "When pairing players from different groups is necessary :", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+        pnlDUDD.setBorder(javax.swing.BorderFactory.createTitledBorder(null, locale.getString("tournament.options.pairing.different_groups"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
         pnlDUDD.setLayout(null);
 
-        pnlDUDDUG.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "the player in the upper group", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+        pnlDUDDUG.setBorder(javax.swing.BorderFactory.createTitledBorder(null, locale.getString("tournament.options.pairing.different_groups.player_upper"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
         pnlDUDDUG.setLayout(null);
 
         grpDUDDUG.add(rdbDUDDUGTop);
         rdbDUDDUGTop.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbDUDDUGTop.setText("in the top of the group");
+        rdbDUDDUGTop.setText(locale.getString("tournament.options.pairing.different_groups.player_in_top")); // NOI18N
         rdbDUDDUGTop.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbDUDDUGTop.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbDUDDUGTop.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1238,7 +1236,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         grpDUDDUG.add(rdbDUDDUGMid);
         rdbDUDDUGMid.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         rdbDUDDUGMid.setSelected(true);
-        rdbDUDDUGMid.setText("in the middle of the group");
+        rdbDUDDUGMid.setText(locale.getString("tournament.options.pairing.different_groups.player_in_middle")); // NOI18N
         rdbDUDDUGMid.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbDUDDUGMid.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbDUDDUGMid.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1251,7 +1249,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         grpDUDDUG.add(rdbDUDDUGBot);
         rdbDUDDUGBot.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbDUDDUGBot.setText("in the bottom of the group");
+        rdbDUDDUGBot.setText(locale.getString("tournament.options.pairing.different_groups.player_in_bottom")); // NOI18N
         rdbDUDDUGBot.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbDUDDUGBot.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbDUDDUGBot.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1265,12 +1263,12 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlDUDD.add(pnlDUDDUG);
         pnlDUDDUG.setBounds(10, 90, 190, 90);
 
-        pnlDUDDLG.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "the player in the lower group", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+        pnlDUDDLG.setBorder(javax.swing.BorderFactory.createTitledBorder(null, locale.getString("tournament.options.pairing.different_groups.player_lower"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
         pnlDUDDLG.setLayout(null);
 
         grpDUDDLG.add(rdbDUDDLGTop);
         rdbDUDDLGTop.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbDUDDLGTop.setText("in the top of the group");
+        rdbDUDDLGTop.setText(locale.getString("tournament.options.pairing.different_groups.player_in_top")); // NOI18N
         rdbDUDDLGTop.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbDUDDLGTop.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbDUDDLGTop.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1284,7 +1282,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         grpDUDDLG.add(rdbDUDDLGMid);
         rdbDUDDLGMid.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         rdbDUDDLGMid.setSelected(true);
-        rdbDUDDLGMid.setText("in the middle of the group");
+        rdbDUDDLGMid.setText(locale.getString("tournament.options.pairing.different_groups.player_in_middle")); // NOI18N
         rdbDUDDLGMid.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbDUDDLGMid.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbDUDDLGMid.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1297,7 +1295,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         grpDUDDLG.add(rdbDUDDLGBot);
         rdbDUDDLGBot.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbDUDDLGBot.setText("in the bottom of the group");
+        rdbDUDDLGBot.setText(locale.getString("tournament.options.pairing.different_groups.player_in_bottom")); // NOI18N
         rdbDUDDLGBot.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbDUDDLGBot.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbDUDDLGBot.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1313,7 +1311,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         ckbCompensate.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         ckbCompensate.setSelected(true);
-        ckbCompensate.setText("Compensate a previous Draw up/down by a Draw down/up");
+        ckbCompensate.setText(locale.getString("tournament.options.pairing.different_groups.compensate_draw")); // NOI18N
         ckbCompensate.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 ckbCompensateFocusLost(evt);
@@ -1324,20 +1322,20 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         ckbAvoid2DUDD.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         ckbAvoid2DUDD.setSelected(true);
-        ckbAvoid2DUDD.setText("Avoid drawing up/down a player twice in the same sense");
+        ckbAvoid2DUDD.setText(locale.getString("tournament.options.pairing.different_groups.draw_twice")); // NOI18N
         ckbAvoid2DUDD.setEnabled(false);
         pnlDUDD.add(ckbAvoid2DUDD);
         ckbAvoid2DUDD.setBounds(10, 20, 350, 21);
 
         jLabel40.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel40.setText("Then, preferably choose :");
+        jLabel40.setText(locale.getString("tournament.options.pairing.different_groups.choose")); // NOI18N
         pnlDUDD.add(jLabel40);
         jLabel40.setBounds(20, 70, 340, 13);
 
         pnlMain.add(pnlDUDD);
         pnlDUDD.setBounds(10, 230, 400, 180);
 
-        pnlSeeding.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Inside a group, use a seeding system", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+        pnlSeeding.setBorder(javax.swing.BorderFactory.createTitledBorder(null, locale.getString("tournament.options.pairing.inside_group"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
         pnlSeeding.setLayout(null);
 
         txfLastRoundForSeedSystem1.setText("2");
@@ -1350,16 +1348,16 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfLastRoundForSeedSystem1.setBounds(190, 20, 30, 20);
 
         jLabel20.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel20.setText("Former rounds up to round :");
+        jLabel20.setText(locale.getString("tournament.options.pairing.former_rounds_up_to")); // NOI18N
         pnlSeeding.add(jLabel20);
         jLabel20.setBounds(10, 20, 180, 13);
 
-        pnlFormer.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Former rounds", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+        pnlFormer.setBorder(javax.swing.BorderFactory.createTitledBorder(null, locale.getString("tournament.options.pairing.former_rounds"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
         pnlFormer.setLayout(null);
 
         ckbAddSortOnRating.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         ckbAddSortOnRating.setSelected(true);
-        ckbAddSortOnRating.setText("Add a sorting on rating ");
+        ckbAddSortOnRating.setText(locale.getString("tournament.options.pairing.add_sorting_on_rating")); // NOI18N
         ckbAddSortOnRating.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         ckbAddSortOnRating.setMargin(new java.awt.Insets(0, 0, 0, 0));
         ckbAddSortOnRating.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1373,7 +1371,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         grpSeedingFormer.add(rdbFormerSplitAndRandom);
         rdbFormerSplitAndRandom.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         rdbFormerSplitAndRandom.setSelected(true);
-        rdbFormerSplitAndRandom.setText("Split and Random");
+        rdbFormerSplitAndRandom.setText(locale.getString("tournament.options.pairing.split_random")); // NOI18N
         rdbFormerSplitAndRandom.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbFormerSplitAndRandom.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbFormerSplitAndRandom.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1386,7 +1384,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         grpSeedingFormer.add(rdbFormerSplitAndFold);
         rdbFormerSplitAndFold.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbFormerSplitAndFold.setText("Split and Fold");
+        rdbFormerSplitAndFold.setText(locale.getString("tournament.options.pairing.split_fold")); // NOI18N
         rdbFormerSplitAndFold.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbFormerSplitAndFold.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbFormerSplitAndFold.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1399,7 +1397,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         grpSeedingFormer.add(rdbFormerSplitAndSlip);
         rdbFormerSplitAndSlip.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbFormerSplitAndSlip.setText("Split and Slip");
+        rdbFormerSplitAndSlip.setText(locale.getString("tournament.options.pairing.split_slip")); // NOI18N
         rdbFormerSplitAndSlip.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbFormerSplitAndSlip.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbFormerSplitAndSlip.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1413,12 +1411,12 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlSeeding.add(pnlFormer);
         pnlFormer.setBounds(10, 40, 220, 110);
 
-        pnlLatter.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Latter rounds", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
+        pnlLatter.setBorder(javax.swing.BorderFactory.createTitledBorder(null, locale.getString("tournament.options.pairing.latter_rounds"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
         pnlLatter.setLayout(null);
 
         grpSeedingLatter.add(rdbLatterSplitAndRandom);
         rdbLatterSplitAndRandom.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbLatterSplitAndRandom.setText("Split and Random");
+        rdbLatterSplitAndRandom.setText(locale.getString("tournament.options.pairing.split_random")); // NOI18N
         rdbLatterSplitAndRandom.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbLatterSplitAndRandom.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbLatterSplitAndRandom.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1432,7 +1430,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         grpSeedingLatter.add(rdbLatterSplitAndFold);
         rdbLatterSplitAndFold.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         rdbLatterSplitAndFold.setSelected(true);
-        rdbLatterSplitAndFold.setText("Split and Fold");
+        rdbLatterSplitAndFold.setText(locale.getString("tournament.options.pairing.split_fold")); // NOI18N
         rdbLatterSplitAndFold.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbLatterSplitAndFold.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbLatterSplitAndFold.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1445,7 +1443,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         grpSeedingLatter.add(rdbLatterSplitAndSlip);
         rdbLatterSplitAndSlip.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        rdbLatterSplitAndSlip.setText("Split and Slip");
+        rdbLatterSplitAndSlip.setText(locale.getString("tournament.options.pairing.split_slip")); // NOI18N
         rdbLatterSplitAndSlip.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbLatterSplitAndSlip.setMargin(new java.awt.Insets(0, 0, 0, 0));
         rdbLatterSplitAndSlip.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1465,16 +1463,16 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlPai.add(pnlMain);
         pnlMain.setBounds(0, 10, 420, 420);
 
-        pnlSecondary.setBorder(javax.swing.BorderFactory.createTitledBorder("Secondary criteria"));
+        pnlSecondary.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.options.pairing.secondary_criteria"))); // NOI18N
         pnlSecondary.setLayout(null);
 
         jLabel21.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel21.setText("Do not apply secondary criteria :");
+        jLabel21.setText(locale.getString("tournament.options.pairing.secondary_criteria.dont_apply")); // NOI18N
         pnlSecondary.add(jLabel21);
         jLabel21.setBounds(10, 30, 270, 14);
 
         jLabel22.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel22.setText("for players with a MMS equal or stronger than :");
+        jLabel22.setText(locale.getString("tournament.options.pairing.secondary_criteria.dont_apply.mms_ge")); // NOI18N
         pnlSecondary.add(jLabel22);
         jLabel22.setBounds(10, 50, 280, 14);
 
@@ -1488,7 +1486,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfSeRankThreshold.setBounds(310, 50, 30, 20);
 
         ckbSeNbWinsThresholdActive.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        ckbSeNbWinsThresholdActive.setText("for players with at least nbRounds/2 wins");
+        ckbSeNbWinsThresholdActive.setText(locale.getString("tournament.options.pairing.secondary_criteria.dont_apply.half_wins")); // NOI18N
         ckbSeNbWinsThresholdActive.setBorder(null);
         ckbSeNbWinsThresholdActive.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1499,7 +1497,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         ckbSeNbWinsThresholdActive.setBounds(10, 70, 270, 20);
 
         jLabel23.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel23.setText("Avoid intra-clubs-group pairing.");
+        jLabel23.setText(locale.getString("tournament.options.pairing.secondary_criteria.avoid_intra_club_group")); // NOI18N
         pnlSecondary.add(jLabel23);
         jLabel23.setBounds(10, 160, 170, 15);
 
@@ -1513,7 +1511,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfSeCountry.setBounds(320, 130, 20, 20);
 
         jLabel24.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel24.setText("Avoid intra-club pairing.");
+        jLabel24.setText(locale.getString("tournament.options.pairing.secondary_criteria.avoid_intra_club")); // NOI18N
         pnlSecondary.add(jLabel24);
         jLabel24.setBounds(10, 200, 170, 10);
 
@@ -1527,7 +1525,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfSeClub.setBounds(320, 200, 20, 20);
 
         ckbSeMinimizeHandicap.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        ckbSeMinimizeHandicap.setText("Minimize handicaps");
+        ckbSeMinimizeHandicap.setText(locale.getString("tournament.options.pairing.secondary_criteria.minimize_handicap")); // NOI18N
         ckbSeMinimizeHandicap.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         ckbSeMinimizeHandicap.setMargin(new java.awt.Insets(0, 0, 0, 0));
         ckbSeMinimizeHandicap.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1540,13 +1538,13 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         jLabel26.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel26.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel26.setText("Prefer a group gap of :");
+        jLabel26.setText(locale.getString("tournament.options.pairing.secondary_criteria.prefer_group_gap")); // NOI18N
         pnlSecondary.add(jLabel26);
         jLabel26.setBounds(190, 200, 130, 15);
 
         ckbSeBarThresholdActive.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         ckbSeBarThresholdActive.setSelected(true);
-        ckbSeBarThresholdActive.setText("for players above McMahon bar");
+        ckbSeBarThresholdActive.setText(locale.getString("tournament.options.pairing.secondary_criteria.dont_apply.mcmahon_bar")); // NOI18N
         ckbSeBarThresholdActive.setBorder(null);
         ckbSeBarThresholdActive.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1557,13 +1555,13 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         ckbSeBarThresholdActive.setBounds(10, 90, 270, 20);
 
         jLabel28.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        jLabel28.setText("Avoid intra-country pairing.");
+        jLabel28.setText(locale.getString("tournament.options.pairing.secondary_criteria.avoid_intra_country")); // NOI18N
         pnlSecondary.add(jLabel28);
         jLabel28.setBounds(10, 130, 170, 15);
 
         jLabel38.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel38.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel38.setText("Prefer a group gap of :");
+        jLabel38.setText(locale.getString("tournament.options.pairing.secondary_criteria.prefer_group_gap")); // NOI18N
         pnlSecondary.add(jLabel38);
         jLabel38.setBounds(190, 130, 130, 15);
 
@@ -1577,7 +1575,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         txfSeClubsGroup.setBounds(320, 160, 20, 20);
 
         btnEditClubsGroups.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        btnEditClubsGroups.setText("Edit clubs groups");
+        btnEditClubsGroups.setText(locale.getString("tournament.options.pairing.secondary_criteria.btn_edit_club_groups")); // NOI18N
         btnEditClubsGroups.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditClubsGroupsActionPerformed(evt);
@@ -1588,7 +1586,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         jLabel39.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel39.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel39.setText("Prefer a group gap of :");
+        jLabel39.setText(locale.getString("tournament.options.pairing.secondary_criteria.prefer_group_gap")); // NOI18N
         pnlSecondary.add(jLabel39);
         jLabel39.setBounds(190, 160, 130, 15);
 
@@ -1596,7 +1594,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlSecondary.setBounds(420, 150, 350, 260);
 
         btnHelpPairing.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelpPairing.setText("help");
+        btnHelpPairing.setText(locale.getString("btn.help")); // NOI18N
         btnHelpPairing.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpPairingActionPerformed(evt);
@@ -1605,11 +1603,11 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlPai.add(btnHelpPairing);
         btnHelpPairing.setBounds(430, 410, 110, 30);
 
-        tpnParameters.addTab("Pairing", pnlPai);
+        tpnParameters.addTab(locale.getString("tournament.options.pairing"), pnlPai); // NOI18N
 
         pnlTPL.setLayout(null);
 
-        jLabel31.setText("Criterion 1");
+        jLabel31.setText(locale.getString("tournament.options.placement.criterion1")); // NOI18N
         pnlTPL.add(jLabel31);
         jLabel31.setBounds(20, 20, 80, 20);
 
@@ -1622,7 +1620,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTPL.add(cbxTeamCrit1);
         cbxTeamCrit1.setBounds(20, 40, 80, 20);
 
-        jLabel32.setText("Criterion 2");
+        jLabel32.setText(locale.getString("tournament.options.placement.criterion2")); // NOI18N
         pnlTPL.add(jLabel32);
         jLabel32.setBounds(120, 20, 80, 20);
 
@@ -1635,7 +1633,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTPL.add(cbxTeamCrit2);
         cbxTeamCrit2.setBounds(120, 40, 80, 20);
 
-        jLabel33.setText("Criterion 3");
+        jLabel33.setText(locale.getString("tournament.options.placement.criterion3")); // NOI18N
         pnlTPL.add(jLabel33);
         jLabel33.setBounds(220, 20, 80, 20);
 
@@ -1648,7 +1646,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTPL.add(cbxTeamCrit3);
         cbxTeamCrit3.setBounds(220, 40, 80, 20);
 
-        jLabel34.setText("Criterion 4");
+        jLabel34.setText(locale.getString("tournament.options.placement.criterion4")); // NOI18N
         pnlTPL.add(jLabel34);
         jLabel34.setBounds(320, 20, 80, 20);
 
@@ -1661,7 +1659,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTPL.add(cbxTeamCrit4);
         cbxTeamCrit4.setBounds(320, 40, 80, 20);
 
-        jLabel35.setText("Criterion 5");
+        jLabel35.setText(locale.getString("tournament.options.placement.criterion5")); // NOI18N
         pnlTPL.add(jLabel35);
         jLabel35.setBounds(430, 20, 80, 20);
 
@@ -1679,7 +1677,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTPL.add(cbxTeamCrit5);
         cbxTeamCrit5.setBounds(430, 40, 80, 20);
 
-        jLabel36.setText("Criterion 6");
+        jLabel36.setText(locale.getString("tournament.options.placement.criterion6")); // NOI18N
         pnlTPL.add(jLabel36);
         jLabel36.setBounds(530, 20, 80, 20);
 
@@ -1692,7 +1690,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTPL.add(cbxTeamCrit6);
         cbxTeamCrit6.setBounds(530, 40, 80, 20);
 
-        pnlTeamGlossary.setBorder(javax.swing.BorderFactory.createTitledBorder("Criteria glossary"));
+        pnlTeamGlossary.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.options.placement.criteria_glossary"))); // NOI18N
         pnlTeamGlossary.setLayout(null);
 
         tblTeamGlossary.setModel(new javax.swing.table.DefaultTableModel(
@@ -1728,7 +1726,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         scpTeamWarning.setBounds(410, 100, 350, 110);
 
         btnHelpTeamPlacement.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelpTeamPlacement.setText("help");
+        btnHelpTeamPlacement.setText(locale.getString("btn.help")); // NOI18N
         btnHelpTeamPlacement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpTeamPlacementActionPerformed(evt);
@@ -1737,12 +1735,12 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         pnlTPL.add(btnHelpTeamPlacement);
         btnHelpTeamPlacement.setBounds(420, 400, 110, 30);
 
-        tpnParameters.addTab("Team placement", pnlTPL);
+        tpnParameters.addTab(locale.getString("tournament.options.team_placement"), pnlTPL); // NOI18N
 
         getContentPane().add(tpnParameters);
         tpnParameters.setBounds(3, 0, 790, 480);
 
-        btnPrint.setText("Print ...");
+        btnPrint.setText(locale.getString("btn.print")); // NOI18N
         btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintActionPerformed(evt);
@@ -2905,7 +2903,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         int h = JFrGotha.MEDIUM_FRAME_HEIGHT;
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         dlgEditClubsGroups.setBounds((dim.width - w) / 2, (dim.height - h) / 2, w, h);
-        dlgEditClubsGroups.setTitle("Edit Clubs Groups");
+        dlgEditClubsGroups.setTitle(locale.getString("club_groups.window_title"));
         dlgEditClubsGroups.setIconImage(Gotha.getIconImage());
         dlgEditClubsGroups.setVisible(true);
         
@@ -2921,7 +2919,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
     }//GEN-LAST:event_lstClubsGroupsValueChanged
 
     private void btnAddGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddGroupActionPerformed
-        String strResponse = JOptionPane.showInputDialog("Enter a name for the new group", "group name");
+        String strResponse = JOptionPane.showInputDialog(locale.getString("club_groups.enter_new_group_name"), locale.getString("club_groups.group_name"));
         if (strResponse == null) {
             return;
         }
@@ -2930,7 +2928,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         try {
             ClubsGroup clubsGroup = tournament.getClubsGroupByName(groupName);
             if (clubsGroup != null){
-                JOptionPane.showMessageDialog(this, groupName + " group already exits", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, locale.format("club_groups.group_exists", groupName), locale.getString("alert.error"), JOptionPane.ERROR_MESSAGE);
                 return;
             }
             tournament.addClubsGroup(new ClubsGroup(groupName));
@@ -2960,12 +2958,12 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         String clubName = "";
         Object sel = lstClubsGroups.getSelectedValue();
         if (sel == null){
-            JOptionPane.showMessageDialog(this, "Please selct a Clubs group", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("club_groups.select_club_group"), locale.getString("alert.error"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         groupName = (String)sel;
         
-        String strResponse = JOptionPane.showInputDialog("Enter the name of the club", "club name");
+        String strResponse = JOptionPane.showInputDialog(locale.getString("club_groups.enter_club_name"), locale.getString("club_groups.club_name"));
         if (strResponse == null) {
             return;
         }
@@ -3095,9 +3093,9 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         // Fill Criterion Glossary JTable
         
-        JFrGotha.formatColumn(tblGlossary, CRITERION_NAME, "Name", 60, SwingConstants.LEFT, SwingConstants.LEFT);
-        JFrGotha.formatColumn(tblGlossary, CRITERION_SHORT_NAME, "Short name", 50, SwingConstants.LEFT, SwingConstants.LEFT);
-        JFrGotha.formatColumn(tblGlossary, CRITERION_DESCRIPTION, "Description", 270, SwingConstants.LEFT, SwingConstants.LEFT);
+        JFrGotha.formatColumn(tblGlossary, CRITERION_NAME, locale.getString("tournament.options.placement.criterion_name"), 60, SwingConstants.LEFT, SwingConstants.LEFT);
+        JFrGotha.formatColumn(tblGlossary, CRITERION_SHORT_NAME, locale.getString("tournament.options.placement.criterion_short_name"), 50, SwingConstants.LEFT, SwingConstants.LEFT);
+        JFrGotha.formatColumn(tblGlossary, CRITERION_DESCRIPTION, locale.getString("tournament.options.placement.criterion_description"), 270, SwingConstants.LEFT, SwingConstants.LEFT);
         
         DefaultTableModel model = (DefaultTableModel)tblGlossary.getModel();
         while (model.getRowCount() > 0) model.removeRow(0);
@@ -3131,9 +3129,9 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
 
         // Fill Criterion Glossary JTable
 
-        JFrGotha.formatColumn(tblTeamGlossary, CRITERION_NAME, "Name", 60, SwingConstants.LEFT, SwingConstants.LEFT);
-        JFrGotha.formatColumn(tblTeamGlossary, CRITERION_SHORT_NAME, "Short name", 50, SwingConstants.LEFT, SwingConstants.LEFT);
-        JFrGotha.formatColumn(tblTeamGlossary, CRITERION_DESCRIPTION, "Description", 270, SwingConstants.LEFT, SwingConstants.LEFT);
+        JFrGotha.formatColumn(tblTeamGlossary, CRITERION_NAME, locale.getString("tournament.options.placement.criterion_name"), 60, SwingConstants.LEFT, SwingConstants.LEFT);
+        JFrGotha.formatColumn(tblTeamGlossary, CRITERION_SHORT_NAME, locale.getString("tournament.options.placement.criterion_short_name"), 50, SwingConstants.LEFT, SwingConstants.LEFT);
+        JFrGotha.formatColumn(tblTeamGlossary, CRITERION_DESCRIPTION, locale.getString("tournament.options.placement.criterion_description"), 270, SwingConstants.LEFT, SwingConstants.LEFT);
 
         DefaultTableModel model = (DefaultTableModel)tblTeamGlossary.getModel();
         while (model.getRowCount() > 0) model.removeRow(0);
@@ -3168,21 +3166,21 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         if (tournamentType == TournamentParameterSet.TYPE_MCMAHON){
             this.pnlTournamentDetails.setVisible(true);
             this.lblSystemName.setVisible(true);
-            this.lblSystemName.setText("McMahon system");
+            this.lblSystemName.setText(locale.getString("tournament.system.mcmahon_system"));
             this.pnlCategories.setVisible(false);                      
             this.pnlMcMahon.setVisible(true);
         }        
         if (tournamentType == TournamentParameterSet.TYPE_SWISS){
             this.pnlTournamentDetails.setVisible(true);
             this.lblSystemName.setVisible(true);
-            this.lblSystemName.setText("Swiss system");
+            this.lblSystemName.setText(locale.getString("tournament.system.swiss_system"));
             this.pnlCategories.setVisible(false);
             this.pnlMcMahon.setVisible(false);
         }
         if (tournamentType == TournamentParameterSet.TYPE_SWISSCAT){
             this.pnlTournamentDetails.setVisible(true);
             this.lblSystemName.setVisible(true);
-            this.lblSystemName.setText("SwissCat system");
+            this.lblSystemName.setText(locale.getString("tournament.system.swiss_cat_system"));
             this.pnlCategories.setVisible(true);                      
             this.pnlMcMahon.setVisible(false);
         }
@@ -3238,7 +3236,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
             pnlCategories.setSize(tpgcPnlWidth, tpgcPnlHeadHeight + tpgcLblHeight * nbCat + tpgcPnlBottomHeight);
             for (int c = 0; c < nbCat; c++){
                 // Category c Labels
-                tabLblCat[c] = new JLabel("Category" + (c + 1));
+                tabLblCat[c] = new JLabel(locale.format("tournament.system.swiss_cat.category", c+1));
 //                tabLblCat[c].setBounds(30, 120 + 20 * c, 80, 20);
                 tabLblCat[c].setBounds(tpgcLblLeft, tpgcPnlHeadHeight + tpgcLblHeight * c, tpgcLblWidth, tpgcLblHeight);
                 pnlCategories.add(tabLblCat[c]);
@@ -3307,7 +3305,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
     private void updatePnlHan()throws RemoteException{
         int tournamentType = tournament.tournamentType();
         if (tournamentType == TournamentParameterSet.TYPE_UNDEFINED){
-            this.lblHandicap.setText("No Handicap");
+            this.lblHandicap.setText(locale.getString("tournament.options.handicap.no_handicap"));
             this.pnlHandicap.setVisible(true);
         }
         if (tournamentType == TournamentParameterSet.TYPE_MCMAHON){
@@ -3315,7 +3313,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
             this.pnlHandicap.setVisible(true);
         }        
         if (tournamentType == TournamentParameterSet.TYPE_SWISS){
-            this.lblHandicap.setText("No Handicap");
+            this.lblHandicap.setText(locale.getString("tournament.options.handicap.no_handicap"));
             this.pnlHandicap.setVisible(false);
        }
         if (tournamentType == TournamentParameterSet.TYPE_SWISSCAT){
@@ -3545,7 +3543,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         try {
             if (!tournament.isOpen()) cleanClose();
             this.lastComponentsUpdateTime = tournament.getCurrentTournamentTime();
-            setTitle("Tournament settings. " + tournament.getFullName());           
+            setTitle(locale.format("tournament.options.window_title", tournament.getFullName()));
             updatePnlGen();
             updatePnlHan();
             updatePnlPla();
@@ -3632,7 +3630,6 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;

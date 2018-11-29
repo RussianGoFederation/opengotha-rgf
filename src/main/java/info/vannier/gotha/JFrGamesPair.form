@@ -10,7 +10,9 @@
       <SubComponents>
         <MenuItem class="javax.swing.JMenuItem" name="mniRenumberTables">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Renumber all tables by MMS"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="game.pairing.menu.renumber_mms" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniRenumberTablesActionPerformed"/>
@@ -18,7 +20,9 @@
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="mniChangeTableNumber">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Change table number"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="game.pairing.menu.change_board_number" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniChangeTableNumberActionPerformed"/>
@@ -26,7 +30,9 @@
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="mniShiftTables">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Shift tables"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="game.pairing.menu.shift_boards" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniShiftTablesActionPerformed"/>
@@ -36,7 +42,9 @@
         </Component>
         <MenuItem class="javax.swing.JMenuItem" name="mniExchangeColors">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Exchange colours"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="game.pairing.menu.exchange_colors" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniExchangeColorsActionPerformed"/>
@@ -44,7 +52,9 @@
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="mniModifyHandicap">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Modify handicap"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="game.pairing.menu.modify_handicap" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniModifyHandicapActionPerformed"/>
@@ -54,7 +64,9 @@
         </Component>
         <MenuItem class="javax.swing.JMenuItem" name="mniCancel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Cancel"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="btn.cancel" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniCancelActionPerformed"/>
@@ -360,7 +372,9 @@
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Pair"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="game.pairing.pair" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -371,7 +385,9 @@
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Unpair"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="game.pairing.unpair" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -381,7 +397,9 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Round"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="tournament.round" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -393,7 +411,9 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Players"/>
+                <TitledBorder title="Players">
+                  <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="player.players" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </TitledBorder>
               </Border>
             </Property>
           </Properties>
@@ -419,9 +439,11 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel1">
+            <Component class="javax.swing.JLabel" name="lblPairablePlayers">
               <Properties>
-                <Property name="text" type="java.lang.String" value="pairable players"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="game.pairing.pairable_players" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -520,9 +542,11 @@
                 <Property name="useNullLayout" type="boolean" value="true"/>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel2">
+                <Component class="javax.swing.JLabel" name="lblUnPairablePlayers">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="unpairable players"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="game.pairing.unpairable_players" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -577,7 +601,9 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Games"/>
+                <TitledBorder title="Games">
+                  <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="game.games" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </TitledBorder>
               </Border>
             </Property>
           </Properties>
@@ -645,7 +671,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Bye player"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="game.pairing.bye_player" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -655,7 +683,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnPrint">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Print..."/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="btn.print" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintActionPerformed"/>
@@ -678,7 +708,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnReport">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Pairing report ..."/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="game.pairing.btn_report" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnReportActionPerformed"/>
@@ -691,7 +723,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="jButton1">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Print Result sheets ..."/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="game.pairing.btn_print_result_sheets" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
@@ -720,7 +754,9 @@
         <Component class="javax.swing.JLabel" name="lblByePlayer">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Bye player"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="game.pairing.bye_player" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -730,7 +766,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnClose">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Close"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="btn.close" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCloseActionPerformed"/>
@@ -756,7 +794,9 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/info/vannier/gotha/gothalogo16.jpg"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="help"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="btn.help" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHelpActionPerformed"/>
@@ -769,7 +809,9 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Search for a player"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.search" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -786,7 +828,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnSearch">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Search/Next"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.btn_search" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSearchActionPerformed"/>

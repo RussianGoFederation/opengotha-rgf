@@ -85,7 +85,9 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="btnClose">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Close"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="btn.close" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCloseActionPerformed"/>
@@ -100,7 +102,9 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Players"/>
+                <TitledBorder title="Players">
+                  <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="player.players" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </TitledBorder>
               </Border>
             </Property>
           </Properties>
@@ -114,9 +118,11 @@
             <Property name="useNullLayout" type="boolean" value="true"/>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel8">
+            <Component class="javax.swing.JLabel" name="lblPlFin">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Registered players. Final (F)"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="player.players.registered_final" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -124,9 +130,11 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel9">
+            <Component class="javax.swing.JLabel" name="lblPlPre">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Registered players. Preliminary (P)"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="player.players.registered_preliminary" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -235,7 +243,9 @@
             </Container>
             <Component class="javax.swing.JButton" name="btnPrint">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Print ..."/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="btn.print" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintActionPerformed"/>
@@ -261,7 +271,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Rounds :"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="player.check.rounds" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -291,7 +303,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Participation"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="player.participation" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -376,7 +390,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnRemovePrePlayers">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Remove all &quot;P&quot; players"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.check.btn_remove_preliminary" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRemovePrePlayersActionPerformed"/>
@@ -389,7 +405,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnIncreaseRank">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Increase rank of selected players"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.check.btn_increase_rank_selected" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnIncreaseRankActionPerformed"/>
@@ -402,7 +420,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnDecreaseRank">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Decrease rank of selected players"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.check.decrease_rank_selected" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDecreaseRankActionPerformed"/>
@@ -415,7 +435,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnSetRegToFin">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Set Registration status to Final"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.check.btn_set_final" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSetRegToFinActionPerformed"/>
@@ -428,7 +450,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnSetRegToPre">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Set Registration status to Preliminary"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.check.btn_set_preliminary" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSetRegToPreActionPerformed"/>
@@ -444,7 +468,9 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/info/vannier/gotha/gothalogo16.jpg"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="help"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="btn.help" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHelpActionPerformed"/>
@@ -457,7 +483,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnSetRanksFromRatings">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Set ranks according to ratings"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.check.set_ranks_to_ratings" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSetRanksFromRatingsActionPerformed"/>
@@ -470,7 +498,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnSetRatingsFromRanks">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Set  ratings according to ranks"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.check.btn_set_ratings_to_ranks" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSetRatingsFromRanksActionPerformed"/>
@@ -483,7 +513,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnUpdateRatings">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Update ratings"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.check.btn_update_ratings" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateRatingsActionPerformed"/>
@@ -496,7 +528,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnModifyRatings">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Modify ratings..."/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="l10n/strings.properties" key="player.check.btn_modify_ratings" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnModifyRatingsActionPerformed"/>

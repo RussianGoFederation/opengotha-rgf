@@ -10,8 +10,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.*;
-import static java.awt.print.Printable.NO_SUCH_PAGE;
-import static java.awt.print.Printable.PAGE_EXISTS;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,7 +17,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
+
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
 
 /**
  * TournamentPrinting manages printing jobs.
@@ -746,7 +748,7 @@ public class TournamentPrinting implements Printable {
                 g.fillRect(usableX, y - lineHeight + 4, usableWidth, lineHeight);  // + 4 to keep leading part unfilled
                 g.setColor(Color.BLACK);
             }
-            if (player.getRegisteringStatus().compareTo("FIN") == 0) {
+            if (player.getRegisteringStatus() == FINAL) {
                 g.setColor(Color.BLACK);
             } else {
                 g.setColor(Color.RED);
@@ -781,7 +783,7 @@ public class TournamentPrinting implements Printable {
             if (strNF.length() > 25) {
                 strNF = strNF.substring(0, 25);
             }
-            if (player.getRegisteringStatus().compareTo("PRE") == 0) {
+            if (player.getRegisteringStatus() == PRELIMINARY) {
                 strNF += "(P)";
             }
             x = usableX + usableWidth * PL_NF_BEG / PL_NBCAR;
@@ -1202,7 +1204,7 @@ public class TournamentPrinting implements Printable {
             }
 
             String strReason;
-            if (!player.getRegisteringStatus().equals("FIN")) {
+            if (player.getRegisteringStatus() != FINAL) {
                 strReason = "No Final Registration";
             } else if (player.hasSameKeyString(tournament.getByePlayer(roundNumber))) {
                 strReason = "Bye player";
@@ -1223,7 +1225,7 @@ public class TournamentPrinting implements Printable {
             if (strNF.length() > 25) {
                 strNF = strNF.substring(0, 25);
             }
-            if (player.getRegisteringStatus().compareTo("PRE") == 0) {
+            if (player.getRegisteringStatus() == PRELIMINARY) {
                 strNF += "(P)";
             }
             x = usableX + usableWidth * NPL_NF_BEG / NPL_NBCAR;

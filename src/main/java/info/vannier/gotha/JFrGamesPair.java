@@ -3,10 +3,8 @@
  */
 package info.vannier.gotha;
 
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +21,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
+import ru.gofederation.gotha.util.GothaLocale;
 
 /**
  *
@@ -49,6 +50,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
     /** current Round */
     private int processedRoundNumber = 0;
 
+	private final GothaLocale locale = GothaLocale.getCurrentLocale();
     /**
      * Creates new form JFrGamesPair
      */
@@ -118,11 +120,11 @@ public class JFrGamesPair extends javax.swing.JFrame {
         final int COUNTRY_WIDTH = 25;
         final int CLUB_WIDTH = 40;
         
-        JFrGotha.formatColumn(tbl, NAME_COL, "First name", NAME_WIDTH, JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(tbl, RANK_COL, "Rk", RANK_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
-        JFrGotha.formatColumn(tbl, SCORE_COL, "Sco", SCORE_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
-        JFrGotha.formatColumn(tbl, COUNTRY_COL, "Co", COUNTRY_WIDTH, JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(tbl, CLUB_COL, "Club", CLUB_WIDTH, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tbl, NAME_COL, locale.getString("player.first_name"), NAME_WIDTH, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tbl, RANK_COL, locale.getString("player.rank_s"), RANK_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
+        JFrGotha.formatColumn(tbl, SCORE_COL, locale.getString("player.score_s"), SCORE_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
+        JFrGotha.formatColumn(tbl, COUNTRY_COL, locale.getString("player.country_s"), COUNTRY_WIDTH, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tbl, CLUB_COL, locale.getString("player.club"), CLUB_WIDTH, JLabel.LEFT, JLabel.LEFT);
     }
 
     private void initPreviousGamesTable() {
@@ -132,11 +134,11 @@ public class JFrGamesPair extends javax.swing.JFrame {
         final int HANDICAP_WIDTH = 25;
         final int RESULT_WIDTH = 25;
         
-        JFrGotha.formatColumn(tblPreviousGames, 0, "R", ROUND_NUMBER_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
-        JFrGotha.formatColumn(tblPreviousGames, 1, "Opponent", OPPONENT_WIDTH, JLabel.LEFT, JLabel.CENTER);
-        JFrGotha.formatColumn(tblPreviousGames, 2, "C", COLOR_WIDTH, JLabel.CENTER, JLabel.CENTER);
-        JFrGotha.formatColumn(tblPreviousGames, 3, "H", HANDICAP_WIDTH, JLabel.CENTER, JLabel.CENTER);
-        JFrGotha.formatColumn(tblPreviousGames, 4, "R", RESULT_WIDTH, JLabel.CENTER, JLabel.CENTER);
+        JFrGotha.formatColumn(tblPreviousGames, 0, locale.getString("game.round_s"), ROUND_NUMBER_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
+        JFrGotha.formatColumn(tblPreviousGames, 1, locale.getString("game.opponent"), OPPONENT_WIDTH, JLabel.LEFT, JLabel.CENTER);
+        JFrGotha.formatColumn(tblPreviousGames, 2, locale.getString("game.color"), COLOR_WIDTH, JLabel.CENTER, JLabel.CENTER);
+        JFrGotha.formatColumn(tblPreviousGames, 3, locale.getString("game.handicap"), HANDICAP_WIDTH, JLabel.CENTER, JLabel.CENTER);
+        JFrGotha.formatColumn(tblPreviousGames, 4, locale.getString("game.result"), RESULT_WIDTH, JLabel.CENTER, JLabel.CENTER);
 
     }
 
@@ -145,10 +147,10 @@ public class JFrGamesPair extends javax.swing.JFrame {
         final int PLAYER_WIDTH = 150;
         final int HANDICAP_WIDTH = 20;
         
-        JFrGotha.formatColumn(tbl, TABLE_NUMBER_COL, "Table", TABLE_NUMBER_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
-        JFrGotha.formatColumn(tbl, WHITE_PLAYER_COL, "White", PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
-        JFrGotha.formatColumn(tbl, BLACK_PLAYER_COL, "Black", PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
-        JFrGotha.formatColumn(tbl, HANDICAP_COL, "Hd", HANDICAP_WIDTH, JLabel.CENTER, JLabel.CENTER);
+        JFrGotha.formatColumn(tbl, TABLE_NUMBER_COL, locale.getString("game.board"), TABLE_NUMBER_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
+        JFrGotha.formatColumn(tbl, WHITE_PLAYER_COL, locale.getString("game.white"), PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
+        JFrGotha.formatColumn(tbl, BLACK_PLAYER_COL, locale.getString("game.black"), PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
+        JFrGotha.formatColumn(tbl, HANDICAP_COL, locale.getString("game.handicap"), HANDICAP_WIDTH, JLabel.CENTER, JLabel.CENTER);
 
     }
 
@@ -187,7 +189,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         ArrayList<Player> alNotPairablePlayers = new ArrayList<Player>();
 
         for (Player p : hmPlayers.values()) {
-            if (p.getRegisteringStatus().compareTo("FIN") != 0
+            if (p.getRegisteringStatus() != FINAL
                     || !p.getParticipating()[processedRoundNumber]) {
                 alNotPairablePlayers.add(p);
                 hmPairablePlayers.remove(p.getKeyString());
@@ -220,8 +222,10 @@ public class JFrGamesPair extends javax.swing.JFrame {
             Collections.sort(alPairablePlayers, playerComparator);
         }
         this.txfNbPairablePlayers.setText("" + alPairablePlayers.size());
+        this.lblPairablePlayers.setText(locale.format("game.pairing.pairable_players", alPairablePlayers.size()));
 
         this.txfNbUnPairablePlayers.setText("" + alNotPairablePlayers.size());
+        lblUnPairablePlayers.setText(locale.format("game.pairing.unpairable_players", alNotPairablePlayers.size()));
 
         this.txfNbGames.setText("" + alActualGames.size());
 
@@ -231,7 +235,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
         // Bye player issues
         if (byePlayer == null) {
-            txfByePlayer.setText("No bye player");
+            txfByePlayer.setText(locale.getString("game.pairing.no_bye_player"));
             btnByePlayer.setText(">>>");
 
         } else {
@@ -292,7 +296,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         }
 
         Player p = alPlayers.get(0);
-        this.lblPreviousGames.setText("Previous games of " + p.getName() + "" + p.getFirstName());
+        this.lblPreviousGames.setText(locale.format("game.pairing.previous_games", p.fullName()));
 
 
         ArrayList<Game> alG = null;
@@ -304,13 +308,13 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
         for (int r = 0; r < this.processedRoundNumber; r++) {
             String strRound = "" + (r + 1);
-            String strOpponent = "Not assigned";
+            String strOpponent = locale.getString("game.pairing.not_assigned");
             String strColor = "";
             String strHd = "";
             String strRes = "";
             boolean playerFound = false;
             if (!p.getParticipating()[r]) {
-                strOpponent = "not participating";
+                strOpponent = locale.getString("game.pairing.not_participating");
                 playerFound = true;
             }
             if (!playerFound) {
@@ -321,7 +325,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
                     Logger.getLogger(JFrGamesPair.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 if (p.hasSameKeyString(byeP)) {
-                    strOpponent = "Bye player";
+                    strOpponent = locale.getString(locale.getString("game.pairing.bye_player"));
                     playerFound = true;
                 }
             }
@@ -445,7 +449,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
             }
         }
 
-        int mainCrit = pps.mainCriterion();
+        PlacementCriterion mainCrit = pps.mainCriterion();
         for (Player p : alDisplayedPlayers) {
             ScoredPlayer sp = hmScoredPlayers.get(p.getKeyString());
             Vector<String> row = new Vector<String>();
@@ -566,7 +570,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         pnlPlayers = new javax.swing.JPanel();
         txfNbPairablePlayers = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
+        lblPairablePlayers = new javax.swing.JLabel();
         scpPairablePlayers = new javax.swing.JScrollPane();
         tblPairablePlayers = new javax.swing.JTable();
         pnlPreviousGames = new javax.swing.JPanel();
@@ -574,7 +578,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         tblPreviousGames = new javax.swing.JTable();
         lblPreviousGames = new javax.swing.JLabel();
         pnlUnPairablePlayers = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        lblUnPairablePlayers = new javax.swing.JLabel();
         txfNbUnPairablePlayers = new javax.swing.JTextField();
         scpNotPairablePlayers = new javax.swing.JScrollPane();
         tblNotPairablePlayers = new javax.swing.JTable();
@@ -597,7 +601,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         txfSearchPlayer = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
 
-        mniRenumberTables.setText("Renumber all tables by MMS");
+        mniRenumberTables.setText(locale.getString("game.pairing.menu.renumber_mms")); // NOI18N
         mniRenumberTables.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniRenumberTablesActionPerformed(evt);
@@ -605,7 +609,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         });
         pupGames.add(mniRenumberTables);
 
-        mniChangeTableNumber.setText("Change table number");
+        mniChangeTableNumber.setText(locale.getString("game.pairing.menu.change_board_number")); // NOI18N
         mniChangeTableNumber.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniChangeTableNumberActionPerformed(evt);
@@ -613,7 +617,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         });
         pupGames.add(mniChangeTableNumber);
 
-        mniShiftTables.setText("Shift tables");
+        mniShiftTables.setText(locale.getString("game.pairing.menu.shift_boards")); // NOI18N
         mniShiftTables.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniShiftTablesActionPerformed(evt);
@@ -622,7 +626,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         pupGames.add(mniShiftTables);
         pupGames.add(jSeparator2);
 
-        mniExchangeColors.setText("Exchange colours");
+        mniExchangeColors.setText(locale.getString("game.pairing.menu.exchange_colors")); // NOI18N
         mniExchangeColors.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniExchangeColorsActionPerformed(evt);
@@ -630,7 +634,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         });
         pupGames.add(mniExchangeColors);
 
-        mniModifyHandicap.setText("Modify handicap");
+        mniModifyHandicap.setText(locale.getString("game.pairing.menu.modify_handicap")); // NOI18N
         mniModifyHandicap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniModifyHandicapActionPerformed(evt);
@@ -639,7 +643,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         pupGames.add(mniModifyHandicap);
         pupGames.add(jSeparator5);
 
-        mniCancel.setText("Cancel");
+        mniCancel.setText(locale.getString("btn.cancel")); // NOI18N
         mniCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniCancelActionPerformed(evt);
@@ -800,20 +804,20 @@ public class JFrGamesPair extends javax.swing.JFrame {
         btnUnpair.setBounds(280, 160, 120, 30);
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Pair");
+        jLabel6.setText(locale.getString("game.pairing.pair")); // NOI18N
         pnlInternal.add(jLabel6);
         jLabel6.setBounds(280, 80, 110, 14);
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Unpair");
+        jLabel7.setText(locale.getString("game.pairing.unpair")); // NOI18N
         pnlInternal.add(jLabel7);
         jLabel7.setBounds(280, 140, 110, 14);
 
-        jLabel9.setText("Round");
+        jLabel9.setText(locale.getString("tournament.round")); // NOI18N
         pnlInternal.add(jLabel9);
         jLabel9.setBounds(10, 20, 50, 14);
 
-        pnlPlayers.setBorder(javax.swing.BorderFactory.createTitledBorder("Players"));
+        pnlPlayers.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("player.players"))); // NOI18N
         pnlPlayers.setLayout(null);
 
         txfNbPairablePlayers.setEditable(false);
@@ -822,9 +826,9 @@ public class JFrGamesPair extends javax.swing.JFrame {
         pnlPlayers.add(txfNbPairablePlayers);
         txfNbPairablePlayers.setBounds(10, 20, 30, 20);
 
-        jLabel1.setText("pairable players");
-        pnlPlayers.add(jLabel1);
-        jLabel1.setBounds(50, 20, 200, 14);
+        lblPairablePlayers.setText(locale.getString("game.pairing.pairable_players")); // NOI18N
+        pnlPlayers.add(lblPairablePlayers);
+        lblPairablePlayers.setBounds(50, 20, 200, 14);
 
         tblPairablePlayers.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -892,9 +896,9 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
         pnlUnPairablePlayers.setLayout(null);
 
-        jLabel2.setText("unpairable players");
-        pnlUnPairablePlayers.add(jLabel2);
-        jLabel2.setBounds(50, 0, 200, 14);
+        lblUnPairablePlayers.setText(locale.getString("game.pairing.unpairable_players")); // NOI18N
+        pnlUnPairablePlayers.add(lblUnPairablePlayers);
+        lblUnPairablePlayers.setBounds(50, 0, 200, 14);
 
         txfNbUnPairablePlayers.setEditable(false);
         txfNbUnPairablePlayers.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -932,7 +936,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         pnlInternal.add(pnlPlayers);
         pnlPlayers.setBounds(0, 40, 280, 480);
 
-        pnlGames.setBorder(javax.swing.BorderFactory.createTitledBorder("Games"));
+        pnlGames.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("game.games"))); // NOI18N
         pnlGames.setLayout(null);
 
         tblGames.setModel(new javax.swing.table.DefaultTableModel(
@@ -979,11 +983,11 @@ public class JFrGamesPair extends javax.swing.JFrame {
         pnlGames.add(jLabel3);
         jLabel3.setBounds(60, 20, 200, 14);
 
-        jLabel8.setText("Bye player");
+        jLabel8.setText(locale.getString("game.pairing.bye_player")); // NOI18N
         pnlGames.add(jLabel8);
         jLabel8.setBounds(10, 300, 80, 14);
 
-        btnPrint.setText("Print...");
+        btnPrint.setText(locale.getString("btn.print")); // NOI18N
         btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintActionPerformed(evt);
@@ -996,7 +1000,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         pnlGames.add(txfByePlayer);
         txfByePlayer.setBounds(120, 300, 250, 20);
 
-        btnReport.setText("Pairing report ...");
+        btnReport.setText(locale.getString("game.pairing.btn_report")); // NOI18N
         btnReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReportActionPerformed(evt);
@@ -1005,7 +1009,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         pnlGames.add(btnReport);
         btnReport.setBounds(10, 330, 360, 20);
 
-        jButton1.setText("Print Result sheets ...");
+        jButton1.setText(locale.getString("game.pairing.btn_print_result_sheets")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -1027,11 +1031,11 @@ public class JFrGamesPair extends javax.swing.JFrame {
         btnByePlayer.setBounds(280, 330, 120, 30);
 
         lblByePlayer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblByePlayer.setText("Bye player");
+        lblByePlayer.setText(locale.getString("game.pairing.bye_player")); // NOI18N
         pnlInternal.add(lblByePlayer);
         lblByePlayer.setBounds(280, 310, 110, 14);
 
-        btnClose.setText("Close");
+        btnClose.setText(locale.getString("btn.close")); // NOI18N
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -1049,7 +1053,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         spnRoundNumber.setBounds(60, 10, 40, 30);
 
         btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.setText("help");
+        btnHelp.setText(locale.getString("btn.help")); // NOI18N
         btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpActionPerformed(evt);
@@ -1058,13 +1062,13 @@ public class JFrGamesPair extends javax.swing.JFrame {
         pnlInternal.add(btnHelp);
         btnHelp.setBounds(280, 480, 120, 30);
 
-        jLabel5.setText("Search for a player");
+        jLabel5.setText(locale.getString("player.search")); // NOI18N
         pnlInternal.add(jLabel5);
         jLabel5.setBounds(290, 220, 110, 14);
         pnlInternal.add(txfSearchPlayer);
         txfSearchPlayer.setBounds(290, 240, 110, 20);
 
-        btnSearch.setText("Search/Next");
+        btnSearch.setText(locale.getString("player.btn_search")); // NOI18N
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);
@@ -1107,13 +1111,13 @@ public class JFrGamesPair extends javax.swing.JFrame {
         pupGames.setVisible(false);
         ArrayList<Game> alSelectedGames = selectedGamesList();
         if (alSelectedGames.isEmpty() || alSelectedGames.size() >= 2) {
-            JOptionPane.showMessageDialog(this, "Please, select one game");
+            JOptionPane.showMessageDialog(this, locale.getString("game.pairing.select_one_game"));
             return;
         }
 
         Game g = alSelectedGames.get(0);
         String strOldHd = "" + g.getHandicap();
-        String strResponse = JOptionPane.showInputDialog("Enter new handicap", strOldHd);
+        String strResponse = JOptionPane.showInputDialog(locale.getString("game.pairing.enter_handicap"), strOldHd);
         if (strResponse == null) {
             return;
         }
@@ -1161,7 +1165,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         pupGames.setVisible(false);
         ArrayList<Game> alSelectedGames = selectedGamesList();
         if (alSelectedGames.isEmpty() || alSelectedGames.size() >= 2) {
-            JOptionPane.showMessageDialog(this, "Please, select one game");
+            JOptionPane.showMessageDialog(this, locale.getString("game.pairing.select_one_game"));
             return;
         }
 
@@ -1203,12 +1207,9 @@ public class JFrGamesPair extends javax.swing.JFrame {
         if (strB.length() > 20) {
             strB = strB.substring(0, 20);
         }
-        this.mniChangeTableNumber.setText("Change table number of "
-                + strW + "-" + strB);
-        this.mniExchangeColors.setText("Exchange colours of "
-                + strW + "-" + strB);
-        this.mniModifyHandicap.setText("Modify handicap of "
-                + strW + "-" + strB);
+        this.mniChangeTableNumber.setText(locale.format("game.pairing.menu.change_board_number", strW, strB));
+        this.mniExchangeColors.setText(locale.format("game.pairing.menu.exchange_colors", strW, strB));
+        this.mniModifyHandicap.setText(locale.format("game.pairing.menu.modify_handicap", strW, strB));
 
         pupGames.setLocation(pInScreen);
         pupGames.setVisible(true);
@@ -1222,9 +1223,8 @@ public class JFrGamesPair extends javax.swing.JFrame {
         int nbGamesToRemove = alGamesToRemove.size();
         if (nbGamesToRemove > 1) {
             int response = JOptionPane.showConfirmDialog(this,
-                    "Gotha will unpair " + nbGamesToRemove + " games"
-                    + "\nUnpair ?",
-                    "Message",
+                    locale.format("game.pairing.confirm_unpair", nbGamesToRemove),
+                    locale.getString("game.pairing.message"),
                     JOptionPane.WARNING_MESSAGE,
                     JOptionPane.OK_CANCEL_OPTION);
             if (response == JOptionPane.CANCEL_OPTION) {
@@ -1260,7 +1260,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
         // Issue an error message if a player is in "PRE" status
         for (Player p : alPlayersToPair) {
-            if (p.getRegisteringStatus().compareTo("FIN") != 0) {
+            if (p.getRegisteringStatus() != FINAL) {
                 JOptionPane.showMessageDialog(this, "At least one player is not in a Final registering status"
                         + "\n" + "You should update registering status (Players .. Players Quick Check)",
                         "Message", JOptionPane.ERROR_MESSAGE);
@@ -1277,13 +1277,12 @@ public class JFrGamesPair extends javax.swing.JFrame {
                 Logger.getLogger(JFrGamesPair.class.getName()).log(Level.SEVERE, null, ex);
             }
             if (!btnByePlayer.isVisible() || bP != null) {
-                JOptionPane.showMessageDialog(this, "Please, select an even number of players",
-                        "Message", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, locale.getString("game.pairing.error.odd"),
+                        locale.getString("game.pairing.message"), JOptionPane.ERROR_MESSAGE);
                 return;
             } else { // Gotha may choose a bye player
-                int response = JOptionPane.showConfirmDialog(this, "Odd number of players"
-                        + "\nGotha will choose a bye player. OK ?",
-                        "Message", JOptionPane.WARNING_MESSAGE,
+                int response = JOptionPane.showConfirmDialog(this, locale.getString("game.pairing.confirm_odd"),
+                        locale.getString("game.pairing.message"), JOptionPane.WARNING_MESSAGE,
                         JOptionPane.OK_CANCEL_OPTION);
                 if (response == JOptionPane.CANCEL_OPTION) {
                     return;
@@ -1343,11 +1342,8 @@ public class JFrGamesPair extends javax.swing.JFrame {
             Player bP = questionableGame.getBlackPlayer();
             int r = questionableGame.getRoundNumber();
 
-            int bAnswer = JOptionPane.showConfirmDialog(this, wP.fullName() + " " + "and"
-                    + " " + bP.fullName()
-                    + " " + "have been already paired in round " + (r + 1)
-                    + "\n" + "Do you want to keep this pairing nevertheless ?",
-                    "Message", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            int bAnswer = JOptionPane.showConfirmDialog(this, locale.format("game.pairing.confirm_pairing_again", wP.fullName(), bP.fullName(), (r + 1)),
+                    locale.getString("game.pairing.message"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (bAnswer == JOptionPane.NO_OPTION) {
                 return;
             }
@@ -1489,7 +1485,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         pupGames.setVisible(false);
         ArrayList<Game> alSelectedGames = selectedGamesList();
         if (alSelectedGames.size() != 1) {
-            JOptionPane.showMessageDialog(this, "Please, select the starting table to shift");
+            JOptionPane.showMessageDialog(this, locale.getString("game.pairing.shift.select_starting"));
             return;
         }
 
@@ -1497,20 +1493,20 @@ public class JFrGamesPair extends javax.swing.JFrame {
         // Ask for a new number
         int oldBegTN = g1.getTableNumber();
         String strOldBegTN = "" + (g1.getTableNumber() + 1);
-        String strResponse = JOptionPane.showInputDialog("Shift tables starting from " + strOldBegTN + " to tables starting from : ", strOldBegTN);
+        String strResponse = JOptionPane.showInputDialog(locale.format("game.pairing.shift.select_new_starting", strOldBegTN), strOldBegTN);
         int newBegTN = - 1;
         try{
             newBegTN = Integer.parseInt(strResponse) - 1;
         }
         catch (NumberFormatException exc) {
-            JOptionPane.showMessageDialog(this, " Table number should be a number",
-                    "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("game.pairing.error.board_number_not_a_number"),
+                    locale.getString("game.pairing.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         if (newBegTN <= oldBegTN) {
-            JOptionPane.showMessageDialog(this, " You can shift table numbers to higher numbers only",
-                    "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("game.pairing.error.only_possible_to_shift_higher"),
+                    locale.getString("game.pairing.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -1533,10 +1529,8 @@ public class JFrGamesPair extends javax.swing.JFrame {
             Game newG = new Game(g.getRoundNumber(), newCurrentTN, g.getWhitePlayer(), g.getBlackPlayer(), g.isKnownColor(), g.getHandicap(), g.getResult());
 
             if (newCurrentTN >= Gotha.MAX_NUMBER_OF_TABLES) {
-                JOptionPane.showMessageDialog(this, " The table shift you ask for would lead to table numbers greater than "
-                        + Gotha.MAX_NUMBER_OF_TABLES
-                        + "\nThis is not possible",
-                        "Message", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, locale.format("game.pairing.error.shift_too_high", Gotha.MAX_NUMBER_OF_TABLES),
+                        locale.getString("game.pairing.message"), JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -1570,7 +1564,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         pupGames.setVisible(false);
         ArrayList<Game> alSelectedGames = selectedGamesList();
         if (alSelectedGames.isEmpty() || alSelectedGames.size() >= 2) {
-            JOptionPane.showMessageDialog(this, "Please, select one game");
+            JOptionPane.showMessageDialog(this, locale.getString("game.pairing.select_one_game"));
             return;
         }
 
@@ -1578,7 +1572,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         // Ask for a new number
         int oldTN = g1.getTableNumber();
         String strOldTN = "" + (oldTN + 1);
-        String strResponse = JOptionPane.showInputDialog("Enter a new table number", strOldTN);
+        String strResponse = JOptionPane.showInputDialog(locale.getString("game.pairing.enter_board_number"), strOldTN);
         int newTN = -1;
         try{
             newTN = Integer.parseInt(strResponse) - 1;
@@ -1586,8 +1580,8 @@ public class JFrGamesPair extends javax.swing.JFrame {
         catch(NumberFormatException exc){
         }
         if (newTN < 0 || newTN >= Gotha.MAX_NUMBER_OF_TABLES) {
-            JOptionPane.showMessageDialog(this, " Table number should be a number between 1 and " + Gotha.MAX_NUMBER_OF_TABLES,
-                    "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.format("game.pairing.error.board_number_range", Gotha.MAX_NUMBER_OF_TABLES),
+                    locale.getString("game.pairing.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (newTN == oldTN) {
@@ -1685,8 +1679,8 @@ public class JFrGamesPair extends javax.swing.JFrame {
         tblGames.clearSelection();
         if (rowNumber == -1) {
             JOptionPane.showMessageDialog(this,
-                "No player with the specified name is paired in round " + (this.processedRoundNumber + 1),
-                "Message", JOptionPane.ERROR_MESSAGE);
+                locale.format("game.pairing.player_not_participating_in_round", (this.processedRoundNumber + 1)),
+                locale.getString("game.pairing.message"), JOptionPane.ERROR_MESSAGE);
         } else {
             tblGames.setRowSelectionAllowed(true);
             tblGames.clearSelection();
@@ -1729,8 +1723,6 @@ public class JFrGamesPair extends javax.swing.JFrame {
     private javax.swing.JCheckBox ckbUnbalancedWB;
     private javax.swing.JDialog dlgPairingReport;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1742,7 +1734,9 @@ public class JFrGamesPair extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JLabel lblByePlayer;
+    private javax.swing.JLabel lblPairablePlayers;
     private javax.swing.JLabel lblPreviousGames;
+    private javax.swing.JLabel lblUnPairablePlayers;
     private javax.swing.JMenuItem mniCancel;
     private javax.swing.JMenuItem mniCancel1;
     private javax.swing.JMenuItem mniChangeTableNumber;
@@ -1795,7 +1789,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         try {
             if (!tournament.isOpen()) cleanClose();
             this.lastComponentsUpdateTime = tournament.getCurrentTournamentTime();
-            setTitle("Games .. Pair. " + tournament.getFullName());
+            setTitle(locale.format("game.pairing.window_title", tournament.getFullName()));
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGamesPair.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1807,9 +1801,8 @@ public class JFrGamesPair extends javax.swing.JFrame {
             Logger.getLogger(JFrGamesPair.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (this.processedRoundNumber >= nbRounds) {
-            JOptionPane.showMessageDialog(this, "The number of rounds has been modified."
-                    + "\n" + "Current round will be consequently changed",
-                    "Games Pair Message", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("tournament.round_count_changed"),
+                    locale.getString("game.pairing.message"), JOptionPane.WARNING_MESSAGE);
             this.processedRoundNumber = nbRounds - 1;
         }
 

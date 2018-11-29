@@ -1,0 +1,132 @@
+/*
+ * This file is part of OpenGotha.
+ *
+ * OpenGotha is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenGotha is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with OpenGotha. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package ru.gofederation.gotha.util;
+
+import com.ibm.icu.text.MessageFormat;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.swing.ComboBoxModel;
+import javax.swing.event.ListDataListener;
+
+public enum GothaLocale implements ComboBoxModel<GothaLocale> {
+    EN(Locale.forLanguageTag("en")), // Default locale comes first. Should always be EN.
+    RU(Locale.forLanguageTag("ru"));
+
+    private static GothaLocale currentLocale = null;
+    private final Locale locale;
+    private ResourceBundle resources;
+
+    GothaLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    public static GothaLocale defaultLocale() {
+        return EN;
+    }
+
+    public static GothaLocale fromTag(String tag) {
+        for(GothaLocale locale : GothaLocale.values()) {
+            if (locale.getCode().equals(tag)) {
+                return locale;
+            }
+        }
+
+        return defaultLocale();
+    }
+
+    public String getCode() {
+        return locale.toLanguageTag();
+    }
+
+    public Locale getLocale() {
+        return this.locale;
+    }
+
+    private ResourceBundle getResources() {
+        if (null == this.resources)
+            this.resources = ResourceBundle.getBundle("l10n/strings", this.locale);
+
+        return this.resources;
+    }
+
+    public String getString(String key) {
+        ResourceBundle bundle = getResources();
+        if (bundle.containsKey(key)) {
+            return bundle.getString(key);
+        } else if (this != GothaLocale.defaultLocale()) {
+            return GothaLocale.defaultLocale().getString(key);
+        }
+
+        return key;
+    }
+
+    public MessageFormat getFormat(String key) {
+        return new MessageFormat(this.getString(key), this.locale);
+    }
+
+    public String format(String key, Object... args) {
+        return getFormat(key).format(args);
+    }
+
+    @Override
+    public String toString() {
+        return locale.getDisplayLanguage().toLowerCase(locale);
+    }
+
+    public static GothaLocale getCurrentLocale() {
+        if (null == currentLocale) {
+            String tag = GothaPreferences.instance().getLocale();
+            currentLocale = GothaLocale.fromTag(tag);
+        }
+
+        return currentLocale;
+    }
+
+    @Override
+    public void setSelectedItem(Object o) {
+        if (o instanceof GothaLocale) {
+            currentLocale = (GothaLocale)o;
+            GothaPreferences.instance().setLocale(currentLocale.getCode());
+        }
+    }
+
+    @Override
+    public Object getSelectedItem() {
+        return GothaLocale.getCurrentLocale();
+    }
+
+    @Override
+    public int getSize() {
+        return GothaLocale.values().length;
+    }
+
+    @Override
+    public GothaLocale getElementAt(int i) {
+        return GothaLocale.values()[i];
+    }
+
+    @Override
+    public void addListDataListener(ListDataListener ll) {
+    }
+
+    @Override
+    public void removeListDataListener(ListDataListener ll) {
+    }
+}
