@@ -28,6 +28,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.RatingListType;
 import ru.gofederation.gotha.model.RatingOrigin;
 import ru.gofederation.gotha.util.GothaLocale;
 
@@ -148,23 +149,23 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         // Use the preferred rating list as in Preferences
         Preferences prefs = Preferences.userRoot().node(Gotha.strPreferences + "/playersmanager");
         String defRL = prefs.get("defaultratinglist", "" );
-        int rlType = RatingList.TYPE_UNDEFINED;
+        RatingListType rlType;
         try{
-            rlType = Integer.parseInt(defRL);
+            rlType = RatingListType.fromId(Integer.parseInt(defRL));
         }catch(Exception e){
-            rlType = RatingList.TYPE_UNDEFINED;
+            rlType = RatingListType.UND;
         }
         this.ckbRatingList.setSelected(true);
         this.btnSearchId.setVisible(false);
         this.txfSearchId.setVisible(false);
         switch(rlType){
-            case RatingList.TYPE_UNDEFINED :
+            case UND :
                 this.ckbRatingList.setSelected(false); break;
-            case RatingList.TYPE_EGF :
+            case EGF :
                 this.rdbEGF.setSelected(true); break;
-            case RatingList.TYPE_FFG :
+            case FFG :
                 this.rdbFFG.setSelected(true); break;
-            case RatingList.TYPE_AGA :
+            case AGA :
                 this.rdbAGA.setSelected(true);
                 this.btnSearchId.setVisible(true);
                 this.txfSearchId.setVisible(true); break;
@@ -240,12 +241,12 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         this.rdbLevenshtein.setVisible(bRL);
         this.btnSearchId.setVisible(false);
         this.txfSearchId.setVisible(false);
-
-        int rlType = RatingList.TYPE_UNDEFINED;
+                
+        RatingListType rlType = RatingListType.UND;
         if (bRL){
-            if (this.rdbEGF.isSelected()) rlType = RatingList.TYPE_EGF;
-            if (this.rdbFFG.isSelected()) rlType = RatingList.TYPE_FFG;
-            if (this.rdbAGA.isSelected()) rlType = RatingList.TYPE_AGA;
+            if (this.rdbEGF.isSelected()) rlType = RatingListType.EGF;
+            if (this.rdbFFG.isSelected()) rlType = RatingListType.FFG;
+            if (this.rdbAGA.isSelected()) rlType = RatingListType.AGA;
         }
         // Save current rating list into Preferences
         Preferences prefs = Preferences.userRoot().node(Gotha.strPreferences + "/playersmanager");
@@ -254,13 +255,13 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         this.useRatingList(rlType);
 
         switch(rlType){
-            case RatingList.TYPE_EGF :
+            case EGF :
                 this.btnUpdateRatingList.setText("Update EGF rating list from ...");
                 break;
-            case RatingList.TYPE_FFG :
+            case FFG :
                 this.btnUpdateRatingList.setText("Update FFG rating list from ...");
                 break;
-            case RatingList.TYPE_AGA :
+            case AGA :
                 this.btnUpdateRatingList.setText("Update AGA rating list from ...");
                 this.btnSearchId.setVisible(true);
                 this.txfSearchId.setVisible(true);
@@ -271,19 +272,19 @@ public class JFrPlayersManager extends javax.swing.JFrame {
 
         this.rdbRankFromGoR.setVisible(false);
         this.rdbRankFromGrade.setVisible(false);
-
-        if (ratingList.getRatingListType() == RatingList.TYPE_EGF) {
+        
+        if (ratingList.getRatingListType() == RatingListType.EGF) {
             this.rdbRankFromGoR.setVisible(true);
             this.rdbRankFromGrade.setVisible(true);
         }
-        if (ratingList.getRatingListType() == RatingList.TYPE_FFG) {
+        if (ratingList.getRatingListType() == RatingListType.FFG) {
             this.rdbRankFromGoR.setSelected(true);
         }
-        if (ratingList.getRatingListType() == RatingList.TYPE_AGA) {
+        if (ratingList.getRatingListType() == RatingListType.AGA) {
             this.rdbRankFromGoR.setSelected(true);
         }
-
-        if (ratingList.getRatingListType() == RatingList.TYPE_UNDEFINED) {
+        
+        if (ratingList.getRatingListType() == RatingListType.UND) {
             cbxRatingList.setEnabled(false);
             cbxRatingList.setVisible(true);
             txfPlayerNameChoice.setEnabled(false);
@@ -1208,19 +1209,19 @@ public class JFrPlayersManager extends javax.swing.JFrame {
     }//GEN-LAST:event_cbxRatingListItemStateChanged
 
     // See also JFrRatings.useRatingList, which should stay a clone
-    private void useRatingList(int typeRatingList) {
+    private void useRatingList(RatingListType typeRatingList) {
         switch (typeRatingList) {
-            case RatingList.TYPE_EGF:
+            case EGF:
                 lblRatingList.setText("Searching for EGF rating list");
-                this.ratingList = new RatingList(RatingList.TYPE_EGF, new File(Gotha.runningDirectory, "ratinglists/egf_db.txt"));
+                this.ratingList = new RatingList(RatingListType.EGF, new File(Gotha.runningDirectory, "ratinglists/egf_db.txt"));
                 break;
-            case RatingList.TYPE_FFG:
+            case FFG:
                 lblRatingList.setText("Searching for FFG rating list");
-                ratingList = new RatingList(RatingList.TYPE_FFG, new File(Gotha.runningDirectory, "ratinglists/ech_ffg_V3.txt"));
+                ratingList = new RatingList(RatingListType.FFG, new File(Gotha.runningDirectory, "ratinglists/ech_ffg_V3.txt"));
                 break;
-            case RatingList.TYPE_AGA:
+            case AGA:
                 lblRatingList.setText("Searching for AGA rating list");
-                ratingList = new RatingList(RatingList.TYPE_AGA, new File(Gotha.runningDirectory, "ratinglists/tdlista.txt"));
+                ratingList = new RatingList(RatingListType.AGA, new File(Gotha.runningDirectory, "ratinglists/tdlista.txt"));
                 break;
             default:
                 ratingList = new RatingList();
@@ -1233,7 +1234,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
             
         }
         if (nbPlayersInRL == 0) {
-            ratingList.setRatingListType(RatingList.TYPE_UNDEFINED);
+            ratingList.setRatingListType(RatingListType.UND);
             lblRatingList.setText("No rating list has been loaded yet");
         } else {
             String strType = "";
@@ -1241,13 +1242,13 @@ public class JFrPlayersManager extends javax.swing.JFrame {
             this.rdbLevenshtein.setEnabled(true);
 
             switch (ratingList.getRatingListType()) {
-                case RatingList.TYPE_EGF:
+                case EGF:
                     strType = "EGF rating list";
                     break;
-                case RatingList.TYPE_FFG:
+                case FFG:
                     strType = "FFG rating list";
                     break;
-                case RatingList.TYPE_AGA:
+                case AGA:
                     strType = "AGA rating list";
                     break;
             }
@@ -1469,35 +1470,27 @@ public class JFrPlayersManager extends javax.swing.JFrame {
     }//GEN-LAST:event_processRatingListChangeEvent
     // See also btnUpdateRatingListActionPerformed, which should stay a clone
     private void btnUpdateRatingListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateRatingListActionPerformed
-        int rlType = RatingList.TYPE_UNDEFINED;
+        RatingListType rlType = RatingListType.UND;
         if (!Gotha.isRatingListsDownloadEnabled()){
             String strMessage = "Access to Rating lists is currently disabled.\nSee Options .. Preferences menu item";
             JOptionPane.showMessageDialog(this, strMessage, "Message", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (this.rdbEGF.isSelected()) rlType = RatingList.TYPE_EGF;
-        if (this.rdbFFG.isSelected()) rlType = RatingList.TYPE_FFG;
-        if (this.rdbAGA.isSelected()) rlType = RatingList.TYPE_AGA;
+        if (this.rdbEGF.isSelected()) rlType = RatingListType.EGF;
+        if (this.rdbFFG.isSelected()) rlType = RatingListType.FFG;
+        if (this.rdbAGA.isSelected()) rlType = RatingListType.AGA;
 
         String strDefaultURL;
         File fDefaultFile;
         String strPrompt;
 
         switch(rlType){
-            case RatingList.TYPE_EGF:
-                strDefaultURL = "http://www.europeangodatabase.eu/EGD/EGD_2_0/downloads/allworld_lp.html";
-                fDefaultFile = new File(Gotha.runningDirectory, "ratinglists/egf_db.txt");
-                strPrompt = "Download EGF Rating List from :";
-                break;
-            case RatingList.TYPE_FFG:
-                strDefaultURL = "http://ffg.jeudego.org/echelle/echtxt/ech_ffg_V3.txt";
-                fDefaultFile = new File(Gotha.runningDirectory, "ratinglists/ech_ffg_V3.txt");
-                strPrompt = "Download FFG Rating List from :";
-                break;
-            case RatingList.TYPE_AGA:
-                strDefaultURL = "https://usgo.org/mm/tdlista.txt";
-                fDefaultFile = new File(Gotha.runningDirectory, "ratinglists/tdlista.txt");
-                strPrompt = "Download AGA Rating List from :";
+            case EGF:
+            case FFG:
+            case AGA:
+                strDefaultURL = rlType.getUrl();
+                fDefaultFile = new File(Gotha.runningDirectory, rlType.getFilename());
+                strPrompt = locale.format("rating_list.btn_update_from", locale.getString(rlType.getL10nKey()));
                 break;
             default:
                 System.out.println("btnUpdateRatingListActionPerformed : Internal error");
@@ -1507,13 +1500,13 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         try {
             String str = JOptionPane.showInputDialog(strPrompt, strDefaultURL);
             if (str == null ) return;
-            this.lblRatingList.setText("Download in progress");
+            this.lblRatingList.setText(locale.getString("rating_list.download_in_progress"));
             lblRatingList.paintImmediately(0, 0, lblRatingList.getWidth(), lblRatingList.getHeight());
             Gotha.download(this.pgbRatingList, str, fDefaultFile);
         } catch (MalformedURLException ex) {
-            JOptionPane.showMessageDialog(this, "Malformed URL\nRating list could not be loaded", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("rating_list.error.malformed_url"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Unreachable file\nRating list could not be loaded", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("rating_list.error.unreachable_file"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         }
         this.useRatingList(rlType);
 

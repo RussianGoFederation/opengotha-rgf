@@ -16,17 +16,14 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ru.gofederation.gotha.model.RatingListType;
+
 import static ru.gofederation.gotha.model.RatingOrigin.AGA;
 import static ru.gofederation.gotha.model.RatingOrigin.EGF;
 import static ru.gofederation.gotha.model.RatingOrigin.FFG;
 
 public class RatingList {
-    public static final int TYPE_UNDEFINED = 0;
-    public static final int TYPE_EGF = 1;
-    public static final int TYPE_FFG = 257;
-    public static final int TYPE_AGA = 513;
-    
-    private int ratingListType = TYPE_UNDEFINED;
+    private RatingListType ratingListType = RatingListType.UND;
     private String strPublicationDate = "";
     private ArrayList<RatedPlayer> alRatedPlayers = new ArrayList<RatedPlayer>();
     private HashMap<String, RatedPlayer> hmPinRatedPlayers; 
@@ -34,11 +31,15 @@ public class RatingList {
 
     /** Creates a new instance of RatingList */
     public RatingList() {
-        ratingListType = TYPE_UNDEFINED;
+        ratingListType = RatingListType.UND;
     }
-    
+
+    public RatingList(RatingListType ratingListType) {
+        this(ratingListType, new File(Gotha.runningDirectory, ratingListType.getFilename()));
+    }
+
     /** Creates a new instance of RatingList */
-    public RatingList(int ratingListType, File f) {
+    public RatingList(RatingListType ratingListType, File f) {
         this.ratingListType = ratingListType;
         parseFile(f);
         
@@ -81,7 +82,7 @@ public class RatingList {
             if (strLine.length() == 0) continue;            
             int pos;
             
-            if (ratingListType == TYPE_EGF){
+            if (ratingListType == RatingListType.EGF){
                 pos = strLine.indexOf("(");                
                 if (pos >= 0) {
                     String str = strLine.substring(pos);
@@ -113,7 +114,7 @@ public class RatingList {
                 }
             }
 
-            if (ratingListType == TYPE_FFG){
+            if (ratingListType == RatingListType.FFG){
                 pos = strLine.indexOf("Echelle au ");
                 if (pos >= 0) {
                     strPublicationDate = strLine.substring(pos + 11, strLine.length());
@@ -147,7 +148,7 @@ public class RatingList {
                 }
             }
  
-            if (ratingListType == TYPE_AGA){
+            if (ratingListType == RatingListType.AGA){
                 if (strLine.length() < 10) continue;
                 int AGA_NAFI = 0;
                 int AGA_ID = 1;
@@ -290,11 +291,11 @@ public class RatingList {
         return strPublicationDate;
     }
 
-    public int getRatingListType() {
+    public RatingListType getRatingListType() {
         return ratingListType;
     }
 
-    public void setRatingListType(int ratingListType) {
+    public void setRatingListType(RatingListType ratingListType) {
         this.ratingListType = ratingListType;
     }
 }

@@ -28,6 +28,8 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+
+import ru.gofederation.gotha.model.RatingListType;
 import ru.gofederation.gotha.util.GothaLocale;
 /**
  *
@@ -3478,12 +3480,12 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         HashMap<String,String> hmClubs = new HashMap<String, String>();
         // Clubs from Rating lists
         ClubsList cl =  new ClubsList();
-        RatingList rlEGF = new RatingList(RatingList.TYPE_EGF, new File(Gotha.runningDirectory, "ratinglists/egf_db.txt"));
+        RatingList rlEGF = new RatingList(RatingListType.EGF, new File(Gotha.runningDirectory, RatingListType.EGF.getFilename()));
         cl.importClubsFromRatingList(rlEGF);
 //        RatingList rlFFG = new RatingList(RatingList.TYPE_FFG, new File(Gotha.runningDirectory, "ratinglists/ech_ffg_new.txt"));
-        RatingList rlFFG = new RatingList(RatingList.TYPE_FFG, new File(Gotha.runningDirectory, "ratinglists/ech_ffg_V3.txt"));
+        RatingList rlFFG = new RatingList(RatingListType.FFG, new File(Gotha.runningDirectory, RatingListType.FFG.getFilename()));
         cl.importClubsFromRatingList(rlFFG);
-        RatingList rlAGA = new RatingList(RatingList.TYPE_AGA, new File(Gotha.runningDirectory, "ratinglists/tdlista.txt"));
+        RatingList rlAGA = new RatingList(RatingListType.AGA, new File(Gotha.runningDirectory, RatingListType.AGA.getFilename()));
         cl.importClubsFromRatingList(rlAGA);       
         for(Club club : cl.getHmClubs().values()){
             hmClubs.put(club.getName(), club.getName());

@@ -17,6 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
+import ru.gofederation.gotha.model.RatingListType;
+
 import static ru.gofederation.gotha.model.RatingOrigin.EGF;
 
 /**
@@ -352,7 +354,7 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
             Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        RatingList ratingList = new RatingList(RatingList.TYPE_EGF, new File(Gotha.runningDirectory, "ratinglists/egf_db.txt"));
+        RatingList ratingList = new RatingList(RatingListType.EGF, new File(Gotha.runningDirectory, "ratinglists/egf_db.txt"));
         ArrayList<RatedPlayer> alRP = ratingList.getALRatedPlayers();
         
         int nbGradesSetOrChanged = 0;
