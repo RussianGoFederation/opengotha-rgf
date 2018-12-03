@@ -527,6 +527,10 @@ public class Gotha {
         String strK = "journalingReport";
         gothaPrefs.put(strK, "" + enabled);
     }
+
+    public static File getRunningDirectory() {
+        return runningDirectory;
+    }
 }
 
 class GothaImageLoader extends Thread{

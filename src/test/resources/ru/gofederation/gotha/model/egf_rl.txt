@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<title> List of Players EURO </title>
+<body>
+<center>
+<h1>List of WORLD Players</h1>
+<hr>
+(22 Feb 2018)
+<hr>
+</center>
+
+<pre>
+<b>  Notation: </b>
+
+PIN     - player identification number
+Club    - specified by internet country code and the city abbreviation
+Grade   - rank professed by the player at last tournament;
+          ranges from 20k to 1k, 1d to 7d, and from 1p to 9p
+P&D     - suggested promotion or demotion
+GoR     - current Go Rating of a given player
+NT      - number of tournaments the player participated in
+
+<b>
+                                                                                    Last
+   PIN          Name                              Club     Grade P&D    GoR    NT appearance
+</b>
+ 13633719  Aagren Thomas                         SE  Upp     6k   --   1484     1  T040529C
+ 15813842  Aahman Sebastian                      SE  Vaxj   10k   --   1129     2  T110219Q
+ 14986906  Aahs Robert                           SE  Karl    1d   --   2072    30  T171028F
+ 10537560  Aaij Rene                             NL  Gron    4d   --   2375    92  T170918A
+ 13286603  Aakerblom Charlie                     SE  Norr    5d   --   2441    71  T160920A
+ 15650261  Aalto Jukka                           XX  xxx    20k  19k    218     1  T091107G
+ 13962069  Aalto Pekka                           FI  Teng    2k   --   1925     6  T091107G
+ 12949827  Aaltonen Ari                          FI  Kanp    8k   --   1276     5  G061014
+ 13974015  Aalund Mogens                         DK  xxx     2k   --   1888     1  T000129E
+ 10213786  Aapola Lauri                          FI  Kanp    1d   --   2074    33  E100802A

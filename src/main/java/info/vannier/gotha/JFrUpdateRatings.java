@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.*;
 
+import ru.gofederation.gotha.model.RatingListFactory;
 import ru.gofederation.gotha.model.RatingListType;
 import ru.gofederation.gotha.util.GothaLocale;
 
@@ -701,21 +702,25 @@ public class JFrUpdateRatings extends javax.swing.JFrame {
     
 // See also JFrPlayersManager.useRatingList, which should stay a clone
     private void useRatingList(RatingListType typeRatingList) {
-        switch (typeRatingList) {
-            case EGF:
-                lblRatingList.setText("Searching for EGF rating list");
-                ratingList = new RatingList(RatingListType.EGF);
-                break;
-            case FFG:
-                lblRatingList.setText("Searching for FFG rating list");
-                ratingList = new RatingList(RatingListType.FFG);
-                break;
-            case AGA:
-                lblRatingList.setText("Searching for AGA rating list");
-                ratingList = new RatingList(RatingListType.AGA);
-                break;
-            default:
-                ratingList = new RatingList();
+        try {
+            switch (typeRatingList) {
+                case EGF:
+                    lblRatingList.setText("Searching for EGF rating list");
+                    ratingList = RatingListFactory.instance().loadDefaultFile(RatingListType.EGF);
+                    break;
+                case FFG:
+                    lblRatingList.setText("Searching for FFG rating list");
+                    ratingList = RatingListFactory.instance().loadDefaultFile(RatingListType.FFG);
+                    break;
+                case AGA:
+                    lblRatingList.setText("Searching for AGA rating list");
+                    ratingList = RatingListFactory.instance().loadDefaultFile(RatingListType.AGA);
+                    break;
+                default:
+                    ratingList = new RatingList();
+            }
+        } catch (IOException e) {
+            ratingList = new RatingList();
         }
         int nbPlayersInRL = ratingList.getALRatedPlayers().size();
         cbxRatingList.removeAllItems();

@@ -29,20 +29,27 @@ public class RatingList {
     private HashMap<String, RatedPlayer> hmPinRatedPlayers; 
     private HashMap<String, RatedPlayer> hmNaFiRatedPlayers; 
 
-    /** Creates a new instance of RatingList */
+    /**
+     * Creates a new instance of RatingList
+     * @deprecated Use {@link ru.gofederation.gotha.model.RatingListFactory RatingListFactory} instead
+     */
+    @Deprecated
     public RatingList() {
         ratingListType = RatingListType.UND;
     }
 
-    public RatingList(RatingListType ratingListType) {
-        this(ratingListType, new File(Gotha.runningDirectory, ratingListType.getFilename()));
-    }
-
-    /** Creates a new instance of RatingList */
+    /**
+     * Creates a new instance of RatingList
+     * @deprecated Use {@link ru.gofederation.gotha.model.RatingListFactory RatingListFactory} instead
+     */
+    @Deprecated
     public RatingList(RatingListType ratingListType, File f) {
         this.ratingListType = ratingListType;
         parseFile(f);
-        
+        rebuildMaps();
+    }
+
+    private void rebuildMaps() {
         // Build HashMap based on egfPin
         hmPinRatedPlayers = new HashMap<String, RatedPlayer>();
         for (RatedPlayer rp : this.alRatedPlayers){
@@ -55,6 +62,15 @@ public class RatingList {
             String strNaFi = (rp.getName() + rp.getFirstName()).replaceAll(" ", "").toUpperCase();
             hmNaFiRatedPlayers.put(strNaFi, rp);
         }
+    }
+
+    public void setPlayers(ArrayList<RatedPlayer> players) {
+        this.alRatedPlayers = players;
+        rebuildMaps();
+    }
+
+    public void setStrPublicationDate(String date) {
+        this.strPublicationDate = date;
     }
 
     private void parseFile(File f){

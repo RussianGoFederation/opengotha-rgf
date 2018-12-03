@@ -1,0 +1,10 @@
+ Anderson, Glenn	23168	Full	-13.66602	3/5/2018	SEAG	WA	0.90598	3/5/2017
+ Brain, Cocoa	23323	Full		5/12/2019	SPRI	CO
+ Kiernan-Paadre, Argo	23502	Youth		9/6/2018	NUGC	MA
+, Eric Yang	23699	Youth	-32.13307	1/21/2019			1.15072	1/6/2018
+, Joplin Go Club	23160	Full				MO
+Aal, Zachary	15648	Full	-20.05711	7/2/2008	LIGC	NY	1.09198	8/1/2007
+Aarhus, Bob	9616	Full	-21.94348	1/1/2008	NOVA	VA	0.87341	11/1/2001
+Aaron, William C.	7206	Full		12/28/1994		CA		12/28/1994
+Abarbanel, Jacob	17213	Youth		8/9/2009				8/9/2009
+Abasolo, Joy 	23206	Youth		10/3/2018	STON	NY

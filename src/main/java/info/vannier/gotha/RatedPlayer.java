@@ -1,24 +1,26 @@
 package info.vannier.gotha;
 
 
+import java.util.Objects;
+
 import ru.gofederation.gotha.model.RatingOrigin;
 
 import static ru.gofederation.gotha.model.RatingOrigin.AGA;
 import static ru.gofederation.gotha.model.RatingOrigin.FFG;
 
-public class RatedPlayer {
-    private String egfPin;
-    private String ffgLicence;
-    private String ffgLicenceStatus;
-    private String agaID;
-    private String agaExpirationDate;
-    private String name;
-    private String firstName;
-    private String country;
-    private String club;
-    private int rawRating;
-    private String strGrade;  
-    private RatingOrigin ratingOrigin;
+public final class RatedPlayer {
+    private final String egfPin;
+    private final String ffgLicence;
+    private final String ffgLicenceStatus;
+    private final String agaID;
+    private final String agaExpirationDate;
+    private final String name;
+    private final String firstName;
+    private final String country;
+    private final String club;
+    private final int rawRating;
+    private final String strGrade;
+    private final RatingOrigin ratingOrigin;
     
 
     public RatedPlayer(
@@ -184,5 +186,64 @@ public class RatedPlayer {
      */
     public String getStrGrade() {
         return strGrade;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + (egfPin == null ? 0 : egfPin.hashCode());
+        hash = 31 * hash + (ffgLicence == null ? 0 : ffgLicence.hashCode());
+        hash = 31 * hash + (ffgLicenceStatus == null ? 0 : ffgLicenceStatus.hashCode());
+        hash = 31 * hash + (agaID == null ? 0 : agaID.hashCode());
+        hash = 31 * hash + (agaExpirationDate == null ? 0 : agaExpirationDate.hashCode());
+        hash = 31 * hash + (name == null ? 0 : name.hashCode());
+        hash = 31 * hash + (firstName == null ? 0 : firstName.hashCode());
+        hash = 31 * hash + (country == null ? 0 : country.hashCode());
+        hash = 31 * hash + (club == null ? 0 : club.hashCode());
+        hash = 31 * hash + rawRating;
+        hash = 31 * hash + (strGrade == null ? 0 : strGrade.hashCode());
+        hash = 31 * hash + (ratingOrigin == null ? 0 : ratingOrigin.hashCode());
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (null == other) return false;
+        if (this == other) return true;
+        if (!(other instanceof RatedPlayer)) return false;
+
+        RatedPlayer otherPlayer = (RatedPlayer) other;
+
+        return Objects.equals(this.egfPin, otherPlayer.egfPin)
+            && Objects.equals(this.ffgLicence, otherPlayer.ffgLicence)
+            && Objects.equals(this.ffgLicenceStatus, otherPlayer.ffgLicenceStatus)
+            && Objects.equals(this.agaID, otherPlayer.agaID)
+            && Objects.equals(this.agaExpirationDate, otherPlayer.agaExpirationDate)
+            && Objects.equals(this.name, otherPlayer.name)
+            && Objects.equals(this.firstName, otherPlayer.firstName)
+            && Objects.equals(this.country, otherPlayer.country)
+            && Objects.equals(this.club, otherPlayer.club)
+            && this.rawRating == otherPlayer.rawRating
+            && Objects.equals(this.strGrade, otherPlayer.strGrade)
+            && Objects.equals(this.ratingOrigin, otherPlayer.ratingOrigin)
+        ;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        switch (ratingOrigin) {
+            case AGA:
+                sb.append(ratingOrigin.toString()).append(':').append(agaID).append(" ");
+                break;
+            case EGF:
+                sb.append(ratingOrigin.toString()).append(':').append(egfPin).append(" ");
+                break;
+            case FFG:
+                sb.append(ratingOrigin.toString()).append(':').append(ffgLicence).append(" ");
+                break;
+        }
+        sb.append(name).append(" ").append(firstName);
+        return sb.toString();
     }
 }
