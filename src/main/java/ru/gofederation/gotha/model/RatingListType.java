@@ -43,6 +43,20 @@ public enum RatingListType {
         return UND;
     }
 
+    public static RatingListType fromName(String name) {
+        if (null == name) return UND;
+
+        for (RatingListType rlType : values()) {
+            if (name.equals(rlType.name())) return rlType;
+        }
+
+        return UND;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public String getFilename() {
         return filename;
     }

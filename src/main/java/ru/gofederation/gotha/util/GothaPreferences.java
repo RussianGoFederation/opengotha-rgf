@@ -17,6 +17,7 @@
 
 package ru.gofederation.gotha.util;
 
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 public final class GothaPreferences {
@@ -24,6 +25,7 @@ public final class GothaPreferences {
 
     private static final String PREFERENCES_NODE = "info/vannier/opengotha";
     private static final String LOCALE = "locale";
+    public static final String DEFAULT_RATING_LIST = "playersmanager.defaultratinglist";
 
     private final Preferences preferences;
 
@@ -45,5 +47,23 @@ public final class GothaPreferences {
 
     public void setLocale(String localeCode) {
         this.preferences.put(LOCALE, localeCode);
+    }
+
+    public String getString(String key, String defaultValue) {
+        return preferences.get(key, defaultValue);
+    }
+
+    public GothaPreferences putString(String key, String value) {
+        preferences.put(key, value);
+        return this;
+    }
+
+    public void sync() {
+        try {
+            preferences.sync();
+        } catch (BackingStoreException e) {
+            e.printStackTrace();
+            // TODO log error
+        }
     }
 }

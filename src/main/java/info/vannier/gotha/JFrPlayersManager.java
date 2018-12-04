@@ -30,6 +30,7 @@ import javax.swing.table.DefaultTableModel;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.RatingListType;
 import ru.gofederation.gotha.model.RatingOrigin;
+import ru.gofederation.gotha.ui.RatingListControls;
 import ru.gofederation.gotha.util.GothaLocale;
 
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
@@ -41,7 +42,7 @@ import static ru.gofederation.gotha.model.RatingOrigin.FFG;
  *
  * @author  Luc Vannier
  */
-public class JFrPlayersManager extends javax.swing.JFrame {
+public class JFrPlayersManager extends javax.swing.JFrame implements RatingListControls.Listener {
     private static final long REFRESH_DELAY = 2000;
     private long lastComponentsUpdateTime = 0;
     private int playersSortType = PlayerComparator.NAME_ORDER;
@@ -104,6 +105,8 @@ public class JFrPlayersManager extends javax.swing.JFrame {
      * Unlike initComponents, customInitComponents is editable
      */
     private void customInitComponents() throws RemoteException {
+        ratingListControls.addListener(this);
+
         AutoCompletion.enable(cbxRatingList);
 
         this.pgbRatingList.setVisible(false);
@@ -121,11 +124,12 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         getRootPane().setDefaultButton(btnRegister);
 
         initCountriesList();
-        initRatingListControls();
+        resetRatingListControls();
         resetPlayerControls();
         initPnlRegisteredPlayers();
 
         this.updateAllViews();
+        onRatingListSelected(ratingListControls.getSelectedRatingListType());
     }
 
     private void initCountriesList(){
@@ -143,35 +147,6 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         for(Country c : alCountries){
             cbxCountry.addItem(c.getAlpha2Code());
         }
-    }
-
-    private void initRatingListControls(){
-        // Use the preferred rating list as in Preferences
-        Preferences prefs = Preferences.userRoot().node(Gotha.strPreferences + "/playersmanager");
-        String defRL = prefs.get("defaultratinglist", "" );
-        RatingListType rlType;
-        try{
-            rlType = RatingListType.fromId(Integer.parseInt(defRL));
-        }catch(Exception e){
-            rlType = RatingListType.UND;
-        }
-        this.ckbRatingList.setSelected(true);
-        this.btnSearchId.setVisible(false);
-        this.txfSearchId.setVisible(false);
-        switch(rlType){
-            case UND :
-                this.ckbRatingList.setSelected(false); break;
-            case EGF :
-                this.rdbEGF.setSelected(true); break;
-            case FFG :
-                this.rdbFFG.setSelected(true); break;
-            case AGA :
-                this.rdbAGA.setSelected(true);
-                this.btnSearchId.setVisible(true);
-                this.txfSearchId.setVisible(true); break;
-        }
-
-        this.resetRatingListControls();
     }
 
 
@@ -231,48 +206,9 @@ public class JFrPlayersManager extends javax.swing.JFrame {
     }
 
     private void resetRatingListControls() {
-        boolean bRL = this.ckbRatingList.isSelected();
-
-        this.rdbEGF.setVisible(bRL);
-        this.rdbFFG.setVisible(bRL);
-        this.rdbAGA.setVisible(bRL);
-        this.btnUpdateRatingList.setVisible(bRL);
-        this.rdbFirstCharacters.setVisible(bRL);
-        this.rdbLevenshtein.setVisible(bRL);
-        this.btnSearchId.setVisible(false);
-        this.txfSearchId.setVisible(false);
-                
-        RatingListType rlType = RatingListType.UND;
-        if (bRL){
-            if (this.rdbEGF.isSelected()) rlType = RatingListType.EGF;
-            if (this.rdbFFG.isSelected()) rlType = RatingListType.FFG;
-            if (this.rdbAGA.isSelected()) rlType = RatingListType.AGA;
-        }
-        // Save current rating list into Preferences
-        Preferences prefs = Preferences.userRoot().node(Gotha.strPreferences + "/playersmanager");
-        prefs.put("defaultratinglist", "" + rlType);
-
-        this.useRatingList(rlType);
-
-        switch(rlType){
-            case EGF :
-                this.btnUpdateRatingList.setText("Update EGF rating list from ...");
-                break;
-            case FFG :
-                this.btnUpdateRatingList.setText("Update FFG rating list from ...");
-                break;
-            case AGA :
-                this.btnUpdateRatingList.setText("Update AGA rating list from ...");
-                this.btnSearchId.setVisible(true);
-                this.txfSearchId.setVisible(true);
-                break;
-            default :
-                this.btnUpdateRatingList.setText("Update rating list");
-        }
-
         this.rdbRankFromGoR.setVisible(false);
         this.rdbRankFromGrade.setVisible(false);
-        
+
         if (ratingList.getRatingListType() == RatingListType.EGF) {
             this.rdbRankFromGoR.setVisible(true);
             this.rdbRankFromGrade.setVisible(true);
@@ -283,7 +219,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         if (ratingList.getRatingListType() == RatingListType.AGA) {
             this.rdbRankFromGoR.setSelected(true);
         }
-        
+
         if (ratingList.getRatingListType() == RatingListType.UND) {
             cbxRatingList.setEnabled(false);
             cbxRatingList.setVisible(true);
@@ -370,7 +306,6 @@ public class JFrPlayersManager extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        grpRatingList = new javax.swing.ButtonGroup();
         grpAlgo = new javax.swing.ButtonGroup();
         grpSetRank = new javax.swing.ButtonGroup();
         grpRegistration = new javax.swing.ButtonGroup();
@@ -425,11 +360,6 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         btnChangeRating = new javax.swing.JButton();
         rdbRankFromGoR = new javax.swing.JRadioButton();
         rdbRankFromGrade = new javax.swing.JRadioButton();
-        ckbRatingList = new javax.swing.JCheckBox();
-        rdbFFG = new javax.swing.JRadioButton();
-        rdbAGA = new javax.swing.JRadioButton();
-        rdbEGF = new javax.swing.JRadioButton();
-        btnUpdateRatingList = new javax.swing.JButton();
         btnSearchId = new javax.swing.JButton();
         txfSearchId = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
@@ -438,6 +368,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         lblAgaExpirationDate = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         txfGrade = new javax.swing.JTextField();
+        ratingListControls = new ru.gofederation.gotha.ui.RatingListControls();
         pnlPlayersList = new javax.swing.JPanel();
         lblPlFin = new javax.swing.JLabel();
         lblPlPre = new javax.swing.JLabel();
@@ -787,56 +718,6 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         pnlPlayer.add(rdbRankFromGrade);
         rdbRankFromGrade.setBounds(20, 205, 220, 20);
 
-        ckbRatingList.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        ckbRatingList.setText(locale.getString("rating_list.use")); // NOI18N
-        ckbRatingList.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                processRatingListChangeEvent(evt);
-            }
-        });
-        pnlPlayer.add(ckbRatingList);
-        ckbRatingList.setBounds(20, 20, 220, 23);
-
-        grpRatingList.add(rdbFFG);
-        rdbFFG.setText(locale.getString("rating_list.ffg")); // NOI18N
-        rdbFFG.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                processRatingListChangeEvent(evt);
-            }
-        });
-        pnlPlayer.add(rdbFFG);
-        rdbFFG.setBounds(70, 60, 130, 23);
-
-        grpRatingList.add(rdbAGA);
-        rdbAGA.setText(locale.getString("rating_list.aga")); // NOI18N
-        rdbAGA.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                processRatingListChangeEvent(evt);
-            }
-        });
-        pnlPlayer.add(rdbAGA);
-        rdbAGA.setBounds(70, 80, 130, 23);
-
-        grpRatingList.add(rdbEGF);
-        rdbEGF.setSelected(true);
-        rdbEGF.setText(locale.getString("rating_list.egf")); // NOI18N
-        rdbEGF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                processRatingListChangeEvent(evt);
-            }
-        });
-        pnlPlayer.add(rdbEGF);
-        rdbEGF.setBounds(70, 40, 130, 23);
-
-        btnUpdateRatingList.setText("Update rating list");
-        btnUpdateRatingList.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateRatingListActionPerformed(evt);
-            }
-        });
-        pnlPlayer.add(btnUpdateRatingList);
-        btnUpdateRatingList.setBounds(20, 110, 220, 23);
-
         btnSearchId.setText("Search by Id");
         btnSearchId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -873,6 +754,8 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         });
         pnlPlayer.add(txfGrade);
         txfGrade.setBounds(70, 405, 40, 20);
+        pnlPlayer.add(ratingListControls);
+        ratingListControls.setBounds(10, 20, 240, 120);
 
         getContentPane().add(pnlPlayer);
         pnlPlayer.setBounds(10, 0, 494, 560);
@@ -1208,6 +1091,52 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_cbxRatingListItemStateChanged
 
+    @Override
+    public void onRatingListSelected(RatingListType rlType) {
+        boolean useRL = rlType != RatingListType.UND;
+        this.rdbFirstCharacters.setVisible(useRL);
+        this.rdbLevenshtein.setVisible(useRL);
+
+        boolean searchId = rlType == RatingListType.AGA;
+        this.btnSearchId.setVisible(searchId);
+        this.txfSearchId.setVisible(searchId);
+
+        useRatingList(rlType);
+
+        this.rdbRankFromGoR.setVisible(false);
+        this.rdbRankFromGrade.setVisible(false);
+
+        if (ratingList.getRatingListType() == RatingListType.EGF) {
+            this.rdbRankFromGoR.setVisible(true);
+            this.rdbRankFromGrade.setVisible(true);
+        }
+        if (ratingList.getRatingListType() == RatingListType.FFG) {
+            this.rdbRankFromGoR.setSelected(true);
+        }
+        if (ratingList.getRatingListType() == RatingListType.AGA) {
+            this.rdbRankFromGoR.setSelected(true);
+        }
+
+        if (ratingList.getRatingListType() == RatingListType.UND) {
+            cbxRatingList.setEnabled(false);
+            cbxRatingList.setVisible(true);
+            txfPlayerNameChoice.setEnabled(false);
+            txfPlayerNameChoice.setVisible(false);
+            scpPlayerNameChoice.setEnabled(false);
+            scpPlayerNameChoice.setVisible(false);
+            lstPlayerNameChoice.setEnabled(false);
+            lstPlayerNameChoice.setVisible(false);
+
+            txfName.requestFocusInWindow();
+        } else {
+            if (rdbFirstCharacters.isSelected()) {
+                resetControlsForFirstCharactersSearching();
+            } else {
+                resetControlsForLevenshteinSearching();
+            }
+        }
+    }
+
     // See also JFrRatings.useRatingList, which should stay a clone
     private void useRatingList(RatingListType typeRatingList) {
         switch (typeRatingList) {
@@ -1463,55 +1392,6 @@ public class JFrPlayersManager extends javax.swing.JFrame {
         resetRatingListControls();
     }//GEN-LAST:event_rdbRankFromGoRActionPerformed
 
-    private void processRatingListChangeEvent(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processRatingListChangeEvent
-        this.resetRatingListControls();
-
-
-    }//GEN-LAST:event_processRatingListChangeEvent
-    // See also btnUpdateRatingListActionPerformed, which should stay a clone
-    private void btnUpdateRatingListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateRatingListActionPerformed
-        RatingListType rlType = RatingListType.UND;
-        if (!Gotha.isRatingListsDownloadEnabled()){
-            String strMessage = "Access to Rating lists is currently disabled.\nSee Options .. Preferences menu item";
-            JOptionPane.showMessageDialog(this, strMessage, "Message", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (this.rdbEGF.isSelected()) rlType = RatingListType.EGF;
-        if (this.rdbFFG.isSelected()) rlType = RatingListType.FFG;
-        if (this.rdbAGA.isSelected()) rlType = RatingListType.AGA;
-
-        String strDefaultURL;
-        File fDefaultFile;
-        String strPrompt;
-
-        switch(rlType){
-            case EGF:
-            case FFG:
-            case AGA:
-                strDefaultURL = rlType.getUrl();
-                fDefaultFile = new File(Gotha.runningDirectory, rlType.getFilename());
-                strPrompt = locale.format("rating_list.btn_update_from", locale.getString(rlType.getL10nKey()));
-                break;
-            default:
-                System.out.println("btnUpdateRatingListActionPerformed : Internal error");
-                return;
-        }
-
-        try {
-            String str = JOptionPane.showInputDialog(strPrompt, strDefaultURL);
-            if (str == null ) return;
-            this.lblRatingList.setText(locale.getString("rating_list.download_in_progress"));
-            lblRatingList.paintImmediately(0, 0, lblRatingList.getWidth(), lblRatingList.getHeight());
-            Gotha.download(this.pgbRatingList, str, fDefaultFile);
-        } catch (MalformedURLException ex) {
-            JOptionPane.showMessageDialog(this, locale.getString("rating_list.error.malformed_url"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, locale.getString("rating_list.error.unreachable_file"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
-        }
-        this.useRatingList(rlType);
-
-    }//GEN-LAST:event_btnUpdateRatingListActionPerformed
-
     private void txfGradeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txfGradeFocusLost
         this.txfGrade.setText(txfGrade.getText().toUpperCase());
         manageRankGradeAndRatingValues();
@@ -1579,13 +1459,10 @@ public class JFrPlayersManager extends javax.swing.JFrame {
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSearchId;
-    private javax.swing.JButton btnUpdateRatingList;
     private javax.swing.JComboBox<String> cbxCountry;
     private javax.swing.JComboBox<String> cbxRatingList;
-    private javax.swing.JCheckBox ckbRatingList;
     private javax.swing.JCheckBox ckbWelcomeSheet;
     private javax.swing.ButtonGroup grpAlgo;
-    private javax.swing.ButtonGroup grpRatingList;
     private javax.swing.ButtonGroup grpRegistration;
     private javax.swing.ButtonGroup grpSetRank;
     private javax.swing.JLabel jLabel1;
@@ -1620,9 +1497,7 @@ public class JFrPlayersManager extends javax.swing.JFrame {
     private javax.swing.JPanel pnlPlayersList;
     private javax.swing.JPanel pnlRegistration;
     private javax.swing.JPopupMenu pupRegisteredPlayers;
-    private javax.swing.JRadioButton rdbAGA;
-    private javax.swing.JRadioButton rdbEGF;
-    private javax.swing.JRadioButton rdbFFG;
+    private ru.gofederation.gotha.ui.RatingListControls ratingListControls;
     private javax.swing.JRadioButton rdbFinal;
     private javax.swing.JRadioButton rdbFirstCharacters;
     private javax.swing.JRadioButton rdbLevenshtein;
