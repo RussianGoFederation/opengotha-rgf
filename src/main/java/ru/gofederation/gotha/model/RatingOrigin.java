@@ -25,6 +25,8 @@ public enum RatingOrigin {
     FFG,
     /** Rating coming from American Go Association */
     AGA,
+    /** Rating coming from Russian Go Federation */
+    RGF,
     /** Rating specified by the organiser or imported from vBar-separated file */
     MAN,
     /** Rating computed from rank */

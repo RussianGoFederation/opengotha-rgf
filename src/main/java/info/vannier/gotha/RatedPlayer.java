@@ -7,6 +7,7 @@ import ru.gofederation.gotha.model.RatingOrigin;
 
 import static ru.gofederation.gotha.model.RatingOrigin.AGA;
 import static ru.gofederation.gotha.model.RatingOrigin.FFG;
+import static ru.gofederation.gotha.model.RatingOrigin.UNDEF;
 
 public final class RatedPlayer {
     private final String egfPin;
@@ -14,6 +15,7 @@ public final class RatedPlayer {
     private final String ffgLicenceStatus;
     private final String agaID;
     private final String agaExpirationDate;
+    private final int rgfId;
     private final String name;
     private final String firstName;
     private final String country;
@@ -41,6 +43,7 @@ public final class RatedPlayer {
          this.ffgLicenceStatus = ffgLicenceStatus;
          this.agaID = agaID; 
          this.agaExpirationDate = agaExpirationDate;
+         this.rgfId = 0;
          this.name = name;
          this.firstName = firstName;
          this.country = country;
@@ -48,6 +51,22 @@ public final class RatedPlayer {
          this.rawRating = rawRating;
          this.strGrade = strGrade;
          this.ratingOrigin = ratingOrigin;
+    }
+
+    private RatedPlayer(Builder builder) {
+        this.egfPin = builder.getEgfPin();
+        this.ffgLicence = builder.getFfgLicence();
+        this.ffgLicenceStatus = builder.getFfgLicenceStatus();
+        this.agaID = builder.getAgaID();
+        this.agaExpirationDate = builder.getAgaExpirationDate();
+        this.rgfId = builder.getRgfId();
+        this.name = builder.getName();
+        this.firstName = builder.getFirstName();
+        this.country = builder.getCountry();
+        this.club = builder.getClub();
+        this.rawRating = builder.getRawRating();
+        this.strGrade = builder.getStrGrade();
+        this.ratingOrigin = builder.getRatingOrigin();
     }
       
     public String getEgfPin() {
@@ -64,6 +83,10 @@ public final class RatedPlayer {
     
     public String getAgaExpirationDate() {
         return agaExpirationDate;
+    }
+
+    public int getRgfId() {
+        return rgfId;
     }
     
     public String getFfgLicenceStatus() {
@@ -196,6 +219,7 @@ public final class RatedPlayer {
         hash = 31 * hash + (ffgLicenceStatus == null ? 0 : ffgLicenceStatus.hashCode());
         hash = 31 * hash + (agaID == null ? 0 : agaID.hashCode());
         hash = 31 * hash + (agaExpirationDate == null ? 0 : agaExpirationDate.hashCode());
+        hash = 31 * hash + rgfId;
         hash = 31 * hash + (name == null ? 0 : name.hashCode());
         hash = 31 * hash + (firstName == null ? 0 : firstName.hashCode());
         hash = 31 * hash + (country == null ? 0 : country.hashCode());
@@ -219,6 +243,7 @@ public final class RatedPlayer {
             && Objects.equals(this.ffgLicenceStatus, otherPlayer.ffgLicenceStatus)
             && Objects.equals(this.agaID, otherPlayer.agaID)
             && Objects.equals(this.agaExpirationDate, otherPlayer.agaExpirationDate)
+            && this.rgfId == otherPlayer.rgfId
             && Objects.equals(this.name, otherPlayer.name)
             && Objects.equals(this.firstName, otherPlayer.firstName)
             && Objects.equals(this.country, otherPlayer.country)
@@ -245,5 +270,130 @@ public final class RatedPlayer {
         }
         sb.append(name).append(" ").append(firstName);
         return sb.toString();
+    }
+
+    public static final class Builder {
+        private String egfPin = "";
+        private String ffgLicence = "";
+        private String ffgLicenceStatus = "";
+        private String agaID = "";
+        private String agaExpirationDate = "";
+        private int rgfId = 0;
+        private String name = "";
+        private String firstName = "";
+        private String country = "";
+        private String club = "";
+        private int rawRating = 0;
+        private String strGrade = "";
+        private RatingOrigin ratingOrigin = UNDEF;
+
+        public Builder setEgfPin(String egfPin) {
+            this.egfPin = egfPin;
+            return this;
+        }
+
+        public String getEgfPin() {
+            return egfPin;
+        }
+
+        public Builder setFfgLicence(String ffgLicence, String ffgLicenceStatus) {
+            this.ffgLicence = ffgLicence;
+            this.ffgLicenceStatus = ffgLicenceStatus;
+            return this;
+        }
+
+        public String getFfgLicence() {
+            return ffgLicence;
+        }
+
+        public String getFfgLicenceStatus() {
+            return ffgLicenceStatus;
+        }
+
+        public Builder setAgaID(String agaID, String agaExpirationDate) {
+            this.agaID = agaID;
+            this.agaExpirationDate = agaExpirationDate;
+            return this;
+        }
+
+        public String getAgaID() {
+            return agaID;
+        }
+
+        public String getAgaExpirationDate() {
+            return agaExpirationDate;
+        }
+
+        public Builder setRgfId(int rgfId) {
+            this.rgfId = rgfId;
+            return this;
+        }
+
+        public int getRgfId() {
+            return rgfId;
+        }
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Builder setFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public Builder setCountry(String country) {
+            this.country = country;
+            return this;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public Builder setClub(String club) {
+            this.club = club;
+            return this;
+        }
+
+        public String getClub() {
+            return club;
+        }
+
+        public Builder setRawRating(RatingOrigin ratingOrigin, int rawRating) {
+            this.ratingOrigin = ratingOrigin;
+            this.rawRating = rawRating;
+            return this;
+        }
+
+        public int getRawRating() {
+            return rawRating;
+        }
+
+        public RatingOrigin getRatingOrigin() {
+            return ratingOrigin;
+        }
+
+        public Builder setStrGrade(String strGrade) {
+            this.strGrade = strGrade;
+            return this;
+        }
+
+        public String getStrGrade() {
+            return strGrade;
+        }
+
+        public RatedPlayer build() {
+            return new RatedPlayer(this);
+        }
     }
 }

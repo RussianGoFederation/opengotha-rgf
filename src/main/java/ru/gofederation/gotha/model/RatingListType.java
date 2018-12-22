@@ -18,10 +18,11 @@
 package ru.gofederation.gotha.model;
 
 public enum RatingListType {
-    UND(0,   "",                                                                        "",                           ""),
-    EGF(1,   "http://www.europeangodatabase.eu/EGD/EGD_2_0/downloads/allworld_lp.html", "ratinglists/egf_db.txt",     "rating_list.egf"),
-    FFG(257, "http://ffg.jeudego.org/echelle/echtxt/ech_ffg_V3.txt",                    "ratinglists/ech_ffg_V3.txt", "rating_list.ffg"),
-    AGA(513, "https://usgo.org/mm/tdlista.txt",                                         "ratinglists/tdlista.txt",    "rating_list.aga");
+    UND(0,    "",                                                                        "",                           ""),
+    EGF(1,    "http://www.europeangodatabase.eu/EGD/EGD_2_0/downloads/allworld_lp.html", "ratinglists/egf_db.txt",     "rating_list.egf"),
+    FFG(257,  "http://ffg.jeudego.org/echelle/echtxt/ech_ffg_V3.txt",                    "ratinglists/ech_ffg_V3.txt", "rating_list.ffg"),
+    AGA(513,  "https://usgo.org/mm/tdlista.txt",                                         "ratinglists/tdlista.txt",    "rating_list.aga"),
+    RGF(1025, "https://gofederation.ru/api/v3.0/players",                                "ratinglists/rgf.json",       "rating_list.rgf");
 
     private final int id;
     private final String filename;

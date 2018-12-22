@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -28,6 +27,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.RatingListFactory;
 import ru.gofederation.gotha.model.RatingListType;
 import ru.gofederation.gotha.model.RatingOrigin;
 import ru.gofederation.gotha.ui.RatingListControls;
@@ -109,7 +109,6 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
 
         AutoCompletion.enable(cbxRatingList);
 
-        this.pgbRatingList.setVisible(false);
         this.scpWelcomeSheet.setVisible(false);
 
         tabCkbParticipation = new JCheckBox[Gotha.MAX_NUMBER_OF_ROUNDS];
@@ -260,6 +259,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         txfEgfPin.setText("");
         lblPhoto.setIcon(null);
         txfAgaId.setText("");
+        txfRgfId.setText("");
         lblAgaExpirationDate.setText("");
         lblAgaExpirationDate.setForeground(Color.BLACK);
         for (int i = 0; i < Gotha.MAX_NUMBER_OF_ROUNDS; i++) {
@@ -354,7 +354,6 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         scpWelcomeSheet = new javax.swing.JScrollPane();
         txpWelcomeSheet = new javax.swing.JTextPane();
         cbxCountry = new javax.swing.JComboBox<>();
-        pgbRatingList = new javax.swing.JProgressBar();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         btnChangeRating = new javax.swing.JButton();
@@ -369,6 +368,8 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         jLabel13 = new javax.swing.JLabel();
         txfGrade = new javax.swing.JTextField();
         ratingListControls = new ru.gofederation.gotha.ui.RatingListControls();
+        jLabel14 = new javax.swing.JLabel();
+        txfRgfId = new javax.swing.JTextField();
         pnlPlayersList = new javax.swing.JPanel();
         lblPlFin = new javax.swing.JLabel();
         lblPlPre = new javax.swing.JLabel();
@@ -673,10 +674,6 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         pnlPlayer.add(cbxCountry);
         cbxCountry.setBounds(70, 310, 50, 21);
 
-        pgbRatingList.setStringPainted(true);
-        pnlPlayer.add(pgbRatingList);
-        pgbRatingList.setBounds(260, 30, 220, 17);
-
         jLabel10.setText(locale.getString("player.rank")); // NOI18N
         jLabel10.setToolTipText("from 30K to 9D");
         pnlPlayer.add(jLabel10);
@@ -756,6 +753,14 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         txfGrade.setBounds(70, 405, 40, 20);
         pnlPlayer.add(ratingListControls);
         ratingListControls.setBounds(10, 20, 240, 120);
+
+        jLabel14.setText(locale.getString("rating_list.rgf_id")); // NOI18N
+        pnlPlayer.add(jLabel14);
+        jLabel14.setBounds(330, 410, 45, 15);
+
+        txfRgfId.setEditable(false);
+        pnlPlayer.add(txfRgfId);
+        txfRgfId.setBounds(390, 410, 90, 19);
 
         getContentPane().add(pnlPlayer);
         pnlPlayer.setBounds(10, 0, 494, 560);
@@ -1116,6 +1121,9 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         if (ratingList.getRatingListType() == RatingListType.AGA) {
             this.rdbRankFromGoR.setSelected(true);
         }
+        if (ratingList.getRatingListType() == RatingListType.RGF) {
+            this.rdbRankFromGoR.setSelected(true);
+        }
 
         if (ratingList.getRatingListType() == RatingListType.UND) {
             cbxRatingList.setEnabled(false);
@@ -1141,16 +1149,17 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
     private void useRatingList(RatingListType typeRatingList) {
         switch (typeRatingList) {
             case EGF:
-                lblRatingList.setText("Searching for EGF rating list");
-                this.ratingList = new RatingList(RatingListType.EGF, new File(Gotha.runningDirectory, "ratinglists/egf_db.txt"));
-                break;
             case FFG:
-                lblRatingList.setText("Searching for FFG rating list");
-                ratingList = new RatingList(RatingListType.FFG, new File(Gotha.runningDirectory, "ratinglists/ech_ffg_V3.txt"));
-                break;
             case AGA:
-                lblRatingList.setText("Searching for AGA rating list");
-                ratingList = new RatingList(RatingListType.AGA, new File(Gotha.runningDirectory, "ratinglists/tdlista.txt"));
+            case RGF:
+                lblRatingList.setText(locale.format("rating_list.searching", locale.getString(typeRatingList.getL10nKey())));
+                try {
+                    ratingList = RatingListFactory.instance().loadDefaultFile(typeRatingList);
+                } catch (IOException e) {
+                    // TODO log error
+                    e.printStackTrace();
+                    ratingList = new RatingList();
+                }
                 break;
             default:
                 ratingList = new RatingList();
@@ -1172,13 +1181,10 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
 
             switch (ratingList.getRatingListType()) {
                 case EGF:
-                    strType = "EGF rating list";
-                    break;
                 case FFG:
-                    strType = "FFG rating list";
-                    break;
                 case AGA:
-                    strType = "AGA rating list";
+                case RGF:
+                    strType = locale.format("rating_list.name", locale.getString(ratingList.getRatingListType().getL10nKey()));
                     break;
             }
             lblRatingList.setText(strType + " " +
@@ -1225,23 +1231,29 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
             smmsCorrection = 0;
         }
 
+        int rgfId = 0;
         try {
-            p = new Player(
-                    txfName.getText(),
-                    txfFirstName.getText(),
-                    ((String)cbxCountry.getSelectedItem()).trim(),
-                    txfClub.getText().trim(),
-                    txfEgfPin.getText(),
-                    txfFfgLicence.getText(),
-                    txfFfgLicenceStatus.getText(),
-                    txfAgaId.getText(),
-                    lblAgaExpirationDate.getText(),
-                    rank,
-                    rating,
-                    RatingOrigin.fromString(strOrigin),
-                    this.txfGrade.getText(),
-                    smmsCorrection,
-                    registration);
+            rgfId = Integer.parseInt(txfRgfId.getText());
+        } catch (NumberFormatException e) {
+            // Noop is ok
+        }
+
+        try {
+            p = new Player.Builder()
+                .setName(txfName.getText())
+                .setFirstName(txfFirstName.getText())
+                .setCountry(((String)cbxCountry.getSelectedItem()).trim())
+                .setClub(txfClub.getText().trim())
+                .setEgfPin(txfEgfPin.getText())
+                .setFfgLicence(txfFfgLicence.getText(), txfFfgLicenceStatus.getText())
+                .setAgaId(txfAgaId.getText(), lblAgaExpirationDate.getText())
+                .setRgfId(rgfId)
+                .setRank(rank)
+                .setRating(rating, RatingOrigin.fromString(strOrigin))
+                .setGrade(this.txfGrade.getText())
+                .setSmmsCorrection(smmsCorrection)
+                .setRegistrationStatus(registration)
+                .build();
 
             boolean[] bPart = new boolean[Gotha.MAX_NUMBER_OF_ROUNDS];
             
@@ -1470,6 +1482,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1491,7 +1504,6 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
     private javax.swing.JMenuItem mniSortByName;
     private javax.swing.JMenuItem mniSortByRank;
     private javax.swing.JMenuItem mniSortByRating;
-    private javax.swing.JProgressBar pgbRatingList;
     private javax.swing.JPanel pnlParticipation;
     private javax.swing.JPanel pnlPlayer;
     private javax.swing.JPanel pnlPlayersList;
@@ -1522,6 +1534,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
     private javax.swing.JTextField txfRank;
     private javax.swing.JTextField txfRating;
     private javax.swing.JTextField txfRatingOrigin;
+    private javax.swing.JTextField txfRgfId;
     private javax.swing.JTextField txfSMMSCorrection;
     private javax.swing.JTextField txfSearchId;
     private javax.swing.JTextPane txpWelcomeSheet;
@@ -1602,6 +1615,9 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         lblAgaExpirationDate.setText(strDate);
         if (Gotha.isDateExpired(strDate)) lblAgaExpirationDate.setForeground(Color.red);
 
+        if (rP.getRgfId() > 0) {
+            txfRgfId.setText(Integer.toString(rP.getRgfId()));
+        }
     }
 
     /**
@@ -1656,6 +1672,10 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         String strDate = playerInModification.getAgaExpirationDate();
         lblAgaExpirationDate.setText(strDate);
         if (Gotha.isDateExpired(strDate)) lblAgaExpirationDate.setForeground(Color.red);
+
+        if (playerInModification.getRgfId() > 0) {
+            txfRgfId.setText(Integer.toString(playerInModification.getRgfId()));
+        }
        
         boolean[] bPart = playerInModification.getParticipating();
         for (int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++) {

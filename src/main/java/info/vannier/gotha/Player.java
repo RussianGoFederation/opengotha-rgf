@@ -23,6 +23,7 @@ public class Player implements java.io.Serializable{
     private String ffgLicenceStatus;
     private String agaId;
     private String agaExpirationDate;
+    private int rgfId;
     /**
      * Rank between -30 (30K) and +8 (9D)
      */
@@ -60,10 +61,11 @@ public class Player implements java.io.Serializable{
     /** Creates a new instance of Player */
     public Player() {
     }
-    public Player(Player p) {      
+    public Player(Player p) {
         deepCopy(p);
     }
-     
+
+    @Deprecated
     public Player(String name, String firstName, String country, String club, String egfPin, String ffgLicence, String ffgLicenceStatus,
             String agaId, String agaExpirationDate,
             int rank,  int rating, RatingOrigin ratingOrigin, String strGrade, int smmsCorrection,
@@ -103,6 +105,35 @@ public class Player implements java.io.Serializable{
             participating[i] = true;
         }
     }
+
+    private Player(Builder builder) throws PlayerException {
+        if (builder.getName().length() < 1) throw new PlayerException("Player's name should have at least 1 character");
+        this.name = builder.getName();
+        if (builder.getFirstName().length() < 1) throw new PlayerException("Player's first name should have at least 1 character");
+        this.firstName = builder.getFirstName();
+        this.computeKeyString();
+        if (builder.getCountry().length() == 1 || builder.getCountry().length() > 2) throw new PlayerException("Country name should either have 2 characters\nor be absent");
+        this.country = builder.getCountry();
+        if (builder.getClub().length() > 4) throw new PlayerException("Club name should have at most 4 character");
+        this.club = builder.getClub();
+        this.egfPin = builder.getEgfPin();
+        this.ffgLicence = builder.getFfgLicence();
+        this.ffgLicenceStatus = builder.getFfgLicenceStatus();
+        this.agaId = builder.getAgaId();
+        this.agaExpirationDate = builder.getAgaExpirationDate();
+        this.rgfId = builder.getRgfId();
+        if (builder.getRank() < Gotha.MIN_RANK || builder.getRank() > Gotha.MAX_RANK) this.rank = Player.convertKDPToInt(builder.getGrade());
+        else this.rank = builder.getRank();
+        this.rating = builder.getRating();
+        this.ratingOrigin = builder.getRatingOrigin();
+        if (builder.getGrade().equals("")) this.strGrade = Player.convertIntToKD(this.rank).toUpperCase();
+        else this.strGrade = builder.getGrade().toUpperCase();
+        this.smmsCorrection = builder.getSmmsCorrection();
+        this.registeringStatus = builder.getRegistrationStatus();
+        for (int i = 0; i < Gotha.MAX_NUMBER_OF_ROUNDS; i++) {
+            participating[i] = true;
+        }
+    }
         
     /** 
      * Copies p into this
@@ -118,6 +149,7 @@ public class Player implements java.io.Serializable{
         this.ffgLicenceStatus = p.getFfgLicenceStatus();
         this.agaId = p.getAgaId();
         this.agaExpirationDate = p.getAgaExpirationDate();
+        this.rgfId = p.getRgfId();
         this.rank = p.getRank();
         this.rating = p.getRating();
         this.ratingOrigin = p.getRatingOrigin();
@@ -473,6 +505,14 @@ public class Player implements java.io.Serializable{
         this.agaId = agaId;
     }
 
+    public void setRgfId(int rgfId) {
+        this.rgfId = rgfId;
+    }
+
+    public int getRgfId() {
+        return rgfId;
+    }
+
     public int getSmmsCorrection() {
         return smmsCorrection;
     }
@@ -511,5 +551,159 @@ public class Player implements java.io.Serializable{
     public void setStrGrade(String strGrade) {
         this.strGrade = strGrade;
     }
-}
 
+    public static final class Builder {
+        private String name = "";
+        private String firstName = "";
+        private String country = "";
+        private String club = "";
+        private String egfPin = "";
+        private String ffgLicence = "";
+        private String ffgLicenceStatus = "";
+        private String agaId = "";
+        private String agaExpirationDate = "";
+        private int rgfId = 0;
+        private int rank = -20;
+        private int rating = MIN_RATING;
+        private RatingOrigin ratingOrigin = UNDEF;
+        private String grade = "";
+        private int smmsCorrection = 0;
+        private PlayerRegistrationStatus registrationStatus = PlayerRegistrationStatus.PRELIMINARY;
+
+        public String getName() {
+            return name;
+        }
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public Builder setFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public Builder setCountry(String country) {
+            this.country = country;
+            return this;
+        }
+
+        public String getClub() {
+            return club;
+        }
+
+        public Builder setClub(String club) {
+            this.club = club;
+            return this;
+        }
+
+        public String getEgfPin() {
+            return egfPin;
+        }
+
+        public Builder setEgfPin(String egfPin) {
+            this.egfPin = egfPin;
+            return this;
+        }
+
+        public String getFfgLicence() {
+            return ffgLicence;
+        }
+
+        public String getFfgLicenceStatus() {
+            return ffgLicenceStatus;
+        }
+
+        public Builder setFfgLicence(String ffgLicence, String ffgLicenceStatus) {
+            this.ffgLicence = ffgLicence;
+            this.ffgLicenceStatus = ffgLicenceStatus;
+            return this;
+        }
+
+        public String getAgaId() {
+            return agaId;
+        }
+
+        public String getAgaExpirationDate() {
+            return agaExpirationDate;
+        }
+
+        public Builder setAgaId(String agaId, String agaExpirationDate) {
+            this.agaId = agaId;
+            this.agaExpirationDate = agaExpirationDate;
+            return this;
+        }
+
+        public int getRgfId() {
+            return rgfId;
+        }
+
+        public Builder setRgfId(int rgfId) {
+            this.rgfId = rgfId;
+            return this;
+        }
+
+        public int getRank() {
+            return rank;
+        }
+
+        public Builder setRank(int rank) {
+            this.rank = rank;
+            return this;
+        }
+
+        public int getRating() {
+            return rating;
+        }
+
+        public RatingOrigin getRatingOrigin() {
+            return ratingOrigin;
+        }
+
+        public Builder setRating(int rating, RatingOrigin ratingOrigin) {
+            this.rating = rating;
+            this.ratingOrigin = ratingOrigin;
+            return this;
+        }
+
+        public String getGrade() {
+            return grade;
+        }
+
+        public Builder setGrade(String grade) {
+            this.grade = grade;
+            return this;
+        }
+
+        public int getSmmsCorrection() {
+            return smmsCorrection;
+        }
+
+        public Builder setSmmsCorrection(int smmsCorrection) {
+            this.smmsCorrection = smmsCorrection;
+            return this;
+        }
+
+        public PlayerRegistrationStatus getRegistrationStatus() {
+            return registrationStatus;
+        }
+
+        public Builder setRegistrationStatus(PlayerRegistrationStatus registrationStatus) {
+            this.registrationStatus = registrationStatus;
+            return this;
+        }
+
+        public Player build() throws PlayerException {
+            return new Player(this);
+        }
+    }
+}

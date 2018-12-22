@@ -600,6 +600,7 @@ public class ExternalDocument {
             String ffgLicenceStatus = extractNodeValue(nnm, "ffgLicenceStatus", "");          
             String agaId = extractNodeValue(nnm, "agaId", "");
             String agaExpirationDate = extractNodeValue(nnm, "agaExpirationDate", "");
+            int rgfId = extractNodeIntValue(nnm, "rgfId", 0);
             String strRank = extractNodeValue(nnm, "rank", "30K");
             int rank = Player.convertKDPToInt(strRank);
             String strRating = extractNodeValue(nnm, "rating", "-900");
@@ -639,8 +640,21 @@ public class ExternalDocument {
             String registeringStatus = extractNodeValue(nnm, "registeringStatus", FINAL.toString());
             Player p = null;
             try {
-                p = new Player(name, firstName, country, club, egfPin, ffgLicence, ffgLicenceStatus,
-                        agaId, agaExpirationDate, rank, rating, RatingOrigin.fromString(ratingOrigin), strGrade, smmsCorrection, PlayerRegistrationStatus.fromString(registeringStatus));
+                p = new Player.Builder()
+                    .setName(name)
+                    .setFirstName(firstName)
+                    .setCountry(country)
+                    .setClub(club)
+                    .setEgfPin(egfPin)
+                    .setFfgLicence(ffgLicence, ffgLicenceStatus)
+                    .setAgaId(agaId, agaExpirationDate)
+                    .setRgfId(rgfId)
+                    .setRank(rank)
+                    .setRating(rating, RatingOrigin.fromString(ratingOrigin))
+                    .setGrade(strGrade)
+                    .setSmmsCorrection(smmsCorrection)
+                    .setRegistrationStatus(PlayerRegistrationStatus.fromString(registeringStatus))
+                    .build();
             } catch (PlayerException ex) {
                 Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -3115,6 +3129,8 @@ public class ExternalDocument {
             emPlayer.setAttribute("ffgLicenceStatus", strFfgLicenceStatus);
             emPlayer.setAttribute("agaId", strAgaId);
             emPlayer.setAttribute("agaExpirationDate", strAgaExpirationDate);
+            if (p.getRgfId() > 0)
+                emPlayer.setAttribute("rgfId", Integer.toString(p.getRgfId()));
             emPlayer.setAttribute("rank", strRank);
             emPlayer.setAttribute("rating", strRating);
             emPlayer.setAttribute("ratingOrigin", strRatingOrigin);
