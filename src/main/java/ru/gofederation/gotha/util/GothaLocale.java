@@ -19,6 +19,7 @@ package ru.gofederation.gotha.util;
 
 import com.ibm.icu.text.MessageFormat;
 
+import java.text.DateFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -31,10 +32,12 @@ public enum GothaLocale implements ComboBoxModel<GothaLocale> {
 
     private static GothaLocale currentLocale = null;
     private final Locale locale;
+    private final DateFormat dateFormat;
     private ResourceBundle resources;
 
     GothaLocale(Locale locale) {
         this.locale = locale;
+        this.dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
     }
 
     public static GothaLocale defaultLocale() {
@@ -57,6 +60,10 @@ public enum GothaLocale implements ComboBoxModel<GothaLocale> {
 
     public Locale getLocale() {
         return this.locale;
+    }
+
+    public DateFormat getDateFormat() {
+        return dateFormat;
     }
 
     private ResourceBundle getResources() {

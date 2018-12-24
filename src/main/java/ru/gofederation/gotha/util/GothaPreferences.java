@@ -17,6 +17,12 @@
 
 package ru.gofederation.gotha.util;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -25,6 +31,7 @@ public final class GothaPreferences {
 
     private static final String PREFERENCES_NODE = "info/vannier/opengotha";
     private static final String LOCALE = "locale";
+    private static final String WINDOW_STATE = "window_state";
     public static final String DEFAULT_RATING_LIST = "playersmanager.defaultratinglist";
 
     private final Preferences preferences;
@@ -56,6 +63,58 @@ public final class GothaPreferences {
     public GothaPreferences putString(String key, String value) {
         preferences.put(key, value);
         return this;
+    }
+
+    public void persistWindowState(Window window, Dimension defaultDimension) {
+        restoreWindowState(window, defaultDimension);
+
+        window.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                saveWindowState(window);
+            }
+        });
+    }
+
+    private void saveWindowState(Window window) {
+        Preferences node = preferences.node(window.getClass().getSimpleName());
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Save window position & dimensions together with screen resolution
+        node.put(WINDOW_STATE, String.valueOf(screenSize.width) + "," + screenSize.height + "," +
+            window.getX() + "," + window.getY() + "," +
+            window.getWidth() + "," + window.getHeight());
+    }
+
+    private void restoreWindowState(Window window, Dimension defaultDimension) {
+        Preferences node = preferences.node(window.getClass().getSimpleName());
+
+        Point location = null;
+
+        String savedStateStr = node.get(WINDOW_STATE, null);
+        if (null != savedStateStr) {
+            String[] savedState = savedStateStr.split(",");
+            if (savedState.length == 6) {
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                if (screenSize.width == Integer.parseInt(savedState[0]) &&
+                    screenSize.height == Integer.parseInt(savedState[1])) {
+                    // Saved window state is only valid for specific screen resolution
+                    defaultDimension.setSize(Integer.parseInt(savedState[4]), Integer.parseInt(savedState[5]));
+                    location = new Point(Integer.parseInt(savedState[2]), Integer.parseInt(savedState[3]));
+                } else {
+                    // Screen resolution changed - invalidate saved state
+                    node.remove(WINDOW_STATE);
+                    sync();
+                }
+            }
+        }
+        if (null == location) {
+            window.setLocationByPlatform(true);
+        } else {
+            window.setLocation(location);
+        }
+        window.setSize(defaultDimension);
+        window.validate();
     }
 
     public void sync() {

@@ -23,13 +23,15 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.*;
 
+import ru.gofederation.gotha.ui.RgfTournamentImportDialog;
+import ru.gofederation.gotha.ui.TournamentOpener;
 import ru.gofederation.gotha.util.GothaLocale;
 
 /**
  *
  * @author Luc Vannier
  */
-public class JFrGotha extends javax.swing.JFrame {
+public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
 
     private static final long REFRESH_DELAY = 2000;
     private long lastComponentsUpdateTime = 0;
@@ -267,6 +269,7 @@ public class JFrGotha extends javax.swing.JFrame {
         mniImportWallist = new javax.swing.JMenuItem();
         mniImportVBS = new javax.swing.JMenuItem();
         mniImportXML = new javax.swing.JMenuItem();
+        mniImportRgf = new javax.swing.JMenuItem();
         mniExport = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JSeparator();
         mniExit = new javax.swing.JMenuItem();
@@ -1073,6 +1076,15 @@ public class JFrGotha extends javax.swing.JFrame {
             }
         });
         mnuImport.add(mniImportXML);
+
+        mniImportRgf.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        mniImportRgf.setText(locale.getString("menu.tournament.import.rgf")); // NOI18N
+        mniImportRgf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniImportRgfActionPerformed(evt);
+            }
+        });
+        mnuImport.add(mniImportRgf);
 
         mnuTournament.add(mnuImport);
 
@@ -3054,6 +3066,11 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 
     }//GEN-LAST:event_mniSaveActionPerformed
 
+    private void mniImportRgfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniImportRgfActionPerformed
+        RgfTournamentImportDialog importPane = new RgfTournamentImportDialog(this, locale.getString("tournament.rgf.import.window_title"), true, this);
+        importPane.setVisible(true);
+    }//GEN-LAST:event_mniImportRgfActionPerformed
+
     private File chooseAFile(File path, String extension) {
         JFileChooser fileChoice = new JFileChooser(path);
         fileChoice.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -3100,6 +3117,12 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             System.out.println(strMessage);
             return;
         }
+
+        openTournament(t);
+    }
+
+    @Override
+    public void openTournament(TournamentInterface t) throws RemoteException {
         // Check if a tournament with same name exists (Server mode only)
         if (Gotha.runningMode == Gotha.RUNNING_MODE_SRV) {
             String tKN = null;
@@ -3437,6 +3460,7 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     private javax.swing.JMenuItem mniGamesOptions;
     private javax.swing.JMenuItem mniHelpAbout;
     private javax.swing.JMenuItem mniImportH9;
+    private javax.swing.JMenuItem mniImportRgf;
     private javax.swing.JMenuItem mniImportTou;
     private javax.swing.JMenuItem mniImportVBS;
     private javax.swing.JMenuItem mniImportWallist;
@@ -3451,6 +3475,7 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     private javax.swing.JMenuItem mniPlayersQuickCheck;
     private javax.swing.JMenuItem mniPreferences;
     private javax.swing.JMenuItem mniPublish;
+    private javax.swing.JMenuItem mniPublishRGF;
     private javax.swing.JMenuItem mniRMI;
     private javax.swing.JMenuItem mniRR;
     private javax.swing.JMenuItem mniResults;

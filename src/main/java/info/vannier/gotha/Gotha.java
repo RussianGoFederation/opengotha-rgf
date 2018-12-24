@@ -4,11 +4,13 @@
  */
 package info.vannier.gotha;
 
+import java.awt.EventQueue;
 import java.awt.Image;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.*;
 import java.rmi.RemoteException;
 import java.text.ParseException;
@@ -333,47 +335,58 @@ public class Gotha {
         return t;
     }
 
-    public static void download(JProgressBar pgb, String strURL, File fDestination) throws MalformedURLException, IOException {
-        BufferedInputStream bis;
-        FileOutputStream fos;
-        
+    public static void download(JProgressBar pgb, boolean forceRepaint, String strURL, OutputStream out) throws IOException {
         URL url = new URL(strURL);
+        if (null != pgb) {
+            pgb.setIndeterminate(true);
+        }
         URLConnection urlc = url.openConnection();
 
-        bis = new BufferedInputStream(urlc.getInputStream());
-        fos = new FileOutputStream(fDestination);
+        try (BufferedInputStream bis = new BufferedInputStream(urlc.getInputStream())) {
+            int i;
+            int contentLength = urlc.getContentLength();
+            int nbChars = 0;
 
-        int i;
-        int contentLength = urlc.getContentLength();
-        int nbChars = 0;
+            if (pgb != null) {
+                pgb.setIndeterminate(false);
+                pgb.setValue(0);
+                pgb.setVisible(true);
+            }
 
-        if (pgb != null) {
-            pgb.setValue(0);
-            pgb.setVisible(true);
-        }
-
-        while ((i = bis.read()) != -1) {
-            fos.write(i);
-            nbChars++;
-            if (nbChars % 2000 == 0) {
-                int percent = 100 * nbChars / contentLength;
-                if (contentLength <= 0){
-                    // Rough estimation of percent
-                    int estimatedLength = 100000;
-                    percent = 100 * nbChars / (nbChars + estimatedLength);
-                }
-                if (pgb != null) {
-                    pgb.setValue(percent);
-                    pgb.paintImmediately(0, 0, pgb.getWidth(), pgb.getHeight());
+            while ((i = bis.read()) != -1) {
+                out.write(i);
+                nbChars++;
+                if (nbChars % 2000 == 0) {
+                    final int percent;
+                    if (contentLength <= 0) {
+                        // Rough estimation of percent
+                        int estimatedLength = 100000;
+                        percent = 100 * nbChars / (nbChars + estimatedLength);
+                    } else {
+                        percent = 100 * nbChars / contentLength;
+                    }
+                    if (pgb != null) {
+                        if (forceRepaint) {
+                            pgb.setValue(percent);
+                            pgb.paintImmediately(0, 0, pgb.getWidth(), pgb.getHeight());
+                        } else {
+                            EventQueue.invokeLater(() -> pgb.setValue(percent));
+                        }
+                    }
                 }
             }
+        } finally {
+            if (pgb != null) {
+                pgb.setVisible(false);
+            }
+            out.close();
         }
+    }
 
-        if (pgb != null) {
-            pgb.setVisible(false);
+    public static void download(JProgressBar pgb, String strURL, File fDestination) throws MalformedURLException, IOException {
+        try (FileOutputStream fos = new FileOutputStream(fDestination)) {
+            download(pgb, true, strURL, fos);
         }
-        fos.close();
-        bis.close();
     }
 
     public static String getHostName() {

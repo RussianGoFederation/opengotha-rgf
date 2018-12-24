@@ -694,6 +694,8 @@ public class ExternalDocument {
         String director = extractNodeValue(nnmGPS, "director", "");
         gps.setDirector(director);
         String strBeginDate = extractNodeValue(nnmGPS, "beginDate", "2000-01-01");
+        int rgfId = extractNodeIntValue(nnmGPS, "rgfId", -1);
+        gps.setRgfId(rgfId);
         try {
             gps.setBeginDate(new SimpleDateFormat("yyyy-MM-dd").parse(strBeginDate));
         } catch (ParseException ex) {
@@ -3321,6 +3323,8 @@ public class ExternalDocument {
         emGeneralParameterSet.setAttribute("size", gps.getStrSize());
         emGeneralParameterSet.setAttribute("komi", gps.getStrKomi());
         emGeneralParameterSet.setAttribute("basicTime", "" + gps.getBasicTime());
+        if (gps.hasRgfId())
+            emGeneralParameterSet.setAttribute("rgfId", Integer.toString(gps.getRgfId()));
         String strComplementaryTimeSystem;
         switch (gps.getComplementaryTimeSystem()) {
             case GeneralParameterSet.GEN_GP_CTS_SUDDENDEATH:

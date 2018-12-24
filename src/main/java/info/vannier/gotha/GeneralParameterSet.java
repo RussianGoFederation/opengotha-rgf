@@ -29,6 +29,8 @@ public class GeneralParameterSet implements java.io.Serializable{
     private String director = "";
     private java.util.Date beginDate = new java.util.Date ();
     private java.util.Date endDate  = new java.util.Date ();
+
+    private int rgfId = -1;
     
     // Games parameters
    
@@ -245,6 +247,18 @@ public class GeneralParameterSet implements java.io.Serializable{
 
     public void setEndDate(java.util.Date endDate) {
         this.endDate = (Date)endDate.clone();
+    }
+
+    public int getRgfId() {
+        return rgfId;
+    }
+
+    public boolean hasRgfId() {
+        return rgfId > 0;
+    }
+
+    public void setRgfId(int rgfId) {
+        this.rgfId = rgfId;
     }
 
     public int getNumberOfRounds() {
