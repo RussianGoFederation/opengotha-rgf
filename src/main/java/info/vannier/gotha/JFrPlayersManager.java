@@ -30,6 +30,7 @@ import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.RatingListFactory;
 import ru.gofederation.gotha.model.RatingListType;
 import ru.gofederation.gotha.model.RatingOrigin;
+import ru.gofederation.gotha.ui.PlayerList;
 import ru.gofederation.gotha.ui.RatingListControls;
 import ru.gofederation.gotha.util.GothaLocale;
 
@@ -42,7 +43,7 @@ import static ru.gofederation.gotha.model.RatingOrigin.FFG;
  *
  * @author  Luc Vannier
  */
-public class JFrPlayersManager extends javax.swing.JFrame implements RatingListControls.Listener {
+public class JFrPlayersManager extends javax.swing.JFrame implements RatingListControls.Listener, PlayerList.PlayerDoubleClickListener {
     private static final long REFRESH_DELAY = 2000;
     private long lastComponentsUpdateTime = 0;
     private int playersSortType = PlayerComparator.NAME_ORDER;
@@ -75,6 +76,8 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         initComponents();
         customInitComponents();
         setupRefreshTimer();
+
+        playerList.setTournament(tournament);
     }
 
     private volatile boolean running = true;
@@ -106,6 +109,9 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
      */
     private void customInitComponents() throws RemoteException {
         ratingListControls.addListener(this);
+        playerList.setPlayerDoubleClickListener(this);
+        playerList.addContextMenuItem(locale.getString("player.menu.remove"), (this::removePlayer));
+        playerList.addContextMenuItem(locale.getString("player.menu.modify"), (this::onPlayerDoubleClicked));
 
         AutoCompletion.enable(cbxRatingList);
 
@@ -125,7 +131,6 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         initCountriesList();
         resetRatingListControls();
         resetPlayerControls();
-        initPnlRegisteredPlayers();
 
         this.updateAllViews();
         onRatingListSelected(ratingListControls.getSelectedRatingListType());
@@ -148,22 +153,6 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         }
     }
 
-
-    private void initPnlRegisteredPlayers() throws RemoteException {
-        JFrGotha.formatColumn(tblRegisteredPlayers, REG_COL, "R", 10, JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, NAME_COL, locale.getString("player.last_name"), 110, JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, FIRSTNAME_COL, locale.getString("player.first_name"), 80, JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, COUNTRY_COL, locale.getString("player.country"),30,  JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, CLUB_COL, locale.getString("player.club"), 40, JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, RANK_COL, locale.getString("player.rank"), 30, JLabel.RIGHT, JLabel.RIGHT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, RATING_COL, locale.getString("player.rating"),  40, JLabel.RIGHT, JLabel.RIGHT);
-        JFrGotha.formatColumn(tblRegisteredPlayers, GRADE_COL, locale.getString("player.grade"),  25, JLabel.RIGHT, JLabel.RIGHT);
-
-        // Single selection
-        tblRegisteredPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        updatePnlRegisteredPlayers(tournament.playersList());
-    }
-
     private void updatePnlRegisteredPlayers(ArrayList<Player> playersList) {
         int nbPreliminary = 0;
         int nbFinal = 0;
@@ -179,29 +168,6 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         txfNbPlFin.setText("" + nbFinal);
         lblPlPre.setText(locale.format("player.players.registered_preliminary", nbPreliminary));
         lblPlFin.setText(locale.format("player.players.registered_final", nbFinal));
-
-        lblPlPre.setText(locale.format("player.players.registered_preliminary", nbPreliminary));
-        lblPlFin.setText(locale.format("player.players.registered_final", nbFinal));
-        DefaultTableModel model = (DefaultTableModel) tblRegisteredPlayers.getModel();
-        // sort
-        ArrayList<Player> displayedPlayersList = new ArrayList<Player>(playersList);
-
-        PlayerComparator playerComparator = new PlayerComparator(playersSortType);
-        Collections.sort(displayedPlayersList, playerComparator);
-
-        model.setRowCount(displayedPlayersList.size());
-        for (Player p : displayedPlayersList) {
-            int line = displayedPlayersList.indexOf(p);
-            model.setValueAt((p.getRegisteringStatus() == PRELIMINARY) ? "P" : "F", line, JFrPlayersManager.REG_COL);
-            model.setValueAt(p.getName(), line, JFrPlayersManager.NAME_COL);
-            model.setValueAt(p.getFirstName(), line, JFrPlayersManager.FIRSTNAME_COL);
-            model.setValueAt(Player.convertIntToKD(p.getRank()), line, JFrPlayersManager.RANK_COL);
-            model.setValueAt(p.getCountry(), line, JFrPlayersManager.COUNTRY_COL);
-            model.setValueAt(p.getClub(), line, JFrPlayersManager.CLUB_COL);
-            model.setValueAt(p.getRating(), line, JFrPlayersManager.RATING_COL);
-//            model.setValueAt(Player.convertIntToKD(p.getGrade()), line, JFrPlayersManager.GRADE_COL);
-            model.setValueAt(p.getStrGrade(), line, JFrPlayersManager.GRADE_COL);
-        }
     }
 
     private void resetRatingListControls() {
@@ -309,15 +275,6 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         grpAlgo = new javax.swing.ButtonGroup();
         grpSetRank = new javax.swing.ButtonGroup();
         grpRegistration = new javax.swing.ButtonGroup();
-        pupRegisteredPlayers = new javax.swing.JPopupMenu();
-        mniSortByName = new javax.swing.JMenuItem();
-        mniSortByGrade = new javax.swing.JMenuItem();
-        mniSortByRank = new javax.swing.JMenuItem();
-        mniSortByRating = new javax.swing.JMenuItem();
-        mniRemovePlayer = new javax.swing.JMenuItem();
-        mniModifyPlayer = new javax.swing.JMenuItem();
-        jSeparator5 = new javax.swing.JPopupMenu.Separator();
-        mniCancel = new javax.swing.JMenuItem();
         pnlPlayer = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -375,70 +332,10 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         lblPlPre = new javax.swing.JLabel();
         txfNbPlFin = new javax.swing.JTextField();
         txfNbPlPre = new javax.swing.JTextField();
-        scpRegisteredPlayers = new javax.swing.JScrollPane();
-        tblRegisteredPlayers = new javax.swing.JTable();
         btnPrint = new javax.swing.JButton();
+        playerList = new ru.gofederation.gotha.ui.PlayerList();
         btnClose = new javax.swing.JButton();
         btnHelp = new javax.swing.JButton();
-
-        pupRegisteredPlayers.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-
-        mniSortByName.setText("Sort by name");
-        mniSortByName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniSortByNameActionPerformed(evt);
-            }
-        });
-        pupRegisteredPlayers.add(mniSortByName);
-
-        mniSortByGrade.setText("Sort by grade");
-        mniSortByGrade.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniSortByGradeActionPerformed(evt);
-            }
-        });
-        pupRegisteredPlayers.add(mniSortByGrade);
-
-        mniSortByRank.setText("Sort by rank");
-        mniSortByRank.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniSortByRankActionPerformed(evt);
-            }
-        });
-        pupRegisteredPlayers.add(mniSortByRank);
-
-        mniSortByRating.setText("Sort by rating");
-        mniSortByRating.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniSortByRatingActionPerformed(evt);
-            }
-        });
-        pupRegisteredPlayers.add(mniSortByRating);
-
-        mniRemovePlayer.setText("Remove player");
-        mniRemovePlayer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniRemovePlayerActionPerformed(evt);
-            }
-        });
-        pupRegisteredPlayers.add(mniRemovePlayer);
-
-        mniModifyPlayer.setText("Modify player");
-        mniModifyPlayer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniModifyPlayerActionPerformed(evt);
-            }
-        });
-        pupRegisteredPlayers.add(mniModifyPlayer);
-        pupRegisteredPlayers.add(jSeparator5);
-
-        mniCancel.setText("Cancel");
-        mniCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniCancelActionPerformed(evt);
-            }
-        });
-        pupRegisteredPlayers.add(mniCancel);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Players Manager");
@@ -786,43 +683,6 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         pnlPlayersList.add(txfNbPlPre);
         txfNbPlPre.setBounds(10, 30, 40, 20);
 
-        scpRegisteredPlayers.setToolTipText("");
-
-        tblRegisteredPlayers.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "R", "Last name", "First name", "Co", "Club", "Rk", "Rating", "EGF Grade"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblRegisteredPlayers.setToolTipText("To modify, right click !");
-        tblRegisteredPlayers.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblRegisteredPlayersMouseClicked(evt);
-            }
-        });
-        tblRegisteredPlayers.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                tblRegisteredPlayersKeyPressed(evt);
-            }
-        });
-        scpRegisteredPlayers.setViewportView(tblRegisteredPlayers);
-
-        pnlPlayersList.add(scpRegisteredPlayers);
-        scpRegisteredPlayers.setBounds(10, 80, 450, 390);
-
         btnPrint.setText(locale.getString("btn.print")); // NOI18N
         btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -831,6 +691,8 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         });
         pnlPlayersList.add(btnPrint);
         btnPrint.setBounds(10, 480, 450, 30);
+        pnlPlayersList.add(playerList);
+        playerList.setBounds(10, 80, 450, 390);
 
         getContentPane().add(pnlPlayersList);
         pnlPlayersList.setBounds(510, 0, 470, 520);
@@ -888,58 +750,19 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         return sb.toString();
     }
 
-    private void tblRegisteredPlayersKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblRegisteredPlayersKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
-            removeSelectedPlayer();
-        }
-    }//GEN-LAST:event_tblRegisteredPlayersKeyPressed
-
-    private void mniModifyPlayerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniModifyPlayerActionPerformed
-        pupRegisteredPlayers.setVisible(false);
-        modifySelectedPlayer();
-    }//GEN-LAST:event_mniModifyPlayerActionPerformed
-
-    private void modifySelectedPlayer() {
+    @Override
+    public void onPlayerDoubleClicked(Player player) {
         resetRatingListControls();
         resetPlayerControls();
         this.playerMode = JFrPlayersManager.PLAYER_MODE_MODIF;
-
-        // What player ?
-        int row = tblRegisteredPlayers.getSelectedRow();
-        if (row < 0) {
-            JOptionPane.showMessageDialog(this, "Please, select a player !");
-            return;
-        }
-        String name = (String) this.tblRegisteredPlayers.getModel().getValueAt(row, JFrPlayersManager.NAME_COL);
-        String firstName = (String) this.tblRegisteredPlayers.getModel().getValueAt(row, JFrPlayersManager.FIRSTNAME_COL);
-        try {
-            playerInModification = tournament.getPlayerByKeyString(name + firstName);
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        playerInModification = player;
         updatePlayerControlsFromPlayerInModification();
         this.btnRegister.setText(locale.getString("player.btn_save"));
     }
 
-    private void mniRemovePlayerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRemovePlayerActionPerformed
-        pupRegisteredPlayers.setVisible(false);
-        removeSelectedPlayer();
-    }//GEN-LAST:event_mniRemovePlayerActionPerformed
-
-    private void removeSelectedPlayer() {
-        // What player ?
-        int row = tblRegisteredPlayers.getSelectedRow();
-        if (row < 0) {
-            JOptionPane.showMessageDialog(this, ("Please, select a player !"));
-            return;
-        }
-        String name = (String) this.tblRegisteredPlayers.getModel().getValueAt(row, JFrPlayersManager.NAME_COL);
-        String firstName = (String) this.tblRegisteredPlayers.getModel().getValueAt(row, JFrPlayersManager.FIRSTNAME_COL);
+    private void removePlayer(Player playerToRemove) {
         try {
-            Player playerToRemove = tournament.getPlayerByKeyString(name + firstName);
-            // You sure ?
-            String strMessage = "Remove " + playerToRemove.fullName() + " ?";
+            String strMessage = locale.format("player.confirm_remove", playerToRemove.fullName());
             int rep = JOptionPane.showConfirmDialog(this, strMessage, "Message", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (rep == JOptionPane.YES_OPTION) {
                 boolean b = tournament.removePlayer(playerToRemove);
@@ -948,49 +771,16 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
                     resetPlayerControls();
                     this.tournamentChanged();
                 } else {
-                    strMessage = "" + name + " " + firstName + "could not be removed";
+                    strMessage = locale.format("player.could_not_be_removed", playerToRemove.fullName());
                     JOptionPane.showMessageDialog(this, strMessage, "Message", JOptionPane.ERROR_MESSAGE);
                 }
             }
-
-        } catch (TournamentException te) {
-            JOptionPane.showMessageDialog(this, te.getMessage(), "Message", JOptionPane.ERROR_MESSAGE);
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TournamentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Message", JOptionPane.ERROR_MESSAGE);
+        } catch (RemoteException e) {
+            Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, e);
         }
     }
-
-    private void mniSortByNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSortByNameActionPerformed
-        playersSortType = PlayerComparator.NAME_ORDER;
-        pupRegisteredPlayers.setVisible(false);
-        try {
-            updatePnlRegisteredPlayers(tournament.playersList());
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_mniSortByNameActionPerformed
-
-    private void mniSortByRankActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSortByRankActionPerformed
-        playersSortType = PlayerComparator.RANK_ORDER;
-        pupRegisteredPlayers.setVisible(false);
-        try {
-            updatePnlRegisteredPlayers(tournament.playersList());
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_mniSortByRankActionPerformed
-
-    private void tblRegisteredPlayersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRegisteredPlayersMouseClicked
-        // Double or multiple click
-        if (evt.getClickCount() >= 2) {
-            modifySelectedPlayer();
-        }
-        // Right click
-        if (evt.getModifiers() != InputEvent.BUTTON3_MASK) return;
-        Point p = evt.getLocationOnScreen();
-        pupRegisteredPlayers.setLocation(p);
-        pupRegisteredPlayers.setVisible(true);
-    }//GEN-LAST:event_tblRegisteredPlayersMouseClicked
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
         this.cleanClose();
@@ -1343,14 +1133,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         Gotha.displayGothaHelp("Players Manager frame");
 }//GEN-LAST:event_btnHelpActionPerformed
 
-    private void mniCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniCancelActionPerformed
-        this.pupRegisteredPlayers.setVisible(false);
-        this.tblRegisteredPlayers.removeRowSelectionInterval(0, tblRegisteredPlayers.getRowCount() - 1);
-}//GEN-LAST:event_mniCancelActionPerformed
-
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        this.pupRegisteredPlayers.setVisible(false);
-
         this.ratingList = null;
         Runtime.getRuntime().gc();
     }//GEN-LAST:event_formWindowClosed
@@ -1408,26 +1191,6 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         this.txfGrade.setText(txfGrade.getText().toUpperCase());
         manageRankGradeAndRatingValues();
     }//GEN-LAST:event_txfGradeFocusLost
-
-    private void mniSortByGradeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSortByGradeActionPerformed
-        playersSortType = PlayerComparator.GRADE_ORDER;
-        pupRegisteredPlayers.setVisible(false);
-        try {
-            updatePnlRegisteredPlayers(tournament.playersList());
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_mniSortByGradeActionPerformed
-
-    private void mniSortByRatingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSortByRatingActionPerformed
-        playersSortType = PlayerComparator.RATING_ORDER;
-        pupRegisteredPlayers.setVisible(false);
-        try {
-            updatePnlRegisteredPlayers(tournament.playersList());
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_mniSortByRatingActionPerformed
 
     private void btnSearchIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchIdActionPerformed
         String strId = this.txfSearchId.getText();
@@ -1489,7 +1252,6 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JLabel lblAgaExpirationDate;
     private javax.swing.JLabel lblFfgLicenceStatus;
     private javax.swing.JLabel lblPhoto;
@@ -1497,18 +1259,11 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
     private javax.swing.JLabel lblPlPre;
     private javax.swing.JLabel lblRatingList;
     private javax.swing.JList<String> lstPlayerNameChoice;
-    private javax.swing.JMenuItem mniCancel;
-    private javax.swing.JMenuItem mniModifyPlayer;
-    private javax.swing.JMenuItem mniRemovePlayer;
-    private javax.swing.JMenuItem mniSortByGrade;
-    private javax.swing.JMenuItem mniSortByName;
-    private javax.swing.JMenuItem mniSortByRank;
-    private javax.swing.JMenuItem mniSortByRating;
+    private ru.gofederation.gotha.ui.PlayerList playerList;
     private javax.swing.JPanel pnlParticipation;
     private javax.swing.JPanel pnlPlayer;
     private javax.swing.JPanel pnlPlayersList;
     private javax.swing.JPanel pnlRegistration;
-    private javax.swing.JPopupMenu pupRegisteredPlayers;
     private ru.gofederation.gotha.ui.RatingListControls ratingListControls;
     private javax.swing.JRadioButton rdbFinal;
     private javax.swing.JRadioButton rdbFirstCharacters;
@@ -1517,9 +1272,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
     private javax.swing.JRadioButton rdbRankFromGoR;
     private javax.swing.JRadioButton rdbRankFromGrade;
     private javax.swing.JScrollPane scpPlayerNameChoice;
-    private javax.swing.JScrollPane scpRegisteredPlayers;
     private javax.swing.JScrollPane scpWelcomeSheet;
-    private javax.swing.JTable tblRegisteredPlayers;
     private javax.swing.JTextField txfAgaId;
     private javax.swing.JTextField txfClub;
     private javax.swing.JTextField txfEgfPin;
@@ -1798,6 +1551,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
             setTitle("Players Manager. " + tournament.getFullName());
             updatePnlRegisteredPlayers(tournament.playersList());
             setPnlParticipationVisibility();
+            playerList.onTournamentUpdated();
         } catch (RemoteException ex) {
             Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
         }
