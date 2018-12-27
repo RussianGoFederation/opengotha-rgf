@@ -3,13 +3,24 @@
  */
 package info.vannier.gotha;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.PageAttributes;
 import java.awt.PageAttributes.OriginType;
-import java.awt.*;
+import java.awt.PrintJob;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Writer;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -20,11 +31,24 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
+
+import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.RatingListFactory;
+import ru.gofederation.gotha.model.RatingListType;
+import ru.gofederation.gotha.model.RatingOrigin;
+import ru.gofederation.gotha.ui.PlayerList;
+import ru.gofederation.gotha.ui.RatingListControls;
+import ru.gofederation.gotha.ui.SmmsByHand;
+import ru.gofederation.gotha.util.GothaLocale;
+
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
+import static ru.gofederation.gotha.model.RatingOrigin.AGA;
+import static ru.gofederation.gotha.model.RatingOrigin.FFG;
 
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.RatingListFactory;
@@ -219,6 +243,8 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         this.txfGrade.setText("");
         cbxCountry.setSelectedItem("  ");
         txfClub.setText("");
+		cbkSmmsByHand.setSelected(false);
+		cbkSmmsByHandActionPerformed(null);
         txfFfgLicence.setText("");
         txfFfgLicenceStatus.setText("");
         lblFfgLicenceStatus.setText("");
@@ -327,6 +353,8 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         ratingListControls = new ru.gofederation.gotha.ui.RatingListControls();
         jLabel14 = new javax.swing.JLabel();
         txfRgfId = new javax.swing.JTextField();
+        cbkSmmsByHand = new javax.swing.JCheckBox();
+        txfSmmsByHand = new javax.swing.JTextField();
         pnlPlayersList = new javax.swing.JPanel();
         lblPlFin = new javax.swing.JLabel();
         lblPlPre = new javax.swing.JLabel();
@@ -336,17 +364,18 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         playerList = new ru.gofederation.gotha.ui.PlayerList();
         btnClose = new javax.swing.JButton();
         btnHelp = new javax.swing.JButton();
+        btnSmms = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Players Manager");
         setIconImage(getIconImage());
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
-            }
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
+            }
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
             }
         });
         getContentPane().setLayout(null);
@@ -361,7 +390,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         jLabel3.setText(locale.getString("player.rating_origin")); // NOI18N
         jLabel3.setToolTipText("from 30K to 9D");
         pnlPlayer.add(jLabel3);
-        jLabel3.setBounds(120, 370, 40, 14);
+        jLabel3.setBounds(120, 390, 40, 14);
 
         jLabel4.setText(locale.getString("player.country")); // NOI18N
         jLabel4.setToolTipText(locale.getString("player.country.tooltip")); // NOI18N
@@ -404,7 +433,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
             }
         });
         pnlPlayer.add(txfRank);
-        txfRank.setBounds(170, 405, 40, 20);
+        txfRank.setBounds(170, 410, 40, 20);
         pnlPlayer.add(txfClub);
         txfClub.setBounds(70, 330, 50, 20);
         pnlPlayer.add(txfFfgLicence);
@@ -415,12 +444,12 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         txfRatingOrigin.setEditable(false);
         txfRatingOrigin.setFocusable(false);
         pnlPlayer.add(txfRatingOrigin);
-        txfRatingOrigin.setBounds(170, 370, 70, 20);
+        txfRatingOrigin.setBounds(170, 390, 70, 20);
 
         txfRating.setEditable(false);
         txfRating.setFocusable(false);
         pnlPlayer.add(txfRating);
-        txfRating.setBounds(70, 370, 40, 20);
+        txfRating.setBounds(70, 390, 40, 20);
 
         txfFfgLicenceStatus.setEditable(false);
         txfFfgLicenceStatus.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -553,7 +582,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         txfSMMSCorrection.setToolTipText("smms correction (relevant for McMahon super-groups)");
         txfSMMSCorrection.setFocusable(false);
         pnlPlayer.add(txfSMMSCorrection);
-        txfSMMSCorrection.setBounds(220, 405, 20, 21);
+        txfSMMSCorrection.setBounds(220, 410, 20, 21);
 
         ckbWelcomeSheet.setText(locale.getString("player.print_welcome_sheet")); // NOI18N
         ckbWelcomeSheet.setToolTipText(locale.getString("player.print_welcome_sheet_tooltip")); // NOI18N
@@ -579,7 +608,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         jLabel11.setText(locale.getString("player.rating")); // NOI18N
         jLabel11.setToolTipText("from 30K to 9D");
         pnlPlayer.add(jLabel11);
-        jLabel11.setBounds(10, 370, 60, 14);
+        jLabel11.setBounds(10, 390, 60, 14);
 
         btnChangeRating.setText(locale.getString("player.btn_change_rating")); // NOI18N
         btnChangeRating.setFocusable(false);
@@ -647,7 +676,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
             }
         });
         pnlPlayer.add(txfGrade);
-        txfGrade.setBounds(70, 405, 40, 20);
+        txfGrade.setBounds(70, 410, 40, 20);
         pnlPlayer.add(ratingListControls);
         ratingListControls.setBounds(10, 20, 240, 120);
 
@@ -658,6 +687,17 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         txfRgfId.setEditable(false);
         pnlPlayer.add(txfRgfId);
         txfRgfId.setBounds(390, 410, 90, 19);
+
+        cbkSmmsByHand.setText(locale.getString("player.smms_by_hand")); // NOI18N
+        cbkSmmsByHand.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbkSmmsByHandActionPerformed(evt);
+            }
+        });
+        pnlPlayer.add(cbkSmmsByHand);
+        cbkSmmsByHand.setBounds(10, 360, 160, 20);
+        pnlPlayer.add(txfSmmsByHand);
+        txfSmmsByHand.setBounds(170, 360, 70, 19);
 
         getContentPane().add(pnlPlayer);
         pnlPlayer.setBounds(10, 0, 494, 560);
@@ -704,7 +744,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
             }
         });
         getContentPane().add(btnClose);
-        btnClose.setBounds(640, 530, 330, 30);
+        btnClose.setBounds(870, 530, 100, 30);
 
         btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
         btnHelp.setText(locale.getString("btn.help")); // NOI18N
@@ -715,6 +755,15 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         });
         getContentPane().add(btnHelp);
         btnHelp.setBounds(520, 530, 110, 30);
+
+        btnSmms.setText(locale.getString("tournament.btn_set_smms_for_all_players")); // NOI18N
+        btnSmms.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSmmsActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnSmms);
+        btnSmms.setBounds(640, 530, 220, 30);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1042,6 +1091,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
                 .setRating(rating, RatingOrigin.fromString(strOrigin))
                 .setGrade(this.txfGrade.getText())
                 .setSmmsCorrection(smmsCorrection)
+                .setSmmsByHand(getSmmsByHand())
                 .setRegistrationStatus(registration)
                 .build();
 
@@ -1206,6 +1256,28 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         cleanClose();
     }//GEN-LAST:event_formWindowClosing
 
+    private void txfRatingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfRatingActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txfRatingActionPerformed
+
+    private void cbkSmmsByHandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbkSmmsByHandActionPerformed
+        if (cbkSmmsByHand.isSelected()) {
+			txfSmmsByHand.setEditable(true);
+			txfSmmsByHand.setText("0");
+		} else {
+			txfSmmsByHand.setEditable(false);
+			txfSmmsByHand.setText("");
+		}
+    }//GEN-LAST:event_cbkSmmsByHandActionPerformed
+
+    private void btnSmmsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSmmsActionPerformed
+		JDialog dialog = new JDialog(this, locale.getString("tournament.setup_smms_by_hand.window_title"), true);
+        SmmsByHand listPane = new SmmsByHand(tournament);
+        dialog.setContentPane(listPane);
+        dialog.pack();
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btnSmmsActionPerformed
+
     private void manageRankGradeAndRatingValues(){
         if (txfRank.getText().equals("") && !txfGrade.getText().equals("")){
             int r = Player.convertKDPToInt(txfGrade.getText());
@@ -1234,6 +1306,8 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSearchId;
+    private javax.swing.JButton btnSmms;
+    private javax.swing.JCheckBox cbkSmmsByHand;
     private javax.swing.JComboBox<String> cbxCountry;
     private javax.swing.JComboBox<String> cbxRatingList;
     private javax.swing.JCheckBox ckbWelcomeSheet;
@@ -1290,6 +1364,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
     private javax.swing.JTextField txfRgfId;
     private javax.swing.JTextField txfSMMSCorrection;
     private javax.swing.JTextField txfSearchId;
+    private javax.swing.JTextField txfSmmsByHand;
     private javax.swing.JTextPane txpWelcomeSheet;
     // End of variables declaration//GEN-END:variables
     // Custom variable declarations. Editable
@@ -1390,6 +1465,15 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         if (ratingOrigin == AGA) strRatingOrigin += " : " + playerInModification.getStrRawRating();
         txfRatingOrigin.setText(strRatingOrigin);
         txfGrade.setText(playerInModification.getStrGrade());
+
+        if (playerInModification.isSmmsByHand()) {
+            cbkSmmsByHand.setSelected(true);
+            cbkSmmsByHandActionPerformed(null);
+            txfSmmsByHand.setText(Integer.toString(playerInModification.getSmmsByHand()));
+        } else {
+            cbkSmmsByHand.setSelected(false);
+            cbkSmmsByHandActionPerformed(null);
+        }
 
         int corr = playerInModification.getSmmsCorrection();
         String strCorr = "" + corr;
@@ -1532,6 +1616,15 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
             output.close();
         } catch (IOException ex) {
             Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private int getSmmsByHand() {
+        if (!cbkSmmsByHand.isSelected()) return -1;
+        try {
+            return Integer.parseInt(txfSmmsByHand.getText().trim());
+        } catch (NumberFormatException e) {
+            return -1;
         }
     }
 

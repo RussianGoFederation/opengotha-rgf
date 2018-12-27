@@ -53,7 +53,9 @@ public class Player implements java.io.Serializable{
      * smmsCorrection may also be negative;
      */
     private int smmsCorrection = 0;
-       
+
+    private int smmsByHand = -1;
+
     private boolean[] participating = new boolean[Gotha.MAX_NUMBER_OF_ROUNDS];
     
     private PlayerRegistrationStatus registeringStatus;
@@ -129,6 +131,7 @@ public class Player implements java.io.Serializable{
         if (builder.getGrade().equals("")) this.strGrade = Player.convertIntToKD(this.rank).toUpperCase();
         else this.strGrade = builder.getGrade().toUpperCase();
         this.smmsCorrection = builder.getSmmsCorrection();
+        this.smmsByHand = builder.getSmmsByHand();
         this.registeringStatus = builder.getRegistrationStatus();
         for (int i = 0; i < Gotha.MAX_NUMBER_OF_ROUNDS; i++) {
             participating[i] = true;
@@ -155,6 +158,7 @@ public class Player implements java.io.Serializable{
         this.ratingOrigin = p.getRatingOrigin();
         this.strGrade = p.getStrGrade();
         this.smmsCorrection = p.getSmmsCorrection();
+        this.smmsByHand = p.getSmmsByHand();
         boolean[] bPart = new boolean[p.getParticipating().length];
         System.arraycopy(p.getParticipating(), 0, bPart, 0, p.getParticipating().length);
         this.participating = bPart;
@@ -350,8 +354,22 @@ public class Player implements java.io.Serializable{
         }
         return cat.length;
     }
-    
+
+    public int getSmmsByHand() {
+        return smmsByHand;
+    }
+
+    public boolean isSmmsByHand() {
+        return (this.smmsByHand >= 0);
+    }
+
+    public void setSmmsByHand(int smmsByHand) {
+        this.smmsByHand = smmsByHand;
+    }
+
     public int smms(GeneralParameterSet gps){
+        if (smmsByHand >= 0) return smmsByHand;
+
 //        int smms = getRank() + 30;
 //        int floor = gps.getGenMMFloor();
 //        int bar = gps.getGenMMBar();
@@ -568,6 +586,7 @@ public class Player implements java.io.Serializable{
         private RatingOrigin ratingOrigin = UNDEF;
         private String grade = "";
         private int smmsCorrection = 0;
+        private int smmsByHand = -1;
         private PlayerRegistrationStatus registrationStatus = PlayerRegistrationStatus.PRELIMINARY;
 
         public String getName() {
@@ -690,6 +709,15 @@ public class Player implements java.io.Serializable{
 
         public Builder setSmmsCorrection(int smmsCorrection) {
             this.smmsCorrection = smmsCorrection;
+            return this;
+        }
+
+        public int getSmmsByHand() {
+            return smmsByHand;
+        }
+
+        public Builder setSmmsByHand(int smmsByHand) {
+            this.smmsByHand = smmsByHand;
             return this;
         }
 

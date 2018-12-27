@@ -44,6 +44,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
@@ -66,9 +67,6 @@ public final class PlayerList extends JPanel {
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setAutoCreateRowSorter(true);
         table.getTableHeader().setReorderingAllowed(false);
-
-        TableCellRenderer cellRenderer = new TableCellRenderer();
-        table.setDefaultRenderer(Integer.class, cellRenderer);
 
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, "grow");
@@ -259,6 +257,7 @@ public final class PlayerList extends JPanel {
                 case CLUB:         return locale.getString("player.club");
                 case RATING:       return locale.getString("player.rating");
                 case GRADE:        return locale.getString("player.grade");
+                case SMMS:         return locale.getString("player.smms");
                 default:           return null;
             }
         }
@@ -277,6 +276,7 @@ public final class PlayerList extends JPanel {
                     case CLUB:         return player.getClub();
                     case RATING:       return player.getRating();
                     case GRADE:        return player.getStrGrade();
+                    case SMMS:         return player.smms(tournament.getTournamentParameterSet().getGeneralParameterSet());
                     default:           return null;
                 }
             } catch (RemoteException e) {
@@ -288,6 +288,7 @@ public final class PlayerList extends JPanel {
         @Override
         public Class getColumnClass(int column) {
             switch (getColumn(column)) {
+                case SMMS:
                 case RATING:
                     return Integer.class;
 
@@ -297,7 +298,7 @@ public final class PlayerList extends JPanel {
         }
     }
 
-    private static class TableCellRenderer extends DefaultTableCellRenderer {
+    private static class SmmsCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -320,6 +321,7 @@ public final class PlayerList extends JPanel {
         FIRST_NAME(80),
         COUNTRY(30),
         CLUB(40),
+        SMMS(40, SwingConstants.RIGHT),
         RANK(30, SwingConstants.RIGHT),
         RATING(40, SwingConstants.RIGHT),
         GRADE(25, SwingConstants.RIGHT);
@@ -344,6 +346,15 @@ public final class PlayerList extends JPanel {
         @Override
         public int horizontalAlignment() {
             return horizontalAlignment;
+        }
+
+        @Override
+        public TableCellRenderer tableCellRenderer() {
+            if (this == SMMS) {
+                return new SmmsCellRenderer();
+            } else {
+                return TableColumnConfig.super.tableCellRenderer();
+            }
         }
     }
 

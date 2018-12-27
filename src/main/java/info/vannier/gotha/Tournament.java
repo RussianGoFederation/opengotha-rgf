@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -2765,8 +2766,9 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         int mainScoreMin = 0;              // Default value
         int mainScoreMax = roundNumber;// Default value
         if (mainCrit == PlacementCriterion.MMS) {
-            mainScoreMin = gps.getGenMMFloor() + PlacementParameterSet.PLA_SMMS_CORR_MIN - Gotha.MIN_RANK;
-            mainScoreMax = gps.getGenMMBar() + PlacementParameterSet.PLA_SMMS_CORR_MAX + roundNumber - Gotha.MIN_RANK;
+            int[] smmsLimits = minMaxSmms(this.hmScoredPlayers.values(), gps);
+            mainScoreMin = smmsLimits[0];
+            mainScoreMax = smmsLimits[1] + roundNumber;
         }
 
         int groupNumber = 0;
@@ -3210,4 +3212,28 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         return false;
     
     }
+
+	/**
+	 * Calculates actual minimum and maximum SMMS for given list of players.
+	 * @param players List of players.
+	 * @param gps General parameter set of the tournament
+	 * @return int[] {min, max}
+	 * @throws IllegalArgumentException if called on empty player list
+	 */
+	private static int[] minMaxSmms(Collection<? extends Player> players, GeneralParameterSet gps) {
+		if (players.isEmpty()) {
+			throw new IllegalArgumentException("Player list is empty");
+		}
+
+		int minSmms = Integer.MAX_VALUE;
+		int maxSmms = Integer.MIN_VALUE;
+
+		for (Player player : players) {
+			int smms = player.smms(gps);
+			minSmms = Math.min(minSmms, smms);
+			maxSmms = Math.max(maxSmms, smms);
+		}
+
+		return new int[] {minSmms, maxSmms};
+	}
 }

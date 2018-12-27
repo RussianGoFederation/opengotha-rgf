@@ -1,3 +1,20 @@
+/*
+ * This file is part of OpenGotha.
+ *
+ * OpenGotha is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenGotha is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with OpenGotha. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package info.vannier.gotha;
 
 import java.util.Arrays;
@@ -6,26 +23,26 @@ import ru.gofederation.gotha.util.GothaLocale;
 
 public final class PlacementParameterSet implements java.io.Serializable{
     private static final long serialVersionUID = Gotha.GOTHA_DATA_VERSION;
-    
-    final static int PLA_MAX_NUMBER_OF_CRITERIA = 6; 
-    
+
+    final static int PLA_MAX_NUMBER_OF_CRITERIA = 6;
+
     private PlacementCriterion[] plaCriteria;
-    
+
     final static int PLA_SMMS_CORR_MAX    =  2;
     final static int PLA_SMMS_CORR_MIN    = -1;
-    
-    public PlacementParameterSet() {             
+
+    public PlacementParameterSet() {
         plaCriteria = new PlacementCriterion[PLA_MAX_NUMBER_OF_CRITERIA];
         Arrays.fill(plaCriteria, PlacementCriterion.NUL);
     }
-     
+
     public PlacementParameterSet(PlacementParameterSet pps) {
         PlacementCriterion[] plaCritModel = pps.getPlaCriteria();
         PlacementCriterion[] plaCrit = new PlacementCriterion[PLA_MAX_NUMBER_OF_CRITERIA];
         System.arraycopy(plaCritModel, 0, plaCrit, 0, PLA_MAX_NUMBER_OF_CRITERIA);
         this.plaCriteria = plaCrit;
     }
-    
+
     public void initForMM() {
         plaCriteria = new PlacementCriterion[PLA_MAX_NUMBER_OF_CRITERIA];
         Arrays.fill(plaCriteria, PlacementCriterion.NUL);
@@ -33,7 +50,7 @@ public final class PlacementParameterSet implements java.io.Serializable{
         plaCriteria[1] = PlacementCriterion.SOSM;
         plaCriteria[2] = PlacementCriterion.SOSOSM;
     }
-    
+
     public void initForSwiss() {
         plaCriteria = new PlacementCriterion[PLA_MAX_NUMBER_OF_CRITERIA];
         Arrays.fill(plaCriteria, PlacementCriterion.NUL);
@@ -41,7 +58,7 @@ public final class PlacementParameterSet implements java.io.Serializable{
         plaCriteria[1] = PlacementCriterion.SOSW;
         plaCriteria[2] = PlacementCriterion.SOSOSW;
     }
-    
+
     public void initForSwissCat() {
         plaCriteria = new PlacementCriterion[PLA_MAX_NUMBER_OF_CRITERIA];
         Arrays.fill(plaCriteria, PlacementCriterion.NUL);
@@ -50,13 +67,13 @@ public final class PlacementParameterSet implements java.io.Serializable{
         plaCriteria[2] = PlacementCriterion.EXT;
         plaCriteria[3] = PlacementCriterion.EXR;
     }
-    
+
     public String checkCriteriaCoherence(javax.swing.JFrame jfr){
         // DIR Coherence
         boolean bOK = true;
         String strMes = "Warning(s) :";
         PlacementCriterion[] crit = this.getPlaCriteria();
-        
+
         // 1st coherence test : DC or SDC should not appear twice
         int nbDirCrit = 0;
         for (int i = 0; i < crit.length; i++){
@@ -95,7 +112,7 @@ public final class PlacementParameterSet implements java.io.Serializable{
                 case SOSTS:
                     nbMMCriteria++;
                     break;
-            } 
+            }
         }
         if (nbSWCriteria > 0 && nbMMCriteria > 0){
             strMes += "\nMcMahon and Swiss Criteria mixed";
@@ -111,7 +128,7 @@ public final class PlacementParameterSet implements java.io.Serializable{
             strMes += "\nSODOSM is not recommended";
             bOK = false;
         }
-        
+
         // 4rd test : STS warning
         boolean bSTS = false;
         for (int i = 0; i < crit.length; i++){
@@ -120,14 +137,14 @@ public final class PlacementParameterSet implements java.io.Serializable{
         }
         if (bSTS){
             strMes += "\nSTS and SOSTS scores only make sense in a McMahon tournament"
-                    + " with a single elimination bracket for players of the top group (see Help).";
+                + " with a single elimination bracket for players of the top group (see Help).";
             bOK = false;
         }
 
 
         if (bOK) return "";
         else return strMes;
-        
+
     }
 
     @Deprecated
@@ -201,7 +218,7 @@ public final class PlacementParameterSet implements java.io.Serializable{
         }
         return tabCrit;
     }
-    
+
     public PlacementCriterion[] getPlaCriteria() {
         return Arrays.copyOf(plaCriteria, plaCriteria.length);
     }
@@ -209,7 +226,7 @@ public final class PlacementParameterSet implements java.io.Serializable{
     public void setPlaCriteria(PlacementCriterion[] plaCriteria) {
         this.plaCriteria = Arrays.copyOf(plaCriteria, plaCriteria.length);
     }
-    
+
     public PlacementCriterion mainCriterion() {
         PlacementCriterion mainCrit = PlacementCriterion.NBW;
         PlacementCriterion[] crit = getPlaCriteria();
@@ -220,7 +237,7 @@ public final class PlacementParameterSet implements java.io.Serializable{
             if (crit[iC] == PlacementCriterion.MMS){
                 return PlacementCriterion.MMS;
             }
-        }  
+        }
         return mainCrit;
     }
 }

@@ -653,6 +653,7 @@ public class ExternalDocument {
                     .setRating(rating, RatingOrigin.fromString(ratingOrigin))
                     .setGrade(strGrade)
                     .setSmmsCorrection(smmsCorrection)
+                    .setSmmsByHand(extractNodeIntValue(nnm, "forcedSmms", -1))
                     .setRegistrationStatus(PlayerRegistrationStatus.fromString(registeringStatus))
                     .build();
             } catch (PlayerException ex) {
@@ -3140,6 +3141,8 @@ public class ExternalDocument {
             emPlayer.setAttribute("smmsCorrection", strSMMSCorrection);
             emPlayer.setAttribute("participating", strParticipating);
             emPlayer.setAttribute("registeringStatus", strRegisteringStatus);
+            if (p.isSmmsByHand())
+                emPlayer.setAttribute("forcedSmms", Integer.toString(p.getSmmsByHand()));
 
             emPlayers.appendChild(emPlayer);
         }
