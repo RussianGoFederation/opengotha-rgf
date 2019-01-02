@@ -291,6 +291,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         mniTeamsPairing = new javax.swing.JMenuItem();
         mnuPublish = new javax.swing.JMenu();
         mniPublish = new javax.swing.JMenuItem();
+        mniPublishRGF = new javax.swing.JMenuItem();
         mnuOptions = new javax.swing.JMenu();
         mniTournamentOptions = new javax.swing.JMenuItem();
         mniGamesOptions = new javax.swing.JMenuItem();
@@ -1228,6 +1229,15 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             }
         });
         mnuPublish.add(mniPublish);
+
+        mniPublishRGF.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        mniPublishRGF.setText(locale.getString("menu.publish.publish_rgf")); // NOI18N
+        mniPublishRGF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniPublishRGFActionPerformed(evt);
+            }
+        });
+        mnuPublish.add(mniPublishRGF);
 
         mnuMain.add(mnuPublish);
 
@@ -3073,6 +3083,11 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         RgfTournamentImportDialog importPane = new RgfTournamentImportDialog(this, locale.getString("tournament.rgf.import.window_title"), true, this);
         importPane.setVisible(true);
     }//GEN-LAST:event_mniImportRgfActionPerformed
+
+    private void mniPublishRGFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniPublishRGFActionPerformed
+        RgfTournamentExportDialog exportPane = new RgfTournamentExportDialog(this, locale.getString("tournament.rgf.publish.window_title"), true, tournament);
+        exportPane.setVisible(true);
+    }//GEN-LAST:event_mniPublishRGFActionPerformed
 
     private File chooseAFile(File path, String extension) {
         JFileChooser fileChoice = new JFileChooser(path);

@@ -36,6 +36,13 @@ public enum RgfGameResult {
         this.gothaCode = gothaCode;
     }
 
+    public static RgfGameResult fromGothaCode(int gothaCode) {
+        for (RgfGameResult result : values())
+            if (result.getGothaCode() == gothaCode) return result;
+
+        return UNKNOWN;
+    }
+
     public int getGothaCode() {
         return gothaCode;
     }
