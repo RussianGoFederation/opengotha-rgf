@@ -44,13 +44,13 @@ public class GameComparator implements Comparator<Game>, Serializable{
             case BEST_MMS_ORDER :
                 ScoredPlayer wSP1 = hmScoredPlayers.get(wP1.getKeyString());
                 ScoredPlayer bSP1 = hmScoredPlayers.get(bP1.getKeyString());
-                int wMMS1 = wSP1.getCritValue(PlacementParameterSet.PLA_CRIT_MMS, g1.getRoundNumber() -1);
-                int bMMS1 = bSP1.getCritValue(PlacementParameterSet.PLA_CRIT_MMS, g1.getRoundNumber() -1);
+                int wMMS1 = wSP1.getCritValue(PlacementCriterion.MMS, g1.getRoundNumber() -1);
+                int bMMS1 = bSP1.getCritValue(PlacementCriterion.MMS, g1.getRoundNumber() -1);
                 int mms1 = Math.max(wMMS1, bMMS1);
                 ScoredPlayer wSP2 = hmScoredPlayers.get(wP2.getKeyString());
                 ScoredPlayer bSP2 = hmScoredPlayers.get(bP2.getKeyString());
-                int wMMS2 = wSP2.getCritValue(PlacementParameterSet.PLA_CRIT_MMS, g2.getRoundNumber() -1);
-                int bMMS2 = bSP2.getCritValue(PlacementParameterSet.PLA_CRIT_MMS, g2.getRoundNumber() -1);
+                int wMMS2 = wSP2.getCritValue(PlacementCriterion.MMS, g2.getRoundNumber() -1);
+                int bMMS2 = bSP2.getCritValue(PlacementCriterion.MMS, g2.getRoundNumber() -1);
                 int mms2 = Math.max(wMMS2, bMMS2);
                 if (mms1 < mms2) return 1;
                 if (mms1 > mms2) return -1;

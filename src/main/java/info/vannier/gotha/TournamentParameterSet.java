@@ -42,13 +42,13 @@ public class TournamentParameterSet implements java.io.Serializable{
     public int tournamentType(){    
         PlacementParameterSet pps = this.getPlacementParameterSet();
         if (pps == null) return TournamentParameterSet.TYPE_UNDEFINED;
-        int[] plaCrit = pps.getPlaCriteria();
+        PlacementCriterion[] plaCrit = pps.getPlaCriteria();
         if (plaCrit == null) return TournamentParameterSet.TYPE_UNDEFINED;
         switch(plaCrit[0]){
-            case PlacementParameterSet.PLA_CRIT_MMS : return TournamentParameterSet.TYPE_MCMAHON;
-            case PlacementParameterSet.PLA_CRIT_NBW : return TournamentParameterSet.TYPE_SWISS;
-            case PlacementParameterSet.PLA_CRIT_CAT : return TournamentParameterSet.TYPE_SWISSCAT;
-            default : return TournamentParameterSet.TYPE_UNDEFINED;
+            case MMS : return TournamentParameterSet.TYPE_MCMAHON;
+            case NBW : return TournamentParameterSet.TYPE_SWISS;
+            case CAT : return TournamentParameterSet.TYPE_SWISSCAT;
+            default  : return TournamentParameterSet.TYPE_UNDEFINED;
         }
     }
 

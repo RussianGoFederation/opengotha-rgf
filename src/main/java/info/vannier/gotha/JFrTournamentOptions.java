@@ -2122,9 +2122,9 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
         }
-        int oldPaiMaAdditionalPlacementCritSystem1 = paiPS.getPaiMaAdditionalPlacementCritSystem1();
-        int newPaiMaAdditionalPlacementCritSystem1 = this.ckbAddSortOnRating.isSelected() ? 
-            PlacementParameterSet.PLA_CRIT_RATING : 0;
+        PlacementCriterion oldPaiMaAdditionalPlacementCritSystem1 = paiPS.getPaiMaAdditionalPlacementCritSystem1();
+        PlacementCriterion newPaiMaAdditionalPlacementCritSystem1 = this.ckbAddSortOnRating.isSelected() ?
+            PlacementCriterion.RATING : null;
         
         if (newPaiMaAdditionalPlacementCritSystem1 != oldPaiMaAdditionalPlacementCritSystem1){
             paiPS.setPaiMaAdditionalPlacementCritSystem1(newPaiMaAdditionalPlacementCritSystem1);
@@ -2597,18 +2597,18 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
         }
-        int[] plaCrit = pps.getPlaCriteria();
-        plaCrit[0] = PlacementParameterSet.criterionUID((String)cbxCrit1.getModel().getSelectedItem());
-        plaCrit[1] = PlacementParameterSet.criterionUID((String)cbxCrit2.getModel().getSelectedItem());
-        plaCrit[2] = PlacementParameterSet.criterionUID((String)cbxCrit3.getModel().getSelectedItem());
-        plaCrit[3] = PlacementParameterSet.criterionUID((String)cbxCrit4.getModel().getSelectedItem());
+        PlacementCriterion[] plaCrit = pps.getPlaCriteria();
+        plaCrit[0] = PlacementCriterion.fromLongName((String)cbxCrit1.getModel().getSelectedItem());
+        plaCrit[1] = PlacementCriterion.fromLongName((String)cbxCrit2.getModel().getSelectedItem());
+        plaCrit[2] = PlacementCriterion.fromLongName((String)cbxCrit3.getModel().getSelectedItem());
+        plaCrit[3] = PlacementCriterion.fromLongName((String)cbxCrit4.getModel().getSelectedItem());
         
         // Immediately filter double DC/SDC criteria, which is stritly forbidden
         int nbDirCrit = 0;
         for (int c = 0; c < plaCrit.length; c++){
-            if (plaCrit[c] != PlacementParameterSet.PLA_CRIT_DC && plaCrit[c] != PlacementParameterSet.PLA_CRIT_SDC) continue;
+            if (plaCrit[c] != PlacementCriterion.DC && plaCrit[c] != PlacementCriterion.SDC) continue;
             nbDirCrit ++;
-            if (nbDirCrit > 1) plaCrit[c] = PlacementParameterSet.PLA_CRIT_NUL;
+            if (nbDirCrit > 1) plaCrit[c] = PlacementCriterion.NUL;
         }
 
         pps.setPlaCriteria(plaCrit);
@@ -2633,13 +2633,13 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
         }
-        int[] plaCrit = tpps.getPlaCriteria();
-        plaCrit[0] = TeamPlacementParameterSet.criterionUID((String)cbxTeamCrit1.getModel().getSelectedItem());
-        plaCrit[1] = TeamPlacementParameterSet.criterionUID((String)cbxTeamCrit2.getModel().getSelectedItem());
-        plaCrit[2] = TeamPlacementParameterSet.criterionUID((String)cbxTeamCrit3.getModel().getSelectedItem());
-        plaCrit[3] = TeamPlacementParameterSet.criterionUID((String)cbxTeamCrit4.getModel().getSelectedItem());
-        plaCrit[4] = TeamPlacementParameterSet.criterionUID((String)cbxTeamCrit5.getModel().getSelectedItem());
-        plaCrit[5] = TeamPlacementParameterSet.criterionUID((String)cbxTeamCrit6.getModel().getSelectedItem());
+        TeamPlacementCriterion[] plaCrit = tpps.getPlaCriteria();
+        plaCrit[0] = TeamPlacementCriterion.fromLongName((String)cbxTeamCrit1.getModel().getSelectedItem());
+        plaCrit[1] = TeamPlacementCriterion.fromLongName((String)cbxTeamCrit2.getModel().getSelectedItem());
+        plaCrit[2] = TeamPlacementCriterion.fromLongName((String)cbxTeamCrit3.getModel().getSelectedItem());
+        plaCrit[3] = TeamPlacementCriterion.fromLongName((String)cbxTeamCrit4.getModel().getSelectedItem());
+        plaCrit[4] = TeamPlacementCriterion.fromLongName((String)cbxTeamCrit5.getModel().getSelectedItem());
+        plaCrit[5] = TeamPlacementCriterion.fromLongName((String)cbxTeamCrit6.getModel().getSelectedItem());
 
         tpps.setPlaCriteria(plaCrit);
         ttps.setTeamPlacementParameterSet(tpps);
@@ -3102,12 +3102,12 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         DefaultTableModel model = (DefaultTableModel)tblGlossary.getModel();
         while (model.getRowCount() > 0) model.removeRow(0);
 
-        for (int iPCrit = 0; iPCrit < PlacementParameterSet.allPlacementCriteria.length; iPCrit++){
-            PlacementCriterion pCrit = PlacementParameterSet.allPlacementCriteria[iPCrit];
+        for (int iPCrit = 0; iPCrit < PlacementCriterion.values().length; iPCrit++){
+            PlacementCriterion pCrit = PlacementCriterion.values()[iPCrit];
             Vector<String> row = new Vector<String>();
-            row.add("" + pCrit.longName);  
-            row.add("" + pCrit.shortName);  
-            row.add("" + pCrit.description);  
+            row.add(pCrit.getLongName());
+            row.add(pCrit.getShortName());
+            row.add(pCrit.getDescription(locale));
           
             model.addRow(row);
         }
@@ -3138,12 +3138,12 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         DefaultTableModel model = (DefaultTableModel)tblTeamGlossary.getModel();
         while (model.getRowCount() > 0) model.removeRow(0);
 
-        for (int iPCrit = 0; iPCrit < TeamPlacementParameterSet.allPlacementCriteria.length; iPCrit++){
-            PlacementCriterion pCrit = TeamPlacementParameterSet.allPlacementCriteria[iPCrit];
+        for (int iPCrit = 0; iPCrit < TeamPlacementCriterion.values().length; iPCrit++){
+            TeamPlacementCriterion pCrit = TeamPlacementCriterion.values()[iPCrit];
             Vector<String> row = new Vector<String>();
-            row.add("" + pCrit.longName);
-            row.add("" + pCrit.shortName);
-            row.add("" + pCrit.description);
+            row.add(pCrit.getLongName());
+            row.add(pCrit.getShortName());
+            row.add(pCrit.getDescription(locale));
 
 
             model.addRow(row);
@@ -3342,11 +3342,11 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         PlacementParameterSet pps = tournament.getTournamentParameterSet().getPlacementParameterSet();
         GeneralParameterSet gps = tournament.getTournamentParameterSet().getGeneralParameterSet();
         // update contents of combo boxes
-        int[] displayedCriteria = pps.getPlaCriteria();
-        this.cbxCrit1.getModel().setSelectedItem(PlacementParameterSet.criterionLongName(displayedCriteria[0]));
-        this.cbxCrit2.getModel().setSelectedItem(PlacementParameterSet.criterionLongName(displayedCriteria[1]));
-        this.cbxCrit3.getModel().setSelectedItem(PlacementParameterSet.criterionLongName(displayedCriteria[2]));
-        this.cbxCrit4.getModel().setSelectedItem(PlacementParameterSet.criterionLongName(displayedCriteria[3]));   
+        PlacementCriterion[] displayedCriteria = pps.getPlaCriteria();
+        this.cbxCrit1.getModel().setSelectedItem(displayedCriteria[0].getLongName());
+        this.cbxCrit2.getModel().setSelectedItem(displayedCriteria[1].getLongName());
+        this.cbxCrit3.getModel().setSelectedItem(displayedCriteria[2].getLongName());
+        this.cbxCrit4.getModel().setSelectedItem(displayedCriteria[3].getLongName());
         
         // update of McMahon bar and floor JTextField
         int bar = gps.getGenMMBar();
@@ -3360,13 +3360,13 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
     private void updatePnlTPl()throws RemoteException{
         TeamPlacementParameterSet tpps = tournament.getTeamTournamentParameterSet().getTeamPlacementParameterSet();
         // update contents of combo boxes
-        int[] displayedCriteria = tpps.getPlaCriteria();
-        this.cbxTeamCrit1.getModel().setSelectedItem(TeamPlacementParameterSet.criterionLongName(displayedCriteria[0]));
-        this.cbxTeamCrit2.getModel().setSelectedItem(TeamPlacementParameterSet.criterionLongName(displayedCriteria[1]));
-        this.cbxTeamCrit3.getModel().setSelectedItem(TeamPlacementParameterSet.criterionLongName(displayedCriteria[2]));
-        this.cbxTeamCrit4.getModel().setSelectedItem(TeamPlacementParameterSet.criterionLongName(displayedCriteria[3]));
-        this.cbxTeamCrit5.getModel().setSelectedItem(TeamPlacementParameterSet.criterionLongName(displayedCriteria[4]));
-        this.cbxTeamCrit6.getModel().setSelectedItem(TeamPlacementParameterSet.criterionLongName(displayedCriteria[5]));
+        TeamPlacementCriterion[] displayedCriteria = tpps.getPlaCriteria();
+        this.cbxTeamCrit1.getModel().setSelectedItem(displayedCriteria[0].getLongName());
+        this.cbxTeamCrit2.getModel().setSelectedItem(displayedCriteria[1].getLongName());
+        this.cbxTeamCrit3.getModel().setSelectedItem(displayedCriteria[2].getLongName());
+        this.cbxTeamCrit4.getModel().setSelectedItem(displayedCriteria[3].getLongName());
+        this.cbxTeamCrit5.getModel().setSelectedItem(displayedCriteria[4].getLongName());
+        this.cbxTeamCrit6.getModel().setSelectedItem(displayedCriteria[5].getLongName());
     }
     
     private void updatePnlPai()throws RemoteException{
@@ -3386,7 +3386,7 @@ public class JFrTournamentOptions extends javax.swing.JFrame{
         this.ckbMinimizeScoreDifference.setSelected(paiPS.getPaiMaMinimizeScoreDifference() != 0);
         this.txfLastRoundForSeedSystem1.setText("" + (paiPS.getPaiMaLastRoundForSeedSystem1() + 1));
         this.ckbAddSortOnRating.setSelected(
-                paiPS.getPaiMaAdditionalPlacementCritSystem1() == PlacementParameterSet.PLA_CRIT_RATING);
+                paiPS.getPaiMaAdditionalPlacementCritSystem1() == PlacementCriterion.RATING);
         
         if (paiPS.getPaiMaSeedSystem1() == PairingParameterSet.PAIMA_SEED_SPLITANDRANDOM)
             this.rdbFormerSplitAndRandom.setSelected(true);

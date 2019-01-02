@@ -1,6 +1,7 @@
 package info.vannier.gotha;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Comparator;
 
 /**
@@ -10,18 +11,18 @@ import java.util.Comparator;
  * if bKeepExAequo == false, exaequo are then compared according alphabetical order of name and first name
  **/
 class ScoredPlayerComparator implements Comparator<ScoredPlayer>, Serializable{
-    int[] criterion = null;
-    int roundNumber = 0;
-    boolean bKeepExAequo = false;
-    public ScoredPlayerComparator(int[] crit, int roundNumber, boolean bKeepExAequo){
-        criterion = new int[crit.length];
-        System.arraycopy(crit, 0, criterion, 0, crit.length);
+    private final PlacementCriterion[] criterion;
+    private final int roundNumber;
+    private final boolean bKeepExAequo;
+
+    public ScoredPlayerComparator(PlacementCriterion[] crit, int roundNumber, boolean bKeepExAequo) {
+        criterion = Arrays.copyOf(crit, crit.length);
         this.roundNumber = roundNumber;
         this.bKeepExAequo = bKeepExAequo;
     }
 
     @Override
-    public int compare(ScoredPlayer sP1, ScoredPlayer sP2){
+    public int compare(ScoredPlayer sP1, ScoredPlayer sP2) {
         int result = betterByScore(sP1, sP2);
         if (result != 0) return result;
 
@@ -35,7 +36,7 @@ class ScoredPlayerComparator implements Comparator<ScoredPlayer>, Serializable{
         return 0;
     }
 
-    public int betterByScore(ScoredPlayer sP1, ScoredPlayer sP2){
+    public int betterByScore(ScoredPlayer sP1, ScoredPlayer sP2) {
         for (int cr = 0; cr < criterion.length; cr++){
             if (sP1.getCritValue(criterion[cr], roundNumber) < sP2.getCritValue(criterion[cr], roundNumber)) return 1;
             else if (sP1.getCritValue(criterion[cr], roundNumber) > sP2.getCritValue(criterion[cr], roundNumber)) return -1;

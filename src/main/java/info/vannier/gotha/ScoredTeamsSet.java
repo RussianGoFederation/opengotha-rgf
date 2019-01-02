@@ -34,14 +34,14 @@ public class ScoredTeamsSet implements java.io.Serializable{
     // matches up to round roundNumber
     private ArrayList<Match> alMatches;
     
-    private PlacementCriterion[] tabPlacementCriteria = null;
+    private TeamPlacementCriterion[] tabPlacementCriteria = null;
     private ArrayList<ScoredTeam> alOrderedScoredTeams = null;
     private String[][] tabHalfMatchString = null;
 
     public ScoredTeamsSet(TournamentInterface tournament){
         this.tournament = tournament;
     }
-    public PlacementCriterion getTeamPlacementCriterion(int critNumber){
+    public TeamPlacementCriterion getTeamPlacementCriterion(int critNumber){
         return tabPlacementCriteria[critNumber];
    }
 
@@ -115,12 +115,12 @@ public class ScoredTeamsSet implements java.io.Serializable{
     }
 
     private void updateTabPlacementCriteria(){
-        tabPlacementCriteria = new PlacementCriterion[TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA];
-        PlacementCriterion[] tabPC = TeamPlacementParameterSet.allPlacementCriteria;
+        tabPlacementCriteria = new TeamPlacementCriterion[TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA];
+        TeamPlacementCriterion[] tabPC = TeamPlacementCriterion.values();
         for(int iac = 0; iac < TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA; iac++){
-            int crit = tpps.getPlaCriterion(iac);
+            TeamPlacementCriterion crit = tpps.getPlaCriterion(iac);
             for(int ic = 0; ic < tabPC.length; ic++){
-                if (tabPC[ic].uid == crit){
+                if (tabPC[ic] == crit){
                     tabPlacementCriteria[iac] = tabPC[ic];
                     break;
                 }
@@ -193,21 +193,21 @@ public class ScoredTeamsSet implements java.io.Serializable{
             Team t = alTeams.get(it);
             for (int ic = 0; ic < TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA; ic++){
                 int val = 0;
-                switch(tabPlacementCriteria[ic].uid){
-                    case TeamPlacementParameterSet.TPL_CRIT_NUL :           val = 0; break;
-                    case TeamPlacementParameterSet.TPL_CRIT_TEAMPOINTS :    val = tabTeamPoints[it]; break;
-                    case TeamPlacementParameterSet.TPL_CRIT_SOST :          val = tabSOST[it]; break;
-                    case TeamPlacementParameterSet.TPL_CRIT_BOARDWINS :     val = tabCumWX2UBByTB[it][9]; break;
-                    case TeamPlacementParameterSet.TPL_CRIT_BOARDWINS_9UB : val = tabCumWX2UBByTB[it][8]; break;
-                    case TeamPlacementParameterSet.TPL_CRIT_BOARDWINS_8UB : val = tabCumWX2UBByTB[it][7]; break;
-                    case TeamPlacementParameterSet.TPL_CRIT_BOARDWINS_7UB : val = tabCumWX2UBByTB[it][6]; break;
-                    case TeamPlacementParameterSet.TPL_CRIT_BOARDWINS_6UB : val = tabCumWX2UBByTB[it][5]; break;
-                    case TeamPlacementParameterSet.TPL_CRIT_BOARDWINS_5UB : val = tabCumWX2UBByTB[it][4]; break;
-                    case TeamPlacementParameterSet.TPL_CRIT_BOARDWINS_4UB : val = tabCumWX2UBByTB[it][3]; break;
-                    case TeamPlacementParameterSet.TPL_CRIT_BOARDWINS_3UB : val = tabCumWX2UBByTB[it][2]; break;
-                    case TeamPlacementParameterSet.TPL_CRIT_BOARDWINS_2UB : val = tabCumWX2UBByTB[it][1]; break;
-                    case TeamPlacementParameterSet.TPL_CRIT_BOARDWINS_1UB : val = tabCumWX2UBByTB[it][0]; break;
-                    case TeamPlacementParameterSet.TPL_CRIT_MEAN_RATING :   val = t.meanRating(tournament.getTeamSize()); break;
+                switch(tabPlacementCriteria[ic]){
+                    case NUL :           val = 0; break;
+                    case TEAMPOINTS :    val = tabTeamPoints[it]; break;
+                    case SOST :          val = tabSOST[it]; break;
+                    case BOARDWINS :     val = tabCumWX2UBByTB[it][9]; break;
+                    case BOARDWINS_9UB : val = tabCumWX2UBByTB[it][8]; break;
+                    case BOARDWINS_8UB : val = tabCumWX2UBByTB[it][7]; break;
+                    case BOARDWINS_7UB : val = tabCumWX2UBByTB[it][6]; break;
+                    case BOARDWINS_6UB : val = tabCumWX2UBByTB[it][5]; break;
+                    case BOARDWINS_5UB : val = tabCumWX2UBByTB[it][4]; break;
+                    case BOARDWINS_4UB : val = tabCumWX2UBByTB[it][3]; break;
+                    case BOARDWINS_3UB : val = tabCumWX2UBByTB[it][2]; break;
+                    case BOARDWINS_2UB : val = tabCumWX2UBByTB[it][1]; break;
+                    case BOARDWINS_1UB : val = tabCumWX2UBByTB[it][0]; break;
+                    case MEAN_RATING :   val = t.meanRating(tournament.getTeamSize()); break;
                     default: val = 0;
                 }
                 tabCritValues[it][ic] = val;

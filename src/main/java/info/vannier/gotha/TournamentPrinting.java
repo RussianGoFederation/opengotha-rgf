@@ -20,6 +20,8 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
+import ru.gofederation.gotha.util.GothaLocale;
+
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
 
@@ -219,6 +221,8 @@ public class TournamentPrinting implements Printable {
     
     // Matches List specificities
     private int matchesPerPage;
+
+    private final GothaLocale locale = GothaLocale.getCurrentLocale();
 
     private TournamentPrinting(TournamentInterface tournament) {
         this.tournament = tournament;
@@ -460,16 +464,16 @@ public class TournamentPrinting implements Printable {
     private void preparePrintStandings(){
         PlacementParameterSet pps = tps.getPlacementParameterSet();
         DPParameterSet dpps = tps.getDPParameterSet();
-        int[] crit = this.tps.getPlacementParameterSet().getPlaCriteria();
+        PlacementCriterion[] crit = this.tps.getPlacementParameterSet().getPlaCriteria();
         int nbCriteria = 0;
         for (int c = 0; c < crit.length; c++){
-            if (crit[c] != PlacementParameterSet.PLA_CRIT_NUL) nbCriteria++;
+            if (crit[c] != PlacementCriterion.NUL) nbCriteria++;
         }
-        this.criteria = PlacementParameterSet.purgeUselessCriteria(crit);
+        this.criteria = convertCriteria(PlacementParameterSet.purgeUselessCriteria(crit));
 
         // Do we print by category ?
         GeneralParameterSet gps = tps.getGeneralParameterSet();
-        if (pps.getPlaCriteria()[0] == PlacementParameterSet.PLA_CRIT_CAT && gps.getNumberOfCategories() > 1) {
+        if (pps.getPlaCriteria()[0] == PlacementCriterion.CAT && gps.getNumberOfCategories() > 1) {
             this.printSubType = TournamentPublishing.SUBTYPE_ST_CAT;
         } else {
              this.printSubType = TournamentPublishing.SUBTYPE_DEFAULT;
@@ -503,12 +507,12 @@ public class TournamentPrinting implements Printable {
     private void preparePrintTeamsStandings(){
         TeamPlacementParameterSet tpps = ttps.getTeamPlacementParameterSet();
         DPParameterSet dpps = this.tps.getDPParameterSet();
-        int[] crit = this.ttps.getTeamPlacementParameterSet().getPlaCriteria();
+        TeamPlacementCriterion[] crit = this.ttps.getTeamPlacementParameterSet().getPlaCriteria();
         int nbCriteria = 0;
         for (int c = 0; c < crit.length; c++){
-            if (crit[c] != TeamPlacementParameterSet.TPL_CRIT_NUL) nbCriteria++;
+            if (crit[c] != TeamPlacementCriterion.NUL) nbCriteria++;
         }
-        this.criteria = PlacementParameterSet.purgeUselessCriteria(crit);
+        this.criteria = convertCriteria(TeamPlacementParameterSet.purgeUselessCriteria(crit));
 
         scoredTeamsSet = null;
         try {
@@ -1297,7 +1301,7 @@ public class TournamentPrinting implements Printable {
             nbPagesForCurCat = (nbPlayersOfCurCat + numberOfBodyLinesInAPage - 1) / numberOfBodyLinesInAPage;
         }
 
-        if (criteria[0] == PlacementParameterSet.PLA_CRIT_CAT) {
+        if (PlacementCriterion.fromUid(criteria[0]) == PlacementCriterion.CAT) {
             String strCat = "Category" + " " + (curCat + 1);
             char[] cCat = strCat.toCharArray();
             int catWidth = fm.charsWidth(cCat, 0, cCat.length);
@@ -1358,7 +1362,7 @@ public class TournamentPrinting implements Printable {
                 g.drawString(strCl, x, y);
             }
             
-            String strNbW = sp.formatScore(PlacementParameterSet.PLA_CRIT_NBW, roundNumber);
+            String strNbW = sp.formatScore(PlacementCriterion.NBW, roundNumber);
             x = usableX + usableWidth * (this.stNbWBeg + ST_NBW_LEN) / numberOfCharactersInALine;
             drawRightAlignedString(g, strNbW, x, y);
 
@@ -1370,7 +1374,7 @@ public class TournamentPrinting implements Printable {
 
             int numberOfCriteriaPrinted = criteria.length;
             for (int iC = 0; iC < numberOfCriteriaPrinted; iC++) {
-                String strCritValue = sp.formatScore(criteria[iC], roundNumber);
+                String strCritValue = sp.formatScore(PlacementCriterion.fromUid(criteria[iC]), roundNumber);
                 x = usableX + usableWidth * (this.stCrit0Beg + (iC + 1) * (ST_CRIT_LEN + ST_PADDING)) / numberOfCharactersInALine;
                 TournamentPrinting.drawRightAlignedString(g, strCritValue, x, y);
             }
@@ -1821,31 +1825,31 @@ public class TournamentPrinting implements Printable {
             ln++;
             g.setFont(font);
 
-            int[] plaC = pps.getPlaCriteria();
+            PlacementCriterion[] plaC = pps.getPlaCriteria();
             // Get rid of useless criteria
             int nbCrit = plaC.length;
             for (int c = nbCrit - 1; c > 0; c--) {
-                if (plaC[c] == PlacementParameterSet.PLA_CRIT_NUL) {
+                if (plaC[c] == PlacementCriterion.NUL) {
                     nbCrit--;
                 } else {
                     break;
                 }
             }
-            int[] plaCrit = new int[nbCrit];
+            PlacementCriterion[] plaCrit = new PlacementCriterion[nbCrit];
             System.arraycopy(plaC, 0, plaCrit, 0, nbCrit);
 
             for (int crit = 0; crit < plaCrit.length; crit++) {
                 ln++;
                 y = usableY + (4 + ln) * lineHeight;
-                String strCrit = PlacementParameterSet.criterionLongName(plaCrit[crit]);
+                String strCrit = plaCrit[crit].getLongName();
                 g.drawString("Criterion" + (crit + 1) + " : " + strCrit, x, y);
             }
             // Criteria Descriptions
             for (int crit = 0; crit < plaCrit.length; crit++) {
                 ln++;
                 y = usableY + (4 + ln) * lineHeight;
-                String strCrit = PlacementParameterSet.criterionLongName(plaCrit[crit]);
-                String strDescr = PlacementParameterSet.criterionDescription(plaCrit[crit]);
+                String strCrit = plaCrit[crit].getLongName();
+                String strDescr = plaCrit[crit].getDescription(locale);
                 Font italFont = new Font("Default", Font.ITALIC, fontSize);
                 g.setFont(italFont);
                 g.drawString(strCrit + " = " + strDescr, x, y);
@@ -1864,31 +1868,31 @@ public class TournamentPrinting implements Printable {
                 g.setFont(font);
 
                 TeamPlacementParameterSet tpps = tournament.getTeamTournamentParameterSet().getTeamPlacementParameterSet();
-                plaC = tpps.getPlaCriteria();
+                TeamPlacementCriterion[] tPlaC = tpps.getPlaCriteria();
                 // Get rid of useless criteria
-                nbCrit = plaC.length;
+                nbCrit = tPlaC.length;
                 for (int c = nbCrit - 1; c > 0; c--) {
-                    if (plaC[c] == TeamPlacementParameterSet.TPL_CRIT_NUL) {
+                    if (tPlaC[c] == TeamPlacementCriterion.NUL) {
                         nbCrit--;
                     } else {
                         break;
                     }
                 }
-                plaCrit = new int[nbCrit];
-                System.arraycopy(plaC, 0, plaCrit, 0, nbCrit);
+                TeamPlacementCriterion[] tPlaCrit = new TeamPlacementCriterion[nbCrit];
+                System.arraycopy(tPlaC, 0, tPlaCrit, 0, nbCrit);
 
-                for (int crit = 0; crit < plaCrit.length; crit++) {
+                for (int crit = 0; crit < tPlaCrit.length; crit++) {
                     ln++;
                     y = usableY + (4 + ln) * lineHeight;
-                    String strCrit = TeamPlacementParameterSet.criterionLongName(plaCrit[crit]);
+                    String strCrit = tPlaCrit[crit].getLongName();
                     g.drawString("Criterion" + (crit + 1) + " : " + strCrit, x, y);
                 }
                 // Criteria Descriptions
-                for (int crit = 0; crit < plaCrit.length; crit++) {
+                for (int crit = 0; crit < tPlaCrit.length; crit++) {
                     ln++;
                     y = usableY + (4 + ln) * lineHeight;
-                    String strCrit = TeamPlacementParameterSet.criterionLongName(plaCrit[crit]);
-                    String strDescr = TeamPlacementParameterSet.criterionDescription(plaCrit[crit]);
+                    String strCrit = plaCrit[crit].getLongName();
+                    String strDescr = plaCrit[crit].getDescription(locale);
                     Font italFont = new Font("Default", Font.ITALIC, fontSize);
                     g.setFont(italFont);
                     g.drawString(strCrit + " = " + strDescr, x, y);
@@ -1923,9 +1927,9 @@ public class TournamentPrinting implements Printable {
             } else if (paiPS.getPaiMaSeedSystem1() == PairingParameterSet.PAIMA_SEED_SPLITANDSLIP) {
                 strSS += "Split and Slip";
             }
-            if (paiPS.getPaiMaAdditionalPlacementCritSystem1() != PlacementParameterSet.PLA_CRIT_NUL) {
+            if (paiPS.getPaiMaAdditionalPlacementCritSystem1() != PlacementCriterion.NUL) {
                 strSS += " " + "with additional criterion on" + " "
-                        + PlacementParameterSet.criterionLongName(paiPS.getPaiMaAdditionalPlacementCritSystem1());
+                        + paiPS.getPaiMaAdditionalPlacementCritSystem1().getLongName();
             }
             g.drawString(strSS, x, y);
 
@@ -1940,9 +1944,9 @@ public class TournamentPrinting implements Printable {
                 } else if (paiPS.getPaiMaSeedSystem2() == PairingParameterSet.PAIMA_SEED_SPLITANDSLIP) {
                     strSS2 += "Split and Slip";
                 }
-                if (paiPS.getPaiMaAdditionalPlacementCritSystem2() != PlacementParameterSet.PLA_CRIT_NUL) {
+                if (paiPS.getPaiMaAdditionalPlacementCritSystem2() != PlacementCriterion.NUL) {
                     strSS2 += "with_additional_criterion_on"
-                            + PlacementParameterSet.criterionLongName(paiPS.getPaiMaAdditionalPlacementCritSystem2());
+                            + paiPS.getPaiMaAdditionalPlacementCritSystem2().getLongName();
                 }
                 g.drawString(strSS2, x, y);
             }
@@ -2329,5 +2333,21 @@ public class TournamentPrinting implements Printable {
 
     public void setRoundNumber(int roundNumber) {
         this.roundNumber = roundNumber;
+    }
+
+    private static int[] convertCriteria(PlacementCriterion[] c) {
+        int[] critI = new int[c.length];
+        for (int i = 0; i < c.length; i++) {
+            critI[i] = c[i].getUid();
+        }
+        return critI;
+    }
+
+    private static int[] convertCriteria(TeamPlacementCriterion[] c) {
+        int[] critI = new int[c.length];
+        for (int i = 0; i < c.length; i++) {
+            critI[i] = c[i].getUid();
+        }
+        return critI;
     }
 }

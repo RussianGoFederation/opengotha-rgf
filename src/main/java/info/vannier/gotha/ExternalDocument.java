@@ -813,19 +813,19 @@ public class ExternalDocument {
         NodeList nlPPS = doc.getElementsByTagName("PlacementParameterSet");
         ArrayList<Node> alCritNodes = extractNodes(nlPPS.item(0), "PlacementCriterion");
 
-        int[] plaC = new int[TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA];
+        PlacementCriterion[] plaC = new PlacementCriterion[TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA];
         for (int nC = 0; nC < plaC.length; nC++) {
-            plaC[nC] = PlacementParameterSet.PLA_CRIT_NUL;
+            plaC[nC] = PlacementCriterion.NUL;
         }
         for (Node n : alCritNodes) {
             NamedNodeMap nnm = n.getAttributes();
             String strNumber = extractNodeValue(nnm, "number", "1");
             int number = new Integer(strNumber).intValue();
             String strName = extractNodeValue(nnm, "name", "NULL");
-            for (int nPC = 0; nPC < PlacementParameterSet.allPlacementCriteria.length; nPC++) {
-                PlacementCriterion pC = PlacementParameterSet.allPlacementCriteria[nPC];
-                if (strName.equals(pC.longName)) {
-                    plaC[number - 1] = pC.uid;
+            for (int nPC = 0; nPC < PlacementCriterion.values().length; nPC++) {
+                PlacementCriterion pC = PlacementCriterion.values()[nPC];
+                if (strName.equals(pC.getLongName())) {
+                    plaC[number - 1] = pC;
                     break;
                 }
             }
@@ -907,22 +907,22 @@ public class ExternalDocument {
         paiPS.setPaiMaSeedSystem2(s2);
 
         String strAddCrit1 = extractNodeValue(nnmPaiPS, "paiMaAdditionalPlacementCritSystem1", "RATING");
-        int aCrit1 = PlacementParameterSet.PLA_CRIT_RATING;
-        for (int nPC = 0; nPC < PlacementParameterSet.allPlacementCriteria.length; nPC++) {
-            PlacementCriterion pC = PlacementParameterSet.allPlacementCriteria[nPC];
-            if (strAddCrit1.equals(pC.longName)) {
-                aCrit1 = pC.uid;
+        PlacementCriterion aCrit1 = PlacementCriterion.RATING;
+        for (int nPC = 0; nPC < PlacementCriterion.values().length; nPC++) {
+            PlacementCriterion pC = PlacementCriterion.values()[nPC];
+            if (strAddCrit1.equals(pC.getLongName())) {
+                aCrit1 = pC;
                 break;
             }
         }
         paiPS.setPaiMaAdditionalPlacementCritSystem1(aCrit1);
 
         String strAddCrit2 = extractNodeValue(nnmPaiPS, "paiMaAdditionalPlacementCritSystem2", "NULL");
-        int aCrit2 = PlacementParameterSet.PLA_CRIT_NUL;
-        for (int nPC = 0; nPC < PlacementParameterSet.allPlacementCriteria.length; nPC++) {
-            PlacementCriterion pC = PlacementParameterSet.allPlacementCriteria[nPC];
-            if (strAddCrit2.equals(pC.longName)) {
-                aCrit2 = pC.uid;
+        PlacementCriterion aCrit2 = PlacementCriterion.NUL;
+        for (int nPC = 0; nPC < PlacementCriterion.values().length; nPC++) {
+            PlacementCriterion pC = PlacementCriterion.values()[nPC];
+            if (strAddCrit2.equals(pC.getLongName())) {
+                aCrit2 = pC;
                 break;
             }
         }
@@ -1108,19 +1108,19 @@ public class ExternalDocument {
         NodeList nlTPPS = doc.getElementsByTagName("TeamPlacementParameterSet");
         ArrayList<Node> alCritNodes = extractNodes(nlTPPS.item(0), "PlacementCriterion");
 
-        int[] plaC = new int[TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA];
+        TeamPlacementCriterion[] plaC = new TeamPlacementCriterion[TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA];
         for (int nC = 0; nC < plaC.length; nC++) {
-            plaC[nC] = PlacementParameterSet.PLA_CRIT_NUL;
+            plaC[nC] = TeamPlacementCriterion.NUL;
         }
         for (Node n : alCritNodes) {
             NamedNodeMap nnm = n.getAttributes();
             String strNumber = extractNodeValue(nnm, "number", "1");
             int number = new Integer(strNumber).intValue();
             String strName = extractNodeValue(nnm, "name", "NULL");
-            for (int nPC = 0; nPC < TeamPlacementParameterSet.allPlacementCriteria.length; nPC++) {
-                PlacementCriterion pC = TeamPlacementParameterSet.allPlacementCriteria[nPC];
-                if (strName.equals(pC.longName)) {
-                    plaC[number - 1] = pC.uid;
+            for (int nPC = 0; nPC < TeamPlacementCriterion.values().length; nPC++) {
+                TeamPlacementCriterion pC = TeamPlacementCriterion.values()[nPC];
+                if (strName.equals(pC.getLongName())) {
+                    plaC[number - 1] = pC;
                     break;
                 }
             }
@@ -1627,8 +1627,8 @@ public class ExternalDocument {
         HandicapParameterSet hps = tps.getHandicapParameterSet();
 
         // Prepare tabCrit from pps
-        int[] tC = pps.getPlaCriteria();
-        int[] tabCrit = PlacementParameterSet.purgeUselessCriteria(tC);
+        PlacementCriterion[] tC = pps.getPlaCriteria();
+        PlacementCriterion[] tabCrit = PlacementParameterSet.purgeUselessCriteria(tC);
 
         Writer output = null;
         try {
@@ -1673,7 +1673,7 @@ public class ExternalDocument {
             output.write("\n;");
             output.write("\n; Pl Name                            Rk Co Club");
             for (int c = 0; c < tabCrit.length; c++) {
-                String strCritName = PlacementParameterSet.criterionShortName(tabCrit[c]);
+                String strCritName = tabCrit[c].getShortName();
                 // Make strings with exactly 4 characters
                 strCritName = strCritName.trim();
                 if (strCritName.length() > 5) {
@@ -2522,8 +2522,8 @@ public class ExternalDocument {
         String strMarqueeTagEnd = "\n</marquee>";
 
         // Prepare tabCrit from pps
-        int[] tC = pps.getPlaCriteria();
-        int[] tabCrit = PlacementParameterSet.purgeUselessCriteria(tC);
+        PlacementCriterion[] tC = pps.getPlaCriteria();
+        PlacementCriterion[] tabCrit = PlacementParameterSet.purgeUselessCriteria(tC);
 
         Writer output;
         try {
@@ -2565,9 +2565,9 @@ public class ExternalDocument {
                 output.write("<th class=\"middle\">R&nbsp;" + (r + 1) + "&nbsp;</th>");
             }
             for (int c = 0; c < tabCrit.length - 1; c++) {
-                output.write("<th class=\"middle\">" + PlacementParameterSet.criterionShortName(tabCrit[c]) + "</th>");
+                output.write("<th class=\"middle\">" + tabCrit[c].getShortName() + "</th>");
             }
-            output.write("<th class=\"right\">" + PlacementParameterSet.criterionShortName(tabCrit[tabCrit.length - 1]) + "</th>");
+            output.write("<th class=\"right\">" + tabCrit[tabCrit.length - 1].getShortName() + "</th>");
 
             output.write("\n</tr>");
         } catch (IOException ex) {
@@ -2630,7 +2630,7 @@ public class ExternalDocument {
                     output.write("<td class=" + strPar + strAlCenter + ">" + strClub + "</td>");
                 }
                 
-                output.write("<td class=" + strPar + strAlCenter + ">" + sP.formatScore(PlacementParameterSet.PLA_CRIT_NBW, roundNumber) + "</td>");
+                output.write("<td class=" + strPar + strAlCenter + ">" + sP.formatScore(PlacementCriterion.NBW, roundNumber) + "</td>");
 
                 for (int r = 0; r <= roundNumber; r++) {
                     String strHG = hG[r][iSP];
@@ -2847,8 +2847,8 @@ public class ExternalDocument {
         String strMarqueeTagEnd = "\n</marquee>";
 
         // Prepare tabCrit from pps
-        int[] tC = tpps.getPlaCriteria();
-        int[] tabCrit = PlacementParameterSet.purgeUselessCriteria(tC);
+        TeamPlacementCriterion[] tC = tpps.getPlaCriteria();
+        TeamPlacementCriterion[] tabCrit = TeamPlacementParameterSet.purgeUselessCriteria(tC);
         
         Writer output;
         try {
@@ -2880,9 +2880,9 @@ public class ExternalDocument {
                 output.write("<th class=\"middle\">R&nbsp;" + (r + 1) + "&nbsp;</th>");
             }
             for (int c = 0; c < tabCrit.length - 1; c++) {
-                output.write("<th class=\"middle\">" + TeamPlacementParameterSet.criterionShortName(tabCrit[c]) + "</th>");
+                output.write("<th class=\"middle\">" + tabCrit[c].getShortName() + "</th>");
             }
-            output.write("<th class=\"right\">" + PlacementParameterSet.criterionShortName(tabCrit[tabCrit.length - 1]) + "</th>");
+            output.write("<th class=\"right\">" + tabCrit[tabCrit.length - 1].getShortName() + "</th>");
 
             output.write("\n</tr>");
         } catch (IOException ex) {
@@ -2917,8 +2917,8 @@ public class ExternalDocument {
                     output.write("<td class=" + strPar + strAlCenter + ">" + strHM + "</td>");
                 }
                 for (int ic = 0; ic < tabCrit.length; ic++) {
-                    int crit = tabCrit[ic];
-                    int coef = TeamPlacementParameterSet.criterionCoef(crit);
+                    TeamPlacementCriterion crit = tabCrit[ic];
+                    int coef = crit.getCoef();
                     String strCritValue = Gotha.formatFractNumber(st.getCritValue(ic), coef);
                     output.write("<td class=" + strPar + strAlCenter + ">" + strCritValue + "</td>");
                 }
@@ -3394,11 +3394,11 @@ public class ExternalDocument {
         Element emPlacementParameterSet = document.createElement("PlacementParameterSet");
 
         Element emPlacementCriteria = document.createElement("PlacementCriteria");
-        int[] plaC = pps.getPlaCriteria();
+        PlacementCriterion[] plaC = pps.getPlaCriteria();
         for (int c = 0; c < plaC.length; c++) {
             Element emPlacementCriterion = document.createElement("PlacementCriterion");
             emPlacementCriterion.setAttribute("number", "" + (c + 1));
-            emPlacementCriterion.setAttribute("name", PlacementParameterSet.criterionLongName(plaC[c]));
+            emPlacementCriterion.setAttribute("name", plaC[c].getLongName());
             emPlacementCriteria.appendChild(emPlacementCriterion);
         }
         emPlacementParameterSet.appendChild(emPlacementCriteria);
@@ -3480,10 +3480,8 @@ public class ExternalDocument {
                 strPaiMaSeedSystem2 = "SPLITANDFOLD";
         }
         emPairingParameterSet.setAttribute("paiMaSeedSystem1", strPaiMaSeedSystem2);
-        emPairingParameterSet.setAttribute("paiMaAdditionalPlacementCritSystem1",
-                PlacementParameterSet.criterionLongName(paiPS.getPaiMaAdditionalPlacementCritSystem1()));
-        emPairingParameterSet.setAttribute("paiMaAdditionalPlacementCritSystem2",
-                PlacementParameterSet.criterionLongName(paiPS.getPaiMaAdditionalPlacementCritSystem2()));
+        emPairingParameterSet.setAttribute("paiMaAdditionalPlacementCritSystem1", paiPS.getPaiMaAdditionalPlacementCritSystem1().getLongName());
+        emPairingParameterSet.setAttribute("paiMaAdditionalPlacementCritSystem2", paiPS.getPaiMaAdditionalPlacementCritSystem2().getLongName());
 
         emPairingParameterSet.setAttribute("paiSeRankThreshold", "" + Player.convertIntToKD(paiPS.getPaiSeRankThreshold()));
         emPairingParameterSet.setAttribute("paiSeNbWinsThresholdActive", "" + paiPS.isPaiSeNbWinsThresholdActive());
@@ -3575,11 +3573,11 @@ public class ExternalDocument {
         Element emTeamPlacementParameterSet = document.createElement("TeamPlacementParameterSet");
 
         Element emPlacementCriteria = document.createElement("PlacementCriteria");
-        int[] plaC = tpps.getPlaCriteria();
+        TeamPlacementCriterion[] plaC = tpps.getPlaCriteria();
         for (int c = 0; c < plaC.length; c++) {
             Element emPlacementCriterion = document.createElement("PlacementCriterion");
             emPlacementCriterion.setAttribute("number", "" + (c + 1));
-            emPlacementCriterion.setAttribute("name", TeamPlacementParameterSet.criterionLongName(plaC[c]));
+            emPlacementCriterion.setAttribute("name", plaC[c].getLongName());
             emPlacementCriteria.appendChild(emPlacementCriterion);
         }
         emTeamPlacementParameterSet.appendChild(emPlacementCriteria);

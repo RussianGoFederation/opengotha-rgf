@@ -343,38 +343,38 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
         sdc = 0;
     }
 
-    public int getCritValue(int criterion, int rn){
+    public int getCritValue(PlacementCriterion criterion, int rn){
         switch(criterion){
-            case PlacementParameterSet.PLA_CRIT_NUL    : return 0;                      // Null criterion
-            case PlacementParameterSet.PLA_CRIT_CAT    : return  - category(generalParameterSet);// Category
-            case PlacementParameterSet.PLA_CRIT_RANK   : return  getRank();      // Rank
-            case PlacementParameterSet.PLA_CRIT_RATING : return  getRating();    // Rating
-            case PlacementParameterSet.PLA_CRIT_NBW    : return  (rn >= 0) ? nbwX2[rn] : 0;                     // Number of Wins
-            case PlacementParameterSet.PLA_CRIT_MMS    : return  (rn >= 0) ? mmsX2[rn] : 2 * smms(generalParameterSet);  // McMahon score
-            case PlacementParameterSet.PLA_CRIT_STS    : return  (rn >= 0) ? stsX2[rn] : 2 * smms(generalParameterSet);  // STS score 
+            case NUL    : return 0;                      // Null criterion
+            case CAT    : return - category(generalParameterSet);// Category
+            case RANK   : return getRank();      // Rank
+            case RATING : return getRating();    // Rating
+            case NBW    : return (rn >= 0) ? nbwX2[rn] : 0;                     // Number of Wins
+            case MMS    : return (rn >= 0) ? mmsX2[rn] : 2 * smms(generalParameterSet);  // McMahon score
+            case STS    : return (rn >= 0) ? stsX2[rn] : 2 * smms(generalParameterSet);  // STS score
                 
-            case PlacementParameterSet.PLA_CRIT_SOSW   : return  (rn >= 0) ? this.soswX2[rn] : 0;	// Sum of Opponents McMahon scores
-            case PlacementParameterSet.PLA_CRIT_SOSWM1 : return  (rn >= 0) ? this.soswM1X2[rn] : 0;
-            case PlacementParameterSet.PLA_CRIT_SOSWM2 : return  (rn >= 0) ? this.soswM2X2[rn] : 0;
-            case PlacementParameterSet.PLA_CRIT_SODOSW : return  (rn >= 0) ? this.getSdswX4()[rn] : 0;	// Sum of Defeated Opponents Scores
-            case PlacementParameterSet.PLA_CRIT_SOSOSW : return  (rn >= 0) ? this.ssswX2[rn] : 0;	// Sum of opponents SOS
-            case PlacementParameterSet.PLA_CRIT_CUSSW  : return  (rn >= 0) ? this.cuswX2[rn] : 0;	// Cuss
+            case SOSW   : return (rn >= 0) ? this.soswX2[rn] : 0;	// Sum of Opponents McMahon scores
+            case SOSWM1 : return (rn >= 0) ? this.soswM1X2[rn] : 0;
+            case SOSWM2 : return (rn >= 0) ? this.soswM2X2[rn] : 0;
+            case SODOSW : return (rn >= 0) ? this.getSdswX4()[rn] : 0;	// Sum of Defeated Opponents Scores
+            case SOSOSW : return (rn >= 0) ? this.ssswX2[rn] : 0;	// Sum of opponents SOS
+            case CUSSW  : return (rn >= 0) ? this.cuswX2[rn] : 0;	// Cuss
 
-            case PlacementParameterSet.PLA_CRIT_SOSM   : return  (rn >= 0) ? this.sosmX2[rn] : 0;	// Sum of Opponents McMahon scores
-            case PlacementParameterSet.PLA_CRIT_SOSMM1 : return  (rn >= 0) ? this.sosmM1X2[rn] : 0;
-            case PlacementParameterSet.PLA_CRIT_SOSMM2 : return  (rn >= 0) ? this.sosmM2X2[rn] : 0;
-            case PlacementParameterSet.PLA_CRIT_SODOSM : return  (rn >= 0) ? this.getSdsmX4()[rn] : 0;	// Sum of Defeated Opponents Scores
-            case PlacementParameterSet.PLA_CRIT_SOSOSM : return  (rn >= 0) ? this.sssmX2[rn] : 0;	// Sum of opponents SOS
-            case PlacementParameterSet.PLA_CRIT_CUSSM  : return  (rn >= 0) ? this.cusmX2[rn] : 0;	// Cuss
+            case SOSM   : return (rn >= 0) ? this.sosmX2[rn] : 0;	// Sum of Opponents McMahon scores
+            case SOSMM1 : return (rn >= 0) ? this.sosmM1X2[rn] : 0;
+            case SOSMM2 : return (rn >= 0) ? this.sosmM2X2[rn] : 0;
+            case SODOSM : return (rn >= 0) ? this.getSdsmX4()[rn] : 0;	// Sum of Defeated Opponents Scores
+            case SOSOSM : return (rn >= 0) ? this.sssmX2[rn] : 0;	// Sum of opponents SOS
+            case CUSSM  : return (rn >= 0) ? this.cusmX2[rn] : 0;	// Cuss
            
-            case PlacementParameterSet.PLA_CRIT_SOSTS   : return  (rn >= 0) ? this.sostsX2[rn] : 0;	// Sum of Opponents STS scores  
+            case SOSTS  : return (rn >= 0) ? this.sostsX2[rn] : 0;	// Sum of Opponents STS scores
 
-            case PlacementParameterSet.PLA_CRIT_EXT    : return  (rn >= 0) ? this.extX2[rn] : 0;       // Exploits tentes
-            case PlacementParameterSet.PLA_CRIT_EXR    : return  (rn >= 0) ? this.exrX2[rn] : 0;       // Exploits reussis
+            case EXT    : return (rn >= 0) ? this.extX2[rn] : 0;       // Exploits tentes
+            case EXR    : return (rn >= 0) ? this.exrX2[rn] : 0;       // Exploits reussis
 
 
-            case PlacementParameterSet.PLA_CRIT_DC      : return dc;
-            case PlacementParameterSet.PLA_CRIT_SDC     : return sdc;
+            case DC     : return dc;
+            case SDC    : return sdc;
 
             default :
             return 0;
@@ -385,9 +385,9 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
      * converts a score value into a string
      * fractional part will be formatted as : ½ ¼ ¾
      */
-    public String formatScore(int crit, int roundNumber){
+    public String formatScore(PlacementCriterion crit, int roundNumber){
         int value = this.getCritValue(crit, roundNumber);
-        int coef = PlacementParameterSet.criterionCoef(crit);
+        int coef = crit.getCoef();
         if (coef == -1)   // only Cat
             return "" + (- value + 1);
 

@@ -23,6 +23,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.*;
 
+import ru.gofederation.gotha.ui.RgfTournamentExportDialog;
 import ru.gofederation.gotha.ui.RgfTournamentImportDialog;
 import ru.gofederation.gotha.ui.TournamentOpener;
 import ru.gofederation.gotha.util.GothaLocale;
@@ -71,10 +72,10 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
     private static final int MAX_NUMBER_OF_RECENT_TOURNAMENTS = 6;
     private int displayedRoundNumber = 0;
     private boolean bDisplayTemporaryParameterSet = false;
-    private int[] displayedCriteria = new int[PlacementParameterSet.PLA_MAX_NUMBER_OF_CRITERIA];
+    private PlacementCriterion[] displayedCriteria = new PlacementCriterion[PlacementParameterSet.PLA_MAX_NUMBER_OF_CRITERIA];
     private int displayedTeamRoundNumber = 0;
     private boolean bDisplayTemporaryTeamParameterSet = false;
-    private int[] displayedTeamCriteria = new int[PlacementParameterSet.PLA_MAX_NUMBER_OF_CRITERIA];
+    private TeamPlacementCriterion[] displayedTeamCriteria = new TeamPlacementCriterion[TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA];
     /**
      * current Tournament
      */
@@ -1885,13 +1886,15 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         bDisplayTemporaryParameterSet = (this.grpPS.getSelection() == this.rdbTemporaryPS.getModel());
 
         if (bDisplayTemporaryParameterSet) {
-            displayedCriteria[0] = PlacementParameterSet.criterionUID((String) cbxCrit1.getModel().getSelectedItem());
-            displayedCriteria[1] = PlacementParameterSet.criterionUID((String) cbxCrit2.getModel().getSelectedItem());
-            displayedCriteria[2] = PlacementParameterSet.criterionUID((String) cbxCrit3.getModel().getSelectedItem());
-            displayedCriteria[3] = PlacementParameterSet.criterionUID((String) cbxCrit4.getModel().getSelectedItem());
+            Arrays.fill(displayedCriteria, PlacementCriterion.NUL);
+            displayedCriteria[0] = PlacementCriterion.fromLongName((String) cbxCrit1.getModel().getSelectedItem());
+            displayedCriteria[1] = PlacementCriterion.fromLongName((String) cbxCrit2.getModel().getSelectedItem());
+            displayedCriteria[2] = PlacementCriterion.fromLongName((String) cbxCrit3.getModel().getSelectedItem());
+            displayedCriteria[3] = PlacementCriterion.fromLongName((String) cbxCrit4.getModel().getSelectedItem());
         } else {
             if (tournament != null) {
                 PlacementParameterSet displayedPPS = tournament.getTournamentParameterSet().getPlacementParameterSet();
+                Arrays.fill(displayedCriteria, PlacementCriterion.NUL);
                 displayedCriteria[0] = displayedPPS.getPlaCriteria()[0];
                 displayedCriteria[1] = displayedPPS.getPlaCriteria()[1];
                 displayedCriteria[2] = displayedPPS.getPlaCriteria()[2];
@@ -1905,12 +1908,12 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         bDisplayTemporaryTeamParameterSet = (this.grpTeamPS.getSelection() == this.rdbTemporaryTeamPS.getModel());
 
         if (bDisplayTemporaryTeamParameterSet) {
-            displayedTeamCriteria[0] = TeamPlacementParameterSet.criterionUID((String) cbxTeamCrit1.getModel().getSelectedItem());
-            displayedTeamCriteria[1] = TeamPlacementParameterSet.criterionUID((String) cbxTeamCrit2.getModel().getSelectedItem());
-            displayedTeamCriteria[2] = TeamPlacementParameterSet.criterionUID((String) cbxTeamCrit3.getModel().getSelectedItem());
-            displayedTeamCriteria[3] = TeamPlacementParameterSet.criterionUID((String) cbxTeamCrit4.getModel().getSelectedItem());
-            displayedTeamCriteria[4] = TeamPlacementParameterSet.criterionUID((String) cbxTeamCrit5.getModel().getSelectedItem());
-            displayedTeamCriteria[5] = TeamPlacementParameterSet.criterionUID((String) cbxTeamCrit6.getModel().getSelectedItem());
+            displayedTeamCriteria[0] = TeamPlacementCriterion.fromLongName((String) cbxTeamCrit1.getModel().getSelectedItem());
+            displayedTeamCriteria[1] = TeamPlacementCriterion.fromLongName((String) cbxTeamCrit2.getModel().getSelectedItem());
+            displayedTeamCriteria[2] = TeamPlacementCriterion.fromLongName((String) cbxTeamCrit3.getModel().getSelectedItem());
+            displayedTeamCriteria[3] = TeamPlacementCriterion.fromLongName((String) cbxTeamCrit4.getModel().getSelectedItem());
+            displayedTeamCriteria[4] = TeamPlacementCriterion.fromLongName((String) cbxTeamCrit5.getModel().getSelectedItem());
+            displayedTeamCriteria[5] = TeamPlacementCriterion.fromLongName((String) cbxTeamCrit6.getModel().getSelectedItem());
         } else {
             if (tournament != null) {
                 TeamPlacementParameterSet displayedTeamPPS = tournament.getTeamTournamentParameterSet().getTeamPlacementParameterSet();
@@ -1946,10 +1949,10 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         this.cbxCrit3.setEnabled(bDisplayTemporaryParameterSet);
         this.cbxCrit4.setEnabled(bDisplayTemporaryParameterSet);
 
-        this.cbxCrit1.getModel().setSelectedItem(PlacementParameterSet.criterionLongName(displayedCriteria[0]));
-        this.cbxCrit2.getModel().setSelectedItem(PlacementParameterSet.criterionLongName(displayedCriteria[1]));
-        this.cbxCrit3.getModel().setSelectedItem(PlacementParameterSet.criterionLongName(displayedCriteria[2]));
-        this.cbxCrit4.getModel().setSelectedItem(PlacementParameterSet.criterionLongName(displayedCriteria[3]));
+        this.cbxCrit1.getModel().setSelectedItem(displayedCriteria[0].getLongName());
+        this.cbxCrit2.getModel().setSelectedItem(displayedCriteria[1].getLongName());
+        this.cbxCrit3.getModel().setSelectedItem(displayedCriteria[2].getLongName());
+        this.cbxCrit4.getModel().setSelectedItem(displayedCriteria[3].getLongName());
 
         // Define displayedTPS
         TournamentParameterSet tps = tournament.getTournamentParameterSet();
@@ -2025,7 +2028,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             columnModel.getColumn(ROUND0_RESULT_COL + r).setHeaderValue("R" + (r + 1));
         }
         for (int c = 0; c < PlacementParameterSet.PLA_MAX_NUMBER_OF_CRITERIA; c++) {
-            columnModel.getColumn(CRIT0_COL + c).setHeaderValue(PlacementParameterSet.criterionShortName(displayedCriteria[c]));
+            columnModel.getColumn(CRIT0_COL + c).setHeaderValue(displayedCriteria[c].getShortName());
         }
         int numWidth = 30;
         if (!tps.getDPParameterSet().isDisplayNumCol()) {
@@ -2068,7 +2071,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         }
 
         for (int c = 0; c < PlacementParameterSet.PLA_MAX_NUMBER_OF_CRITERIA; c++) {
-            if (displayedPPS.getPlaCriteria()[c] == PlacementParameterSet.PLA_CRIT_NUL) {
+            if (displayedPPS.getPlaCriteria()[c] == PlacementCriterion.NUL) {
                 columnModel.getColumn(CRIT0_COL + c).setMinWidth(0);
                 columnModel.getColumn(CRIT0_COL + c).setPreferredWidth(0);
             } else {
@@ -2110,7 +2113,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             model.setValueAt(strCl, iSP, iCol++);
            
             
-            model.setValueAt(sp.formatScore(PlacementParameterSet.PLA_CRIT_NBW, this.displayedRoundNumber), iSP, iCol++);
+            model.setValueAt(sp.formatScore(PlacementCriterion.NBW, this.displayedRoundNumber), iSP, iCol++);
             for (int r = 0; r <= displayedRoundNumber; r++) {
                 model.setValueAt((hG[r][iSP]), iSP, iCol++);
             }
@@ -2155,12 +2158,12 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         this.cbxTeamCrit5.setEnabled(bDisplayTemporaryTeamParameterSet);
         this.cbxTeamCrit6.setEnabled(bDisplayTemporaryTeamParameterSet);
 
-        this.cbxTeamCrit1.getModel().setSelectedItem(TeamPlacementParameterSet.criterionLongName(displayedTeamCriteria[0]));
-        this.cbxTeamCrit2.getModel().setSelectedItem(TeamPlacementParameterSet.criterionLongName(displayedTeamCriteria[1]));
-        this.cbxTeamCrit3.getModel().setSelectedItem(TeamPlacementParameterSet.criterionLongName(displayedTeamCriteria[2]));
-        this.cbxTeamCrit4.getModel().setSelectedItem(TeamPlacementParameterSet.criterionLongName(displayedTeamCriteria[3]));
-        this.cbxTeamCrit5.getModel().setSelectedItem(TeamPlacementParameterSet.criterionLongName(displayedTeamCriteria[4]));
-        this.cbxTeamCrit6.getModel().setSelectedItem(TeamPlacementParameterSet.criterionLongName(displayedTeamCriteria[5]));
+        this.cbxTeamCrit1.getModel().setSelectedItem(displayedTeamCriteria[0].getLongName());
+        this.cbxTeamCrit2.getModel().setSelectedItem(displayedTeamCriteria[1].getLongName());
+        this.cbxTeamCrit3.getModel().setSelectedItem(displayedTeamCriteria[2].getLongName());
+        this.cbxTeamCrit4.getModel().setSelectedItem(displayedTeamCriteria[3].getLongName());
+        this.cbxTeamCrit5.getModel().setSelectedItem(displayedTeamCriteria[4].getLongName());
+        this.cbxTeamCrit6.getModel().setSelectedItem(displayedTeamCriteria[5].getLongName());
 
         // Define displayedTeamTPS
         TeamTournamentParameterSet ttps = tournament.getTeamTournamentParameterSet();
@@ -2187,8 +2190,8 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             columnModel.getColumn(TEAM_ROUND0_RESULT_COL + r).setHeaderValue("R" + (r + 1));
         }
         for (int c = 0; c < TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA; c++) {
-            String strCrit = TeamPlacementParameterSet.criterionShortName(displayedTeamCriteria[c]);
-            if (displayedTeamCriteria[c] == TeamPlacementParameterSet.TPL_CRIT_NUL) {
+            String strCrit = displayedTeamCriteria[c].getShortName();
+            if (displayedTeamCriteria[c] == TeamPlacementCriterion.NUL) {
                 strCrit = "";
             }
             TableColumn tc = columnModel.getColumn(TEAM_CRIT0_COL + c);
@@ -2210,7 +2213,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         }
 
         for (int c = 0; c < TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA; c++) {
-            if (displayedTeamPPS.getPlaCriteria()[c] == TeamPlacementParameterSet.TPL_CRIT_NUL) {
+            if (displayedTeamPPS.getPlaCriteria()[c] == TeamPlacementCriterion.NUL) {
                 columnModel.getColumn(TEAM_CRIT0_COL + c).setMinWidth(0);
                 columnModel.getColumn(TEAM_CRIT0_COL + c).setPreferredWidth(0);
             } else {
@@ -2233,7 +2236,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
                 model.setValueAt("", ist, iCol++);
             }
             for (int ic = 0; ic < this.displayedTeamCriteria.length; ic++) {
-                int crit = this.displayedTeamCriteria[ic];
+                int crit = this.displayedTeamCriteria[ic].getUid();
                 int coef = TeamPlacementParameterSet.criterionCoef(crit);
                 String strCritValue = Gotha.formatFractNumber(st.getCritValue(ic), coef);
                 model.setValueAt(strCritValue, ist, TEAM_CRIT0_COL + ic);

@@ -3,6 +3,7 @@ package info.vannier.gotha;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -907,12 +908,12 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         fillPairingInfo(roundNumber);
 
         // What is the main score in this tps ?
-        int mainCrit = pps.mainCriterion();
+        PlacementCriterion mainCrit = pps.mainCriterion();
 
         // And what is mainScoreMin and mainScoreMax ?
         int mainScoreMin = 0;              // Default value
         int mainScoreMax = roundNumber;// Default value
-        if (mainCrit == PlacementParameterSet.PLA_CRIT_MMS) {
+        if (mainCrit == PlacementCriterion.MMS) {
             mainScoreMin = gps.getGenMMFloor() + PlacementParameterSet.PLA_SMMS_CORR_MIN - Gotha.MIN_RANK;
             mainScoreMax = gps.getGenMMBar() + PlacementParameterSet.PLA_SMMS_CORR_MAX + roundNumber - Gotha.MIN_RANK;
         }
@@ -1222,14 +1223,14 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         
         int mmBar = gps.getGenMMBar() - Gotha.MIN_RANK;
 
-        int pseudoMMSSP1 = sP1.getCritValue(PlacementParameterSet.PLA_CRIT_MMS, roundNumber - 1) / 2;
-        int pseudoMMSSP2 = sP2.getCritValue(PlacementParameterSet.PLA_CRIT_MMS, roundNumber - 1) / 2;
+        int pseudoMMSSP1 = sP1.getCritValue(PlacementCriterion.MMS, roundNumber - 1) / 2;
+        int pseudoMMSSP2 = sP2.getCritValue(PlacementCriterion.MMS, roundNumber - 1) / 2;
         int maxMMS = gps.getGenMMBar() + PlacementParameterSet.PLA_SMMS_CORR_MAX - Gotha.MIN_RANK + roundNumber;
 
-        int nbwSP1X2 = sP1.getCritValue(PlacementParameterSet.PLA_CRIT_NBW, roundNumber - 1);
-        int nbwSP2X2 = sP2.getCritValue(PlacementParameterSet.PLA_CRIT_NBW, roundNumber - 1);
+        int nbwSP1X2 = sP1.getCritValue(PlacementCriterion.NBW, roundNumber - 1);
+        int nbwSP2X2 = sP2.getCritValue(PlacementCriterion.NBW, roundNumber - 1);
 
-        boolean bStrongMMS = (2 * sP1.getRank() + sP1.getCritValue(PlacementParameterSet.PLA_CRIT_NBW, roundNumber - 1) >= 2 * paiPS.getPaiSeRankThreshold());
+        boolean bStrongMMS = (2 * sP1.getRank() + sP1.getCritValue(PlacementCriterion.NBW, roundNumber - 1) >= 2 * paiPS.getPaiSeRankThreshold());
         boolean bManyWins = nbwSP1X2 >= nbw2Threshold;
         boolean bAboveMMBar = (sP1.smms(gps) >= mmBar && paiPS.isPaiSeBarThresholdActive());
         if (bManyWins
@@ -1239,7 +1240,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             pseudoMMSSP1 = maxMMS;
         }
         
-        bStrongMMS = (2 * sP2.getRank() + sP2.getCritValue(PlacementParameterSet.PLA_CRIT_NBW, roundNumber - 1) >= 2 * paiPS.getPaiSeRankThreshold());
+        bStrongMMS = (2 * sP2.getRank() + sP2.getCritValue(PlacementCriterion.NBW, roundNumber - 1) >= 2 * paiPS.getPaiSeRankThreshold());
         bManyWins = nbwSP2X2 >= nbw2Threshold;
         bAboveMMBar = (sP2.smms(gps) >= mmBar && paiPS.isPaiSeBarThresholdActive());
         if (bManyWins
@@ -1345,8 +1346,8 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         int pseudoRank1 = sP1.getRank();
         int pseudoRank2 = sP2.getRank();
         if (hdPS.isHdBasedOnMMS()) {
-            pseudoRank1 = sP1.getCritValue(PlacementParameterSet.PLA_CRIT_MMS, roundNumber - 1) / 2 + Gotha.MIN_RANK;
-            pseudoRank2 = sP2.getCritValue(PlacementParameterSet.PLA_CRIT_MMS, roundNumber - 1) / 2 + Gotha.MIN_RANK;
+            pseudoRank1 = sP1.getCritValue(PlacementCriterion.MMS, roundNumber - 1) / 2 + Gotha.MIN_RANK;
+            pseudoRank2 = sP2.getCritValue(PlacementCriterion.MMS, roundNumber - 1) / 2 + Gotha.MIN_RANK;
         }
         pseudoRank1 = Math.min(pseudoRank1, hdPS.getHdNoHdRankThreshold());
         pseudoRank2 = Math.min(pseudoRank2, hdPS.getHdNoHdRankThreshold());
@@ -2148,11 +2149,11 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         // Order hmScoredPlayers into alOrderedScoredPlayers according to Main criteria (before DC and SDC)
         ArrayList<ScoredPlayer> alOrderedScoredPlayers = new ArrayList<ScoredPlayer>(hmScoredPlayers.values());
 
-        int[] crit = pps.getPlaCriteria();
-        int[] primaryCrit = new int[crit.length];
+        PlacementCriterion[] crit = pps.getPlaCriteria();
+        PlacementCriterion[] primaryCrit = new PlacementCriterion[crit.length];
         int iCritDir = crit.length; // set to first CD or SDC criterion if found
         for (int iC = 0; iC < crit.length; iC++) {
-            if (crit[iC] == PlacementParameterSet.PLA_CRIT_DC || crit[iC] == PlacementParameterSet.PLA_CRIT_SDC) {
+            if (crit[iC] == PlacementCriterion.DC || crit[iC] == PlacementCriterion.SDC) {
                 iCritDir = iC;
                 break;
             } else {
@@ -2160,7 +2161,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             }
         }
         for (int iC = iCritDir; iC < crit.length; iC++) {
-            primaryCrit[iC] = PlacementParameterSet.PLA_CRIT_NUL;
+            primaryCrit[iC] = PlacementCriterion.NUL;
         }
 
         // Sort on primary criteria
@@ -2705,10 +2706,10 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             sP.setDC(0);
         }
 
-        int[] crit = pps.getPlaCriteria();
+        PlacementCriterion[] crit = pps.getPlaCriteria();
         int nbCritBeforeDir = -1;
         for (int cr = 0; cr < crit.length; cr++) {
-            if (crit[cr] == PlacementParameterSet.PLA_CRIT_DC || crit[cr] == PlacementParameterSet.PLA_CRIT_SDC) {
+            if (crit[cr] == PlacementCriterion.DC || crit[cr] == PlacementCriterion.SDC) {
                 nbCritBeforeDir = cr;
                 break;
             }
@@ -2759,11 +2760,11 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         PairingParameterSet paiPS = tournamentParameterSet.getPairingParameterSet();
 
         // What is the main score in this tps ?
-        int mainCrit = pps.mainCriterion();
+        PlacementCriterion mainCrit = pps.mainCriterion();
         // And what is mainScoreMin and mainScoreMax ?
         int mainScoreMin = 0;              // Default value
         int mainScoreMax = roundNumber;// Default value
-        if (mainCrit == PlacementParameterSet.PLA_CRIT_MMS) {
+        if (mainCrit == PlacementCriterion.MMS) {
             mainScoreMin = gps.getGenMMFloor() + PlacementParameterSet.PLA_SMMS_CORR_MIN - Gotha.MIN_RANK;
             mainScoreMax = gps.getGenMMBar() + PlacementParameterSet.PLA_SMMS_CORR_MAX + roundNumber - Gotha.MIN_RANK;
         }
@@ -2787,12 +2788,12 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
 
                 // Sort alSPGroup to give each SPlayer an innerPlacement
                 // sort is made according to pps criteria + specified additional criteria
-                int[] crit = pps.getPlaCriteria();
-                int additionalCrit = paiPS.getPaiMaAdditionalPlacementCritSystem1();
+                PlacementCriterion[] crit = pps.getPlaCriteria();
+                PlacementCriterion additionalCrit = paiPS.getPaiMaAdditionalPlacementCritSystem1();
                 if (roundNumber > paiPS.getPaiMaLastRoundForSeedSystem1()) {
                     additionalCrit = paiPS.getPaiMaAdditionalPlacementCritSystem2();
                 }
-                int[] paiCrit = new int[crit.length + 1];
+                PlacementCriterion[] paiCrit = new PlacementCriterion[crit.length + 1];
                 System.arraycopy(crit, 0, paiCrit, 0, crit.length);
                 paiCrit[paiCrit.length - 1] = additionalCrit;
                 ScoredPlayerComparator spc = new ScoredPlayerComparator(paiCrit, roundNumber - 1, false);
@@ -2984,14 +2985,13 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
 
         // DC Algorithm
         // Order alExAequoBeforeDirScoredPlayers according to secondary criteria
-        int[] crit = pps.getPlaCriteria();
-        int[] secCrit = new int[crit.length];
-        System.arraycopy(crit, 0, secCrit, 0, secCrit.length);
+        PlacementCriterion[] crit = pps.getPlaCriteria();
+        PlacementCriterion[] secCrit = Arrays.copyOf(crit, crit.length);
         for (int iC = 0; iC < secCrit.length; iC++) {
-            if (crit[iC] != PlacementParameterSet.PLA_CRIT_DC) {
-                secCrit[iC] = PlacementParameterSet.PLA_CRIT_NUL;
+            if (crit[iC] != PlacementCriterion.DC) {
+                secCrit[iC] = PlacementCriterion.NUL;
             } else {
-                secCrit[iC] = PlacementParameterSet.PLA_CRIT_NUL;
+                secCrit[iC] = PlacementCriterion.NUL;
                 break;
             }
         }

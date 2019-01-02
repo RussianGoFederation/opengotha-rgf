@@ -51,9 +51,9 @@ public class PairingParameterSet implements java.io.Serializable{
     private long paiMaMaximizeSeeding                   =         PAIMA_MAX_MAXIMIZE_SEEDING;      // 5 *10^6
     private int paiMaLastRoundForSeedSystem1            = 1;
     private int paiMaSeedSystem1                        = PAIMA_SEED_SPLITANDRANDOM;                              
-    private int paiMaSeedSystem2                        = PAIMA_SEED_SPLITANDFOLD; 
-    private int paiMaAdditionalPlacementCritSystem1     = PlacementParameterSet.PLA_CRIT_RATING;
-    private int paiMaAdditionalPlacementCritSystem2     = PlacementParameterSet.PLA_CRIT_NUL;
+    private int paiMaSeedSystem2                        = PAIMA_SEED_SPLITANDFOLD;
+    private PlacementCriterion paiMaAdditionalPlacementCritSystem1 = PlacementCriterion.RATING;
+    private PlacementCriterion paiMaAdditionalPlacementCritSystem2 = PlacementCriterion.NUL;
          
     private boolean paiSeBarThresholdActive                  = true;        // Do not apply secondary criteria for players above bar
     private int paiSeRankThreshold                           = 0;           // Do not apply secondary criteria above 1D rank
@@ -154,19 +154,19 @@ public class PairingParameterSet implements java.io.Serializable{
         this.paiMaSeedSystem2 = paiMaSeedSystem2;
     }
 
-    public int getPaiMaAdditionalPlacementCritSystem1() {
+    public PlacementCriterion getPaiMaAdditionalPlacementCritSystem1() {
         return paiMaAdditionalPlacementCritSystem1;
     }
 
-    public void setPaiMaAdditionalPlacementCritSystem1(int paiMaAdditionalPlacementCritSystem1) {
+    public void setPaiMaAdditionalPlacementCritSystem1(PlacementCriterion paiMaAdditionalPlacementCritSystem1) {
         this.paiMaAdditionalPlacementCritSystem1 = paiMaAdditionalPlacementCritSystem1;
     }
 
-    public int getPaiMaAdditionalPlacementCritSystem2() {
+    public PlacementCriterion getPaiMaAdditionalPlacementCritSystem2() {
         return paiMaAdditionalPlacementCritSystem2;
     }
 
-    public void setPaiMaAdditionalPlacementCritSystem2(int paiMaAdditionalPlacementCritSystem2) {
+    public void setPaiMaAdditionalPlacementCritSystem2(PlacementCriterion paiMaAdditionalPlacementCritSystem2) {
         this.paiMaAdditionalPlacementCritSystem2 = paiMaAdditionalPlacementCritSystem2;
     }
 
@@ -285,8 +285,8 @@ public class PairingParameterSet implements java.io.Serializable{
             paiMaLastRoundForSeedSystem1        =   1;
             paiMaSeedSystem1                    =   PAIMA_SEED_SPLITANDRANDOM;                              
             paiMaSeedSystem2                    =   PAIMA_SEED_SPLITANDFOLD; 
-            paiMaAdditionalPlacementCritSystem1 =   PlacementParameterSet.PLA_CRIT_RATING;
-            paiMaAdditionalPlacementCritSystem2 =   PlacementParameterSet.PLA_CRIT_NUL;
+            paiMaAdditionalPlacementCritSystem1 =   PlacementCriterion.RATING;
+            paiMaAdditionalPlacementCritSystem2 =   PlacementCriterion.NUL;
         
         paiSeBarThresholdActive                 =   true;         // Do not apply secondary criteria above bar
         paiSeRankThreshold                      =   0;           // Do not apply secondary criteria above 1D rank
@@ -317,8 +317,8 @@ public class PairingParameterSet implements java.io.Serializable{
             paiMaLastRoundForSeedSystem1        =   1;
             paiMaSeedSystem1                    =   PAIMA_SEED_SPLITANDSLIP;                              
             paiMaSeedSystem2                    =   PAIMA_SEED_SPLITANDSLIP; 
-            paiMaAdditionalPlacementCritSystem1 =   PlacementParameterSet.PLA_CRIT_RATING;
-            paiMaAdditionalPlacementCritSystem2 =   PlacementParameterSet.PLA_CRIT_RATING;
+            paiMaAdditionalPlacementCritSystem1 =   PlacementCriterion.RATING;
+            paiMaAdditionalPlacementCritSystem2 =   PlacementCriterion.RATING;
         
         paiSeBarThresholdActive                 =   true;           // Not relevant
         paiSeRankThreshold                      =   -30;            // Do not apply secondary criteria above rank 
@@ -349,8 +349,8 @@ public class PairingParameterSet implements java.io.Serializable{
             paiMaLastRoundForSeedSystem1        =   1;
             paiMaSeedSystem1                    =   PAIMA_SEED_SPLITANDRANDOM;                              
             paiMaSeedSystem2                    =   PAIMA_SEED_SPLITANDFOLD; 
-            paiMaAdditionalPlacementCritSystem1 =   PlacementParameterSet.PLA_CRIT_RATING;
-            paiMaAdditionalPlacementCritSystem2 =   PlacementParameterSet.PLA_CRIT_NUL;
+            paiMaAdditionalPlacementCritSystem1 =   PlacementCriterion.RATING;
+            paiMaAdditionalPlacementCritSystem2 =   PlacementCriterion.NUL;
         
         paiSeBarThresholdActive                 =   true;           // Not relevant
         paiSeRankThreshold                      =   0;           // Do not apply secondary criteria above 1D rank
