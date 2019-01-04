@@ -20,6 +20,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.*;
 
+import ru.gofederation.gotha.util.GothaLocale;
+
 /**
  *
  * @author  Admin
@@ -46,6 +48,8 @@ public class JFrGamesRR extends javax.swing.JFrame{
         customInitComponents();
         setupRefreshTimer();
     }
+
+    private final GothaLocale locale = GothaLocale.getCurrentLocale();
 
     private volatile boolean running = true;
     javax.swing.Timer timer = null;
@@ -112,7 +116,7 @@ public class JFrGamesRR extends javax.swing.JFrame{
         });
         getContentPane().setLayout(null);
 
-        btnClose.setText("Close");
+        btnClose.setText(locale.getString("btn.close")); // NOI18N
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -173,7 +177,7 @@ public class JFrGamesRR extends javax.swing.JFrame{
         scpGames.setBounds(0, 0, 784, 339);
 
         lblBNumberOfRounds.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lblBNumberOfRounds.setText("Number of rounds");
+        lblBNumberOfRounds.setText(locale.getString("tournament.number_of_rounds")); // NOI18N
         pnlGames.add(lblBNumberOfRounds);
         lblBNumberOfRounds.setBounds(0, 340, 120, 13);
 
@@ -190,26 +194,26 @@ public class JFrGamesRR extends javax.swing.JFrame{
         lblUncompatibility1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lblUncompatibility1.setForeground(new java.awt.Color(255, 51, 51));
         lblUncompatibility1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblUncompatibility1.setText("This tournament is not (or no longer) compatible with Round-robin.");
+        lblUncompatibility1.setText(locale.getString("tournament.rr.incompatible_1")); // NOI18N
         pnlUncompatibility.add(lblUncompatibility1);
         lblUncompatibility1.setBounds(10, 50, 760, 30);
 
         lblUncompatibility3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lblUncompatibility3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblUncompatibility3.setText("To be compatible with Round-robin, the number of players of your tournament should not exceed ");
+        lblUncompatibility3.setText(locale.getString("tournament.rr.incompatible_2")); // NOI18N
         pnlUncompatibility.add(lblUncompatibility3);
         lblUncompatibility3.setBounds(10, 150, 760, 30);
 
         lblUncompatibility4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lblUncompatibility4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblUncompatibility4.setText("And there should not be any duplicate game");
+        lblUncompatibility4.setText(locale.getString("tournament.rr.incompatible_3")); // NOI18N
         pnlUncompatibility.add(lblUncompatibility4);
         lblUncompatibility4.setBounds(10, 180, 760, 30);
 
         getContentPane().add(pnlUncompatibility);
         pnlUncompatibility.setBounds(0, 0, 780, 250);
 
-        pnlHelp.setBorder(javax.swing.BorderFactory.createTitledBorder("Help"));
+        pnlHelp.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.rr.help_frame"))); // NOI18N
         pnlHelp.setLayout(null);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -221,7 +225,7 @@ public class JFrGamesRR extends javax.swing.JFrame{
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Increase handicap ");
+        jLabel2.setText(locale.getString("tournament.rr.increase_handicap")); // NOI18N
         jLabel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         pnlHelp.add(jLabel2);
         jLabel2.setBounds(370, 20, 250, 25);
@@ -232,7 +236,7 @@ public class JFrGamesRR extends javax.swing.JFrame{
         jLabel6.setBounds(630, 20, 90, 25);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel7.setText("Left click");
+        jLabel7.setText(locale.getString("tournament.rr.left_click")); // NOI18N
         pnlHelp.add(jLabel7);
         jLabel7.setBounds(270, 20, 90, 25);
 
@@ -244,13 +248,13 @@ public class JFrGamesRR extends javax.swing.JFrame{
         jLabel12.setBounds(10, 50, 250, 25);
 
         jLabel14.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel14.setText("Right click");
+        jLabel14.setText(locale.getString("tournament.rr.right_click")); // NOI18N
         pnlHelp.add(jLabel14);
         jLabel14.setBounds(270, 50, 90, 25);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("Decrease handicap ");
+        jLabel3.setText(locale.getString("tournament.rr.decrease_handicap")); // NOI18N
         jLabel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         pnlHelp.add(jLabel3);
         jLabel3.setBounds(370, 50, 250, 25);
@@ -262,7 +266,7 @@ public class JFrGamesRR extends javax.swing.JFrame{
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel4.setText("Delete game ");
+        jLabel4.setText(locale.getString("tournament.rr.delete_game")); // NOI18N
         jLabel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         pnlHelp.add(jLabel4);
         jLabel4.setBounds(370, 80, 250, 25);
@@ -276,7 +280,7 @@ public class JFrGamesRR extends javax.swing.JFrame{
         pnlHelp.setBounds(0, 365, 790, 110);
 
         btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.setText("help");
+        btnHelp.setText(locale.getString("btn.help")); // NOI18N
         btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpActionPerformed(evt);
@@ -379,9 +383,9 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         final int GAME_WIDTH = 30;
         
         Vector<String> columnNames = new Vector<String>();
-        columnNames.add("Player name");
-        columnNames.add("Rk");
-        columnNames.add("Nr");
+        columnNames.add(locale.getString("player.player_name"));
+        columnNames.add(locale.getString("player.rank_s"));
+        columnNames.add(locale.getString("nr"));
         for (int ip = 0; ip < MAX_NUMBER_OF_RR_PLAYERS; ip++){
             columnNames.add("" + (ip + 1));
         }     
@@ -412,7 +416,7 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         if (!isRRCompatible()){
             this.pnlGames.setVisible(false);
             this.pnlHelp.setVisible(false);
-            lblUncompatibility3.setText("To be compatible with Round-robin, the number of players of your tournament should not exceed " + MAX_NUMBER_OF_RR_PLAYERS + ".");         
+            lblUncompatibility3.setText(locale.format("tournament.rr.incompatible_2", MAX_NUMBER_OF_RR_PLAYERS));
             this.pnlUncompatibility.setVisible(true);
             return;
         }
@@ -684,8 +688,8 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             }
         }
         if (availableRound == -1){
-            String strMessage = "Due to a limitation in number of rounds, the game could not be created";
-            JOptionPane.showMessageDialog (this, strMessage, "Message", JOptionPane.ERROR_MESSAGE);
+            String strMessage = locale.getString("tournament.rr.game_not_created_number_of_rounds");
+            JOptionPane.showMessageDialog (this, strMessage, locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         }
 
         try {

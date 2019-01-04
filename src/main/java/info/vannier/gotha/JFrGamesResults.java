@@ -20,6 +20,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import ru.gofederation.gotha.util.GothaLocale;
+
 /**
  *
  * @author Luc Vannier
@@ -46,6 +48,8 @@ public class JFrGamesResults extends javax.swing.JFrame {
      * current Round
      */
     private int processedRoundNumber = 0;
+
+    private final GothaLocale locale = GothaLocale.getCurrentLocale();
 
     /**
      * Creates new form JFrPlayerManager
@@ -98,11 +102,11 @@ public class JFrGamesResults extends javax.swing.JFrame {
      */
     private void initGamesComponents() {
 
-        JFrGotha.formatColumn(tblGames, TABLE_NUMBER_COL, "Table", TABLE_NUMBER_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
+        JFrGotha.formatColumn(tblGames, TABLE_NUMBER_COL, locale.getString("game.board"), TABLE_NUMBER_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
         JFrGotha.formatColumn(tblGames, LEFT_PLAYER_COL, "", PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
         JFrGotha.formatColumn(tblGames, RIGHT_PLAYER_COL, "", PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
-        JFrGotha.formatColumn(tblGames, HANDICAP_COL, "Hd", HANDICAP_WIDTH, JLabel.CENTER, JLabel.CENTER);
-        JFrGotha.formatColumn(tblGames, RESULT_COL, "Result", RESULT_WIDTH, JLabel.CENTER, JLabel.CENTER);
+        JFrGotha.formatColumn(tblGames, HANDICAP_COL, locale.getString("game.handicap"), HANDICAP_WIDTH, JLabel.CENTER, JLabel.CENTER);
+        JFrGotha.formatColumn(tblGames, RESULT_COL, locale.getString("game.result"), RESULT_WIDTH, JLabel.CENTER, JLabel.CENTER);
     }
 
     private void updateComponents() {
@@ -115,8 +119,8 @@ public class JFrGamesResults extends javax.swing.JFrame {
         }
         // else White = left, Black = right
         else{
-            JFrGotha.formatColumn(tblGames, LEFT_PLAYER_COL, "White", PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
-            JFrGotha.formatColumn(tblGames, RIGHT_PLAYER_COL, "Black", PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
+            JFrGotha.formatColumn(tblGames, LEFT_PLAYER_COL, locale.getString("game.white"), PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
+            JFrGotha.formatColumn(tblGames, RIGHT_PLAYER_COL, locale.getString("game.black"), PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
         }
         
  
@@ -291,7 +295,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
 
         pnlInternal.setLayout(null);
 
-        pnlGames.setBorder(javax.swing.BorderFactory.createTitledBorder("Games"));
+        pnlGames.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("game.games"))); // NOI18N
         pnlGames.setLayout(null);
 
         tblGames.setModel(new javax.swing.table.DefaultTableModel(
@@ -323,7 +327,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
         pnlGames.add(scpGames);
         scpGames.setBounds(10, 20, 440, 320);
 
-        btnPrint.setText("Print...");
+        btnPrint.setText(locale.getString("btn.print")); // NOI18N
         btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintActionPerformed(evt);
@@ -332,27 +336,27 @@ public class JFrGamesResults extends javax.swing.JFrame {
         pnlGames.add(btnPrint);
         btnPrint.setBounds(10, 430, 440, 30);
 
-        jLabel1.setText("Click on winner's name");
+        jLabel1.setText(locale.getString("game.results.help_1")); // NOI18N
         pnlGames.add(jLabel1);
         jLabel1.setBounds(10, 350, 260, 14);
 
-        jLabel2.setText("To cancel a result, click on table number ");
+        jLabel2.setText(locale.getString("game.results.help_2")); // NOI18N
         pnlGames.add(jLabel2);
         jLabel2.setBounds(10, 370, 390, 14);
 
-        jLabel4.setText("For special results, click on result");
+        jLabel4.setText(locale.getString("game.results.help_3")); // NOI18N
         pnlGames.add(jLabel4);
         jLabel4.setBounds(10, 390, 390, 14);
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        jLabel5.setText("Right click on result to toggle Normal/By default");
+        jLabel5.setText(locale.getString("game.results.help_3_1")); // NOI18N
         pnlGames.add(jLabel5);
         jLabel5.setBounds(40, 405, 360, 14);
 
         pnlInternal.add(pnlGames);
         pnlGames.setBounds(168, 10, 460, 470);
 
-        btnClose.setText("Close");
+        btnClose.setText(locale.getString("btn.close")); // NOI18N
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -361,17 +365,17 @@ public class JFrGamesResults extends javax.swing.JFrame {
         pnlInternal.add(btnClose);
         btnClose.setBounds(170, 490, 460, 30);
 
-        jLabel9.setText("Round");
+        jLabel9.setText(locale.getString("tournament.round")); // NOI18N
         pnlInternal.add(jLabel9);
         jLabel9.setBounds(10, 40, 50, 14);
         pnlInternal.add(txfSearchPlayer);
         txfSearchPlayer.setBounds(10, 220, 150, 20);
 
-        jLabel3.setText("Search for a player");
+        jLabel3.setText(locale.getString("player.search")); // NOI18N
         pnlInternal.add(jLabel3);
         jLabel3.setBounds(10, 200, 130, 14);
 
-        btnSearch.setText("Search/Next");
+        btnSearch.setText(locale.getString("player.btn_search")); // NOI18N
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);
@@ -389,7 +393,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
         spnRoundNumber.setBounds(70, 30, 40, 30);
 
         btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.setText("help");
+        btnHelp.setText(locale.getString("btn.help")); // NOI18N
         btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpActionPerformed(evt);
@@ -398,7 +402,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
         pnlInternal.add(btnHelp);
         btnHelp.setBounds(10, 490, 140, 30);
 
-        ckbTeamOrder.setText("Team presentation");
+        ckbTeamOrder.setText(locale.getString("game.team_presentation")); // NOI18N
         ckbTeamOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ckbTeamOrderActionPerformed(evt);
@@ -555,8 +559,8 @@ public class JFrGamesResults extends javax.swing.JFrame {
         tblGames.clearSelection();
         if (rowNumber == -1) {
             JOptionPane.showMessageDialog(this,
-                    "No player with the specified name is paired in round " + (this.processedRoundNumber + 1),
-                    "Message", JOptionPane.ERROR_MESSAGE);
+                    locale.format("game.pairing.player_not_participating_in_round", this.processedRoundNumber + 1),
+                    locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
         } else {
             tblGames.setRowSelectionAllowed(true);
             tblGames.clearSelection();
@@ -614,7 +618,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
         try {
             if (!tournament.isOpen()) cleanClose();
             this.lastComponentsUpdateTime = tournament.getCurrentTournamentTime();
-            setTitle("Games .. Results. " + tournament.getFullName());
+            setTitle(locale.format("game.results.window_title", tournament.getFullName()));
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGamesResults.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -626,9 +630,8 @@ public class JFrGamesResults extends javax.swing.JFrame {
             Logger.getLogger(JFrGamesPair.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (this.processedRoundNumber >= nbRounds) {
-            JOptionPane.showMessageDialog(this, "The number of rounds has been modified."
-                    + "\n" + "Current round will be consequently changed",
-                    "Games Results Message", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("tournament.round_count_changed"),
+                    locale.getString("alert.message"), JOptionPane.WARNING_MESSAGE);
             this.processedRoundNumber = nbRounds - 1;
         }
         

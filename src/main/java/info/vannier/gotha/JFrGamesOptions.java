@@ -9,6 +9,8 @@ import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ru.gofederation.gotha.util.GothaLocale;
+
 /**
  *
  * @author  Administrateur
@@ -18,6 +20,8 @@ public class JFrGamesOptions extends javax.swing.JFrame {
     private static final long REFRESH_DELAY = 2000;
     private long lastComponentsUpdateTime = 0;
     private TournamentInterface tournament;
+
+    private final GothaLocale locale = GothaLocale.getCurrentLocale();
 
     private volatile boolean running = true;
     javax.swing.Timer timer = null;
@@ -96,11 +100,11 @@ public class JFrGamesOptions extends javax.swing.JFrame {
 
         pnlGam.setLayout(null);
 
-        jLabel2.setText("Goban size");
+        jLabel2.setText(locale.getString("game.goban_size")); // NOI18N
         pnlGam.add(jLabel2);
         jLabel2.setBounds(10, 30, 160, 14);
 
-        jLabel3.setText("Komi");
+        jLabel3.setText(locale.getString("game.komi")); // NOI18N
         pnlGam.add(jLabel3);
         jLabel3.setBounds(10, 80, 160, 14);
 
@@ -122,7 +126,7 @@ public class JFrGamesOptions extends javax.swing.JFrame {
         pnlGam.add(txfKomi);
         txfKomi.setBounds(170, 80, 50, 20);
 
-        btnClose.setText("Close");
+        btnClose.setText(locale.getString("btn.close")); // NOI18N
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -132,7 +136,7 @@ public class JFrGamesOptions extends javax.swing.JFrame {
         btnClose.setBounds(140, 460, 200, 30);
 
         btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.setText("help");
+        btnHelp.setText(locale.getString("btn.help")); // NOI18N
         btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpActionPerformed(evt);
@@ -141,10 +145,10 @@ public class JFrGamesOptions extends javax.swing.JFrame {
         pnlGam.add(btnHelp);
         btnHelp.setBounds(10, 460, 110, 30);
 
-        pnlTime.setBorder(javax.swing.BorderFactory.createTitledBorder("Thinking time"));
+        pnlTime.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("game.thinking_time"))); // NOI18N
         pnlTime.setLayout(null);
 
-        jLabel1.setText("Basic time (min)");
+        jLabel1.setText(locale.getString("game.thinking_time.basic_time")); // NOI18N
         pnlTime.add(jLabel1);
         jLabel1.setBounds(10, 30, 120, 14);
 
@@ -159,7 +163,7 @@ public class JFrGamesOptions extends javax.swing.JFrame {
 
         grpComplTimeSystem.add(rdbSuddenDeath);
         rdbSuddenDeath.setSelected(true);
-        rdbSuddenDeath.setText("Sudden death system");
+        rdbSuddenDeath.setText(locale.getString("game.thinking_time.sudden_death")); // NOI18N
         rdbSuddenDeath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rdbComplTimeSystemActionPerformed(evt);
@@ -169,7 +173,7 @@ public class JFrGamesOptions extends javax.swing.JFrame {
         rdbSuddenDeath.setBounds(10, 60, 200, 20);
 
         grpComplTimeSystem.add(rdbStdByoYomi);
-        rdbStdByoYomi.setText("Standard Byo-yomi system");
+        rdbStdByoYomi.setText(locale.getString("game.thinking_time.standard_byo-yomi")); // NOI18N
         rdbStdByoYomi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rdbComplTimeSystemActionPerformed(evt);
@@ -179,7 +183,7 @@ public class JFrGamesOptions extends javax.swing.JFrame {
         rdbStdByoYomi.setBounds(10, 100, 280, 20);
 
         grpComplTimeSystem.add(rdbCanByoYomi);
-        rdbCanByoYomi.setText("Canadian Byo-yomi system");
+        rdbCanByoYomi.setText(locale.getString("game.thinking_time.canadian_byo-yomi")); // NOI18N
         rdbCanByoYomi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rdbComplTimeSystemActionPerformed(evt);
@@ -189,7 +193,7 @@ public class JFrGamesOptions extends javax.swing.JFrame {
         rdbCanByoYomi.setBounds(10, 150, 210, 20);
 
         grpComplTimeSystem.add(rdbFischer);
-        rdbFischer.setText("Fischer system");
+        rdbFischer.setText(locale.getString("game.thinking_time.fischer_system")); // NOI18N
         rdbFischer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rdbComplTimeSystemActionPerformed(evt);
@@ -198,7 +202,7 @@ public class JFrGamesOptions extends javax.swing.JFrame {
         pnlTime.add(rdbFischer);
         rdbFischer.setBounds(10, 200, 200, 20);
 
-        lblFischerTime.setText("Bonus time(seconds)");
+        lblFischerTime.setText(locale.getString("game.thinking_time.bonus_time_seconds")); // NOI18N
         pnlTime.add(lblFischerTime);
         lblFischerTime.setBounds(100, 220, 130, 20);
 
@@ -211,7 +215,7 @@ public class JFrGamesOptions extends javax.swing.JFrame {
         pnlTime.add(txfFischerTime);
         txfFischerTime.setBounds(230, 220, 40, 20);
 
-        lblStdTime.setText("Time(seconds)");
+        lblStdTime.setText(locale.getString("game.thinking_time.time_seconds")); // NOI18N
         pnlTime.add(lblStdTime);
         lblStdTime.setBounds(130, 120, 100, 20);
 
@@ -224,7 +228,7 @@ public class JFrGamesOptions extends javax.swing.JFrame {
         pnlTime.add(txfStdTime);
         txfStdTime.setBounds(230, 120, 40, 20);
 
-        lblCanTime.setText("Time(seconds)");
+        lblCanTime.setText(locale.getString("game.thinking_time.time_seconds")); // NOI18N
         pnlTime.add(lblCanTime);
         lblCanTime.setBounds(130, 170, 100, 20);
 
@@ -253,14 +257,14 @@ public class JFrGamesOptions extends javax.swing.JFrame {
         lblEGFClass.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblEGFClass.setForeground(new java.awt.Color(255, 0, 0));
         lblEGFClass.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblEGFClass.setText("EGF class X");
+        lblEGFClass.setText(locale.getString("game.thinking_time.egf_class")); // NOI18N
         pnlTime.add(lblEGFClass);
         lblEGFClass.setBounds(10, 280, 290, 30);
 
         lblAT.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblAT.setForeground(new java.awt.Color(255, 0, 0));
         lblAT.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblAT.setText("Adjusted time = 0");
+        lblAT.setText(locale.getString("game.thinking_time.adjusted_time")); // NOI18N
         pnlTime.add(lblAT);
         lblAT.setBounds(10, 260, 290, 20);
 
@@ -547,18 +551,13 @@ public class JFrGamesOptions extends javax.swing.JFrame {
 
         // What EGF Adjusted time ?
         int at = tournament.egfAdjustedTime();
-        String strAT = "Adjusted time = " + (at / 60) + " min";
-        
-        this.lblAT.setText(strAT);
+
+        this.lblAT.setText(locale.format("game.thinking_time.adjusted_time", at / 60));
         
         // What EGF class ?
         String strClass = tournament.egfClass();
-        String strMes = "";
-        if (strClass.equals("C")) strMes = "EGF class C";
-        if (strClass.equals("B")) strMes = "EGF class B";
-        if (strClass.equals("A")) strMes = "EGF class A";
-        
-        this.lblEGFClass.setText(strMes);
+
+        this.lblEGFClass.setText(locale.format("game.thinking_time.egf_class", strClass));
         
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
