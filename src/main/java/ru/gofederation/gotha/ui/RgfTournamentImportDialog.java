@@ -112,6 +112,7 @@ public final class RgfTournamentImportDialog extends JDialog implements RgfTourn
 
                 tournamentOpener.openTournament(report.tournament);
             }
+            dispose();
         } catch (IOException | PlayerException e) {
             e.printStackTrace();
             // TODO

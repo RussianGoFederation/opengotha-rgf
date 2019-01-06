@@ -2632,6 +2632,21 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
     }
 
     private void mniPublishRGFActionPerformed(java.awt.event.ActionEvent evt) {
+        if (null == tournament) {
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            if (tournament.teamsList().size() > 0) {
+                JOptionPane.showMessageDialog(this, locale.getString("tournament.rgf.publish.teams_not_implemented"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (RemoteException e) {
+            // TODO
+            return;
+        }
+
         RgfTournamentExportDialog exportPane = new RgfTournamentExportDialog(this, locale.getString("tournament.rgf.publish.window_title"), true, tournament);
         exportPane.setVisible(true);
     }

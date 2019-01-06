@@ -29,5 +29,5 @@ public final class RgfTournamentPlayerApplication {
     @SerializedName("TownName")
     String townName;
     @SerializedName("Rating")
-    Integer rating;
+    String rating;
 }

@@ -36,6 +36,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
@@ -46,13 +47,13 @@ import ru.gofederation.gotha.model.rgf.RgfTournamentState;
 import ru.gofederation.gotha.util.GothaLocale;
 
 public final class RgfTournamentExportDialog extends JDialog {
+    private final GothaLocale locale = GothaLocale.getCurrentLocale();
     private final JCheckBox finishTournament;
 
     public RgfTournamentExportDialog(Frame owner, String title, boolean modal, TournamentInterface tournament) {
         super(owner, title, modal);
 
-        GothaLocale locale = GothaLocale.getCurrentLocale();
-        GeneralParameterSet gps = null;
+         GeneralParameterSet gps = null;
         try {
             gps = tournament.getTournamentParameterSet().getGeneralParameterSet();
         } catch (RemoteException e) {
@@ -95,6 +96,11 @@ public final class RgfTournamentExportDialog extends JDialog {
     }
 
     private void exportTournament(TournamentInterface tournament) {
+        String authentication = new RgbAuthentication().getAuthenticationHeader(this);
+        if (null == authentication) {
+            return;
+        }
+
         HttpURLConnection conn = null;
         try {
             RgfTournament rgfTournament = new RgfTournament(tournament);
@@ -109,10 +115,20 @@ public final class RgfTournamentExportDialog extends JDialog {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
             conn.setRequestProperty("Content-Length", Integer.toString(data.length));
+            conn.setRequestProperty("Authorization", authentication);
             conn.setDoOutput(true);
             try (OutputStream out = conn.getOutputStream()) {
                 out.write(data);
             }
+
+            if (conn.getResponseCode() == 403) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    locale.getString("tournament.rgf.publish.authentication_required_message"),
+                    locale.getString("tournament.rgf.publish.authentication_failed"),
+                    JOptionPane.WARNING_MESSAGE);
+            }
+
             try (InputStream in = conn.getInputStream()) {
 
             }
