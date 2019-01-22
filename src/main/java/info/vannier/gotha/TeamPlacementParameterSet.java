@@ -142,7 +142,13 @@ public final class TeamPlacementParameterSet implements java.io.Serializable{
      * @return the plaCriteria
      */
     public TeamPlacementCriterion[] getPlaCriteria() {
-        return Arrays.copyOf(plaCriteria, plaCriteria.length);
+        TeamPlacementCriterion[] c = Arrays.copyOf(plaCriteria, plaCriteria.length);
+        for (int i = 0; i < c.length; i++) {
+            if (c[i] == null) {
+                c[i] = TeamPlacementCriterion.NUL;
+            }
+        }
+        return c;
     }
 
     /**

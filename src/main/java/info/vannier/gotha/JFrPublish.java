@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import ru.gofederation.gotha.util.GothaLocale;
 
 /**
  *
@@ -19,6 +20,8 @@ public class JFrPublish extends javax.swing.JFrame {
     private long lastComponentsUpdateTime = 0;
     private TournamentInterface tournament;
     int processedRoundNumber = 0;
+
+	private final GothaLocale locale = GothaLocale.getCurrentLocale();
 
     /**
      * Creates new form JFrPublish
@@ -138,7 +141,7 @@ public class JFrPublish extends javax.swing.JFrame {
         });
         getContentPane().setLayout(null);
 
-        btnClose.setText("Close");
+        btnClose.setText(locale.getString("btn.close")); // NOI18N
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -149,15 +152,15 @@ public class JFrPublish extends javax.swing.JFrame {
 
         pnlContents.setLayout(null);
 
-        pnlPL.setBorder(javax.swing.BorderFactory.createTitledBorder("Players list"));
+        pnlPL.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.player_list"))); // NOI18N
         pnlPL.setLayout(null);
 
-        jLabel1.setText("Sort players by");
+        jLabel1.setText(locale.getString("publish.player_list.sort_by")); // NOI18N
         pnlPL.add(jLabel1);
         jLabel1.setBounds(20, 20, 100, 20);
 
         grpSortType.add(rdbSortByName);
-        rdbSortByName.setText("Name");
+        rdbSortByName.setText(locale.getString("publish.player_list.sort_by.name")); // NOI18N
         rdbSortByName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allSortRDBActionPerformed(evt);
@@ -166,7 +169,7 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlPL.add(rdbSortByName);
         rdbSortByName.setBounds(130, 10, 70, 23);
 
-        rdbSortByRank.setText("Rank");
+        rdbSortByRank.setText(locale.getString("publish.player_list.sort_by.rank")); // NOI18N
         rdbSortByRank.setEnabled(false);
         rdbSortByRank.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -177,7 +180,7 @@ public class JFrPublish extends javax.swing.JFrame {
         rdbSortByRank.setBounds(210, 30, 70, 23);
 
         grpSortType.add(rdbSortByGrade);
-        rdbSortByGrade.setText("Grade");
+        rdbSortByGrade.setText(locale.getString("publish.player_list.sort_by.grade")); // NOI18N
         rdbSortByGrade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allSortRDBActionPerformed(evt);
@@ -189,15 +192,15 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlContents.add(pnlPL);
         pnlPL.setBounds(10, 20, 300, 70);
 
-        pnlGL.setBorder(javax.swing.BorderFactory.createTitledBorder("Games list"));
+        pnlGL.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.games_list"))); // NOI18N
         pnlGL.setLayout(null);
 
-        jLabel3.setText("For each player, show");
+        jLabel3.setText(locale.getString("publish.games_list.for_each_player")); // NOI18N
         pnlGL.add(jLabel3);
-        jLabel3.setBounds(10, 20, 150, 14);
+        jLabel3.setBounds(10, 20, 150, 19);
 
         ckbShowPlayerGrade.setSelected(true);
-        ckbShowPlayerGrade.setText("Grade");
+        ckbShowPlayerGrade.setText(locale.getString("publish.games_list.grade")); // NOI18N
         ckbShowPlayerGrade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allContentsCKBActionPerformed(evt);
@@ -206,7 +209,7 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlGL.add(ckbShowPlayerGrade);
         ckbShowPlayerGrade.setBounds(40, 40, 180, 20);
 
-        ckbShowPlayerCountry.setText("Country");
+        ckbShowPlayerCountry.setText(locale.getString("publish.games_list.country")); // NOI18N
         ckbShowPlayerCountry.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allContentsCKBActionPerformed(evt);
@@ -216,7 +219,7 @@ public class JFrPublish extends javax.swing.JFrame {
         ckbShowPlayerCountry.setBounds(40, 60, 180, 20);
 
         ckbShowPlayerClub.setSelected(true);
-        ckbShowPlayerClub.setText("Club");
+        ckbShowPlayerClub.setText(locale.getString("publish.games_list.club")); // NOI18N
         ckbShowPlayerClub.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allContentsCKBActionPerformed(evt);
@@ -228,11 +231,11 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlContents.add(pnlGL);
         pnlGL.setBounds(380, 20, 300, 120);
 
-        pnlNPP.setBorder(javax.swing.BorderFactory.createTitledBorder("Non-playing players list"));
+        pnlNPP.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.non_playing_player_list"))); // NOI18N
         pnlNPP.setLayout(null);
 
         ckbShowByePlayer.setSelected(true);
-        ckbShowByePlayer.setText("Show Bye players if any");
+        ckbShowByePlayer.setText(locale.getString("publish.non_playing_player_list.show_bye")); // NOI18N
         ckbShowByePlayer.setEnabled(false);
         ckbShowByePlayer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -243,7 +246,7 @@ public class JFrPublish extends javax.swing.JFrame {
         ckbShowByePlayer.setBounds(10, 20, 230, 20);
 
         ckbShowNotPairedPlayers.setSelected(true);
-        ckbShowNotPairedPlayers.setText("Show unpaired players if any");
+        ckbShowNotPairedPlayers.setText(locale.getString("publish.non_playing_player_list.show_unpaired")); // NOI18N
         ckbShowNotPairedPlayers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allContentsCKBActionPerformed(evt);
@@ -252,7 +255,7 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlNPP.add(ckbShowNotPairedPlayers);
         ckbShowNotPairedPlayers.setBounds(10, 40, 230, 20);
 
-        ckbShowNotParticipatingPlayers.setText("Show not participating players if any");
+        ckbShowNotParticipatingPlayers.setText(locale.getString("publish.non_playing_player_list.show_not_participating")); // NOI18N
         ckbShowNotParticipatingPlayers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allContentsCKBActionPerformed(evt);
@@ -262,7 +265,7 @@ public class JFrPublish extends javax.swing.JFrame {
         ckbShowNotParticipatingPlayers.setBounds(10, 60, 230, 20);
 
         ckbShowNotFinallyRegisteredPlayers.setSelected(true);
-        ckbShowNotFinallyRegisteredPlayers.setText("Show not Finally registered players if any");
+        ckbShowNotFinallyRegisteredPlayers.setText(locale.getString("publish.non_playing_player_list.show_non_final_registration")); // NOI18N
         ckbShowNotFinallyRegisteredPlayers.setEnabled(false);
         ckbShowNotFinallyRegisteredPlayers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -275,10 +278,10 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlContents.add(pnlNPP);
         pnlNPP.setBounds(10, 110, 300, 110);
 
-        pnlSt.setBorder(javax.swing.BorderFactory.createTitledBorder("Standings"));
+        pnlSt.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.standings"))); // NOI18N
         pnlSt.setLayout(null);
 
-        ckbDisplayNPPlayers.setText("display non-playing players");
+        ckbDisplayNPPlayers.setText(locale.getString("publish.standings.display_non_playing")); // NOI18N
         ckbDisplayNPPlayers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allContentsCKBActionPerformed(evt);
@@ -288,7 +291,7 @@ public class JFrPublish extends javax.swing.JFrame {
         ckbDisplayNPPlayers.setBounds(10, 60, 180, 23);
 
         ckbDisplayNumCol.setSelected(true);
-        ckbDisplayNumCol.setText("display Num column");
+        ckbDisplayNumCol.setText(locale.getString("publish.standings.display_num")); // NOI18N
         ckbDisplayNumCol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allContentsCKBActionPerformed(evt);
@@ -298,7 +301,7 @@ public class JFrPublish extends javax.swing.JFrame {
         ckbDisplayNumCol.setBounds(210, 30, 180, 23);
 
         ckbDisplayPlCol.setSelected(true);
-        ckbDisplayPlCol.setText("display Pl column");
+        ckbDisplayPlCol.setText(locale.getString("publish.standings.display_pl")); // NOI18N
         ckbDisplayPlCol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allContentsCKBActionPerformed(evt);
@@ -307,7 +310,7 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlSt.add(ckbDisplayPlCol);
         ckbDisplayPlCol.setBounds(210, 50, 180, 23);
 
-        ckbDisplayCoCol.setText("display Country column");
+        ckbDisplayCoCol.setText(locale.getString("publish.standings.display_country")); // NOI18N
         ckbDisplayCoCol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allContentsCKBActionPerformed(evt);
@@ -316,7 +319,7 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlSt.add(ckbDisplayCoCol);
         ckbDisplayCoCol.setBounds(210, 70, 180, 20);
 
-        ckbDisplayClCol.setText("display Club column");
+        ckbDisplayClCol.setText(locale.getString("publish.standings.display_club")); // NOI18N
         ckbDisplayClCol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allContentsCKBActionPerformed(evt);
@@ -325,12 +328,12 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlSt.add(ckbDisplayClCol);
         ckbDisplayClCol.setBounds(210, 90, 180, 23);
 
-        jLabel5.setText("Game format");
+        jLabel5.setText(locale.getString("publish.standings.game_format")); // NOI18N
         pnlSt.add(jLabel5);
         jLabel5.setBounds(400, 50, 110, 20);
 
         grpGameFormat.add(rdbGameFormatFull);
-        rdbGameFormatFull.setText("Full (123+/w4)");
+        rdbGameFormatFull.setText(locale.getString("publish.standings.game_format_full")); // NOI18N
         rdbGameFormatFull.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allGameFormatRDBActionPerformed(evt);
@@ -340,7 +343,7 @@ public class JFrPublish extends javax.swing.JFrame {
         rdbGameFormatFull.setBounds(510, 40, 150, 23);
 
         grpGameFormat.add(rdbGameFormatShort);
-        rdbGameFormatShort.setText("Short (123+)");
+        rdbGameFormatShort.setText(locale.getString("publish.standings.game_format_short")); // NOI18N
         rdbGameFormatShort.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allGameFormatRDBActionPerformed(evt);
@@ -352,11 +355,11 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlContents.add(pnlSt);
         pnlSt.setBounds(10, 230, 670, 150);
 
-        pnlML.setBorder(javax.swing.BorderFactory.createTitledBorder("Matches list (Team tournaments)"));
+        pnlML.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.matches"))); // NOI18N
         pnlML.setLayout(null);
 
         ckbDisplayIndGames.setSelected(true);
-        ckbDisplayIndGames.setText("also display Individual games");
+        ckbDisplayIndGames.setText(locale.getString("publish.matches.individual_games")); // NOI18N
         ckbDisplayIndGames.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allContentsCKBActionPerformed(evt);
@@ -368,15 +371,15 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlContents.add(pnlML);
         pnlML.setBounds(380, 150, 300, 70);
 
-        tpnPublish.addTab("Contents", pnlContents);
+        tpnPublish.addTab(locale.getString("publish.contents"), pnlContents); // NOI18N
 
         pnlPar.setLayout(null);
 
-        pnlActions.setBorder(javax.swing.BorderFactory.createTitledBorder("Publish buttons will launch the following actions"));
+        pnlActions.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.buttons_action"))); // NOI18N
         pnlActions.setLayout(null);
 
         ckbPrint.setSelected(true);
-        ckbPrint.setText("Print");
+        ckbPrint.setText(locale.getString("publish.buttons_action_print")); // NOI18N
         ckbPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allParametersCKBActionPerformed(evt);
@@ -386,7 +389,7 @@ public class JFrPublish extends javax.swing.JFrame {
         ckbPrint.setBounds(10, 30, 81, 23);
 
         ckbExportToLocalFile.setSelected(true);
-        ckbExportToLocalFile.setText("Export to a local file");
+        ckbExportToLocalFile.setText(locale.getString("publish.buttons_action_export_file")); // NOI18N
         ckbExportToLocalFile.setEnabled(false);
         ckbExportToLocalFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -399,11 +402,11 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlPar.add(pnlActions);
         pnlActions.setBounds(20, 20, 400, 430);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("HTML export files"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.html_export"))); // NOI18N
         jPanel1.setLayout(null);
 
-        ckbHTMLAutoscroll.setText("Include an autoscroll feature into HTM Files");
-        ckbHTMLAutoscroll.setToolTipText("interesting to display html files with a projector");
+        ckbHTMLAutoscroll.setText(locale.getString("publish.html_export_autoscroll")); // NOI18N
+        ckbHTMLAutoscroll.setToolTipText(locale.getString("publish.html_export_autoscroll_tooltip")); // NOI18N
         ckbHTMLAutoscroll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 allParametersCKBActionPerformed(evt);
@@ -415,13 +418,13 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlPar.add(jPanel1);
         jPanel1.setBounds(440, 20, 340, 90);
 
-        tpnPublish.addTab("Parameters", pnlPar);
+        tpnPublish.addTab(locale.getString("publish.parameters"), pnlPar); // NOI18N
 
         pnlPub.setLayout(null);
 
-        jLabel2.setText("Round");
+        jLabel2.setText(locale.getString("tournament.round")); // NOI18N
         pnlPub.add(jLabel2);
-        jLabel2.setBounds(310, 30, 60, 14);
+        jLabel2.setBounds(310, 30, 60, 19);
 
         spnRoundNumber.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -431,7 +434,7 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlPub.add(spnRoundNumber);
         spnRoundNumber.setBounds(390, 20, 40, 30);
 
-        btnPublishPL.setText("Publish players list");
+        btnPublishPL.setText(locale.getString("publish.publish_player_list")); // NOI18N
         btnPublishPL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPublishPLActionPerformed(evt);
@@ -442,7 +445,7 @@ public class JFrPublish extends javax.swing.JFrame {
 
         btnPrintTP.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         btnPrintTP.setForeground(new java.awt.Color(0, 0, 255));
-        btnPrintTP.setText("Print Tournament settings");
+        btnPrintTP.setText(locale.getString("publish.publish_print_tournament_settings")); // NOI18N
         btnPrintTP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintTPActionPerformed(evt);
@@ -451,7 +454,7 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlPub.add(btnPrintTP);
         btnPrintTP.setBounds(10, 130, 230, 25);
 
-        btnPublishGL.setText("Publish games of round 1 ");
+        btnPublishGL.setText(locale.getString("publish.publish_games")); // NOI18N
         btnPublishGL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPublishGLActionPerformed(evt);
@@ -462,7 +465,7 @@ public class JFrPublish extends javax.swing.JFrame {
 
         btnPrintNPP.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         btnPrintNPP.setForeground(new java.awt.Color(0, 0, 255));
-        btnPrintNPP.setText("Print non-playing players of Round 1");
+        btnPrintNPP.setText(locale.getString("publish.publish_print_non_playing_players")); // NOI18N
         btnPrintNPP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintNPPActionPerformed(evt);
@@ -471,7 +474,7 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlPub.add(btnPrintNPP);
         btnPrintNPP.setBounds(260, 170, 260, 25);
 
-        btnPublishSt.setText("Publish standings after round 1");
+        btnPublishSt.setText(locale.getString("publish.publish_standings")); // NOI18N
         btnPublishSt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPublishStActionPerformed(evt);
@@ -481,7 +484,7 @@ public class JFrPublish extends javax.swing.JFrame {
         btnPublishSt.setBounds(260, 220, 260, 40);
 
         btnExportRLEGF.setForeground(new java.awt.Color(255, 0, 0));
-        btnExportRLEGF.setText("Export results for EGF rating list");
+        btnExportRLEGF.setText(locale.getString("publish.publish_export_egf")); // NOI18N
         btnExportRLEGF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExportRLEGFActionPerformed(evt);
@@ -491,7 +494,7 @@ public class JFrPublish extends javax.swing.JFrame {
         btnExportRLEGF.setBounds(540, 80, 230, 50);
 
         btnExportRLFFG.setForeground(new java.awt.Color(255, 0, 0));
-        btnExportRLFFG.setText("Export results for FFG rating list");
+        btnExportRLFFG.setText(locale.getString("publish.publish_export_ffg")); // NOI18N
         btnExportRLFFG.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExportRLFFGActionPerformed(evt);
@@ -501,7 +504,7 @@ public class JFrPublish extends javax.swing.JFrame {
         btnExportRLFFG.setBounds(540, 180, 230, 50);
 
         btnExportRLAGA.setForeground(new java.awt.Color(255, 0, 0));
-        btnExportRLAGA.setText("Export results for AGA rating list");
+        btnExportRLAGA.setText(locale.getString("publish.publish_export_aga")); // NOI18N
         btnExportRLAGA.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExportRLAGAActionPerformed(evt);
@@ -511,7 +514,7 @@ public class JFrPublish extends javax.swing.JFrame {
         btnExportRLAGA.setBounds(540, 280, 230, 50);
 
         btnExportPlayersCSV.setForeground(new java.awt.Color(0, 128, 0));
-        btnExportPlayersCSV.setText("Export players in csv format");
+        btnExportPlayersCSV.setText(locale.getString("publish.publish_export_players_csv")); // NOI18N
         btnExportPlayersCSV.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExportPlayersCSVActionPerformed(evt);
@@ -520,10 +523,10 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlPub.add(btnExportPlayersCSV);
         btnExportPlayersCSV.setBounds(540, 380, 230, 50);
 
-        pnlTeams.setBorder(javax.swing.BorderFactory.createTitledBorder("Teams"));
+        pnlTeams.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.teams"))); // NOI18N
         pnlTeams.setLayout(null);
 
-        btnPublishTL.setText("Publish teams list");
+        btnPublishTL.setText(locale.getString("publish.publish_teams_list")); // NOI18N
         btnPublishTL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPublishTLActionPerformed(evt);
@@ -532,7 +535,7 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlTeams.add(btnPublishTL);
         btnPublishTL.setBounds(10, 30, 230, 50);
 
-        btnPublishML.setText("Publish matches list after round 1");
+        btnPublishML.setText(locale.getString("publish.publish_team_matches")); // NOI18N
         btnPublishML.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPublishMLActionPerformed(evt);
@@ -541,7 +544,7 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlTeams.add(btnPublishML);
         btnPublishML.setBounds(260, 30, 260, 50);
 
-        btnPublishTS.setText("Publish team standings after round 1");
+        btnPublishTS.setText(locale.getString("publish.publish_team_standings")); // NOI18N
         btnPublishTS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPublishTSActionPerformed(evt);
@@ -555,7 +558,7 @@ public class JFrPublish extends javax.swing.JFrame {
 
         btnPrintRS.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         btnPrintRS.setForeground(new java.awt.Color(0, 0, 255));
-        btnPrintRS.setText("Print result sheets of Round 1");
+        btnPrintRS.setText(locale.getString("publish.publish_print_result_sheets")); // NOI18N
         btnPrintRS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintRSActionPerformed(evt);
@@ -564,13 +567,13 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlPub.add(btnPrintRS);
         btnPrintRS.setBounds(260, 130, 260, 25);
 
-        tpnPublish.addTab("Publish", pnlPub);
+        tpnPublish.addTab(locale.getString("publish.publish"), pnlPub); // NOI18N
 
         getContentPane().add(tpnPublish);
         tpnPublish.setBounds(0, 0, 790, 490);
 
         btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.setText("help");
+        btnHelp.setText(locale.getString("btn.help")); // NOI18N
         btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpActionPerformed(evt);
@@ -604,7 +607,7 @@ public class JFrPublish extends javax.swing.JFrame {
 
     private void btnExportRLFFGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportRLFFGActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -617,8 +620,7 @@ public class JFrPublish extends javax.swing.JFrame {
         }
         GeneralParameterSet gps = tps.getGeneralParameterSet();
         if (gps.getStrSize().length() == 0 || gps.getBasicTime() == 0) {
-            JOptionPane.showMessageDialog(this, "Goban size and Thinking time should be documented."
-                + "\nSee Options .. Games menu item", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("publish.err_goban_size_or_thinking_time"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -638,7 +640,7 @@ public class JFrPublish extends javax.swing.JFrame {
 
     private void btnExportRLAGAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportRLAGAActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
         // If some players have no aga id, should OpenGotha generate dummy Ids ?
@@ -655,9 +657,7 @@ public class JFrPublish extends javax.swing.JFrame {
             }
         }
         if (nbPWithoutId > 0) {
-            String strPrompt = "" + nbPWithoutId + " players have no AGA Id."
-            + "\nOpenGotha will generate dummy AGA Ids in the \"99xxx\" range.";
-            int response = JOptionPane.showConfirmDialog(this, strPrompt, "Message", JOptionPane.OK_CANCEL_OPTION);
+            int response = JOptionPane.showConfirmDialog(this, locale.format("publish.err_no_aga_id", nbPWithoutId), locale.getString("alert.message"), JOptionPane.OK_CANCEL_OPTION);
 
             if (response == JOptionPane.CANCEL_OPTION) {
                 return;
@@ -675,7 +675,7 @@ public class JFrPublish extends javax.swing.JFrame {
 
     private void btnExportRLEGFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportRLEGFActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -686,8 +686,7 @@ public class JFrPublish extends javax.swing.JFrame {
         // Keep tournamentDirectory
         Gotha.exportDirectory = f.getParentFile();
 
-        int response = JOptionPane.showConfirmDialog(this, "Do you want to keep by default results in the exportFile ?"
-            + "\nClick Yes to keep them or No to drop them", "Message", JOptionPane.YES_NO_CANCEL_OPTION);
+        int response = JOptionPane.showConfirmDialog(this, locale.getString("publish.err_keep_default_results"), locale.getString("alert.message"), JOptionPane.YES_NO_CANCEL_OPTION);
 
         if (response == JOptionPane.YES_OPTION) {
             ExternalDocument.generateH9File(tournament, f, true);
@@ -705,7 +704,7 @@ public class JFrPublish extends javax.swing.JFrame {
 
     private void btnExportPlayersCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportPlayersCSVActionPerformed
         if (tournament == null) {
-            JOptionPane.showMessageDialog(this, "No currently open tournament", "Message", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -1026,9 +1025,7 @@ public class JFrPublish extends javax.swing.JFrame {
             Logger.getLogger(JFrGamesPair.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (this.processedRoundNumber >= nbRounds) {
-            JOptionPane.showMessageDialog(this, "The number of rounds has been modified."
-                    + "\n" + "Current round will be consequently changed",
-                    "Games Pair Message", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, locale.getString("tournament.round_count_changed"), locale.getString("alert.warning"), JOptionPane.WARNING_MESSAGE);
             this.processedRoundNumber = nbRounds - 1;
         }
 
@@ -1056,13 +1053,12 @@ public class JFrPublish extends javax.swing.JFrame {
     private void updatePnlPub() throws RemoteException {
         this.spnRoundNumber.setValue(this.processedRoundNumber + 1);
 
-        String strRound = " round " + (processedRoundNumber + 1);
-        this.btnPublishGL.setText("Publish games of" + strRound);
-        this.btnPrintRS.setText("Print result sheets of" + strRound);
-        this.btnPrintNPP.setText("Print non-playing players of" + strRound);
-        this.btnPublishSt.setText("Publish standings after" + strRound);
-        this.btnPublishML.setText("Publish matches list of" + strRound);
-        this.btnPublishTS.setText("Publish team standings after" + strRound);
+        this.btnPublishGL.setText(locale.format("publish.publish_games", processedRoundNumber + 1));
+        this.btnPrintRS.setText(locale.format("publish.publish_print_result_sheets", processedRoundNumber + 1));
+        this.btnPrintNPP.setText(locale.format("publish.publish_print_non_playing_players", processedRoundNumber + 1));
+        this.btnPublishSt.setText(locale.format("publish.publish_standings", processedRoundNumber + 1));
+        this.btnPublishML.setText(locale.format("publish.publish_team_matches", processedRoundNumber + 1));
+        this.btnPublishTS.setText(locale.format("publish.publish_team_standings", processedRoundNumber + 1));
 
         int nbTeams = tournament.teamsList().size();
         boolean bT = false;

@@ -54,7 +54,9 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="btnClose">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Close"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="l10n/strings.properties" key="btn.close" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCloseActionPerformed"/>
@@ -78,7 +80,9 @@
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Contents">
-                <Property name="tabTitle" type="java.lang.String" value="Contents"/>
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="publish.contents" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -91,7 +95,9 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Players list"/>
+                    <TitledBorder title="Players list">
+                      <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="publish.player_list" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </TitledBorder>
                   </Border>
                 </Property>
               </Properties>
@@ -107,7 +113,9 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="jLabel1">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Sort players by"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.player_list.sort_by" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -120,7 +128,9 @@
                     <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                       <ComponentRef name="grpSortType"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Name"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.player_list.sort_by.name" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allSortRDBActionPerformed"/>
@@ -133,7 +143,9 @@
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="rdbSortByRank">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Rank"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.player_list.sort_by.rank" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
@@ -150,7 +162,9 @@
                     <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                       <ComponentRef name="grpSortType"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Grade"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.player_list.sort_by.grade" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allSortRDBActionPerformed"/>
@@ -167,7 +181,9 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Games list"/>
+                    <TitledBorder title="Games list">
+                      <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="publish.games_list" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </TitledBorder>
                   </Border>
                 </Property>
               </Properties>
@@ -183,7 +199,9 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="jLabel3">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="For each player, show"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.games_list.for_each_player" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -194,7 +212,9 @@
                 <Component class="javax.swing.JCheckBox" name="ckbShowPlayerGrade">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="Grade"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.games_list.grade" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allContentsCKBActionPerformed"/>
@@ -207,7 +227,9 @@
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="ckbShowPlayerCountry">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Country"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.games_list.country" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allContentsCKBActionPerformed"/>
@@ -221,7 +243,9 @@
                 <Component class="javax.swing.JCheckBox" name="ckbShowPlayerClub">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="Club"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.games_list.club" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allContentsCKBActionPerformed"/>
@@ -238,7 +262,9 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Non-playing players list"/>
+                    <TitledBorder title="Non-playing players list">
+                      <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="publish.non_playing_player_list" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </TitledBorder>
                   </Border>
                 </Property>
               </Properties>
@@ -255,7 +281,9 @@
                 <Component class="javax.swing.JCheckBox" name="ckbShowByePlayer">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="Show Bye players if any"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.non_playing_player_list.show_bye" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
@@ -270,7 +298,9 @@
                 <Component class="javax.swing.JCheckBox" name="ckbShowNotPairedPlayers">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="Show unpaired players if any"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.non_playing_player_list.show_unpaired" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allContentsCKBActionPerformed"/>
@@ -283,7 +313,9 @@
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="ckbShowNotParticipatingPlayers">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Show not participating players if any"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.non_playing_player_list.show_not_participating" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allContentsCKBActionPerformed"/>
@@ -297,7 +329,9 @@
                 <Component class="javax.swing.JCheckBox" name="ckbShowNotFinallyRegisteredPlayers">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="Show not Finally registered players if any"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.non_playing_player_list.show_non_final_registration" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
@@ -315,7 +349,9 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Standings"/>
+                    <TitledBorder title="Standings">
+                      <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="publish.standings" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </TitledBorder>
                   </Border>
                 </Property>
               </Properties>
@@ -331,7 +367,9 @@
               <SubComponents>
                 <Component class="javax.swing.JCheckBox" name="ckbDisplayNPPlayers">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="display non-playing players"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.standings.display_non_playing" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allContentsCKBActionPerformed"/>
@@ -345,7 +383,9 @@
                 <Component class="javax.swing.JCheckBox" name="ckbDisplayNumCol">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="display Num column"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.standings.display_num" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allContentsCKBActionPerformed"/>
@@ -359,7 +399,9 @@
                 <Component class="javax.swing.JCheckBox" name="ckbDisplayPlCol">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="display Pl column"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.standings.display_pl" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allContentsCKBActionPerformed"/>
@@ -372,7 +414,9 @@
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="ckbDisplayCoCol">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="display Country column"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.standings.display_country" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allContentsCKBActionPerformed"/>
@@ -385,7 +429,9 @@
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="ckbDisplayClCol">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="display Club column"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.standings.display_club" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allContentsCKBActionPerformed"/>
@@ -398,7 +444,9 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel5">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Game format"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.standings.game_format" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -411,7 +459,9 @@
                     <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                       <ComponentRef name="grpGameFormat"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Full (123+/w4)"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.standings.game_format_full" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allGameFormatRDBActionPerformed"/>
@@ -427,7 +477,9 @@
                     <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                       <ComponentRef name="grpGameFormat"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Short (123+)"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.standings.game_format_short" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allGameFormatRDBActionPerformed"/>
@@ -444,7 +496,9 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Matches list (Team tournaments)"/>
+                    <TitledBorder title="Matches list (Team tournaments)">
+                      <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="publish.matches" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </TitledBorder>
                   </Border>
                 </Property>
               </Properties>
@@ -461,7 +515,9 @@
                 <Component class="javax.swing.JCheckBox" name="ckbDisplayIndGames">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="also display Individual games"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.matches.individual_games" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allContentsCKBActionPerformed"/>
@@ -480,7 +536,9 @@
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Parameters">
-                <Property name="tabTitle" type="java.lang.String" value="Parameters"/>
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="publish.parameters" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -493,7 +551,9 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Publish buttons will launch the following actions"/>
+                    <TitledBorder title="Publish buttons will launch the following actions">
+                      <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="publish.buttons_action" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </TitledBorder>
                   </Border>
                 </Property>
               </Properties>
@@ -510,7 +570,9 @@
                 <Component class="javax.swing.JCheckBox" name="ckbPrint">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="Print"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.buttons_action_print" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allParametersCKBActionPerformed"/>
@@ -524,7 +586,9 @@
                 <Component class="javax.swing.JCheckBox" name="ckbExportToLocalFile">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="Export to a local file"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.buttons_action_export_file" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
@@ -542,7 +606,9 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="HTML export files"/>
+                    <TitledBorder title="HTML export files">
+                      <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="publish.html_export" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </TitledBorder>
                   </Border>
                 </Property>
               </Properties>
@@ -558,8 +624,12 @@
               <SubComponents>
                 <Component class="javax.swing.JCheckBox" name="ckbHTMLAutoscroll">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Include an autoscroll feature into HTM Files"/>
-                    <Property name="toolTipText" type="java.lang.String" value="interesting to display html files with a projector"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.html_export_autoscroll" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
+                    <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.html_export_autoscroll_tooltip" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allParametersCKBActionPerformed"/>
@@ -578,7 +648,9 @@
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Publish">
-                <Property name="tabTitle" type="java.lang.String" value="Publish"/>
+                <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="publish.publish" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -589,7 +661,9 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Round"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="tournament.round" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -609,7 +683,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnPublishPL">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Publish players list"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="publish.publish_player_list" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPublishPLActionPerformed"/>
@@ -628,7 +704,9 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="0" red="0" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Print Tournament settings"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="publish.publish_print_tournament_settings" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintTPActionPerformed"/>
@@ -641,7 +719,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnPublishGL">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Publish games of round 1 "/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="publish.publish_games" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPublishGLActionPerformed"/>
@@ -660,7 +740,9 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="0" red="0" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Print non-playing players of Round 1"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="publish.publish_print_non_playing_players" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintNPPActionPerformed"/>
@@ -673,7 +755,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnPublishSt">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Publish standings after round 1"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="publish.publish_standings" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPublishStActionPerformed"/>
@@ -689,7 +773,9 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="0" green="0" red="ff" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Export results for EGF rating list"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="publish.publish_export_egf" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportRLEGFActionPerformed"/>
@@ -705,7 +791,9 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="0" green="0" red="ff" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Export results for FFG rating list"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="publish.publish_export_ffg" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportRLFFGActionPerformed"/>
@@ -721,7 +809,9 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="0" green="0" red="ff" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Export results for AGA rating list"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="publish.publish_export_aga" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportRLAGAActionPerformed"/>
@@ -737,7 +827,9 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="0" green="80" red="0" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Export players in csv format"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="publish.publish_export_players_csv" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportPlayersCSVActionPerformed"/>
@@ -752,7 +844,9 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Teams"/>
+                    <TitledBorder title="Teams">
+                      <ResourceString PropertyName="titleX" bundle="l10n/strings.properties" key="tournament.teams" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </TitledBorder>
                   </Border>
                 </Property>
               </Properties>
@@ -768,7 +862,9 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="btnPublishTL">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Publish teams list"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.publish_teams_list" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPublishTLActionPerformed"/>
@@ -781,7 +877,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnPublishML">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Publish matches list after round 1"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.publish_team_matches" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPublishMLActionPerformed"/>
@@ -794,7 +892,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnPublishTS">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Publish team standings after round 1"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="l10n/strings.properties" key="publish.publish_team_standings" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPublishTSActionPerformed"/>
@@ -815,7 +915,9 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="0" red="0" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Print result sheets of Round 1"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="l10n/strings.properties" key="publish.publish_print_result_sheets" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintRSActionPerformed"/>
@@ -835,7 +937,9 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/info/vannier/gotha/gothalogo16.jpg"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="help"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="l10n/strings.properties" key="btn.help" replaceFormat="locale.getString(&quot;{key}&quot;)"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHelpActionPerformed"/>
