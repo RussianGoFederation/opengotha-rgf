@@ -52,9 +52,9 @@ public class HandicapParameterSet implements java.io.Serializable{
     
     public void initForMM(){
         hdBasedOnMMS = true;
-        hdNoHdRankThreshold = 0;
-        hdCorrection = 1;       
-        hdCeiling = 9;
+        hdNoHdRankThreshold = -30;
+        hdCorrection = 0;
+        hdCeiling = 0;
     }
     
     public void initForSwiss(){

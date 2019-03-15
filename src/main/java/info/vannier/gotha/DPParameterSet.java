@@ -59,7 +59,7 @@ public class DPParameterSet implements java.io.Serializable{
     }
     
     public void initForMM(){
-        this.gameFormat = DPParameterSet.DP_GAME_FORMAT_FULL;
+        this.gameFormat = DPParameterSet.DP_GAME_FORMAT_SHORT;
         commonInit();
     }
     
