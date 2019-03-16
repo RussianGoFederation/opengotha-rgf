@@ -118,6 +118,8 @@ final class RgfTournamentList extends JPanel {
 
     private void onListDownloaded(TableModel model) {
         tournamentsTable.setModel(model);
+        tournamentsTable.getColumnModel().getColumn(TableModel.NAME_COLUMN).setPreferredWidth(400);
+        tournamentsTable.getColumnModel().getColumn(TableModel.LOCATION_COLUMN).setPreferredWidth(150);
         tournamentsTable.setAutoCreateRowSorter(true);
         // Twice to sort descending
         tournamentsTable.getRowSorter().toggleSortOrder(TableModel.END_DATE_COLUMN);
