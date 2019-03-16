@@ -102,6 +102,7 @@ public final class RgfTournamentExportDialog extends JDialog {
         }
 
         HttpURLConnection conn = null;
+        boolean hadError = false;
         try {
             RgfTournament rgfTournament = new RgfTournament(tournament);
             rgfTournament.state = finishTournament.isSelected() ?
@@ -132,14 +133,24 @@ public final class RgfTournamentExportDialog extends JDialog {
             try (InputStream in = conn.getInputStream()) {
 
             }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
+            hadError = true;
+            JOptionPane.showMessageDialog(
+                this,
+                locale.format("tournament.rgf.publish.error", e.getLocalizedMessage()),
+                locale.getString("alert.error"),
+                JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } finally {
             if (null != conn) conn.disconnect();
+            if (!hadError) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    locale.getString("tournament.rgf.publish.success"),
+                    locale.getString("alert.message"),
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+            dispose();
         }
     }
 }
