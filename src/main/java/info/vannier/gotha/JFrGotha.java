@@ -1391,7 +1391,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
     }
 
     private void updateTitle() {
-        String strTitle = Gotha.getGothaVersionnedName() + " ";
+        String strTitle = Gotha.getGothaReleaseVersion() + " ";
         switch (Gotha.runningMode) {
             case Gotha.RUNNING_MODE_SRV:
                 strTitle += locale.getString("start.server") + ".  ";

@@ -40,6 +40,17 @@ tasks.withType(ProcessResources).each { task ->
     }
 }
 
+task createProperties {
+    doLast {
+        new File("$buildDir/resources/main/build.properties").withWriter { w ->
+            Properties p = new Properties()
+            p['version'] = project.version.toString()
+            p.store w, null
+        }
+    }
+}
+processResources.dependsOn createProperties
+
 startScripts {
     doLast {
         unixScript.text = unixScript.text.replace('cd "`dirname \\"$PRG\\"`/../.." >/dev/null', 'cd "`dirname \\"$PRG\\"`" >/dev/null')

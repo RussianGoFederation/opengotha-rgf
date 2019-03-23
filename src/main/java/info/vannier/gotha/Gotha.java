@@ -10,6 +10,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
 import java.rmi.RemoteException;
@@ -66,6 +67,31 @@ public class Gotha {
 
     static File exportDirectory;
     static File exportHTMLDirectory;
+
+    private static Properties buildProperties = null;
+    public static Properties getBuildProperties() {
+        if (null == buildProperties) {
+            try (InputStream in = Gotha.class.getClassLoader().getResourceAsStream("build.properties")) {
+                Properties properties = new Properties();
+                properties.load(in);
+                buildProperties = properties;
+            } catch (IOException e) {
+                e.printStackTrace();
+                // TODO
+            }
+        }
+
+        return buildProperties;
+    }
+
+    public static String getGothaReleaseVersion() {
+        Properties properties = getBuildProperties();
+
+        if (properties.containsKey("version"))
+            return getGothaName() + " " + properties.getProperty("version");
+        else
+            return getGothaVersionnedName();
+    }
 
     public static String getGothaVersionNumber() {
         int mainVersion = (int) (GOTHA_VERSION / 100L);
