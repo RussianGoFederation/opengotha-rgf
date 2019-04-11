@@ -110,6 +110,13 @@ public final class RgfTournament {
             RgfGame rgfGame = new RgfGame(game, playersMap, this);
             games.add(rgfGame);
         }
+        Player[] byePlayers = tournament.getByePlayers();
+        for (int i = 0; i < byePlayers.length; i++) {
+            Player player = byePlayers[i];
+            if (null != player && playersMap.containsKey(tournament.getPlayerByKeyString(player.getKeyString()))) {
+                games.add(RgfGame.forFreePlayer(i, playersMap.get(player), this));
+            }
+        }
     }
 
     public RgfTournamentImportReport toGothaTournament(int importMode) throws PlayerException, RemoteException {

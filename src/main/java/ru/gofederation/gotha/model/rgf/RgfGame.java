@@ -42,6 +42,8 @@ public final class RgfGame {
     @SerializedName("handicap")
     public int handicap;
 
+    private RgfGame() {}
+
     public RgfGame(Game game, Map<Player, RgfPlayer> playersMap, RgfTournament tournament) {
         if (playersMap.containsKey(game.getBlackPlayer()))
             player1 = playersMap.get(game.getBlackPlayer()).id;
