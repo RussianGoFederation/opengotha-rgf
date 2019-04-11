@@ -45,39 +45,39 @@ public final class RgfTournament {
     public static final int IMPORT_MODE_APPLICATIONS = 0;
     public static final int IMPORT_MODE_WALLIST = 1;
 
-    @SerializedName("Id")
+    @SerializedName("id")
     public int id;
-    @SerializedName("Name")
+    @SerializedName("name")
     public String name;
-    @SerializedName("Location")
+    @SerializedName("location")
     public String location;
-    @SerializedName("StartDate")
+    @SerializedName("startDate")
     @JsonAdapter(value = GsonDateAdapter.class)
     public Date startDate;
-    @SerializedName("EndDate")
+    @SerializedName("endDate")
     @JsonAdapter(value = GsonDateAdapter.class)
     public Date endDate;
-    @SerializedName("System")
+    @SerializedName("system")
     public String system;
-    @SerializedName("RoundCount")
+    @SerializedName("roundCount")
     public int roundCount;
-    @SerializedName("Komi")
+    @SerializedName("komi")
     public float komi;
-    @SerializedName("State")
+    @SerializedName("state")
     public RgfTournamentState state;
-    @SerializedName("Category")
+    @SerializedName("category")
     public String category;
-    @SerializedName("Timing")
+    @SerializedName("timing")
     public Timing timing;
-    @SerializedName("Applications")
+    @SerializedName("applications")
     public Set<RgfTournamentPlayerApplication> applications;
-    @SerializedName("Players")
+    @SerializedName("players")
     public Set<RgfPlayer> players;
-    @SerializedName("Games")
+    @SerializedName("games")
     public Set<RgfGame> games;
-    @SerializedName("ApplicationsCount")
+    @SerializedName("applicationsCount")
     public int applicationsCount;
-    @SerializedName("ParticipantsCount")
+    @SerializedName("participantsCount")
     public int participantsCount;
 
     public RgfTournament(TournamentInterface tournament) throws RemoteException {

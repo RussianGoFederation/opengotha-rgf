@@ -20,7 +20,7 @@ package ru.gofederation.gotha.model.rgf;
 import com.google.gson.annotations.SerializedName;
 
 public final class RgfTournamentDetails {
-    @SerializedName("Data")
+    @SerializedName("data")
     public Data data;
 
     public RgfTournament getTournament() {
@@ -28,7 +28,7 @@ public final class RgfTournamentDetails {
     }
 
     public static final class Data {
-        @SerializedName("Tournament")
+        @SerializedName("tournament")
         RgfTournament tournament;
     }
 }

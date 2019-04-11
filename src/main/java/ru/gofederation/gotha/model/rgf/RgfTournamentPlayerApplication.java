@@ -20,14 +20,14 @@ package ru.gofederation.gotha.model.rgf;
 import com.google.gson.annotations.SerializedName;
 
 public final class RgfTournamentPlayerApplication {
-    @SerializedName("PlayerId")
+    @SerializedName("playerId")
     int rgfId;
-    @SerializedName("FirstName")
+    @SerializedName("firstName")
     String firstName;
-    @SerializedName("LastName")
+    @SerializedName("lastName")
     String lastName;
-    @SerializedName("TownName")
+    @SerializedName("townName")
     String townName;
-    @SerializedName("Rating")
+    @SerializedName("rating")
     String rating;
 }

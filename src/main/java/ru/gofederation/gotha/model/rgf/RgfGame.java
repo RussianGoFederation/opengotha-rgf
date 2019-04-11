@@ -25,21 +25,21 @@ import info.vannier.gotha.Game;
 import info.vannier.gotha.Player;
 
 public final class RgfGame {
-    @SerializedName("Player1")
+    @SerializedName("player1")
     public int player1;
-    @SerializedName("Player2")
+    @SerializedName("player2")
     public int player2;
-    @SerializedName("Color")
+    @SerializedName("color")
     public RgfGameColor color;
-    @SerializedName("Result")
+    @SerializedName("result")
     public RgfGameResult result;
-    @SerializedName("Round")
+    @SerializedName("round")
     public int round;
-    @SerializedName("Board")
+    @SerializedName("board")
     public int board;
-    @SerializedName("Komi")
+    @SerializedName("komi")
     public float komi;
-    @SerializedName("Handicap")
+    @SerializedName("handicap")
     public int handicap;
 
     public RgfGame(Game game, Map<Player, RgfPlayer> playersMap, RgfTournament tournament) {
@@ -49,10 +49,23 @@ public final class RgfGame {
             player2 = playersMap.get(game.getWhitePlayer()).id;
         color = game.isKnownColor() ? RgfGameColor.PLAYER_1_BLACK : RgfGameColor.UNKNOWN;
         result = RgfGameResult.fromGothaCode(game.getResult());
-        round = game.getRoundNumber();
+        round = game.getRoundNumber() + 1;
         board = game.getTableNumber();
         komi = tournament.komi;
         handicap = game.getHandicap();
+    }
+
+    public static RgfGame forFreePlayer(int round, RgfPlayer rgfPlayer, RgfTournament tournament) {
+        RgfGame game = new RgfGame();
+        game.player1 = -1;
+        game.player2 = rgfPlayer.id;
+        game.color = RgfGameColor.UNKNOWN;
+        game.result = RgfGameResult.PLAYER_2_WIN;
+        game.round = round + 1;
+        game.board = 0;
+        game.komi = tournament.komi;
+        game.handicap = 0;
+        return game;
     }
 
     public Game toGothaGame(Map<Integer, Player> playersMap) {

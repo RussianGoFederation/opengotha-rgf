@@ -27,25 +27,25 @@ import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.RatingOrigin;
 
 public final class RgfPlayer {
-    @SerializedName("Id")
+    @SerializedName("id")
     public int id;
-    @SerializedName("PlayerId")
+    @SerializedName("playerId")
     public int playerId;
-    @SerializedName("FirstName")
+    @SerializedName("firstName")
     public String firstName;
-    @SerializedName("LastName")
+    @SerializedName("lastName")
     public String lastName;
-    @SerializedName("MM0")
+    @SerializedName("mm0")
     public int mm0;
-    @SerializedName("MMF")
+    @SerializedName("mmF")
     public int mmf;
-    @SerializedName("SOS")
+    @SerializedName("sos")
     public int sos4;
-    @SerializedName("SODOS")
+    @SerializedName("sodos")
     public int sodos4;
-    @SerializedName("Rating")
+    @SerializedName("rating")
     public int rating;
-    @SerializedName("Place")
+    @SerializedName("place")
     public int place;
 
     public RgfPlayer(ScoredPlayer player, GeneralParameterSet gps, int place) {

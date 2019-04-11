@@ -22,7 +22,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Set;
 
 public final class RgfRatingList {
-    @SerializedName("Data")
+    @SerializedName("data")
     Data data;
 
     public Set<Player> getPlayers() {
@@ -31,28 +31,28 @@ public final class RgfRatingList {
     }
 
     public static final class Data {
-        @SerializedName("Players")
+        @SerializedName("players")
         Set<Player> players;
     }
 
     public static final class Player {
-        @SerializedName("Id")
+        @SerializedName("id")
         public int id;
-        @SerializedName("FirstName")
+        @SerializedName("firstName")
         public String firstName;
-        @SerializedName("LastName")
+        @SerializedName("lastName")
         public String lastName;
-        @SerializedName("FirstNameLat")
+        @SerializedName("firstNameLat")
         public String firstNameLat;
-        @SerializedName("LastNameLat")
+        @SerializedName("lastNameLat")
         public String lastNameLat;
-        @SerializedName("TownName")
+        @SerializedName("townName")
         public String townName;
-        @SerializedName("Rating")
+        @SerializedName("rating")
         public int rawRating;
-        @SerializedName("RatingDrift")
+        @SerializedName("ratingDrift")
         public int ratingDrift;
-        @SerializedName("LastGame")
+        @SerializedName("lastGame")
         public String lastGame;
     }
 }

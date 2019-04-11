@@ -22,7 +22,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public final class RgfTournamentList {
-    @SerializedName("Data")
+    @SerializedName("data")
     public Data data;
 
     public List<RgfTournament> getTournaments() {
@@ -30,7 +30,7 @@ public final class RgfTournamentList {
     }
 
     public static final class Data {
-        @SerializedName("Tournaments")
+        @SerializedName("tournaments")
         List<RgfTournament> tournaments;
     }
 }
