@@ -24,9 +24,10 @@ import net.miginfocom.swing.MigLayout;
 import java.awt.Frame;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.rmi.RemoteException;
@@ -131,7 +132,15 @@ public final class RgfTournamentExportDialog extends JDialog {
             }
 
             try (InputStream in = conn.getInputStream()) {
+                try (Reader reader = new InputStreamReader(in)) {
+                    RgfTournament postedTournament = new Gson().fromJson(reader, ru.gofederation.gotha.model.rgf.RgfTournamentDetails.class)
+                        .getTournament();
 
+                    if (null != postedTournament) {
+                        tournament.getTournamentParameterSet().getGeneralParameterSet().setRgfId(postedTournament.id);
+                        tournament.setLastTournamentModificationTime(tournament.getCurrentTournamentTime());
+                    }
+                }
             }
         } catch (IOException e) {
             hadError = true;
