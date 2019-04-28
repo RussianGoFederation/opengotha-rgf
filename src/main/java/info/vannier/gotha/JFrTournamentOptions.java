@@ -2698,8 +2698,8 @@ public class JFrTournamentOptions extends JFrame {
     }
 
     private void customInitComponents()throws RemoteException{
-        int w = JFrGotha.MEDIUM_FRAME_WIDTH;
-        int h = JFrGotha.MEDIUM_FRAME_HEIGHT;
+        int w = JFrGotha.BIG_FRAME_WIDTH;
+        int h = JFrGotha.BIG_FRAME_HEIGHT;
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((dim.width - w)/2, (dim.height -h)/2, w, h);
         setIconImage(Gotha.getIconImage());
