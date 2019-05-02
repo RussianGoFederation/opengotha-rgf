@@ -44,6 +44,7 @@ import javax.swing.JRadioButton;
 import info.vannier.gotha.GeneralParameterSet;
 import info.vannier.gotha.TournamentInterface;
 import ru.gofederation.gotha.model.rgf.RgfTournament;
+import ru.gofederation.gotha.model.rgf.RgfTournamentDetails;
 import ru.gofederation.gotha.model.rgf.RgfTournamentState;
 import ru.gofederation.gotha.util.GothaLocale;
 
@@ -109,12 +110,19 @@ public final class RgfTournamentExportDialog extends JDialog {
             rgfTournament.state = finishTournament.isSelected() ?
                 RgfTournamentState.MODERATION : RgfTournamentState.CONDUCTING;
             Gson gson = new Gson();
-            String json = gson.toJson(rgfTournament);
+            String json = gson.toJson(new RgfTournamentDetails(rgfTournament));
             byte[] data = json.getBytes(Charset.forName("UTF-8"));
 
-            URL url = new URL("https://gofederation.ru/api/v3.0/tournaments/" + rgfTournament.id);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
+            URL url;
+            if (rgfTournament.id > 0) {
+                url = new URL("https://gofederation.ru/api/v3.0/tournaments/" + rgfTournament.id);
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("PUT");
+            } else {
+                url = new URL("https://gofederation.ru/api/v3.0/tournaments");
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+            }
             conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
             conn.setRequestProperty("Content-Length", Integer.toString(data.length));
             conn.setRequestProperty("Authorization", authentication);

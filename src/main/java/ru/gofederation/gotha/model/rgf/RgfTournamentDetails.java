@@ -23,6 +23,11 @@ public final class RgfTournamentDetails {
     @SerializedName("data")
     public Data data;
 
+    public RgfTournamentDetails(RgfTournament tournament) {
+        this.data = new Data();
+        this.data.tournament = tournament;
+    }
+
     public RgfTournament getTournament() {
         return data.tournament;
     }
