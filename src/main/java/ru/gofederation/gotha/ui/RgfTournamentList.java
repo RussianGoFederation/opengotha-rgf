@@ -35,6 +35,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -149,7 +150,9 @@ final class RgfTournamentList extends JPanel {
                          Reader reader = new InputStreamReader(bais)) {
                         ru.gofederation.gotha.model.rgf.RgfTournamentList list =
                             new Gson().fromJson(reader, ru.gofederation.gotha.model.rgf.RgfTournamentList.class);
-                        tournaments = list.getTournaments();
+                        tournaments =  list.getTournaments().stream()
+                            .filter(t -> t.applicationsCount > 0)
+                            .collect(Collectors.toList());
                         EventQueue.invokeLater(() -> onListDownloaded(this));
                     }
                 } catch (IOException e) {

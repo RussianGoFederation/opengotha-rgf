@@ -1192,7 +1192,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         }
         try {
             JFrame jfr = new JFrGamesResults(tournament);   
-            displayFrame(jfr, JFrGotha.MEDIUM_FRAME_WIDTH, JFrGotha.MEDIUM_FRAME_HEIGHT);
+            displayFrame(jfr, JFrGotha.BIG_FRAME_WIDTH, JFrGotha.BIG_FRAME_HEIGHT);
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -2466,7 +2466,7 @@ private void mniTeamsPairingActionPerformed(java.awt.event.ActionEvent evt) {
     }
     try {
         JFrame jfr = new JFrTeamsPairing(tournament);
-        this.displayFrame(jfr, MEDIUM_FRAME_WIDTH, MEDIUM_FRAME_HEIGHT);
+        this.displayFrame(jfr, BIG_FRAME_WIDTH, BIG_FRAME_HEIGHT);
     } catch (RemoteException ex) {
         Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
     }
