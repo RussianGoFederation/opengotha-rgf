@@ -50,4 +50,22 @@ public final class Rating {
 
         throw new IllegalArgumentException("Not implemented");
     }
+
+    public static int rankToRating(RatingOrigin origin, int rank) {
+        // TODO test limits
+
+        if (origin == RGF) {
+            if (rank <= -20) {
+                return (rank + 30) * 60;
+            }
+
+            if (rank <= 0) {
+                return (rank + 20) * 75 + 600;
+            }
+
+            return rank * 100 + 2100;
+        }
+
+        throw new IllegalArgumentException("Not implemented");
+    }
 }

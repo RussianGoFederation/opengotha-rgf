@@ -72,7 +72,7 @@ public final class RgfPlayer {
             .setName(lastName)
             .setFirstName(firstName)
             .setRating(rating, RatingOrigin.RGF)
-            .setRank(info.vannier.gotha.Player.rankFromRating(rating))
+            .setRank(info.vannier.gotha.Player.rankFromRating(RatingOrigin.RGF, rating))
             .setRegistrationStatus(PlayerRegistrationStatus.FINAL)
             .build();
     }

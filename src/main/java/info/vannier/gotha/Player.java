@@ -4,6 +4,7 @@
 package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
 
 import static ru.gofederation.gotha.model.RatingOrigin.AGA;
@@ -452,7 +453,11 @@ public class Player implements java.io.Serializable{
      * Converts rating to rank
      * rank = (rating + 1000)/100 - 30; 
      */
-    public static int rankFromRating(int rating) {
+    public static int rankFromRating(RatingOrigin origin, int rating) {
+        if (origin.equals(RatingOrigin.RGF)) {
+            return Rating.ratingToRank(origin, rating);
+        }
+
         int rk = (rating + 950)/100 - 30;
         if (rk > 8 ) rk = 8;
         if (rk < -30) rk = -30;
@@ -463,7 +468,11 @@ public class Player implements java.io.Serializable{
      * Converts rank to rating
      * rating = (rank + 30) *100 - 1000; 
      */
-    public static int ratingFromRank(int rank) {
+    public static int ratingFromRank(RatingOrigin origin, int rank) {
+        if (origin.equals(RatingOrigin.RGF)) {
+            return Rating.rankToRating(origin, rank);
+        }
+
         return (rank + 30) * 100 - 900;     
     }
 

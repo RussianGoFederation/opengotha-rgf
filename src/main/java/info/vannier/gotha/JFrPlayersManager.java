@@ -1058,7 +1058,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
             rating = new Integer(txfRating.getText()).intValue();
         }catch(Exception e){
             strOrigin = "INI";
-            rating = Player.ratingFromRank(rank);
+            rating = Player.ratingFromRank(RatingOrigin.RGF, rank); // TODO: somehow set proper origin
         }
         
         int smmsCorrection;
@@ -1406,7 +1406,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         if (ratingOrigin == AGA) strRatingOrigin += " : " + rP.getStrRawRating();
         txfRatingOrigin.setText(strRatingOrigin);
         this.txfSMMSCorrection.setText("" + 0);
-        int rank = Player.rankFromRating(stdRating);
+        int rank = Player.rankFromRating(ratingOrigin, stdRating);
         if (this.rdbRankFromGrade.isSelected()) rank = Player.convertKDPToInt(rP.getStrGrade());
         txfRank.setText(Player.convertIntToKD(rank));
         txfGrade.setText(rP.getStrGrade());

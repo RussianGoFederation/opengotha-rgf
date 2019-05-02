@@ -59,6 +59,15 @@ public class RatingTest {
         }
     }
 
+    @DisplayName("Should convert rank to RGF rating")
+    @ParameterizedTest
+    @MethodSource("rgfRatingToRankData")
+    void testRankToRgfRatingConversion(int minRating, int maxRating, int rank) {
+        for (int rating = minRating; rating <= maxRating; rating++) {
+            assertEquals(minRating, Rating.rankToRating(RatingOrigin.RGF, rank));
+        }
+    }
+
     private static Stream<Arguments> clampRatingData() {
         return Stream.of(
             Arguments.of(RatingOrigin.RGF, -10, 0),
