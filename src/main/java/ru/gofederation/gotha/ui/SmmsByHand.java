@@ -67,25 +67,22 @@ public final class SmmsByHand extends JPanel {
         add(playerList, "spany, push, grow");
 
         btnRise = new JButton();
-        btnRise.addActionListener(event -> {
-            playerList.preserveSelection(() -> {
-                try {
-                    if (!selectionValidToRise()) return;
+        btnRise.addActionListener(event -> playerList.preserveSelection(() -> {
+            try {
+                if (!selectionValidToRise()) return;
 
-                    int[] selectedRows = playerList.getSelectedRows();
-                    GeneralParameterSet gps = tournament.getTournamentParameterSet().getGeneralParameterSet();
-                    for (int i = 0; i <= selectedRows[selectedRows.length - 1]; i++) {
-                        Player player = playerList.getPlayer(i);
-                        player.setSmmsByHand(player.smms(gps) + 1);
-                    }
-                } catch (RemoteException e) {
-                    // TODO
+                int[] selectedRows = playerList.getSelectedRows();
+                GeneralParameterSet gps = tournament.getTournamentParameterSet().getGeneralParameterSet();
+                for (int i = 0; i <= selectedRows[selectedRows.length - 1]; i++) {
+                    Player player = playerList.getPlayer(i);
+                    player.setSmmsByHand(player.smms(gps) + 1);
                 }
-                setTournamentUpdateTime();
-            });
-
-        });
-        add(btnRise, "sgx btn, h min*1.2, wrap");
+            } catch (RemoteException e) {
+                // TODO
+            }
+            setTournamentUpdateTime();
+        }));
+        add(btnRise, "gaptop 0:40lp:, sgx btn, h min*1.5, wrap");
 
         JLabel riseHelp = new JLabel(locale.getString("tournament.setup_smms_by_hand.btn_rise_help"));
         add(riseHelp, "hmax 50lp, wmax 500lp, wrap unrel:unrel*2");
