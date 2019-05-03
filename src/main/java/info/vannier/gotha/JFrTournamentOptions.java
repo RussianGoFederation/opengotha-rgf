@@ -856,7 +856,7 @@ public class JFrTournamentOptions extends JFrame {
     private void initPlacementControls() {
         String[] strCritLN = PlacementParameterSet.criteriaLongNames();
 
-        pnlPla.setLayout(new MigLayout("wrap 5, fill, debug", "[15%:15%:15%, sgx][sgx][sgx][sgx][32%:32%:32%]"));
+        pnlPla.setLayout(new MigLayout("wrap 5, fill", "[15%:15%:15%, sgx][sgx][sgx][sgx][32%:32%:32%]"));
 
         pnlPla.add(new JLabel(locale.getString("tournament.options.placement.criterion1")));
         pnlPla.add(new JLabel(locale.getString("tournament.options.placement.criterion2")));
@@ -885,6 +885,7 @@ public class JFrTournamentOptions extends JFrame {
                 cbxCritFocusLost(evt);
             }
         });
+        pnlPla.add(cbxCrit3);
 
         cbxCrit4.setModel(new DefaultComboBoxModel<>(strCritLN));
         cbxCrit4.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1326,7 +1327,7 @@ public class JFrTournamentOptions extends JFrame {
     private void initTeamPlacementControls() {
         String[] strCritLN = TeamPlacementParameterSet.criteriaLongNames();
 
-        pnlTPL.setLayout(new MigLayout("wrap 6, debug", "[grow, sg]"));
+        pnlTPL.setLayout(new MigLayout("wrap 6", "[grow, sg]"));
 
         pnlTPL.add(new JLabel(locale.getString("tournament.options.placement.criterion1")));
         pnlTPL.add(new JLabel(locale.getString("tournament.options.placement.criterion2")));
