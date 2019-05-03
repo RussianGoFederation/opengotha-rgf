@@ -15,18 +15,17 @@
  * along with OpenGotha. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.gofederation.gotha.model.rgf;
+package info.vannier.gotha;
 
-import java.util.ArrayList;
-import java.util.List;
+public class TournamentPlayerDoubleException extends TournamentException {
+    private final String playerName;
 
-import info.vannier.gotha.TournamentInterface;
+    TournamentPlayerDoubleException(String message, String playerName) {
+        super(message);
+        this.playerName = playerName;
+    }
 
-public final class RgfTournamentImportReport {
-    public boolean hadError = false;
-    public StringBuilder reportBuilder = new StringBuilder();
-    public TournamentInterface tournament = null;
-    public int players = 0;
-    public int games = 0;
-    List<String> playerDoubles = new ArrayList<>();
+    public String getPlayerName() {
+        return playerName;
+    }
 }

@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ru.gofederation.gotha.util.GothaLocale;
+
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
 
 public class Tournament extends UnicastRemoteObject implements TournamentInterface, java.io.Serializable {
@@ -333,8 +335,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     @Override
     public boolean addPlayer(Player p) throws TournamentException, RemoteException {
         if (hmPlayers.size() >= Gotha.MAX_NUMBER_OF_PLAYERS) {
-            throw new TournamentException("Player" + " " + p.fullName() + " " + "could not be inserted"
-                    + "\n" + "Maximum number of players exceeded");
+            throw new TournamentException(GothaLocale.getCurrentLocale().format("tournament.error.player_limit_reached", p.fullName()));
         }
         Player homonymPlayer = homonymPlayerOf(p);
         if (homonymPlayer == null) {
@@ -342,7 +343,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             this.setChangeSinceLastSave(true);
             return true;
         } else {
-            throw new TournamentException("Player" + " " + p.fullName() + " " + "could not be inserted" + "\n" + "A player named" + " " + homonymPlayer.fullName() + " " + "already exists in the tournament");
+            throw new TournamentPlayerDoubleException(GothaLocale.getCurrentLocale().format("tournament.error.player_double", p.fullName(), homonymPlayer.fullName()), p.fullName());
         }
     }
 

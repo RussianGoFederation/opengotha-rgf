@@ -37,8 +37,10 @@ import info.vannier.gotha.Tournament;
 import info.vannier.gotha.TournamentException;
 import info.vannier.gotha.TournamentInterface;
 import info.vannier.gotha.TournamentParameterSet;
+import info.vannier.gotha.TournamentPlayerDoubleException;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
+import ru.gofederation.gotha.util.GothaLocale;
 import ru.gofederation.gotha.util.GsonDateAdapter;
 
 public final class RgfTournament {
@@ -151,6 +153,9 @@ public final class RgfTournament {
                     try {
                         tournament.addPlayer(builder.build());
                         report.players += 1;
+                    } catch (TournamentPlayerDoubleException e) {
+                        report.playerDoubles.add(e.getPlayerName());
+                        report.hadError = true;
                     } catch (TournamentException e) {
                         report.reportBuilder.append(e.getMessage()).append("\n");
                         report.hadError = true;
@@ -188,6 +193,9 @@ public final class RgfTournament {
         }
 
         report.tournament = tournament;
+        if (report.playerDoubles.size() > 0) {
+            report.reportBuilder.append(String.join(", ", report.playerDoubles));
+        }
 
         return report;
     }
