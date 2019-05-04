@@ -285,68 +285,44 @@ public class JFrTournamentOptions extends JFrame {
         final Font smallFont = scaleFont(ckbAvoidMixingCategories, 0.8f);
         final Font smallItalicFont = smallFont.deriveFont(smallFont.getStyle() | Font.ITALIC);
 
-        dlgChangeSystem.getContentPane().setLayout(null);
+        dlgChangeSystem.getContentPane().setLayout(new MigLayout("flowy, insets dialog, fill", null, "[]unrel[][][][][]unrel[]unrel[]"));
+
+        ckbResetParameters.setText(locale.getString("tournament.reset.keep_system_reset_settings"));
+        ckbResetParameters.addActionListener(this::ckbResetParametersActionPerformed);
+        dlgChangeSystem.getContentPane().add(ckbResetParameters);
+
+        lblNewSystem.setText(locale.getString("tournament.reset.new_system"));
+        dlgChangeSystem.getContentPane().add(lblNewSystem, "gapbefore indent");
 
         grpNewSystem.add(rdbMcMahon);
-        rdbMcMahon.setFont(new java.awt.Font("Tahoma", 0, 10));
         rdbMcMahon.setSelected(true);
         rdbMcMahon.setText(locale.getString("tournament.system.mcmahon"));
         rdbMcMahon.setToolTipText(locale.getString("tournament.system.mcmahon_tooltip"));
-        rdbMcMahon.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        rdbMcMahon.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        dlgChangeSystem.getContentPane().add(rdbMcMahon);
+        dlgChangeSystem.getContentPane().add(rdbMcMahon, "gapbefore indent");
 
         grpNewSystem.add(rdbSwiss);
-        rdbSwiss.setFont(new java.awt.Font("Tahoma", 0, 10));
         rdbSwiss.setText(locale.getString("tournament.system.swiss"));
         rdbSwiss.setToolTipText(locale.getString("tournament.system.swiss_tooltip"));
-        rdbSwiss.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        rdbSwiss.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        dlgChangeSystem.getContentPane().add(rdbSwiss);
+        dlgChangeSystem.getContentPane().add(rdbSwiss, "gapbefore indent");
 
         grpNewSystem.add(rdbSwissCat);
-        rdbSwissCat.setFont(new java.awt.Font("Tahoma", 0, 10));
         rdbSwissCat.setText(locale.getString("tournament.system.swiss_cat"));
         rdbSwissCat.setToolTipText(locale.getString("tournament.system.swiss_cat_tooltip"));
-        rdbSwissCat.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        rdbSwissCat.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        dlgChangeSystem.getContentPane().add(rdbSwissCat);
+        dlgChangeSystem.getContentPane().add(rdbSwissCat, "gapbefore indent");
 
-        lblNewSystem.setText(locale.getString("tournament.reset.new_system"));
-        dlgChangeSystem.getContentPane().add(lblNewSystem);
+        lblRecommended.setText(locale.getString("tournament.system.swiss_cat_recommended"));
+        dlgChangeSystem.getContentPane().add(lblRecommended, "gapbefore 40lp");
 
-        jLabel19.setFont(new java.awt.Font("Tahoma", 2, 11));
-        jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel19.setText(locale.getString("tournament.reset.change_system_will_reset_settings"));
         dlgChangeSystem.getContentPane().add(jLabel19);
 
         btnDlgChangeSystemOK.setText(locale.getString("btn.ok"));
-        btnDlgChangeSystemOK.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDlgChangeSystemOKActionPerformed(evt);
-            }
-        });
-        dlgChangeSystem.getContentPane().add(btnDlgChangeSystemOK);
+        btnDlgChangeSystemOK.addActionListener(this::btnDlgChangeSystemOKActionPerformed);
+        dlgChangeSystem.getContentPane().add(btnDlgChangeSystemOK, "split 2, flowx, tag ok");
 
         btnDlgChangeSystemCancel.setText(locale.getString("btn.cancel"));
-        btnDlgChangeSystemCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDlgChangeSystemCancelActionPerformed(evt);
-            }
-        });
-        dlgChangeSystem.getContentPane().add(btnDlgChangeSystemCancel);
-
-        lblRecommended.setFont(new java.awt.Font("Tahoma", 0, 10));
-        lblRecommended.setText(locale.getString("tournament.system.swiss_cat_recommended"));
-        dlgChangeSystem.getContentPane().add(lblRecommended);
-
-        ckbResetParameters.setText(locale.getString("tournament.reset.keep_system_reset_settings"));
-        ckbResetParameters.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ckbResetParametersActionPerformed(evt);
-            }
-        });
-        dlgChangeSystem.getContentPane().add(ckbResetParameters);
+        btnDlgChangeSystemCancel.addActionListener(this::btnDlgChangeSystemCancelActionPerformed);
+        dlgChangeSystem.getContentPane().add(btnDlgChangeSystemCancel, "tag cancel");
 
         dlgEditClubsGroups.getContentPane().setLayout(null);
 
@@ -1494,17 +1470,9 @@ public class JFrTournamentOptions extends JFrame {
         if (tournamentType == TournamentParameterSet.TYPE_SWISSCAT) rdbSwissCat.setSelected(true);
          
         dlgChangeSystem.setVisible(true);
-        dlgChangeSystem.setTitle("Change tournament system");
-        this.displayFrame(dlgChangeSystem, JFrGotha.SMALL_FRAME_WIDTH, JFrGotha.SMALL_FRAME_HEIGHT);
+        dlgChangeSystem.setTitle(locale.getString("tournament.reset"));
+        dlgChangeSystem.pack();
 
-    }
-    
-    private void displayFrame(Window win, int w, int h){
-        Rectangle newRect = this.getBounds();
-        win.setLocation(newRect.x + 10, newRect.y + 60);
-        win.setSize(w, h);
-        win.setVisible(true);
-        win.setIconImage(Gotha.getIconImage());
     }
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {
