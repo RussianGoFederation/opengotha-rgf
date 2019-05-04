@@ -316,7 +316,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         rdbMcMahon.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbMcMahon.setMargin(new java.awt.Insets(0, 0, 0, 0));
         pnlSystem.add(rdbMcMahon);
-        rdbMcMahon.setBounds(50, 30, 170, 13);
+        rdbMcMahon.setBounds(20, 30, 170, 13);
 
         grpPS.add(rdbSwiss);
         rdbSwiss.setFont(new java.awt.Font("Tahoma", 0, 10));
@@ -325,7 +325,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         rdbSwiss.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbSwiss.setMargin(new java.awt.Insets(0, 0, 0, 0));
         pnlSystem.add(rdbSwiss);
-        rdbSwiss.setBounds(50, 60, 170, 13);
+        rdbSwiss.setBounds(20, 60, 170, 13);
 
         grpPS.add(rdbSwissCat);
         rdbSwissCat.setFont(new java.awt.Font("Tahoma", 0, 10));
@@ -334,21 +334,21 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         rdbSwissCat.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         rdbSwissCat.setMargin(new java.awt.Insets(0, 0, 0, 0));
         pnlSystem.add(rdbSwissCat);
-        rdbSwissCat.setBounds(50, 90, 170, 13);
+        rdbSwissCat.setBounds(20, 90, 170, 13);
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 0, 10));
         jLabel13.setText(locale.getString("tournament.number_of_rounds"));
         pnlSystem.add(jLabel13);
-        jLabel13.setBounds(50, 140, 120, 13);
+        jLabel13.setBounds(20, 140, 120, 13);
 
         txfNumberOfRounds.setText("0");
         pnlSystem.add(txfNumberOfRounds);
-        txfNumberOfRounds.setBounds(190, 140, 30, 20);
+        txfNumberOfRounds.setBounds(160, 140, 30, 20);
 
         lblRecommended.setFont(new java.awt.Font("Tahoma", 0, 10));
         lblRecommended.setText(locale.getString("tournament.system.swiss_cat_recommended"));
         pnlSystem.add(lblRecommended);
-        lblRecommended.setBounds(60, 100, 240, 13);
+        lblRecommended.setBounds(30, 100, 240, 13);
 
         dlgNew.getContentPane().add(pnlSystem);
         pnlSystem.setBounds(410, 10, 300, 220);
