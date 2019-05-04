@@ -48,7 +48,7 @@ public final class PlacementParameterSet implements java.io.Serializable{
         Arrays.fill(plaCriteria, PlacementCriterion.NUL);
         plaCriteria[0] = PlacementCriterion.MMS;
         plaCriteria[1] = PlacementCriterion.SOSM;
-        plaCriteria[2] = PlacementCriterion.SOSOSM;
+        plaCriteria[2] = PlacementCriterion.SODOSM;
     }
 
     public void initForSwiss() {
