@@ -1133,7 +1133,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         if (!saveCurrentTournamentIfNecessary()) {
             return;
         }
-        dlgNew.setTitle("Create a new tournament");
+        dlgNew.setTitle(locale.getString("tournament.create"));
         this.displayFrame(dlgNew, MEDIUM_FRAME_WIDTH, SMALL_FRAME_HEIGHT);
 
         this.rdbMcMahon.setSelected(true);
