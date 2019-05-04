@@ -40,6 +40,7 @@ import info.vannier.gotha.TournamentParameterSet;
 import info.vannier.gotha.TournamentPlayerDoubleException;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
+import ru.gofederation.gotha.util.GothaLocale;
 import ru.gofederation.gotha.util.GsonDateAdapter;
 
 public final class RgfTournament {
@@ -193,7 +194,7 @@ public final class RgfTournament {
 
         report.tournament = tournament;
         if (report.playerDoubles.size() > 0) {
-            report.reportBuilder.append(String.join(", ", report.playerDoubles));
+            report.reportBuilder.append(GothaLocale.getCurrentLocale().format("tournament.rgf.import.error.player_doubles", String.join(", ", report.playerDoubles)));
         }
 
         return report;
