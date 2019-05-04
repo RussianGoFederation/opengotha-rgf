@@ -40,7 +40,6 @@ import info.vannier.gotha.TournamentParameterSet;
 import info.vannier.gotha.TournamentPlayerDoubleException;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
-import ru.gofederation.gotha.util.GothaLocale;
 import ru.gofederation.gotha.util.GsonDateAdapter;
 
 public final class RgfTournament {
