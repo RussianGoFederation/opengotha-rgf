@@ -17,7 +17,7 @@
 
 import org.apache.tools.ant.filters.EscapeUnicode
 
-version '3.46.04-RGF.1-SNAPSHOT'
+version '3.46.04-RGF.1-SNAPSHOT13'
 
 repositories {
     mavenCentral()
@@ -42,7 +42,8 @@ tasks.withType(ProcessResources).each { task ->
 
 task createProperties {
     doLast {
-        new File("$buildDir/resources/main/build.properties").withWriter { w ->
+        file("${buildDir}/resources/main").mkdirs()
+        file("${buildDir}/resources/main/build.properties").withWriter { w ->
             Properties p = new Properties()
             p['version'] = project.version.toString()
             p.store w, null
