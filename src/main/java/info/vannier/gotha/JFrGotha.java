@@ -632,6 +632,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         pnlStandings.add(btnPrintStandings, "sgx lp, wrap");
 
         tblStandings.setEnabled(false);
+        tblStandings.setModel(new DefaultTableModel(0, 33));
         tblStandings.setRowSelectionAllowed(false);
         scpStandings.setViewportView(tblStandings);
 
