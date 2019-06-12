@@ -1220,7 +1220,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         }
         try {
             JFrame jfr = new JFrPlayersQuickCheck(tournament);
-            displayFrame(jfr, JFrGotha.MEDIUM_FRAME_WIDTH, JFrGotha.MEDIUM_FRAME_HEIGHT);
+            displayFrame(jfr, JFrGotha.BIG_FRAME_WIDTH, JFrGotha.MEDIUM_FRAME_HEIGHT);
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
