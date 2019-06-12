@@ -182,7 +182,8 @@ public class JFrGothaStart extends javax.swing.JFrame {
             } catch (java.net.UnknownHostException ex) {
                             Logger.getLogger(JFrGothaStart.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Gotha.serverName = JOptionPane.showInputDialog(locale.getString("start.input_server_address"), strSN);
+            strSN = JOptionPane.showInputDialog(locale.getString("start.input_server_address"), strSN);
+            Gotha.serverName = strSN;
 
             String[] lstTou = GothaRMIClient.tournamentNamesList(Gotha.serverName);
             String strTN = "";
