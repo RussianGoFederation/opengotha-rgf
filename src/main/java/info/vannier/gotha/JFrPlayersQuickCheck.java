@@ -44,8 +44,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
     public static final int RANK_COL = 5;
     public static final int RATING_COL = 6;
     public static final int PARTICIPATING_COL0 = 7;
-    public static final int MAX_NUMBER_OF_ROUNDS_DISPLAYED = 7;
-    
+
     private int playersSortType = PlayerComparator.NAME_ORDER;
     private ArrayList<Player> alSelectedPlayersToKeepSelected = new ArrayList<Player>(); 
 
@@ -53,7 +52,6 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
 
     private final GothaLocale locale = GothaLocale.getCurrentLocale();
     
-     private int displayedStartingRoundNumber = 0;
     /**
      * Creates new form JFrPlayersQuickCheck
      */
@@ -110,7 +108,6 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         btnPrint = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         lblLastRound = new javax.swing.JLabel();
-        spnDisplayedStartingRoundNumber = new javax.swing.JSpinner();
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -153,60 +150,20 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
                 formWindowClosing(evt);
             }
         });
-        getContentPane().setLayout(new MigLayout("debug, flowy", "[]unrel[]rel[]", "[growprio 0][]unrel[][][]unrel[][][]unrel[][]unrel[]"));
+        getContentPane().setLayout(new MigLayout("flowy, insets dialog", "[]unrel[]rel[]", "[growprio 0][]unrel[][][]unrel[][][]unrel[][]unrel[]"));
 
         pnlPlayersList.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("player.players")));
-        pnlPlayersList.setLayout(new MigLayout("debug, flowx", "[grow 0][grow 100]unrel[][][]"));
-
-        txfNbPlPre.setEditable(false);
-        txfNbPlPre.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        pnlPlayersList.add(txfNbPlPre);
+        pnlPlayersList.setLayout(new MigLayout("flowy, insets panel", null, "[][]unrel[]unrel[]"));
 
         lblPlPre.setText(locale.getString("player.players.registered_preliminary"));
         pnlPlayersList.add(lblPlPre);
 
-        jLabel4.setText(locale.getString("player.participation"));
-        pnlPlayersList.add(jLabel4, "spanx 3, wrap");
-
-        txfNbPlFin.setEditable(false);
-        txfNbPlFin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        pnlPlayersList.add(txfNbPlFin);
-
         lblPlFin.setText(locale.getString("player.players.registered_final"));
         pnlPlayersList.add(lblPlFin);
 
-        jLabel2.setText(locale.getString("player.check.rounds"));
-        pnlPlayersList.add(jLabel2);
-
-        spnDisplayedStartingRoundNumber.addChangeListener(this::spnDisplayedStartingRoundNumberStateChanged);
-        pnlPlayersList.add(spnDisplayedStartingRoundNumber);
-
-        lblLastRound.setText("... 7");
-        pnlPlayersList.add(lblLastRound, "wrap");
-
-        tblRegisteredPlayers.setModel(new javax.swing.table.DefaultTableModel(
-            new Object[][]{
-                { null, null, null, null, null, null, null, "", "", "", null, null, null, null },
-                { null, null, null, null, null, null, null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null, null, null, null, null, null, null }
-            },
-            new String[]{
-                "R", "Last name", "First name", "Co", "Club", "Rk", "Rating", "1", "2", "3", "4", "5", "6", "7"
-            }
-        ) {
-            boolean[] canEdit = new boolean[]{
-                false, false, false, false, false, false, false, true, true, true, true, true, true, true
-            };
-
+        tblRegisteredPlayers.setModel(new javax.swing.table.DefaultTableModel(0, 7) {
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
+                return false;
             }
         });
         tblRegisteredPlayers.setToolTipText("To modify, right click !");
@@ -226,11 +183,11 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         });
         scpRegisteredPlayers.setViewportView(tblRegisteredPlayers);
 
-        pnlPlayersList.add(scpRegisteredPlayers, "spanx, push, grow, wrap");
+        pnlPlayersList.add(scpRegisteredPlayers, "push, grow");
 
         btnPrint.setText(locale.getString("btn.print"));
         btnPrint.addActionListener(this::btnPrintActionPerformed);
-        pnlPlayersList.add(btnPrint, "spanx, growx");
+        pnlPlayersList.add(btnPrint, "growx");
 
         add(pnlPlayersList, "spany 10, push, grow");
 
@@ -679,7 +636,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             int iCol = tblRegisteredPlayers.columnAtPoint(evt.getPoint());
             System.out.println("iRow = " + iRow + " iCol = " + iCol);
             if (iCol < PARTICIPATING_COL0) return;
-            int round = iCol - PARTICIPATING_COL0 + displayedStartingRoundNumber;
+            int round = iCol - PARTICIPATING_COL0;
             String name = (String)tblRegisteredPlayers.getModel().getValueAt(iRow, NAME_COL);
             String firstName = (String)tblRegisteredPlayers.getModel().getValueAt(iRow, FIRSTNAME_COL);
             Player p = null;
@@ -779,56 +736,19 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         cleanClose();
     }
 
-    private void spnDisplayedStartingRoundNumberStateChanged(javax.swing.event.ChangeEvent evt) {
-        int demandedRN = (Integer) (spnDisplayedStartingRoundNumber.getValue()) - 1;
-        this.demandedDisplayedRoundNumberHasChanged(demandedRN);        // TODO add your handling code here:
-    }
-
-    private void demandedDisplayedRoundNumberHasChanged(int demandedRN) {
-        int numberOfRounds = 0;
-        try {
-            numberOfRounds = tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        if (demandedRN == displayedStartingRoundNumber) {
-            return;
-        }
-
-        if (demandedRN < 0) {
-            spnDisplayedStartingRoundNumber.setValue(displayedStartingRoundNumber + 1);
-            return;
-        }
-        
-        if (demandedRN >= numberOfRounds - MAX_NUMBER_OF_ROUNDS_DISPLAYED) {
-            demandedRN = numberOfRounds -  MAX_NUMBER_OF_ROUNDS_DISPLAYED;
-        }
-
-        displayedStartingRoundNumber = demandedRN;
-        updateAllViews();
-    }
-    
-    private void customInitComponents()throws RemoteException{       
+    private void customInitComponents()throws RemoteException{
         initPnlRegisteredPlayers();
         this.updateAllViews();
     }
     
-    private void initPnlRegisteredPlayers()throws RemoteException{
- 
-        TableColumnModel tcm = this.tblRegisteredPlayers.getColumnModel();
-                
-        JFrGotha.formatColumn(this.tblRegisteredPlayers, REG_COL, "R", 10, JLabel.LEFT, JLabel.LEFT); 
+    private void initPnlRegisteredPlayers() {
+        JFrGotha.formatColumn(this.tblRegisteredPlayers, REG_COL, "R", 10, JLabel.LEFT, JLabel.LEFT);
         JFrGotha.formatColumn(this.tblRegisteredPlayers, NAME_COL, locale.getString("player.last_name"),110, JLabel.LEFT, JLabel.LEFT);
         JFrGotha.formatColumn(this.tblRegisteredPlayers, FIRSTNAME_COL, locale.getString("player.last_name"), 80, JLabel.LEFT, JLabel.LEFT);
         JFrGotha.formatColumn(this.tblRegisteredPlayers, COUNTRY_COL, locale.getString("player.country_s"), 30, JLabel.LEFT, JLabel.LEFT);
         JFrGotha.formatColumn(this.tblRegisteredPlayers, CLUB_COL, locale.getString("player.club="), 40, JLabel.LEFT, JLabel.LEFT);
         JFrGotha.formatColumn(this.tblRegisteredPlayers, RANK_COL, locale.getString("player.rank_s"), 30, JLabel.RIGHT, JLabel.RIGHT);
         JFrGotha.formatColumn(this.tblRegisteredPlayers, RATING_COL, locale.getString("player.rating"), 40, JLabel.RIGHT, JLabel.RIGHT);
-        for (int r=0; r < MAX_NUMBER_OF_ROUNDS_DISPLAYED; r++){
-            JFrGotha.formatColumn(this.tblRegisteredPlayers, PARTICIPATING_COL0 + r, "" + (r + 1), 15, JLabel.CENTER, JLabel.CENTER); 
-            }
-
     }
     
     private void tournamentChanged(){
@@ -854,11 +774,21 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
 
     private void updateComponents(){
         ArrayList<Player> playersList = null;
+        int numberOfRounds = 0;
         try {
             playersList = tournament.playersList();
+            numberOfRounds = tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds();
         } catch (RemoteException ex) {
             Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        DefaultTableModel model = (DefaultTableModel)tblRegisteredPlayers.getModel();
+        model.setColumnCount(PARTICIPATING_COL0 + numberOfRounds);
+        initPnlRegisteredPlayers();
+        for (int r = PARTICIPATING_COL0; r < PARTICIPATING_COL0 + numberOfRounds; r++) {
+            JFrGotha.formatColumn(this.tblRegisteredPlayers, r, "" + (r + 1 - PARTICIPATING_COL0), 20, JLabel.CENTER, JLabel.CENTER);
+        }
+
         updatePnlRegisteredPlayers(playersList);
     }
     
@@ -877,7 +807,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         lblPlFin.setText(locale.format("player.players.registered_final", nbFinal));
 
         DefaultTableModel model = (DefaultTableModel)tblRegisteredPlayers.getModel();
-     
+
         ArrayList<Player> displayedPlayersList = new ArrayList<Player>(playersList);
         
         PlayerComparator playerComparator = new PlayerComparator(playersSortType);
@@ -891,48 +821,15 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        TableColumnModel tcm = this.tblRegisteredPlayers.getColumnModel();
         
-        int lastRoundDisplayed = displayedStartingRoundNumber + MAX_NUMBER_OF_ROUNDS_DISPLAYED - 1;    
-        if (lastRoundDisplayed >= numberOfRounds){
-            lastRoundDisplayed = numberOfRounds - 1;
-        }
-        if (displayedStartingRoundNumber != lastRoundDisplayed - MAX_NUMBER_OF_ROUNDS_DISPLAYED + 1) 
-            displayedStartingRoundNumber = lastRoundDisplayed - MAX_NUMBER_OF_ROUNDS_DISPLAYED + 1; 
-        
-        if (displayedStartingRoundNumber < 0) displayedStartingRoundNumber = 0; 
-            
-        this.spnDisplayedStartingRoundNumber.setValue(displayedStartingRoundNumber + 1);
-   
-        if (displayedStartingRoundNumber < lastRoundDisplayed)
-            this.lblLastRound.setText("..." + (lastRoundDisplayed + 1));
-        
-        if (numberOfRounds > MAX_NUMBER_OF_ROUNDS_DISPLAYED) this.spnDisplayedStartingRoundNumber.setEnabled(true);
-        else this.spnDisplayedStartingRoundNumber.setEnabled(false);
-                
-        TableColumnModel tcm = this.tblRegisteredPlayers.getColumnModel();        
-        
-        // New V3.45.02 : Trim nr of columns for participation
-        int nbPartCol = MAX_NUMBER_OF_ROUNDS_DISPLAYED;
-        if (nbPartCol > numberOfRounds) nbPartCol = numberOfRounds;
-        for (int col = PARTICIPATING_COL0 + nbPartCol; col < PARTICIPATING_COL0 + MAX_NUMBER_OF_ROUNDS_DISPLAYED; col++){
+        for (int col = PARTICIPATING_COL0; col < PARTICIPATING_COL0 + numberOfRounds; col++){
             TableColumn tc = tcm.getColumn(col);
             tc.setMinWidth(0);
-            tc.setMaxWidth(0);
-//            tcm.removeColumn(tc);
+            tc.setMaxWidth(20);
         }
-        for (int col = PARTICIPATING_COL0; col < PARTICIPATING_COL0 + MAX_NUMBER_OF_ROUNDS_DISPLAYED; col++){
-            TableColumn tc = tcm.getColumn(col);
-            tc.setMinWidth(0);
-            tc.setMaxWidth(16);
-//            tcm.addColumn(tc);
-        }
-        
-        for (int virtualR = 0; virtualR < nbPartCol; virtualR++){
-            JFrGotha.formatColumn(this.tblRegisteredPlayers, PARTICIPATING_COL0 + virtualR, "" + (virtualR + displayedStartingRoundNumber + 1), 16, JLabel.LEFT, JLabel.LEFT); 
-        }
-        
-        // model = (DefaultTableModel)tblRegisteredPlayers.getModel();
-        
+
         for (Player p:displayedPlayersList){
             int line = displayedPlayersList.indexOf(p); 
             model.setValueAt((p.getRegisteringStatus()==PRELIMINARY)?"P":"F", line, JFrPlayersQuickCheck.REG_COL);
@@ -943,10 +840,10 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             model.setValueAt(Player.convertIntToKD(p.getRank()), line, JFrPlayersQuickCheck.RANK_COL);
             model.setValueAt(p.getRating(), line, JFrPlayersQuickCheck.RATING_COL); 
             boolean[] bPart = p.getParticipating();
-            for (int virtualR = 0; virtualR < nbPartCol; virtualR++){
+            for (int round = 0; round < numberOfRounds; round++){
                 String strPart = "";
-                if (bPart[virtualR + displayedStartingRoundNumber]) strPart = "V";
-                model.setValueAt(strPart, line, JFrPlayersQuickCheck.PARTICIPATING_COL0 + virtualR); 
+                if (bPart[round]) strPart = "V";
+                model.setValueAt(strPart, line, JFrPlayersQuickCheck.PARTICIPATING_COL0 + round);
             }
         }
         
@@ -1038,7 +935,6 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
     private javax.swing.JPanel pnlPlayersList;
     private javax.swing.JPopupMenu pupRegisteredPlayers;
     private javax.swing.JScrollPane scpRegisteredPlayers;
-    private javax.swing.JSpinner spnDisplayedStartingRoundNumber;
     private javax.swing.JTable tblRegisteredPlayers;
     private javax.swing.JTextField txfNbPlFin;
     private javax.swing.JTextField txfNbPlPre;
