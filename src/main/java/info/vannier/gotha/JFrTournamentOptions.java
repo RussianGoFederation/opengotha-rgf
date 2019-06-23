@@ -521,7 +521,7 @@ public class JFrTournamentOptions extends JFrame {
         pnlTournamentDetails.add(jLabel5, "newline unrel");
 
         txfNumberOfRounds.setModel(new SpinnerNumberModel(0, 0, Gotha.MAX_NUMBER_OF_ROUNDS, 1));
-        txfNumberOfRounds.addChangeListener(this::txfNumberOfCategoriesChanged);
+        txfNumberOfRounds.addChangeListener(this::txfNumberOfRoundsChanged);
         pnlTournamentDetails.add(txfNumberOfRounds, "wmin 40lp");
 
         pnlGen.add(pnlTournamentDetails, "growx, pushx");
