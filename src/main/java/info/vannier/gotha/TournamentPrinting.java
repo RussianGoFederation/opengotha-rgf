@@ -18,6 +18,9 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.MediaSizeName;
 import javax.swing.JOptionPane;
 
 import ru.gofederation.gotha.util.GothaLocale;
@@ -249,7 +252,7 @@ public class TournamentPrinting implements Printable {
         pageFormat = new PageFormat();
 
         Paper paper = new Paper();
-        paper.setImageableArea(0, 0, paper.getWidth(), paper.getHeight());  // forces Imageable to maximum
+        paper.setSize(210, 297);
         pageFormat.setPaper(paper);
         printerJob.setPrintable(this, pageFormat);
     }
@@ -386,7 +389,10 @@ public class TournamentPrinting implements Printable {
                 break;
         }
 
-        if (!askForPrinter || printerJob.printDialog()) {
+        PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
+        printRequestAttributeSet.add(MediaSizeName.ISO_A4);
+
+        if (!askForPrinter || printerJob.printDialog(printRequestAttributeSet)) {
             try {
                 printerJob.print();
             } catch (PrinterException e) {
