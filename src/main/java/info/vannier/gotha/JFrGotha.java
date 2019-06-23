@@ -2551,7 +2551,7 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
         }
         try {
             JFrame jfr = new JFrDiscardRounds(tournament);
-            this.displayFrame(jfr, SMALL_FRAME_WIDTH, SMALL_FRAME_HEIGHT);
+            this.displayFrame(jfr, MEDIUM_FRAME_WIDTH, SMALL_FRAME_HEIGHT);
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
