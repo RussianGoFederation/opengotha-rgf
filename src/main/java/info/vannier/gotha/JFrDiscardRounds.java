@@ -6,6 +6,7 @@ package info.vannier.gotha;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -15,11 +16,15 @@ import java.util.logging.Logger;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 
+import ru.gofederation.gotha.util.GothaLocale;
+
 /**
  *
  * @author Luc Vannier
  */
 public class JFrDiscardRounds extends javax.swing.JFrame {
+    private GothaLocale locale = GothaLocale.getCurrentLocale();
+
     private static final long REFRESH_DELAY = 2000;
     private long lastComponentsUpdateTime = 0;
 
@@ -73,14 +78,12 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         btnHelp = new javax.swing.JButton();
         pnlRoundsToKeep = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         ckbRemoveNotImpliedPlayers = new javax.swing.JCheckBox();
         ckbShiftRounds = new javax.swing.JCheckBox();
         btnDiscardRounds = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Discard rounds");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -89,7 +92,7 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         });
         getContentPane().setLayout(null);
 
-        btnClose.setText("Close");
+        btnClose.setText(locale.getString("btn.close"));
         btnClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
@@ -99,7 +102,7 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         btnClose.setBounds(150, 280, 370, 30);
 
         btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.setText("help");
+        btnHelp.setText(locale.getString("btn.help"));
         btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpActionPerformed(evt);
@@ -108,33 +111,28 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         getContentPane().add(btnHelp);
         btnHelp.setBounds(20, 280, 110, 30);
 
-        pnlRoundsToKeep.setBorder(javax.swing.BorderFactory.createTitledBorder("Rounds to keep"));
+        pnlRoundsToKeep.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.discard_rounds.keep")));
         pnlRoundsToKeep.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         pnlRoundsToKeep.setLayout(null);
         getContentPane().add(pnlRoundsToKeep);
         pnlRoundsToKeep.setBounds(300, 30, 220, 140);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel1.setText("Checked rounds will be kept");
+        jLabel1.setText(locale.getString("tournament.discard_rounds.help"));
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(20, 40, 260, 14);
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel2.setText("Unchecked rounds will be discarded");
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(20, 60, 260, 14);
+        jLabel1.setBounds(20, 40, 260, 28);
 
         ckbRemoveNotImpliedPlayers.setSelected(true);
-        ckbRemoveNotImpliedPlayers.setText("Remove players implied in no round ");
+        ckbRemoveNotImpliedPlayers.setText(locale.getString("tournament.discard_rounds.remove_players"));
         getContentPane().add(ckbRemoveNotImpliedPlayers);
         ckbRemoveNotImpliedPlayers.setBounds(30, 130, 260, 23);
 
         ckbShiftRounds.setSelected(true);
-        ckbShiftRounds.setText("Shift  rounds to fill discarded rounds");
+        ckbShiftRounds.setText(locale.getString("tournament.discard_rounds.shift_rounds"));
         getContentPane().add(ckbShiftRounds);
         ckbShiftRounds.setBounds(30, 150, 260, 23);
 
-        btnDiscardRounds.setText("Discard rounds");
+        btnDiscardRounds.setText(locale.getString("tournament.discard_rounds.btn_discard"));
         btnDiscardRounds.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDiscardRoundsActionPerformed(evt);
@@ -143,7 +141,7 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         getContentPane().add(btnDiscardRounds);
         btnDiscardRounds.setBounds(20, 210, 500, 40);
 
-        jLabel3.setText("After discarding rounds");
+        jLabel3.setText(locale.getString("tournament.discard_rounds.after"));
         getContentPane().add(jLabel3);
         jLabel3.setBounds(20, 110, 270, 14);
 
@@ -308,22 +306,12 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         }
 
         tournamentChanged();
-        String str = "" + nbDiscardedRounds;
-            if (nbDiscardedRounds < 2) str += " round has been discarded";
-            else str += " rounds have been discarded";
-        str += "\n" + nbRemovedGames;
-            if (nbRemovedGames < 2) str += " game has been removed";
-            else str += " games have been removed";
-        str += "\n" + nbRemovedByes;
-            if (nbRemovedByes < 2) str += " bye player has been unassigned";
-            else str += " bye players have been unassigned";
-        str += "\n" + nbRemovedPlayers;
-            if (nbRemovedPlayers < 2) str += " player has been removed";
-            else str += " players have been removed";
-        str += "\n" + nbShiftedRounds;
-            if (nbShiftedRounds < 2) str += " round has been shifted";
-            else str += " rounds have been shifted";
-        JOptionPane.showMessageDialog(this, str);
+        String report = locale.format("tournament.discard_rounds.report.rounds_discarded", nbDiscardedRounds) + "\n" +
+                        locale.format("tournament.discard_rounds.report.games_removed", nbRemovedGames) + "\n" +
+                        locale.format("tournament.discard_rounds.report.bye_unassigned", nbRemovedByes) + "\n" +
+                        locale.format("tournament.discard_rounds.report.players_removed", nbRemovedPlayers) + "\n" +
+                        locale.format("tournament.discard_rounds.report.rounds_shifted", nbShiftedRounds);
+        JOptionPane.showMessageDialog(this, report);
 
     }//GEN-LAST:event_btnDiscardRoundsActionPerformed
 
@@ -350,7 +338,7 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         try {
             if (!tournament.isOpen()) cleanClose();
             this.lastComponentsUpdateTime = tournament.getCurrentTournamentTime();
-            setTitle("Discard rounds. " + tournament.getFullName());        
+            setTitle(locale.format("tournament.discard_rounds", tournament.getFullName()));
         } catch (RemoteException ex) {
             Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -392,7 +380,6 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
     private javax.swing.JCheckBox ckbRemoveNotImpliedPlayers;
     private javax.swing.JCheckBox ckbShiftRounds;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel pnlRoundsToKeep;
     // End of variables declaration//GEN-END:variables
