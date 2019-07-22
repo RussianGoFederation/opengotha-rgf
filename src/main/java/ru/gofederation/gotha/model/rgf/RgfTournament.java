@@ -92,6 +92,7 @@ public final class RgfTournament {
         location = gps.getLocation();
         startDate = gps.getBeginDate();
         endDate = gps.getEndDate();
+        komi = Float.valueOf(gps.getStrKomi());
         // TODO system = ...
         roundCount = gps.getNumberOfRounds();
 
