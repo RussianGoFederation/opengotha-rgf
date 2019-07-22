@@ -44,6 +44,8 @@ import ru.gofederation.gotha.model.rgf.RgfTournamentImportReport;
 import ru.gofederation.gotha.util.GothaLocale;
 import ru.gofederation.gotha.util.GothaPreferences;
 
+import static ru.gofederation.gotha.model.rgf.Rgf.API_BASE_PATH;
+
 public final class RgfTournamentImportDialog extends JDialog implements RgfTournamentList.TournamentPickListener {
     private final GothaLocale locale;
     private final TournamentOpener tournamentOpener;
@@ -86,7 +88,7 @@ public final class RgfTournamentImportDialog extends JDialog implements RgfTourn
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             int importMode = importApplications.isSelected()
                 ? RgfTournament.IMPORT_MODE_APPLICATIONS : RgfTournament.IMPORT_MODE_WALLIST;
-            String url = "https://gofederation.ru/api/v3.0/tournaments/" + Integer.toString(id);
+            String url = API_BASE_PATH + "tournaments/" + Integer.toString(id);
             if (importMode == RgfTournament.IMPORT_MODE_APPLICATIONS) url += "?include=player_applications";
             Gotha.download(null, false, url, baos);
             byte[] b = baos.toByteArray();

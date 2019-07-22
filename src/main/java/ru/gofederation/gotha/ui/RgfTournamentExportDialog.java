@@ -48,6 +48,8 @@ import ru.gofederation.gotha.model.rgf.RgfTournamentDetails;
 import ru.gofederation.gotha.model.rgf.RgfTournamentState;
 import ru.gofederation.gotha.util.GothaLocale;
 
+import static ru.gofederation.gotha.model.rgf.Rgf.API_BASE_PATH;
+
 public final class RgfTournamentExportDialog extends JDialog {
     private final GothaLocale locale = GothaLocale.getCurrentLocale();
     private final JCheckBox finishTournament;
@@ -115,11 +117,11 @@ public final class RgfTournamentExportDialog extends JDialog {
 
             URL url;
             if (rgfTournament.id > 0) {
-                url = new URL("https://gofederation.ru/api/v3.0/tournaments/" + rgfTournament.id);
+                url = new URL(API_BASE_PATH + "tournaments/" + rgfTournament.id);
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("PUT");
             } else {
-                url = new URL("https://gofederation.ru/api/v3.0/tournaments");
+                url = new URL(API_BASE_PATH + "tournaments");
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
             }

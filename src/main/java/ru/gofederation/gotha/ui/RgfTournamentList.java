@@ -52,6 +52,8 @@ import ru.gofederation.gotha.model.rgf.RgfTournament;
 import ru.gofederation.gotha.model.rgf.RgfTournamentState;
 import ru.gofederation.gotha.util.GothaLocale;
 
+import static ru.gofederation.gotha.model.rgf.Rgf.API_BASE_PATH;
+
 final class RgfTournamentList extends JPanel {
     private static final String PROGRESS = "progress";
     private static final String LIST = "list";
@@ -144,7 +146,7 @@ final class RgfTournamentList extends JPanel {
             if (null != updateThread) updateThread.interrupt();
             updateThread = new Thread(() -> {
                 try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-                    Gotha.download(progressBar, false, "https://gofederation.ru/api/v3.0/tournaments", baos);
+                    Gotha.download(progressBar, false,  API_BASE_PATH + "tournaments", baos);
                     byte[] b = baos.toByteArray();
                     try (ByteArrayInputStream bais = new ByteArrayInputStream(b);
                          Reader reader = new InputStreamReader(bais)) {
