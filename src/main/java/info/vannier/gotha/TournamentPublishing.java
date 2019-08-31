@@ -5,6 +5,8 @@ import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ru.gofederation.gotha.printing.StandingsPrinter;
+
 /**
  *
  * @author Luc Vannier
@@ -25,14 +27,12 @@ public class TournamentPublishing {
     public static final int SUBTYPE_ST_CAT = 1; // Standings by cat
 
     public static void publish(TournamentInterface tournament, int roundNumber, int type, int subtype){
-        TournamentParameterSet tps = null;
         try {
-            tps = tournament.getTournamentParameterSet();
+            TournamentParameterSet tps = tournament.getTournamentParameterSet();
+            publish(tournament, tps, roundNumber, type, subtype);
         } catch (RemoteException ex) {
             Logger.getLogger(TournamentPublishing.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        publish(tournament, tps, roundNumber, type, subtype);
     }
     
     /**
@@ -43,7 +43,7 @@ public class TournamentPublishing {
      * @param type
      * @param subtype 
      */
-    public static void publish(TournamentInterface tournament, TournamentParameterSet tps, int roundNumber, int type, int subtype){
+    public static void publish(TournamentInterface tournament, TournamentParameterSet tps, int roundNumber, int type, int subtype) throws RemoteException {
         PublishParameterSet pubPS = tps.getPublishParameterSet();
         
         if (pubPS.isPrint()) print(tournament, tps, roundNumber, type, subtype);
@@ -53,7 +53,7 @@ public class TournamentPublishing {
                 
     }
     
-    private static void print(TournamentInterface tournament, TournamentParameterSet tps, int roundNumber, int type, int subtype){
+    private static void print(TournamentInterface tournament, TournamentParameterSet tps, int roundNumber, int type, int subtype) throws RemoteException {
         switch(type){
             case TournamentPublishing.TYPE_PLAYERSLIST:
                 TournamentPrinting.printPlayersList(tournament);
@@ -74,7 +74,7 @@ public class TournamentPublishing {
                 TournamentPrinting.printNotPlayingPlayersList(tournament, roundNumber);
                 break;
             case TournamentPublishing.TYPE_STANDINGS:
-                TournamentPrinting.printStandings(tournament, tps, roundNumber);
+                StandingsPrinter.print(tournament, tps, roundNumber);
                 break;
             case TournamentPublishing.TYPE_MATCHESLIST:
                 TournamentPrinting.printMatchesList(tournament, roundNumber);

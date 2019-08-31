@@ -27,6 +27,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.*;
 
+import ru.gofederation.gotha.printing.StandingsPrinter;
 import ru.gofederation.gotha.ui.RgfTournamentExportDialog;
 import ru.gofederation.gotha.ui.RgfTournamentImportDialog;
 import ru.gofederation.gotha.ui.TournamentOpener;
@@ -971,7 +972,11 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         TournamentParameterSet printTPS = new TournamentParameterSet(tps);
         PlacementParameterSet printPPS = printTPS.getPlacementParameterSet();
         printPPS.setPlaCriteria(displayedCriteria);
-        TournamentPrinting.printStandings(tournament, printTPS, this.displayedRoundNumber);
+        try {
+            StandingsPrinter.print(tournament, printTPS, this.displayedRoundNumber);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     private void mniMMGroupsActionPerformed(java.awt.event.ActionEvent evt) {

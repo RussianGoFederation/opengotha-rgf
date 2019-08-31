@@ -2,6 +2,7 @@ package info.vannier.gotha;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -416,7 +417,7 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
      * h being handicap, "0" ... "9"
      * @param tps Tournament parameter set. useful for placement criteria and for absent and values scores
      */
-public static String[][] halfGamesStrings(ArrayList<ScoredPlayer> alOrderedScoredPlayers, int roundNumber, TournamentParameterSet tps, boolean bFull) {
+public static String[][] halfGamesStrings(List<ScoredPlayer> alOrderedScoredPlayers, int roundNumber, TournamentParameterSet tps, boolean bFull) {
         GeneralParameterSet gps = tps.getGeneralParameterSet();
         // Prepare hmPos for fast retrieving
         HashMap<String, Integer> hmPos = new HashMap<String, Integer>();
@@ -521,7 +522,7 @@ public static String[][] halfGamesStrings(ArrayList<ScoredPlayer> alOrderedScore
      * Basically placement is the position in alOrderedScoredPlayers + 1.
      * Except for ex-aequos
      */
-    public static String[] catPositionStrings(ArrayList<ScoredPlayer> alOrderedScoredPlayers, int roundNumber, TournamentParameterSet tps) {
+    public static String[] catPositionStrings(List<ScoredPlayer> alOrderedScoredPlayers, int roundNumber, TournamentParameterSet tps) {
         PlacementParameterSet pps = tps.getPlacementParameterSet();
         GeneralParameterSet gps = tps.getGeneralParameterSet();
         ScoredPlayerComparator spc = new ScoredPlayerComparator(pps.getPlaCriteria(), roundNumber, true);
