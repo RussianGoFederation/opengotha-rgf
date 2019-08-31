@@ -35,8 +35,8 @@ public class Player implements java.io.Serializable{
      * from -900 to 2949
      * If the rating comes from FFG, rating = FFGrating + 2050.
      */
-    static final int MIN_RATING = -900;
-    static final int MAX_RATING = 2949;
+    public static final int MIN_RATING = -900;
+    public static final int MAX_RATING = 2949;
 
     private int rating = MIN_RATING;
     

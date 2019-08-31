@@ -43,7 +43,7 @@ public class Gotha {
     static final long GOTHA_DATA_VERSION = 201L;
     
     // Should definitely stay below or equal to 32, due to internal limits in costValue() method
-    static final int MAX_NUMBER_OF_ROUNDS = 20;
+    public static final int MAX_NUMBER_OF_ROUNDS = 20;
     // Should definitely stay below 16000, due to internal limits in PairingParameterSet parameter values
     // Should definitely stay below 9999, due to printing issues
     static final int MAX_NUMBER_OF_PLAYERS = 1200;
@@ -62,8 +62,8 @@ public class Gotha {
     static int runningMode = RUNNING_MODE_UNDEFINED;
     static String serverName = "";  // relevant only when in Client mode
     static String clientName = "";  // relevant in Client mode
-    static String strPreferences = "info/vannier/opengotha";
-    static File runningDirectory;
+    public static String strPreferences = "info/vannier/opengotha";
+    public static File runningDirectory;
 
     static File exportDirectory;
     static File exportHTMLDirectory;
@@ -572,27 +572,3 @@ public class Gotha {
     }
 }
 
-class GothaImageLoader extends Thread{
-    String strURL;
-    JLabel lbl;
-    public GothaImageLoader(String strURL, JLabel lbl){
-        this.strURL = strURL;
-        this.lbl = lbl;
-    }
-    @Override
-    public void run(){
-        URL url = null;
-        try {              
-            url = new URL(strURL);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        ImageIcon myIcon = new ImageIcon(url);
-        lbl.setIcon(myIcon);
-    }
-    
-    public static void loadImage(String strURL, JLabel lbl){
-        (new GothaImageLoader(strURL, lbl)).start();
-    }
-}
