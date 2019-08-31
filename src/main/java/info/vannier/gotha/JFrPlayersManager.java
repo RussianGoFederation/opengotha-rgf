@@ -13,8 +13,6 @@ import java.util.Collections;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -42,14 +40,6 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
     private final static int PLAYER_MODE_MODIF = 2;
     private int playerMode = PLAYER_MODE_NEW;
     private Player playerInModification = null;
-    private static final int REG_COL = 0;
-    private static final int NAME_COL = 1;
-    private static final int FIRSTNAME_COL = 2;
-    private static final int COUNTRY_COL = 3;
-    private static final int CLUB_COL = 4;
-    private static final int RANK_COL = 5;
-    private static final int RATING_COL = 6;
-    private static final int GRADE_COL = 7;
     /**  current Tournament */
     private TournamentInterface tournament;
     /** Rating List */
