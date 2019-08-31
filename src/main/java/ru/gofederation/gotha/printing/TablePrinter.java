@@ -89,6 +89,11 @@ public abstract class TablePrinter extends Printer {
     }
 
     @Override
+    protected int footerHeight() {
+        return (int) (fontMetrics.getHeight() * 1.5);
+    }
+
+    @Override
     protected void printFooter() {
         int y = (int) (pageFormat.getImageableHeight() - fontMetrics.getMaxDescent());
         graphics.drawString(Gotha.getGothaReleaseVersion(), 0, y);

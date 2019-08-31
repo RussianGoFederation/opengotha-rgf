@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ru.gofederation.gotha.printing.PairingPrinter;
 import ru.gofederation.gotha.printing.StandingsPrinter;
 
 /**
@@ -65,7 +66,7 @@ public class TournamentPublishing {
                 TournamentPrinting.printTournamentParameters(tournament);
                 break;
             case TournamentPublishing.TYPE_GAMESLIST:
-                TournamentPrinting.printGamesList(tournament, roundNumber);
+                PairingPrinter.print(tournament, roundNumber);
                 break;
             case TournamentPublishing.TYPE_RESULTSHEETS:
                 TournamentPrinting.printResultSheets(tournament, roundNumber);

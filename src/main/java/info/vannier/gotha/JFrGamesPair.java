@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -27,8 +28,10 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
+import ru.gofederation.gotha.printing.PairingPrinter;
 import ru.gofederation.gotha.util.GothaLocale;
+
+import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
 
 /**
  *
@@ -990,7 +993,11 @@ public class JFrGamesPair extends javax.swing.JFrame {
     }
     
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        TournamentPrinting.printGamesList(tournament, processedRoundNumber);
+        try {
+            PairingPrinter.print(tournament, processedRoundNumber);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_btnPrintActionPerformed
 
     private void mniModifyHandicapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniModifyHandicapActionPerformed

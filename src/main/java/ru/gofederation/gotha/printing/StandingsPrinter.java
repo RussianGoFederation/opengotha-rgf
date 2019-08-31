@@ -119,11 +119,6 @@ public class StandingsPrinter extends TablePrinter implements Printable {
     }
 
     @Override
-    protected int footerHeight() {
-        return (int) (fontMetrics.getHeight() * 1.5);
-    }
-
-    @Override
     protected void printHeader() {
         String s = gps.getName();
         int w = fontMetrics.stringWidth(s);
