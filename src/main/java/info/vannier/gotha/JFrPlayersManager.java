@@ -3,6 +3,8 @@
  */
 package info.vannier.gotha;
 
+import net.miginfocom.swing.MigLayout;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -317,36 +319,19 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         pnlPlayer.setBounds(10, 0, 494, 560);
 
         pnlPlayersList.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("player.players"))); // NOI18N
-        pnlPlayersList.setLayout(null);
+        pnlPlayersList.setLayout(new MigLayout("flowy", null, "[][]unrel[]unrel[]"));
 
-        lblPlFin.setText(locale.getString("player.players.registered_final")); // NOI18N
-        pnlPlayersList.add(lblPlFin);
-        lblPlFin.setBounds(60, 50, 250, 20);
-
-        lblPlPre.setText(locale.getString("player.players.registered_preliminary")); // NOI18N
+        lblPlPre.setText(locale.getString("player.players.registered_preliminary"));
         pnlPlayersList.add(lblPlPre);
-        lblPlPre.setBounds(60, 30, 250, 20);
 
-        txfNbPlFin.setEditable(false);
-        txfNbPlFin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        pnlPlayersList.add(txfNbPlFin);
-        txfNbPlFin.setBounds(10, 50, 40, 20);
+        lblPlFin.setText(locale.getString("player.players.registered_final"));
+        pnlPlayersList.add(lblPlFin);
 
-        txfNbPlPre.setEditable(false);
-        txfNbPlPre.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        pnlPlayersList.add(txfNbPlPre);
-        txfNbPlPre.setBounds(10, 30, 40, 20);
-
-        btnPrint.setText(locale.getString("btn.print")); // NOI18N
-        btnPrint.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPrintActionPerformed(evt);
-            }
-        });
-        pnlPlayersList.add(btnPrint);
-        btnPrint.setBounds(10, 480, 450, 30);
         pnlPlayersList.add(playerList);
-        playerList.setBounds(10, 80, 450, 390);
+
+        btnPrint.setText(locale.getString("btn.print"));
+        btnPrint.addActionListener(this::btnPrintActionPerformed);
+        pnlPlayersList.add(btnPrint, "push, grow");
 
         getContentPane().add(pnlPlayersList);
         pnlPlayersList.setBounds(510, 0, 470, 520);
