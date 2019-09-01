@@ -249,7 +249,7 @@ public class PlayerEditor extends JPanel {
         register.addActionListener(actionEvent -> {
             onRegisterAction();
         });
-        add(register, "span, split, growx");
+        add(register, "span, split 2, growx");
 
         // Reset button
         JButton reset = new JButton(locale.getString("player.btn_reset"));
@@ -266,7 +266,7 @@ public class PlayerEditor extends JPanel {
         welcomeSheetScroll = new JScrollPane();
         welcomeSheetScroll.setVisible(false);
         welcomeSheetScroll.setViewportView(welcomeSheetPane);
-        add(welcomeSheetScroll, "pos 0 0 840 1188");
+        add(welcomeSheetScroll, "pos 0 0 840 1188, hidemode 3");
 
         // Change rating button. TODO: add to layout
         changeRating = new JButton(locale.getString("player.btn_change_rating"));
