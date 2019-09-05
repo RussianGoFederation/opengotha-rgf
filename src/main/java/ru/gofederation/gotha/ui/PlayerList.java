@@ -28,8 +28,11 @@ import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -47,6 +50,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 import info.vannier.gotha.Player;
 import info.vannier.gotha.TournamentInterface;
@@ -194,6 +198,9 @@ public final class PlayerList extends JPanel {
             if (column == Column.LAST_NAME)
                 table.getRowSorter().toggleSortOrder(i);
         }
+
+        ((TableRowSorter) table.getRowSorter()).setComparator(getColumnIndex(Column.RANK), rankComparator);
+        ((TableRowSorter) table.getRowSorter()).setComparator(getColumnIndex(Column.GRADE), rankComparator);
     }
 
     public void setSortKeys(List<? extends RowSorter.SortKey> keys) {
@@ -361,4 +368,21 @@ public final class PlayerList extends JPanel {
     public interface PlayerDoubleClickListener {
         void onPlayerDoubleClicked(Player player);
     }
+
+    private static final Comparator<String> rankComparator = new Comparator<String>() {
+        private final Pattern rankPattern = Pattern.compile("(\\d{1,2})([KD])");
+
+        @Override
+        public int compare(String a, String b) {
+            Matcher am = rankPattern.matcher(a);
+            Matcher bm = rankPattern.matcher(b);
+            if (am.find() && bm.find()) {
+                int c = am.group(2).compareTo(bm.group(2));
+                if (c != 0) return c;
+                return (Integer.parseInt(am.group(1)) - Integer.parseInt(bm.group(1))) * ("D".equals(am.group(2)) ? -1 : 1);
+            } else {
+                throw new IllegalStateException();
+            }
+        }
+    };
 }
