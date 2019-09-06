@@ -52,7 +52,7 @@ public abstract class Printer implements Printable {
     protected void init(Graphics graphics, PageFormat pageFormat) {
         this.graphics = graphics;
         this.pageFormat = pageFormat;
-        this.font = graphics.getFont().deriveFont(8f);
+        this.font = graphics.getFont().deriveFont(10f);
         this.fontMetrics = graphics.getFontMetrics(this.font);
         this.locale = GothaLocale.getCurrentLocale();
         graphics.setFont(this.font);
