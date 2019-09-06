@@ -17,6 +17,8 @@
 
 package ru.gofederation.gotha.printing;
 
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -34,6 +36,8 @@ public class PairingPrinter extends TablePrinter {
     private final GeneralParameterSet gps;
     private final List<Game> games;
     private final int round;
+
+    private CellPrinter resultCellPrinter = null;
 
     private PairingPrinter(TournamentInterface tournament, int round) throws RemoteException {
         this.gps = tournament.getTournamentParameterSet().getGeneralParameterSet();
@@ -92,5 +96,38 @@ public class PairingPrinter extends TablePrinter {
         s = locale.format("printing.games.header", round + 1);
         w = fontMetrics.stringWidth(s);
         graphics.drawString(s, (int) (pageFormat.getImageableWidth() / 2 - w / 2), fontMetrics.getHeight() * 2);
+    }
+
+    @Override
+    protected CellPrinter getCellPrinter(int column) {
+        if (column == resultCol) {
+            if (null == resultCellPrinter) {
+                resultCellPrinter = new ResultCellPrinter(fontMetrics);
+            }
+            return resultCellPrinter;
+        } else {
+            return super.getCellPrinter(column);
+        }
+    }
+
+    private static class ResultCellPrinter implements CellPrinter {
+        private static final String POSSIBLE_FIRST_CHARACTERS = " 01½";
+        private final int firstCharacterWidth;
+
+        ResultCellPrinter(FontMetrics fm) {
+            int w = 0;
+            for (int i = 0; i < POSSIBLE_FIRST_CHARACTERS.length(); i++) {
+                w = Math.max(w, fm.stringWidth(POSSIBLE_FIRST_CHARACTERS.substring(i, i+1)));
+            }
+            firstCharacterWidth = w;
+        }
+
+        @Override
+        public void printCell(Graphics g, int x, int y, String s) {
+            g.drawString(s.substring(1), x + firstCharacterWidth, y);
+            s = s.substring(0, 1);
+            int w = g.getFontMetrics().stringWidth(s);
+            g.drawString(s, x + firstCharacterWidth - w, y);
+        }
     }
 }

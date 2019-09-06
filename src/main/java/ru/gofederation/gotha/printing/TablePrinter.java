@@ -70,7 +70,7 @@ public abstract class TablePrinter extends Printer {
             graphics.drawString(getHeader(column), columnPositions[column], fontMetrics.getHeight() + headerHeight());
             for (int row = startingRow; row < startingRow + rowsPerPage && row < rowCount; row++) {
                 int y = fontMetrics.getHeight() * (row - startingRow + 2) + headerHeight();
-                graphics.drawString(getCell(row, column), columnPositions[column], y);
+                getCellPrinter(column).printCell(graphics, columnPositions[column], y, getCell(row, column));
             }
         }
 
@@ -108,4 +108,12 @@ public abstract class TablePrinter extends Printer {
     abstract int getRowCount();
     abstract String getHeader(int column);
     abstract String getCell(int row, int column);
+
+    protected CellPrinter getCellPrinter(int column) {
+        return (g, x, y, s) -> g.drawString(s, x, y);
+    }
+
+    interface CellPrinter {
+        void printCell(Graphics g, int x, int y, String s);
+    }
 }
