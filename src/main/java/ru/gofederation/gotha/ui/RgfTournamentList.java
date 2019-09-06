@@ -25,6 +25,8 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Point;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -98,6 +100,18 @@ final class RgfTournamentList extends JPanel {
                 if (e.getClickCount() == 2 && tournamentsTable.getSelectedRow() != -1) {
                     TableModel model = (TableModel) tournamentsTable.getModel();
                     RgfTournament tournament = model.getTournament(tournamentsTable.convertRowIndexToModel(row));
+                    tournamentPickListener.onTournamentPicked(tournament);
+                }
+            }
+        });
+        tournamentsTable.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+                    event.consume();
+                    TableModel model = (TableModel) tournamentsTable.getModel();
+                    RgfTournament tournament = model.getTournament(
+                        tournamentsTable.convertRowIndexToModel(tournamentsTable.getSelectedRow()));
                     tournamentPickListener.onTournamentPicked(tournament);
                 }
             }
