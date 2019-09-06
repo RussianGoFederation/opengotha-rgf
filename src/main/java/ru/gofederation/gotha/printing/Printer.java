@@ -24,8 +24,11 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import javax.print.PrintService;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaPrintableArea;
@@ -35,8 +38,10 @@ import info.vannier.gotha.Gotha;
 import ru.gofederation.gotha.util.GothaLocale;
 
 public abstract class Printer implements Printable {
-    private static final String MEDIA = "media";
     private static final String MEDIA_PRINTABLE_AREA = "media_printable_area";
+    private static final String PRINT_SERVICE = "print_service";
+
+    private final Logger logger = Logger.getGlobal();
 
     protected Graphics graphics;
     protected PageFormat pageFormat;
@@ -82,8 +87,10 @@ public abstract class Printer implements Printable {
         return attributes;
     }
 
-    private void savePrintRequestAttributeSet(PrintRequestAttributeSet attributes) {
+    private void savePrintRequestAttributeSet(PrintRequestAttributeSet attributes, PrinterJob printerJob) {
         Preferences preferences = getPreferences();
+
+        preferences.put(PRINT_SERVICE, printerJob.getPrintService().getName());
 
         if (attributes.containsKey(MediaPrintableArea.class)) {
             MediaPrintableArea area = (MediaPrintableArea) attributes.get(MediaPrintableArea.class);
@@ -97,9 +104,17 @@ public abstract class Printer implements Printable {
 
     protected void print() {
         PrinterJob printerJob = PrinterJob.getPrinterJob();
+
+        try {
+            PrintService printService = findPrintService(getPreferences().get(PRINT_SERVICE, ""));
+            if (null != printService) printerJob.setPrintService(printService);
+        } catch (PrinterException e) {
+            logger.log(Level.WARNING, "Failed to set PrintService", e);
+        }
+
         PrintRequestAttributeSet attributes = getPrintRequestAttributeSet();
         if (printerJob.printDialog(attributes)) {
-            savePrintRequestAttributeSet(attributes);
+            savePrintRequestAttributeSet(attributes, printerJob);
             try {
                 printerJob.setPrintable(this);
                 printerJob.print(attributes);
@@ -108,6 +123,14 @@ public abstract class Printer implements Printable {
             }
         }
 
+    }
+
+    private PrintService findPrintService(String name) {
+        PrintService[] services = PrinterJob.lookupPrintServices();
+        for (PrintService service : services) {
+            if (service.getName().equals(name)) return service;
+        }
+        return null;
     }
 
     abstract protected int headerHeight();
