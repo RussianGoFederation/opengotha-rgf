@@ -17,8 +17,6 @@
 
 package ru.gofederation.gotha.printing;
 
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -44,16 +42,7 @@ public class PairingPrinter extends TablePrinter {
     }
 
     public static void print(TournamentInterface tournament, int round) throws RemoteException {
-        PrinterJob printerJob = PrinterJob.getPrinterJob();
-        if (printerJob.printDialog(getPrintRequestAttributeSet())) {
-            // TODO: save settings
-            try {
-                printerJob.setPrintable(new PairingPrinter(tournament, round));
-                printerJob.print();
-            } catch (PrinterException e) {
-                e.printStackTrace();
-            }
-        }
+        new PairingPrinter(tournament, round).print();
     }
 
     @Override
