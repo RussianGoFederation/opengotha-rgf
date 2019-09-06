@@ -63,7 +63,7 @@ public abstract class Printer implements Printable {
         Preferences preferences = getPreferences();
         PrintRequestAttributeSet attributes = new HashPrintRequestAttributeSet();
 
-        attributes.add(MediaSize.ISO.A4);
+        attributes.add(MediaSize.ISO.A4.getMediaSizeName());
 
         String areaStr = preferences.get(MEDIA_PRINTABLE_AREA, null);
         if (null != areaStr) {
