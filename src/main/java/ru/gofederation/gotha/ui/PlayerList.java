@@ -29,6 +29,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -201,6 +202,18 @@ public final class PlayerList extends JPanel {
 
         ((TableRowSorter) table.getRowSorter()).setComparator(getColumnIndex(Column.RANK), rankComparator);
         ((TableRowSorter) table.getRowSorter()).setComparator(getColumnIndex(Column.GRADE), rankComparator);
+
+        table.getRowSorter().addRowSorterListener(rowSorterEvent -> {
+            List<? extends RowSorter.SortKey> origKeys =  table.getRowSorter().getSortKeys();
+            List<RowSorter.SortKey> sortKeys = new LinkedList<>();
+            if (origKeys.size() > 0) {
+                RowSorter.SortKey key = origKeys.get(0);
+                sortKeys.add(key);
+                sortKeys.add(new RowSorter.SortKey(getColumnIndex(Column.LAST_NAME), key.getSortOrder()));
+                sortKeys.add(new RowSorter.SortKey(getColumnIndex(Column.FIRST_NAME), key.getSortOrder()));
+            }
+            rowSorterEvent.getSource().setSortKeys(sortKeys);
+        });
     }
 
     public void setSortKeys(List<? extends RowSorter.SortKey> keys) {
