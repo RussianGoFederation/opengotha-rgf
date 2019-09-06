@@ -32,6 +32,7 @@ import java.io.Reader;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -58,7 +59,7 @@ public final class RgfTournamentImportDialog extends JDialog implements RgfTourn
         this.locale = GothaLocale.getCurrentLocale();
         this.tournamentOpener = tournamentOpener;
 
-        setLayout(new MigLayout("insets dialog", "[grow,fill]", "[][grow,fill]"));
+        setLayout(new MigLayout("insets dialog, flowy", "[grow,fill]", "[]unrel[grow,fill][]"));
 
         JPanel importOptionsPanel = new JPanel(new MigLayout("flowy, insets panel"));
         importOptionsPanel.setBorder(BorderFactory.createTitledBorder(locale.getString("tournament.rgf.import.options")));
@@ -72,11 +73,13 @@ public final class RgfTournamentImportDialog extends JDialog implements RgfTourn
         importMode.add(importParticipants);
         importOptionsPanel.add(importParticipants);
 
-        add(importOptionsPanel, "wrap");
+        add(importOptionsPanel);
 
         RgfTournamentList tournamentList = new RgfTournamentList(this);
 
         add(tournamentList);
+
+        add(new JLabel(locale.getString("tournament.rgf.import.help")));
 
         pack();
 
