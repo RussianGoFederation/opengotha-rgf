@@ -22,6 +22,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import ru.gofederation.gotha.printing.PairingPrinter;
 import ru.gofederation.gotha.util.GothaLocale;
 
 /**
@@ -439,9 +440,12 @@ public class JFrGamesResults extends javax.swing.JFrame {
     }
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {
-        if (!this.ckbTeamOrder.isSelected()) TournamentPrinting.printGamesList(tournament, processedRoundNumber);
-        else TournamentPrinting.printMatchesList(tournament, processedRoundNumber);
-
+        try {
+            if (!this.ckbTeamOrder.isSelected()) PairingPrinter.print(tournament, processedRoundNumber);
+            else TournamentPrinting.printMatchesList(tournament, processedRoundNumber);
+        } catch (RemoteException e) {
+            // TODO
+        }
     }
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {
