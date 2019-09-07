@@ -36,7 +36,7 @@ import javax.swing.SwingUtilities;
 
 import ru.gofederation.gotha.util.GothaLocale;
 
-public final class RgbAuthentication {
+public final class RgfAuthentication {
     private final Charset utf8 = Charset.forName("UTF8");
     private final GothaLocale locale = GothaLocale.getCurrentLocale();
     private static final AtomicReference<String> login = new AtomicReference<>(null);

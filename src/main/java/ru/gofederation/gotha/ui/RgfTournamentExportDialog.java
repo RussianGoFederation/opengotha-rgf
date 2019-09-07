@@ -100,7 +100,7 @@ public final class RgfTournamentExportDialog extends JDialog {
     }
 
     private void exportTournament(TournamentInterface tournament) {
-        String authentication = new RgbAuthentication().getAuthenticationHeader(this);
+        String authentication = new RgfAuthentication().getAuthenticationHeader(this);
         if (null == authentication) {
             return;
         }
