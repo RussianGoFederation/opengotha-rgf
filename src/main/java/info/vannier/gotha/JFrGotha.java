@@ -56,7 +56,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
     private static final int NBW_COL = CLUB_COL + 1;
     private static final int ROUND0_RESULT_COL = NBW_COL + 1;
     private static final int CRIT0_COL = ROUND0_RESULT_COL + Gotha.MAX_NUMBER_OF_ROUNDS;
-    
+
     private static final int TEAM_PL_COL = 0;
     private static final int TEAM_NAME_COL = 1;
     private static final int TEAM_ROUND0_RESULT_COL = 2;
@@ -955,8 +955,8 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         }
 
         try {
-            JFrame jfr = new JFrGamesOptions(tournament);
-            this.displayFrame(jfr, MEDIUM_FRAME_WIDTH, MEDIUM_FRAME_HEIGHT);
+            JFrGamesOptions jfr = new JFrGamesOptions(this, tournament);
+            this.displayFrame(jfr);
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1197,7 +1197,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             return;
         }
         try {
-            JFrame jfr = new JFrGamesResults(tournament);   
+            JFrame jfr = new JFrGamesResults(tournament);
             displayFrame(jfr, JFrGotha.BIG_FRAME_WIDTH, JFrGotha.BIG_FRAME_HEIGHT);
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
@@ -1263,7 +1263,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
         getRootPane().setDefaultButton(btnSearch);
-        
+
         if (tournament == null){
             this.tpnGotha.setSelectedComponent(this.pnlWelcome);
         }
@@ -1585,7 +1585,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             strPlHeader = "";
         }
         columnModel.getColumn(PL_COL).setHeaderValue(strPlHeader);
-        
+
         columnModel.getColumn(NAME_COL).setHeaderValue("Name");
         columnModel.getColumn(GRADE_COL).setHeaderValue("Gr");
         String strCoHeader = "Co";
@@ -1599,7 +1599,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             strClHeader = "";
         }
         columnModel.getColumn(CLUB_COL).setHeaderValue(strClHeader);
-        
+
         columnModel.getColumn(NBW_COL).setHeaderValue("NBW");
 
         for (int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++) {
@@ -1664,14 +1664,14 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
                 strNum = "";
             }
             model.setValueAt(strNum, iSP, iCol++);
-            
+
             String strPl = "" + strPlace[iSP];
             if (!tps.getDPParameterSet().isDisplayPlCol()) {
                 strPl = "";
             }
             model.setValueAt("" + strPl, iSP, iCol++);
-  
-            model.setValueAt(sp.fullName(), iSP, iCol++);                       
+
+            model.setValueAt(sp.fullName(), iSP, iCol++);
             model.setValueAt(sp.getStrGrade(), iSP, iCol++);
 
             String strCo = sp.getCountry();
@@ -1679,14 +1679,14 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
                 strCo = "";
             }
             model.setValueAt(strCo, iSP, iCol++);
-            
+
             String strCl = sp.getClub();
             if (!tps.getDPParameterSet().isDisplayClCol()) {
                 strCl = "";
             }
             model.setValueAt(strCl, iSP, iCol++);
-           
-            
+
+
             model.setValueAt(sp.formatScore(PlacementCriterion.NBW, this.displayedRoundNumber), iSP, iCol++);
             for (int r = 0; r <= displayedRoundNumber; r++) {
                 model.setValueAt((hG[r][iSP]), iSP, iCol++);
@@ -1812,11 +1812,11 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         java.util.Date dh = new java.util.Date(lastDisplayedTeamsStandingsUpdateTime);
 		lblTeamUpdateTime.setText(this.locale.format("standings.update_time", dh));
     }
-    
-    private void updateWelcomePanel() throws RemoteException {        
-        
+
+    private void updateWelcomePanel() throws RemoteException {
+
     }
- 
+
     private void updateControlPanel() throws RemoteException {
         if (tournament == null) {
             return;
@@ -1891,7 +1891,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         }
     }
 
-    // TODO : UpdateTeamsPanel should use TeamMemberStrings (See TournamentPrinting or ExternalDocument.generateTeamsListHTMLFile 
+    // TODO : UpdateTeamsPanel should use TeamMemberStrings (See TournamentPrinting or ExternalDocument.generateTeamsListHTMLFile
     private void updateTeamsPanel() throws RemoteException {
         DefaultTableModel model = (DefaultTableModel) this.tblTeamsPanel.getModel();
         while (model.getRowCount() > 0) {
@@ -1987,7 +1987,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             }
             if (tournament == null) {
                 return true;
-            }           
+            }
             if (!tournament.isChangeSinceLastSave()) {
                 return true;
             }
@@ -2023,11 +2023,11 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
-        File snFile = new File(Gotha.runningDirectory + "/tournamentfiles", shortName + "_work.xml"); 
+        File snFile = new File(Gotha.runningDirectory + "/tournamentfiles", shortName + "_work.xml");
         saveTournament(snFile);
-        
+
     }
-        
+
     private File saveTournament(File f) {
         TournamentInterface t = tournament;
         return saveTournament(t, f);
@@ -2054,9 +2054,9 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         }
 
         ExternalDocument.generateXMLFile(t, f);
-        
+
         return f;
-        
+
     }
 
     private void mniHelpAboutActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2084,12 +2084,12 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         File f =  this.chooseASaveFile(this.getDefaultSaveAsFileName());
         if (f == null) return;
-        
+
         updateShortNameFromFile(f);
-        
+
         // Make actual save
         this.saveTournament(f);
         try {
@@ -2097,23 +2097,23 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             tournament.setHasBeenSavedOnce(true);
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
-        }               
+        }
         this.addRecentTournament("" + f);
-        
+
         this.tournamentChanged();
     }
-    
+
     // Manages the JFileChooser Dialog and makes actual save
     File chooseASaveFile(String fileName){
         File defFile = new File(fileName);
-        
+
         File dir = defFile.getParentFile();
         String fn = defFile.getName();
-        
+
         JFileChooser fileChoice = new JFileChooser(dir);
         fileChoice.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChoice.setDialogType(JFileChooser.SAVE_DIALOG);
-      
+
         fileChoice.setSelectedFile(new File(fn));
 
         MyFileFilter mff = new MyFileFilter(new String[]{"xml"},
@@ -2131,17 +2131,17 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         }
         return f;
     }
-     
+
     void updateShortNameFromFile(File f){
         String fileName = "" + f;
         int indLastSep = 0;
-        // drop path and extension 
+        // drop path and extension
         for (int i = 0; i < fileName.length(); i++){
             if (fileName.charAt(i) == '/') indLastSep = i;
             if (fileName.charAt(i) == '\\') indLastSep = i;
         }
         String snExt = fileName.substring(indLastSep + 1);
-        
+
         int indLastPoint = snExt.length();
         for (int i = 0; i < snExt.length(); i++){
             if (snExt.charAt(i) == '.') indLastPoint = i;
@@ -2154,13 +2154,13 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         }
     }
 
-        
-    /** 
+
+    /**
      * Used to know what is the default Tournament File Name for saving
      * if hasBeenSavedOnce = false, the default is based on runningDirectory + "/tournamentfile/" sand shortName
      * else default is the °th recent tournament file
      * if no recent tournament file, default is based on runningDirectory and shortName
-     * @return 
+     * @return
      */
     String getDefaultSaveAsFileName(){
         boolean bHBSO = false;
@@ -2169,14 +2169,14 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         String shortName = "shortName";
         try {
             shortName = tournament.getShortName();
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
-        File snFile = new File(Gotha.runningDirectory + "/tournamentfiles", shortName + ".xml"); 
+        File snFile = new File(Gotha.runningDirectory + "/tournamentfiles", shortName + ".xml");
         String snFN;
         snFN = "" + snFile;
 
@@ -2188,7 +2188,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         if (rtFN.length() < 1) return snFN;
         return rtFN;
     }
- 
+
 private void mniRRActionPerformed(java.awt.event.ActionEvent evt) {
     if (tournament == null) {
         JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
@@ -2581,13 +2581,13 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
             File tcFile = new File(Gotha.runningDirectory + "/tournamentfiles/copies", shortName + "_Copy.xml");
             strTC = "" + tcFile;
         }
-            
+
         File f = this.chooseASaveFile(strTC);
         if (f == null) return;
         this.updateShortNameFromFile(f);
         saveTournament(f);
         gothaPrefs.put("tournamentCopy", "" + f);
-     
+
     }
 
     private void mniPublishActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2612,14 +2612,14 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
             JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         File f =  new File (this.getDefaultSaveAsFileName());
-        
+
         updateShortNameFromFile(f);
-        
+
         // Make actual save
         this.saveTournament(f);
-                
+
        try {
             tournament.setChangeSinceLastSaveAsFalse();
             tournament.setHasBeenSavedOnce(true);
@@ -2627,7 +2627,7 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.addRecentTournament("" + f);
-        
+
         this.tournamentChanged();
 
     }
@@ -2675,7 +2675,7 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
         if (!saveCurrentTournamentIfNecessary()) {
             return;
         }
-        
+
         // check whether a more recent work file has been saved for this tournament
         // Is there a work tournament ?
 
@@ -2685,17 +2685,17 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
         String strWorkNE= strFN + "_work.xml";
         String strDNE = strDir + "/" + strWorkNE;
         File fW = new File(strDNE);
-        
+
         long timeF = f.lastModified();
         long timeFW = fW.lastModified();
         if (timeFW - timeF > 2 * JFrGotha.REFRESH_DELAY){
             String strMes = locale.getString("error.confirm_recover_work_file");
             int rep = JOptionPane.showConfirmDialog(this, locale.getString("error.confirm_recover_work_file"), locale.format("error.confirm_recover", strNE), JOptionPane.OK_CANCEL_OPTION);
-            if (rep == JOptionPane.OK_OPTION) Files.copy(fW.toPath(), f.toPath(), REPLACE_EXISTING);  
+            if (rep == JOptionPane.OK_OPTION) Files.copy(fW.toPath(), f.toPath(), REPLACE_EXISTING);
             else Files.delete(fW.toPath());
         }
-        
-        
+
+
         TournamentInterface t = Gotha.getTournamentFromFile(f);
         if (t == null) {
             String strMessage = "Some problem occured with file : " + f.getName();
@@ -2758,7 +2758,7 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
         this.tournamentChanged();
         tournament = null;
         this.tournamentChanged();
-        
+
         Preferences prefsRoot = Preferences.userRoot();
         Preferences gothaPrefs = prefsRoot.node(Gotha.strPreferences);
         gothaPrefs.put("tournamentCopy", "");
@@ -2866,7 +2866,7 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
                 Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
     }
 
     private void demandedDisplayedRoundNumberHasChanged(int demandedRN) {
@@ -2957,13 +2957,20 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
         TableColumnModel tcm = tbl.getColumnModel();
 
         tcm.getColumn(col).setPreferredWidth(width);
-        
+
         // Alignment
         DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
         dtcr.setHorizontalAlignment(align);
         tcm.getColumn(col).setCellRenderer(dtcr);
     }
-    
+
+    private void displayFrame(Window win) {
+        win.pack();
+        Rectangle newRect = this.getBounds();
+        win.setLocation(newRect.x + 10, newRect.y + 10);
+        win.setVisible(true);
+    }
+
     private void displayFrame(Window win, int w, int h){
         Rectangle newRect = this.getBounds();
         win.setLocation(newRect.x + 10, newRect.y + 60);
