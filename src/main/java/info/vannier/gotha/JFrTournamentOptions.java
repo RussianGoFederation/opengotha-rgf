@@ -51,11 +51,11 @@ public class JFrTournamentOptions extends JFrame {
     private static final long REFRESH_DELAY = 2000;
     private long lastComponentsUpdateTime = 0;
 
-    
+
     private static final int CRITERION_NAME = 0;
     private static final int CRITERION_SHORT_NAME = 1;
     private static final int CRITERION_DESCRIPTION = 2;
-    
+
     private TournamentInterface tournament;
 
 	private GothaLocale locale;
@@ -83,7 +83,7 @@ public class JFrTournamentOptions extends JFrame {
         timer.start();
     }
 
-    
+
     public JFrTournamentOptions(TournamentInterface tournament) throws RemoteException{
         super();
 
@@ -324,15 +324,51 @@ public class JFrTournamentOptions extends JFrame {
         btnDlgChangeSystemCancel.addActionListener(this::btnDlgChangeSystemCancelActionPerformed);
         dlgChangeSystem.getContentPane().add(btnDlgChangeSystemCancel, "tag cancel");
 
-        dlgEditClubsGroups.getContentPane().setLayout(null);
+        dlgEditClubsGroups.getContentPane().setLayout(new MigLayout("flowy, insets dialog", "[sg, fill]unrel[sg, fill]unrel[sg, fill]", "[][grow, fill][][]unrel[]"));
+
+        jLabel25.setText(locale.getString("club_groups.club_groups"));
+        dlgEditClubsGroups.getContentPane().add(jLabel25);
+
+        lstClubsGroups.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        lstClubsGroups.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lstClubsGroups.addListSelectionListener(this::lstClubsGroupsValueChanged);
+        scpClubsGroups.setViewportView(lstClubsGroups);
+
+        dlgEditClubsGroups.getContentPane().add(scpClubsGroups);
+
+        btnAddGroup.setText(locale.getString("club_groups.btn_new_group"));
+        btnAddGroup.addActionListener(this::btnAddGroupActionPerformed);
+        dlgEditClubsGroups.getContentPane().add(btnAddGroup);
+
+        btnRemoveGroup.setText(locale.getString("club_groups.btn_remove_group"));
+        btnRemoveGroup.addActionListener(this::btnRemoveGroupActionPerformed);
+        dlgEditClubsGroups.getContentPane().add(btnRemoveGroup);
 
         btnDlgEditClubsGroupsClose.setText(locale.getString("btn.close"));
-        btnDlgEditClubsGroupsClose.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDlgEditClubsGroupsCloseActionPerformed(evt);
-            }
-        });
-        dlgEditClubsGroups.getContentPane().add(btnDlgEditClubsGroupsClose);
+        btnDlgEditClubsGroupsClose.addActionListener(this::btnDlgEditClubsGroupsCloseActionPerformed);
+        dlgEditClubsGroups.getContentPane().add(btnDlgEditClubsGroupsClose, "spanx, wrap, tag cancel");
+
+        jLabel42.setText(locale.getString("club_groups.clubs_in_selected_group"));
+        dlgEditClubsGroups.getContentPane().add(jLabel42);
+
+        scpClubsInSelectedGroup.setViewportView(lstClubsInSelectedGroup);
+
+        dlgEditClubsGroups.getContentPane().add(scpClubsInSelectedGroup);
+
+        btnAddClub.setText(locale.getString("club_groups.btn_add_club"));
+        btnAddClub.addActionListener(this::btnAddClubActionPerformed);
+        dlgEditClubsGroups.getContentPane().add(btnAddClub);
+
+        btnRemoveClub.setText(locale.getString("club_groups.btn_remove_club"));
+        btnRemoveClub.addActionListener(this::btnRemoveClubActionPerformed);
+        dlgEditClubsGroups.getContentPane().add(btnRemoveClub, "wrap");
+
+        jLabel41.setText(locale.getString("club_groups.known_clubs"));
+        dlgEditClubsGroups.getContentPane().add(jLabel41);
 
         lstClubs.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -341,67 +377,7 @@ public class JFrTournamentOptions extends JFrame {
         });
         scpClubs.setViewportView(lstClubs);
 
-        dlgEditClubsGroups.getContentPane().add(scpClubs);
-
-        jLabel41.setText(locale.getString("club_groups.known_clubs"));
-        dlgEditClubsGroups.getContentPane().add(jLabel41);
-
-        lstClubsGroups.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        lstClubsGroups.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        lstClubsGroups.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                lstClubsGroupsValueChanged(evt);
-            }
-        });
-        scpClubsGroups.setViewportView(lstClubsGroups);
-
-        dlgEditClubsGroups.getContentPane().add(scpClubsGroups);
-
-        jLabel25.setText(locale.getString("club_groups.club_groups"));
-        dlgEditClubsGroups.getContentPane().add(jLabel25);
-
-        scpClubsInSelectedGroup.setViewportView(lstClubsInSelectedGroup);
-
-        dlgEditClubsGroups.getContentPane().add(scpClubsInSelectedGroup);
-
-        jLabel42.setText(locale.getString("club_groups.clubs_in_selected_group"));
-        dlgEditClubsGroups.getContentPane().add(jLabel42);
-
-        btnAddGroup.setText(locale.getString("club_groups.btn_new_group"));
-        btnAddGroup.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddGroupActionPerformed(evt);
-            }
-        });
-        dlgEditClubsGroups.getContentPane().add(btnAddGroup);
-
-        btnRemoveGroup.setText(locale.getString("club_groups.btn_remove_group"));
-        btnRemoveGroup.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRemoveGroupActionPerformed(evt);
-            }
-        });
-        dlgEditClubsGroups.getContentPane().add(btnRemoveGroup);
-
-        btnAddClub.setText(locale.getString("club_groups.btn_add_club"));
-        btnAddClub.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddClubActionPerformed(evt);
-            }
-        });
-        dlgEditClubsGroups.getContentPane().add(btnAddClub);
-
-        btnRemoveClub.setText(locale.getString("club_groups.btn_remove_club"));
-        btnRemoveClub.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRemoveClubActionPerformed(evt);
-            }
-        });
-        dlgEditClubsGroups.getContentPane().add(btnRemoveClub);
+        dlgEditClubsGroups.getContentPane().add(scpClubs, "grow, spany 3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Tournament settings");
@@ -1400,7 +1376,7 @@ public class JFrTournamentOptions extends JFrame {
         if (this.rdbMcMahon.isSelected()) system = TournamentParameterSet.TYPE_MCMAHON;
         if (this.rdbSwiss.isSelected()) system = TournamentParameterSet.TYPE_SWISS;
         if (this.rdbSwissCat.isSelected()) system = TournamentParameterSet.TYPE_SWISSCAT;
-        
+
         TournamentParameterSet tps;
         try {
             tps = tournament.getTournamentParameterSet();
@@ -1419,7 +1395,7 @@ public class JFrTournamentOptions extends JFrame {
                 hps.initForMM();
                 pps.initForMM();
                 paiPS.initForMM();
-                dpps.initForMM();              
+                dpps.initForMM();
                 break;
             case TournamentParameterSet.TYPE_SWISS:
                 gps.initForSwiss();
@@ -1441,13 +1417,13 @@ public class JFrTournamentOptions extends JFrame {
                 pps.initForMM();
                 paiPS.initForMM();
         }
-        
+
         try {
             tournament.setTournamentParameterSet(tps);
             this.tournamentChanged();
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }              
+        }
         dlgChangeSystem.dispose();
     }
 
@@ -1468,7 +1444,7 @@ public class JFrTournamentOptions extends JFrame {
         if (tournamentType == TournamentParameterSet.TYPE_MCMAHON) rdbMcMahon.setSelected(true);
         if (tournamentType == TournamentParameterSet.TYPE_SWISS) rdbSwiss.setSelected(true);
         if (tournamentType == TournamentParameterSet.TYPE_SWISSCAT) rdbSwissCat.setSelected(true);
-         
+
         dlgChangeSystem.setVisible(true);
         dlgChangeSystem.setTitle(locale.getString("tournament.reset"));
         dlgChangeSystem.pack();
@@ -1504,31 +1480,31 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }       
-        
+        }
+
         boolean bSomethingHasChanged = false;
 
-        
+
         int oldRankThreshold = paiPS.getPaiSeRankThreshold();
         int newRankThreshold = Player.convertKDPToInt(this.txfSeRankThreshold.getText());
         if (newRankThreshold != oldRankThreshold){
             paiPS.setPaiSeRankThreshold(newRankThreshold);
             bSomethingHasChanged = true;
         }
-        
+
         boolean oldBarThresholdActive = paiPS.isPaiSeBarThresholdActive();
         boolean newBarThresholdActive = this.ckbSeBarThresholdActive.isSelected();
         if (newBarThresholdActive != oldBarThresholdActive){
             paiPS.setPaiSeBarThresholdActive(newBarThresholdActive);
-            bSomethingHasChanged = true;            
+            bSomethingHasChanged = true;
         }
         boolean oldNbWinsThresholdActive = paiPS.isPaiSeNbWinsThresholdActive();
         boolean newNbWinsThresholdActive = this.ckbSeNbWinsThresholdActive.isSelected();
          if (newNbWinsThresholdActive != oldNbWinsThresholdActive){
             paiPS.setPaiSeNbWinsThresholdActive(newNbWinsThresholdActive);
-            bSomethingHasChanged = true;            
+            bSomethingHasChanged = true;
         }
-        
+
         int oldPreferMMSDiffRatherThanSameCountry = paiPS.getPaiSePreferMMSDiffRatherThanSameCountry();
         int newPreferMMSDiffRatherThanSameCountry;
         try {
@@ -1540,9 +1516,9 @@ public class JFrTournamentOptions extends JFrame {
         }
         if (newPreferMMSDiffRatherThanSameCountry != oldPreferMMSDiffRatherThanSameCountry){
             paiPS.setPaiSePreferMMSDiffRatherThanSameCountry(newPreferMMSDiffRatherThanSameCountry);
-            bSomethingHasChanged = true;            
+            bSomethingHasChanged = true;
         }
-        
+
         int oldPreferMMSDiffRatherThanSameClubsGroup = paiPS.getPaiSePreferMMSDiffRatherThanSameClubsGroup();
         int newPreferMMSDiffRatherThanSameClubsGroup;
         try{
@@ -1554,9 +1530,9 @@ public class JFrTournamentOptions extends JFrame {
         }
         if (newPreferMMSDiffRatherThanSameClubsGroup != oldPreferMMSDiffRatherThanSameClubsGroup){
             paiPS.setPaiSePreferMMSDiffRatherThanSameClubsGroup(newPreferMMSDiffRatherThanSameClubsGroup);
-            bSomethingHasChanged = true; 
+            bSomethingHasChanged = true;
         }
-        
+
         int oldPreferMMSDiffRatherThanSameClub = paiPS.getPaiSePreferMMSDiffRatherThanSameClub();
         int newPreferMMSDiffRatherThanSameClub;
         // newPreferMMSDiffRatherThanSameClub = Integer.parseInt(this.txfSeClub.getText());
@@ -1567,10 +1543,10 @@ public class JFrTournamentOptions extends JFrame {
             newPreferMMSDiffRatherThanSameClub = oldPreferMMSDiffRatherThanSameClub;
             this.txfSeClub.setText("" + oldPreferMMSDiffRatherThanSameClub);
         }
-        
+
         if (newPreferMMSDiffRatherThanSameClub != oldPreferMMSDiffRatherThanSameClub){
             paiPS.setPaiSePreferMMSDiffRatherThanSameClub(newPreferMMSDiffRatherThanSameClub);
-            bSomethingHasChanged = true; 
+            bSomethingHasChanged = true;
         }
         long oldMinimizeHandicap = paiPS.getPaiSeMinimizeHandicap();
         long newMinimizeHandicap = this.ckbSeMinimizeHandicap.isSelected() ? paiPS.getPaiSeDefSecCrit() : 0;
@@ -1578,7 +1554,7 @@ public class JFrTournamentOptions extends JFrame {
             paiPS.setPaiSeMinimizeHandicap(newMinimizeHandicap);
             bSomethingHasChanged = true;
         }
-        
+
         if (bSomethingHasChanged){
             try {
                 tournament.setTournamentParameterSet(tps);
@@ -1586,9 +1562,9 @@ public class JFrTournamentOptions extends JFrame {
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }    
+        }
     }
-    
+
     private void ckbBalanceWBFocusLost(java.awt.event.FocusEvent evt) {
         TournamentParameterSet tps;
         PairingParameterSet paiPS;
@@ -1598,8 +1574,8 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }        
-        
+        }
+
         boolean bSomethingHasChanged = false;
         long oldBalanceWB = paiPS.getPaiBaBalanceWB();
         long newBalanceWB = this.ckbBalanceWB.isSelected() ? PairingParameterSet.PAIBA_MAX_BALANCEWB : 0;
@@ -1614,7 +1590,7 @@ public class JFrTournamentOptions extends JFrame {
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }    
+        }
     }
 
     private void ckbDeterministicFocusLost(java.awt.event.FocusEvent evt) {
@@ -1636,8 +1612,8 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }        
-        
+        }
+
         boolean bSomethingHasChanged = false;
         long oldRandom = paiPS.getPaiBaRandom();
         long newRandom = this.rdbAcceptRandom.isSelected() ? PairingParameterSet.PAIBA_MAX_RANDOM : 0;
@@ -1658,9 +1634,9 @@ public class JFrTournamentOptions extends JFrame {
              } catch (RemoteException ex) {
                 Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }                
+        }
     }
-    
+
     private void rdbDUDDFocusLost(java.awt.event.FocusEvent evt) {
         TournamentParameterSet tps;
         PairingParameterSet paiPS;
@@ -1670,26 +1646,26 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }   
-        
+        }
+
         boolean bSomethingHasChanged = false;
         int oldDUDDUpperMode = paiPS.getPaiMaDUDDUpperMode();
-        int newDUDDUpperMode = PairingParameterSet.PAIMA_DUDD_TOP;       
+        int newDUDDUpperMode = PairingParameterSet.PAIMA_DUDD_TOP;
         if (this.rdbDUDDUGMid.isSelected()) newDUDDUpperMode = PairingParameterSet.PAIMA_DUDD_MID;
-        if (this.rdbDUDDUGBot.isSelected()) newDUDDUpperMode = PairingParameterSet.PAIMA_DUDD_BOT;     
+        if (this.rdbDUDDUGBot.isSelected()) newDUDDUpperMode = PairingParameterSet.PAIMA_DUDD_BOT;
         if (newDUDDUpperMode != oldDUDDUpperMode){
             paiPS.setPaiMaDUDDUpperMode(newDUDDUpperMode);
             bSomethingHasChanged = true;
         }
         int oldDUDDLowerMode = paiPS.getPaiMaDUDDLowerMode();
-        int newDUDDLowerMode = PairingParameterSet.PAIMA_DUDD_TOP;       
+        int newDUDDLowerMode = PairingParameterSet.PAIMA_DUDD_TOP;
         if (this.rdbDUDDLGMid.isSelected()) newDUDDLowerMode = PairingParameterSet.PAIMA_DUDD_MID;
-        if (this.rdbDUDDLGBot.isSelected()) newDUDDLowerMode = PairingParameterSet.PAIMA_DUDD_BOT;     
+        if (this.rdbDUDDLGBot.isSelected()) newDUDDLowerMode = PairingParameterSet.PAIMA_DUDD_BOT;
         if (newDUDDLowerMode != oldDUDDLowerMode){
             paiPS.setPaiMaDUDDLowerMode(newDUDDLowerMode);
             bSomethingHasChanged = true;
         }
-                
+
         if (bSomethingHasChanged){
             try {
                 tournament.setTournamentParameterSet(tps);
@@ -1709,27 +1685,27 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }   
-        
+        }
+
         boolean bSomethingHasChanged = false;
         int oldSeedSystem1 = paiPS.getPaiMaSeedSystem1();
         int newSeedSystem1 = PairingParameterSet.PAIMA_SEED_SPLITANDRANDOM;
         if (this.rdbFormerSplitAndFold.isSelected()) newSeedSystem1 = PairingParameterSet.PAIMA_SEED_SPLITANDFOLD;
-        if (this.rdbFormerSplitAndSlip.isSelected()) newSeedSystem1 = PairingParameterSet.PAIMA_SEED_SPLITANDSLIP;        
+        if (this.rdbFormerSplitAndSlip.isSelected()) newSeedSystem1 = PairingParameterSet.PAIMA_SEED_SPLITANDSLIP;
         if (newSeedSystem1 != oldSeedSystem1){
             paiPS.setPaiMaSeedSystem1(newSeedSystem1);
             bSomethingHasChanged = true;
         }
-        
+
         int oldSeedSystem2 = paiPS.getPaiMaSeedSystem2();
         int newSeedSystem2 = PairingParameterSet.PAIMA_SEED_SPLITANDRANDOM;
         if (this.rdbLatterSplitAndFold.isSelected()) newSeedSystem2 = PairingParameterSet.PAIMA_SEED_SPLITANDFOLD;
-        if (this.rdbLatterSplitAndSlip.isSelected()) newSeedSystem2 = PairingParameterSet.PAIMA_SEED_SPLITANDSLIP;        
+        if (this.rdbLatterSplitAndSlip.isSelected()) newSeedSystem2 = PairingParameterSet.PAIMA_SEED_SPLITANDSLIP;
         if (newSeedSystem2 != oldSeedSystem2){
             paiPS.setPaiMaSeedSystem2(newSeedSystem2);
             bSomethingHasChanged = true;
         }
-        
+
         if (bSomethingHasChanged){
             try {
                 tournament.setTournamentParameterSet(tps);
@@ -1754,7 +1730,7 @@ public class JFrTournamentOptions extends JFrame {
         PlacementCriterion oldPaiMaAdditionalPlacementCritSystem1 = paiPS.getPaiMaAdditionalPlacementCritSystem1();
         PlacementCriterion newPaiMaAdditionalPlacementCritSystem1 = this.ckbAddSortOnRating.isSelected() ?
             PlacementCriterion.RATING : null;
-        
+
         if (newPaiMaAdditionalPlacementCritSystem1 != oldPaiMaAdditionalPlacementCritSystem1){
             paiPS.setPaiMaAdditionalPlacementCritSystem1(newPaiMaAdditionalPlacementCritSystem1);
             try {
@@ -1777,10 +1753,10 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }   
+        }
         int oldLastRoundForSeedSystem1 = paiPS.getPaiMaLastRoundForSeedSystem1();
         int newLastRoundForSeedSystem1 = new Integer(txfLastRoundForSeedSystem1.getText()).intValue() - 1;
-        if (newLastRoundForSeedSystem1 < 1 || newLastRoundForSeedSystem1 >= gps.getNumberOfRounds()){ 
+        if (newLastRoundForSeedSystem1 < 1 || newLastRoundForSeedSystem1 >= gps.getNumberOfRounds()){
             this.txfLastRoundForSeedSystem1.setText("" + (oldLastRoundForSeedSystem1 + 1));
             return;
         }
@@ -1804,17 +1780,17 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }   
+        }
         int oldGenMMFloor = gps.getGenMMFloor();
-        int newGenMMFloor = Player.convertKDPToInt(this.txfMMFloor.getText());        
-        txfMMFloor.setText("" + Player.convertIntToKD(newGenMMFloor)); 
-        if (newGenMMFloor > GeneralParameterSet.GEN_MM_FLOOR_MAX 
+        int newGenMMFloor = Player.convertKDPToInt(this.txfMMFloor.getText());
+        txfMMFloor.setText("" + Player.convertIntToKD(newGenMMFloor));
+        if (newGenMMFloor > GeneralParameterSet.GEN_MM_FLOOR_MAX
                 || newGenMMFloor < GeneralParameterSet.GEN_MM_FLOOR_MIN
                 || newGenMMFloor > gps.getGenMMBar()){
             // Error. Keep old value
-            txfMMFloor.setText("" + Player.convertIntToKD(oldGenMMFloor));  
+            txfMMFloor.setText("" + Player.convertIntToKD(oldGenMMFloor));
             return;
-        } 
+        }
         if (newGenMMFloor != oldGenMMFloor){
             gps.setGenMMFloor(newGenMMFloor);
             try {
@@ -1835,17 +1811,17 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }   
+        }
         int oldGenMMBar = gps.getGenMMBar();
         int newGenMMBar = Player.convertKDPToInt(this.txfMMBar.getText());
-        txfMMBar.setText("" + Player.convertIntToKD(newGenMMBar));  
-        if ((newGenMMBar > GeneralParameterSet.GEN_MM_BAR_MAX) 
+        txfMMBar.setText("" + Player.convertIntToKD(newGenMMBar));
+        if ((newGenMMBar > GeneralParameterSet.GEN_MM_BAR_MAX)
             || (newGenMMBar < GeneralParameterSet.GEN_MM_BAR_MIN)
             || (newGenMMBar < gps.getGenMMFloor())){
             // Error. Keep old value
-            txfMMBar.setText("" + Player.convertIntToKD(oldGenMMBar));  
+            txfMMBar.setText("" + Player.convertIntToKD(oldGenMMBar));
             return;
-        } 
+        }
         if (newGenMMBar != oldGenMMBar){
             gps.setGenMMBar(newGenMMBar);
             try {
@@ -1866,8 +1842,8 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }   
-        
+        }
+
         boolean bSomethingHasChanged = false;
         int newGenMMS2ValueAbsent = 0;
         if (this.rdbAbsentMMS1.isSelected()) newGenMMS2ValueAbsent = 1;
@@ -1907,7 +1883,7 @@ public class JFrTournamentOptions extends JFrame {
             }
         }
     }
-    
+
     private void txfHdCeilingFocusLost(java.awt.event.FocusEvent evt) {
        TournamentParameterSet tps;
         try {
@@ -1920,7 +1896,7 @@ public class JFrTournamentOptions extends JFrame {
         int oldHdCeiling = hps.getHdCeiling();
         int newHdCeiling;
         try{
-            newHdCeiling = (new Integer(txfHdCeiling.getText())).intValue();            
+            newHdCeiling = (new Integer(txfHdCeiling.getText())).intValue();
         }
         catch(NumberFormatException e){
             try {
@@ -1930,7 +1906,7 @@ public class JFrTournamentOptions extends JFrame {
             }
             return;
         }
-        if (newHdCeiling < 0 || newHdCeiling > 9) {  
+        if (newHdCeiling < 0 || newHdCeiling > 9) {
             try {
                 this.updatePnlHan();
             } catch (RemoteException ex) {
@@ -1946,9 +1922,9 @@ public class JFrTournamentOptions extends JFrame {
             this.tournamentChanged();
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }      
+        }
     }
-    
+
     private void updHdCorrection(){
         TournamentParameterSet tps;
         try {
@@ -1960,11 +1936,11 @@ public class JFrTournamentOptions extends JFrame {
         HandicapParameterSet hps = tps.getHandicapParameterSet();
         int oldHdCorrection = hps.getHdCorrection();
         int newHdCorrection = 0;
-        if (rdbHdCorrection0.isSelected()) newHdCorrection = 0; 
-        if (rdbHdCorrection1.isSelected()) newHdCorrection = 1; 
-        if (rdbHdCorrection2.isSelected()) newHdCorrection = 2; 
-        if (rdbHdCorrection3.isSelected()) newHdCorrection = 3; 
-        if (rdbHdCorrectionPlus1.isSelected()) newHdCorrection = -1; 
+        if (rdbHdCorrection0.isSelected()) newHdCorrection = 0;
+        if (rdbHdCorrection1.isSelected()) newHdCorrection = 1;
+        if (rdbHdCorrection2.isSelected()) newHdCorrection = 2;
+        if (rdbHdCorrection3.isSelected()) newHdCorrection = 3;
+        if (rdbHdCorrectionPlus1.isSelected()) newHdCorrection = -1;
         if (newHdCorrection == oldHdCorrection) return;
         hps.setHdCorrection(newHdCorrection);
         tps.setHandicapParameterSet(hps);
@@ -1973,9 +1949,9 @@ public class JFrTournamentOptions extends JFrame {
             this.tournamentChanged();
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }                  
+        }
     }
-    
+
     private void txfNoHdRankThresholdFocusLost(java.awt.event.FocusEvent evt) {
         TournamentParameterSet tps;
         try {
@@ -1987,7 +1963,7 @@ public class JFrTournamentOptions extends JFrame {
         HandicapParameterSet hps = tps.getHandicapParameterSet();
         int oldNoHdRankThreshold = hps.getHdNoHdRankThreshold();
         int newNoHdRankThreshold = Player.convertKDPToInt(txfNoHdRankThreshold.getText());
-        if (newNoHdRankThreshold < Gotha.MIN_RANK) {   
+        if (newNoHdRankThreshold < Gotha.MIN_RANK) {
             try {
                 this.updatePnlHan();
             } catch (RemoteException ex) {
@@ -2003,7 +1979,7 @@ public class JFrTournamentOptions extends JFrame {
             this.tournamentChanged();
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }      
+        }
     }
 
     private void btnAdjustCategoryLimitsActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2024,16 +2000,16 @@ public class JFrTournamentOptions extends JFrame {
             return;
         }
         GeneralParameterSet gps = tps.getGeneralParameterSet();
-        
+
         int oldNbRounds = gps.getNumberOfRounds();
         int newNbRounds = oldNbRounds;
-        try {           
+        try {
             newNbRounds = ((Integer) this.txfNumberOfRounds.getValue());
         } catch (NumberFormatException ex) {
         }
         if (newNbRounds <= 0) newNbRounds = oldNbRounds;
         if (newNbRounds > Gotha.MAX_NUMBER_OF_ROUNDS) newNbRounds = Gotha.MAX_NUMBER_OF_ROUNDS;
-        
+
         // Refuse to decrease number of rounds if round not empty
         for (int r = oldNbRounds - 1; r >= newNbRounds; r-- ){
             try {
@@ -2057,8 +2033,8 @@ public class JFrTournamentOptions extends JFrame {
             this.tournamentChanged();
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }      
-        
+        }
+
     }
 
     private void txfBeginDateFocusLost(java.awt.event.FocusEvent evt) {
@@ -2073,7 +2049,7 @@ public class JFrTournamentOptions extends JFrame {
         Date oldBeginDate = gps.getBeginDate();
         Date newBeginDate = txfBeginDate.getDate();
         if (newBeginDate.equals(oldBeginDate)) return;
-        gps.setBeginDate(newBeginDate);        
+        gps.setBeginDate(newBeginDate);
 
         tps.setGeneralParameterSet(gps);
         try {
@@ -2082,7 +2058,7 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     private void txfLocationFocusLost(java.awt.event.FocusEvent evt) {
@@ -2137,10 +2113,10 @@ public class JFrTournamentOptions extends JFrame {
             return;
         }
         GeneralParameterSet gps = tps.getGeneralParameterSet();
-        
+
         int oldNbCategories = gps.getNumberOfCategories();
         int newNbCategories = -1;
-        try {           
+        try {
             newNbCategories = (Integer) this.txfNumberOfCategories.getValue();
         } catch (NumberFormatException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
@@ -2155,7 +2131,7 @@ public class JFrTournamentOptions extends JFrame {
             for (int c = 0; c < newLowerCategoryLimits.length; c++ ){
                 if (c < oldLowerCategoryLimits.length) newLowerCategoryLimits[c] = oldLowerCategoryLimits[c];
                 else newLowerCategoryLimits[c] = -30;
-            } 
+            }
             gps.setNumberOfCategories(newNbCategories);
             gps.setLowerCategoryLimits(newLowerCategoryLimits);
             tps.setGeneralParameterSet(gps);
@@ -2164,11 +2140,11 @@ public class JFrTournamentOptions extends JFrame {
                 this.tournamentChanged();
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-            }      
+            }
         }
     }
-    
-    private void tabTxfLowerLimitOfCatFocusLost(java.awt.event.FocusEvent evt) {        
+
+    private void tabTxfLowerLimitOfCatFocusLost(java.awt.event.FocusEvent evt) {
         TournamentParameterSet tps;
         try {
             tps = tournament.getTournamentParameterSet();
@@ -2177,7 +2153,7 @@ public class JFrTournamentOptions extends JFrame {
             return;
         }
         GeneralParameterSet gps = tps.getGeneralParameterSet();
-        
+
         for (int c = 0; c < this.tabTxfLowerLimitOfCat.length; c++){
             if (evt.getSource() == tabTxfLowerLimitOfCat[c]){
                 int newLowerLimit = Player.convertKDPToInt(tabTxfLowerLimitOfCat[c].getText());
@@ -2193,9 +2169,9 @@ public class JFrTournamentOptions extends JFrame {
                 if (newLowerLimit == oldLowerLimit) return;
                 int[] newTabTxfLowerLimitOfCat = gps.getLowerCategoryLimits();
                 newTabTxfLowerLimitOfCat[c] = newLowerLimit;
-                for (int cc = 0; cc < c; cc++) 
+                for (int cc = 0; cc < c; cc++)
                     if (newTabTxfLowerLimitOfCat[cc] < newLowerLimit) newTabTxfLowerLimitOfCat[cc] = newLowerLimit;
-                for (int cc = c; cc < newTabTxfLowerLimitOfCat.length; cc++) 
+                for (int cc = c; cc < newTabTxfLowerLimitOfCat.length; cc++)
                     if (newTabTxfLowerLimitOfCat[cc] > newLowerLimit) newTabTxfLowerLimitOfCat[cc] = newLowerLimit;
                 gps.setLowerCategoryLimits(newTabTxfLowerLimitOfCat);
                 tps.setGeneralParameterSet(gps);
@@ -2204,11 +2180,11 @@ public class JFrTournamentOptions extends JFrame {
                     this.tournamentChanged();
                 } catch (RemoteException ex) {
                     Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-                }      
-            }                
-        }         
+                }
+            }
+        }
     }
-    
+
     private void updateCriteriaFromComboBoxes(){
         TournamentParameterSet tps;
         PlacementParameterSet pps;
@@ -2224,7 +2200,7 @@ public class JFrTournamentOptions extends JFrame {
         plaCrit[1] = PlacementCriterion.fromLongName((String)cbxCrit2.getModel().getSelectedItem());
         plaCrit[2] = PlacementCriterion.fromLongName((String)cbxCrit3.getModel().getSelectedItem());
         plaCrit[3] = PlacementCriterion.fromLongName((String)cbxCrit4.getModel().getSelectedItem());
-        
+
         // Immediately filter double DC/SDC criteria, which is stritly forbidden
         int nbDirCrit = 0;
         for (int c = 0; c < plaCrit.length; c++){
@@ -2275,7 +2251,7 @@ public class JFrTournamentOptions extends JFrame {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {
         cleanClose();
     }
@@ -2308,7 +2284,7 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     private void rdbHdBaseMMSActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2341,7 +2317,7 @@ public class JFrTournamentOptions extends JFrame {
         this.rdbSwiss.setEnabled(!bResetSelected);
         this.rdbSwissCat.setEnabled(!bResetSelected);
         this.lblRecommended.setEnabled(!bResetSelected);
-        
+
         if (bResetSelected){
             int tournamentType = TournamentParameterSet.TYPE_UNDEFINED;
             try {
@@ -2380,7 +2356,7 @@ public class JFrTournamentOptions extends JFrame {
         Date oldEndDate = gps.getEndDate();
         Date newEndDate = txfEndDate.getDate();
         if (newEndDate.equals(oldEndDate)) return;
-        gps.setEndDate(newEndDate);        
+        gps.setEndDate(newEndDate);
 
         tps.setGeneralParameterSet(gps);
         try {
@@ -2389,7 +2365,7 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     private void txfDirectorFocusLost(java.awt.event.FocusEvent evt) {
@@ -2427,15 +2403,15 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }   
-        
+        }
+
         boolean bSomethingHasChanged = false;
         boolean newRoundDown = this.ckbRoundDown.isSelected();
         if (newRoundDown != gps.isGenRoundDownNBWMMS()){
             gps.setGenRoundDownNBWMMS(newRoundDown);
             bSomethingHasChanged = true;
         }
-        
+
         if (bSomethingHasChanged){
             try {
                 tournament.setTournamentParameterSet(tps);
@@ -2460,8 +2436,8 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }        
-        
+        }
+
         boolean bSomethingHasChanged = false;
         boolean oldCompensateDUDD = paiPS.isPaiMaCompensateDUDD();
         boolean newCompensateDUDD = this.ckbCompensate.isSelected();
@@ -2476,7 +2452,7 @@ public class JFrTournamentOptions extends JFrame {
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }    
+        }
 
     }
 
@@ -2489,16 +2465,16 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }   
+        }
         int oldGenMMZero = gps.getGenMMZero();
-        int newGenMMZero = Player.convertKDPToInt(this.txfMMZero.getText());        
-        txfMMZero.setText("" + Player.convertIntToKD(newGenMMZero)); 
-        if (newGenMMZero > GeneralParameterSet.GEN_MM_ZERO_MAX 
+        int newGenMMZero = Player.convertKDPToInt(this.txfMMZero.getText());
+        txfMMZero.setText("" + Player.convertIntToKD(newGenMMZero));
+        if (newGenMMZero > GeneralParameterSet.GEN_MM_ZERO_MAX
                 || newGenMMZero < GeneralParameterSet.GEN_MM_ZERO_MIN){
             // Error. Keep old value
-            txfMMZero.setText("" + Player.convertIntToKD(oldGenMMZero));  
+            txfMMZero.setText("" + Player.convertIntToKD(oldGenMMZero));
             return;
-        } 
+        }
         if (newGenMMZero != oldGenMMZero){
             gps.setGenMMZero(newGenMMZero);
             try {
@@ -2522,7 +2498,7 @@ public class JFrTournamentOptions extends JFrame {
         dlgEditClubsGroups.setTitle(locale.getString("club_groups.window_title"));
         dlgEditClubsGroups.setIconImage(Gotha.getIconImage());
         dlgEditClubsGroups.setVisible(true);
-        
+
     }
 
     private void lstClubsGroupsValueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -2549,7 +2525,7 @@ public class JFrTournamentOptions extends JFrame {
             }
             tournament.addClubsGroup(new ClubsGroup(groupName));
             this.tournamentChanged();
-              
+
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -2561,12 +2537,12 @@ public class JFrTournamentOptions extends JFrame {
         String strGroup = (String)sel;
         try {
             tournament.removeClubsGroup(new ClubsGroup(strGroup));
-            lstClubsGroups.clearSelection(); 
+            lstClubsGroups.clearSelection();
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-        
+
     }
 
     private void btnAddClubActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2578,7 +2554,7 @@ public class JFrTournamentOptions extends JFrame {
             return;
         }
         groupName = (String)sel;
-        
+
         String strResponse = JOptionPane.showInputDialog(locale.getString("club_groups.enter_club_name"), locale.getString("club_groups.club_name"));
         if (strResponse == null) {
             return;
@@ -2612,7 +2588,7 @@ public class JFrTournamentOptions extends JFrame {
     }
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {
-        cleanClose();        
+        cleanClose();
     }
 
     private void ckbCountNPGFocusLost(java.awt.event.FocusEvent evt) {
@@ -2624,15 +2600,15 @@ public class JFrTournamentOptions extends JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             return;
-        }   
-        
+        }
+
         boolean bSomethingHasChanged = false;
         boolean newCountNPG = this.ckbCountNPG.isSelected();
         if (newCountNPG != gps.isGenCountNotPlayedGamesAsHalfPoint()){
             gps.setGenCountNotPlayedGamesAsHalfPoint(newCountNPG);
             bSomethingHasChanged = true;
         }
-        
+
         if (bSomethingHasChanged){
             try {
                 tournament.setTournamentParameterSet(tps);
@@ -2680,7 +2656,7 @@ public class JFrTournamentOptions extends JFrame {
         initPnlTPl();
         this.updateAllViews();
     }
-    
+
     private void initPnlGen()throws RemoteException{
         if (Gotha.runningMode == Gotha.RUNNING_MODE_CLI) this.txfShortName.setEditable(false);
         updatePnlGen();
@@ -2692,7 +2668,7 @@ public class JFrTournamentOptions extends JFrame {
         // For any type of tournament crit 1 should not be modified
         cbxCrit1.setEnabled(false);
         // And for SwissCat Tournaments, crit 2 should not be modified
-        if (tournament.tournamentType() == TournamentParameterSet.TYPE_SWISSCAT)         
+        if (tournament.tournamentType() == TournamentParameterSet.TYPE_SWISSCAT)
             cbxCrit2.setEnabled(false);
 
         // Fill Criterion Glossary JTable
@@ -2710,7 +2686,7 @@ public class JFrTournamentOptions extends JFrame {
             row.add(pCrit.getLongName());
             row.add(pCrit.getShortName());
             row.add(pCrit.getDescription(locale));
-          
+
             model.addRow(row);
         }
 
@@ -2747,23 +2723,23 @@ public class JFrTournamentOptions extends JFrame {
     private void initPnlPai()throws RemoteException{
         updatePnlPai();
     }
-    
+
     private void updatePnlGen()throws RemoteException{
         GeneralParameterSet gps = tournament.getTournamentParameterSet().getGeneralParameterSet();
         int tournamentType = tournament.tournamentType();
         if (tournamentType == TournamentParameterSet.TYPE_UNDEFINED){
             this.pnlTournamentDetails.setVisible(true);
             this.lblSystemName.setVisible(false);
-            this.pnlCategories.setVisible(false); 
+            this.pnlCategories.setVisible(false);
             this.pnlMcMahon.setVisible(false);
         }
         if (tournamentType == TournamentParameterSet.TYPE_MCMAHON){
             this.pnlTournamentDetails.setVisible(true);
             this.lblSystemName.setVisible(true);
             this.lblSystemName.setText(locale.getString("tournament.system.mcmahon_system"));
-            this.pnlCategories.setVisible(false);                      
+            this.pnlCategories.setVisible(false);
             this.pnlMcMahon.setVisible(true);
-        }        
+        }
         if (tournamentType == TournamentParameterSet.TYPE_SWISS){
             this.pnlTournamentDetails.setVisible(true);
             this.lblSystemName.setVisible(true);
@@ -2775,10 +2751,10 @@ public class JFrTournamentOptions extends JFrame {
             this.pnlTournamentDetails.setVisible(true);
             this.lblSystemName.setVisible(true);
             this.lblSystemName.setText(locale.getString("tournament.system.swiss_cat_system"));
-            this.pnlCategories.setVisible(true);                      
+            this.pnlCategories.setVisible(true);
             this.pnlMcMahon.setVisible(false);
         }
-        
+
         // Identification Panel
         this.txfShortName.setText(gps.getShortName());
         this.txfName.setText(gps.getName());
@@ -2787,7 +2763,7 @@ public class JFrTournamentOptions extends JFrame {
         this.txfBeginDate.setDate(gps.getBeginDate());
         this.txfEndDate.setDate(gps.getEndDate());
         this.txfNumberOfRounds.setValue(gps.getNumberOfRounds());
-        
+
         // Categories Panel
         if (this.pnlCategories.isVisible()){
             int nbCat = gps.getNumberOfCategories();
@@ -2796,7 +2772,7 @@ public class JFrTournamentOptions extends JFrame {
                 for (int c = 0; c < tabLblCat.length; c++){
                     pnlCategories.remove(tabLblCat[c]);
                 }
-            }            
+            }
             if (tabTxfLowerLimitOfCat != null){
                 for (int c = 0; c < tabTxfLowerLimitOfCat.length; c++){
                     pnlCategories.remove(tabTxfLowerLimitOfCat[c]);
@@ -2807,23 +2783,23 @@ public class JFrTournamentOptions extends JFrame {
                     pnlCategories.remove(tabLblNbPlayersOfCat[c]);
                 }
             }
-            
+
             // Dimensions for pnlCategories and its components
             int tpgcPnlWidth = 220;
             int tpgcPnlHeadHeight = 120;
             int tpgcPnlBottomHeight = 30;
-            
+
             int tpgcLblLeft = 30;
             int tpgcLblTop = tpgcPnlHeadHeight;
             int tpgcLblHeight = 20;
             int tpgcLblWidth = 80;
-            
+
             int tpgcTxfLeft = tpgcLblLeft + tpgcLblWidth + 10;
             int tpgcTxfWidth = 30;
 
             int tpgcNbPLeft = tpgcTxfLeft + tpgcTxfWidth + 10;
             int tpgcNbPWidth = 30;
-                  
+
             tabLblCat = new JLabel[nbCat];
             tabTxfLowerLimitOfCat = new JTextField[nbCat];
             tabLblNbPlayersOfCat = new JLabel[nbCat];
@@ -2854,7 +2830,7 @@ public class JFrTournamentOptions extends JFrame {
                 tabLblNbPlayersOfCat[c] = new JLabel("" + nbPl);
                 pnlCategories.add(tabLblNbPlayersOfCat[c]);
                 tabLblNbPlayersOfCat[c].updateUI();
-            }          
+            }
         }
         // McMahon Panel
         if (this.pnlMcMahon.isVisible()){
@@ -2862,7 +2838,7 @@ public class JFrTournamentOptions extends JFrame {
             this.txfMMFloor.setText(Player.convertIntToKD(gps.getGenMMFloor()));
             this.txfMMZero.setText(Player.convertIntToKD(gps.getGenMMZero()));
         }
-        
+
         // Special results panel
         switch(gps.getGenMMS2ValueAbsent()){
             case 0 : this.rdbAbsentMMS0.setSelected(true); break;
@@ -2884,11 +2860,11 @@ public class JFrTournamentOptions extends JFrame {
             case 1 : this.rdbByeNBW1.setSelected(true); break;
             case 2 : this.rdbByeNBW2.setSelected(true); break;
         }
-        
+
         this.ckbRoundDown.setSelected(gps.isGenRoundDownNBWMMS());
         this.ckbCountNPG.setSelected(gps.isGenCountNotPlayedGamesAsHalfPoint());
     }
-    
+
     private void updatePnlHan()throws RemoteException{
         int tournamentType = tournament.tournamentType();
         if (tournamentType == TournamentParameterSet.TYPE_UNDEFINED){
@@ -2898,7 +2874,7 @@ public class JFrTournamentOptions extends JFrame {
         if (tournamentType == TournamentParameterSet.TYPE_MCMAHON){
             this.lblHandicap.setText("");
             this.pnlHandicap.setVisible(true);
-        }        
+        }
         if (tournamentType == TournamentParameterSet.TYPE_SWISS){
             this.lblHandicap.setText(locale.getString("tournament.options.handicap.no_handicap"));
             this.pnlHandicap.setVisible(false);
@@ -2941,7 +2917,7 @@ public class JFrTournamentOptions extends JFrame {
         this.txfMMFloor.setText("" + Player.convertIntToKD(floor));
         this.txfMMZero.setText("" + Player.convertIntToKD(zero));
     }
-    
+
     private void updatePnlTPl()throws RemoteException{
         TeamPlacementParameterSet tpps = tournament.getTeamTournamentParameterSet().getTeamPlacementParameterSet();
         // update contents of combo boxes
@@ -2953,26 +2929,26 @@ public class JFrTournamentOptions extends JFrame {
         this.cbxTeamCrit5.getModel().setSelectedItem(displayedCriteria[4].getLongName());
         this.cbxTeamCrit6.getModel().setSelectedItem(displayedCriteria[5].getLongName());
     }
-    
+
     private void updatePnlPai()throws RemoteException{
         if (tournament.tournamentType() == TournamentParameterSet.TYPE_SWISSCAT)
             this.ckbSeMinimizeHandicap.setVisible(true);
-        else 
+        else
             this.ckbSeMinimizeHandicap.setVisible(false);
-        
+
         if (tournament.tournamentType() == TournamentParameterSet.TYPE_MCMAHON)
             this.ckbSeBarThresholdActive.setVisible(true);
-        else 
+        else
             this.ckbSeBarThresholdActive.setVisible(false);
-        
+
         PairingParameterSet paiPS = tournament.getTournamentParameterSet().getPairingParameterSet();
-        
+
         this.ckbAvoidMixingCategories.setSelected(paiPS.getPaiMaAvoidMixingCategories() != 0);
         this.ckbMinimizeScoreDifference.setSelected(paiPS.getPaiMaMinimizeScoreDifference() != 0);
         this.txfLastRoundForSeedSystem1.setText("" + (paiPS.getPaiMaLastRoundForSeedSystem1() + 1));
         this.ckbAddSortOnRating.setSelected(
                 paiPS.getPaiMaAdditionalPlacementCritSystem1() == PlacementCriterion.RATING);
-        
+
         if (paiPS.getPaiMaSeedSystem1() == PairingParameterSet.PAIMA_SEED_SPLITANDRANDOM)
             this.rdbFormerSplitAndRandom.setSelected(true);
         if (paiPS.getPaiMaSeedSystem1() == PairingParameterSet.PAIMA_SEED_SPLITANDFOLD)
@@ -2985,7 +2961,7 @@ public class JFrTournamentOptions extends JFrame {
             this.rdbLatterSplitAndFold.setSelected(true);
         if (paiPS.getPaiMaSeedSystem2() == PairingParameterSet.PAIMA_SEED_SPLITANDSLIP)
             this.rdbLatterSplitAndSlip.setSelected(true);
-        
+
         this.ckbCompensate.setSelected(paiPS.isPaiMaCompensateDUDD());
         if (paiPS.getPaiMaDUDDUpperMode() == PairingParameterSet.PAIMA_DUDD_TOP)
             this.rdbDUDDUGTop.setSelected(true);
@@ -2999,9 +2975,9 @@ public class JFrTournamentOptions extends JFrame {
             this.rdbDUDDLGMid.setSelected(true);
         if (paiPS.getPaiMaDUDDLowerMode() == PairingParameterSet.PAIMA_DUDD_BOT)
             this.rdbDUDDLGBot.setSelected(true);
-        
+
         this.ckbAvoidPairingSamePair.setSelected(paiPS.getPaiBaAvoidDuplGame() != 0);
-        
+
         if (paiPS.getPaiBaRandom() == 0){
             this.rdbNoRandom.setSelected(true);
             this.ckbDeterministic.setSelected(false);
@@ -3012,9 +2988,9 @@ public class JFrTournamentOptions extends JFrame {
             this.ckbDeterministic.setSelected(paiPS.isPaiBaDeterministic());
             this.ckbDeterministic.setEnabled(true);
         }
-        
+
         this.ckbBalanceWB.setSelected(paiPS.getPaiBaBalanceWB() != 0);
-        
+
         this.txfSeRankThreshold.setText(Player.convertIntToKD(paiPS.getPaiSeRankThreshold()));
         this.ckbSeBarThresholdActive.setSelected(paiPS.isPaiSeBarThresholdActive());
         this.ckbSeNbWinsThresholdActive.setSelected(paiPS.isPaiSeNbWinsThresholdActive());
@@ -3022,10 +2998,10 @@ public class JFrTournamentOptions extends JFrame {
         this.txfSeClubsGroup.setText("" + paiPS.getPaiSePreferMMSDiffRatherThanSameClubsGroup());
         this.txfSeClub.setText("" + paiPS.getPaiSePreferMMSDiffRatherThanSameClub());
         this.ckbSeMinimizeHandicap.setSelected(paiPS.getPaiSeMinimizeHandicap() != 0);
-        
+
         updateDlgClubsGroups();
     }
-        
+
     private void updateDlgClubsGroups() throws RemoteException {
         // Clubs groups
         // If a group is selected, keep the selection
@@ -3041,12 +3017,12 @@ public class JFrTournamentOptions extends JFrame {
         }
         Collections.sort(alStrCG);
         String[] strCG = new String[alStrCG.size()];
-                
+
         for(int i = 0; i < strCG.length; i++){
             strCG[i] = alStrCG.get(i);
         }
         this.lstClubsGroups.removeAll();
-        this.lstClubsGroups.setListData(strCG); 
+        this.lstClubsGroups.setListData(strCG);
 
         // Restore selection
         this.lstClubsGroups.clearSelection();
@@ -3060,8 +3036,8 @@ public class JFrTournamentOptions extends JFrame {
             }
         }
         this.updateClubsInSelectedGroup();
-        
-        // Known clubs 
+
+        // Known clubs
         HashMap<String,String> hmClubs = new HashMap<String, String>();
         // Clubs from Rating lists
         ClubsList cl =  new ClubsList();
@@ -3071,31 +3047,31 @@ public class JFrTournamentOptions extends JFrame {
         RatingList rlFFG = new RatingList(RatingListType.FFG, new File(Gotha.runningDirectory, RatingListType.FFG.getFilename()));
         cl.importClubsFromRatingList(rlFFG);
         RatingList rlAGA = new RatingList(RatingListType.AGA, new File(Gotha.runningDirectory, RatingListType.AGA.getFilename()));
-        cl.importClubsFromRatingList(rlAGA);       
+        cl.importClubsFromRatingList(rlAGA);
         for(Club club : cl.getHmClubs().values()){
             hmClubs.put(club.getName(), club.getName());
         }
-        
+
         // Clubs from players in the tournament
         ArrayList<Player> alP = tournament.playersList();
         for (Player p : alP){
             hmClubs.put(p.getClub(), p.getClub());
         }
         ArrayList<String> alClubs = new ArrayList<String>(hmClubs.values());
-        
+
         Collections.sort(alClubs);
         String[] strClubs = new String[alClubs.size()];
         this.lstClubs.removeAll();
-        
+
         for(int i = 0; i < strClubs.length; i++){
             strClubs[i] = alClubs.get(i);
         }
 
         this.lstClubs.setListData(strClubs);
     }
-    
+
     private void updateClubsInSelectedGroup() throws RemoteException{
-        lstClubsInSelectedGroup.setListData(new String[0]); // clear 
+        lstClubsInSelectedGroup.setListData(new String[0]); // clear
         Object sel = lstClubsGroups.getSelectedValue();
         if (sel == null) return;
         String strSelectedGroup = (String)sel;
@@ -3106,16 +3082,16 @@ public class JFrTournamentOptions extends JFrame {
             alStrClubs.add(c.getName());
         }
         Collections.sort(alStrClubs);
-        String[] strClubs = new String[alClubs.size()];        
+        String[] strClubs = new String[alClubs.size()];
         for(int i = 0; i < strClubs.length; i++){
             strClubs[i] = alStrClubs.get(i);
         }
-        
+
         this.lstClubsInSelectedGroup.removeAll();
         this.lstClubsInSelectedGroup.setListData(strClubs);
     }
 
-    
+
     private void tournamentChanged(){
         try {
             tournament.setLastTournamentModificationTime(tournament.getCurrentTournamentTime());
@@ -3125,7 +3101,7 @@ public class JFrTournamentOptions extends JFrame {
         updateAllViews();
     }
 
-    private void updateAllViews(){      
+    private void updateAllViews(){
         this.tpnParameters.setVisible(true);
         try {
             if (!tournament.isOpen()) cleanClose();
@@ -3140,8 +3116,8 @@ public class JFrTournamentOptions extends JFrame {
             Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
+
+
     private javax.swing.JButton btnAddClub;
     private javax.swing.JButton btnAddGroup;
     private javax.swing.JButton btnAdjustCategoryLimits;
