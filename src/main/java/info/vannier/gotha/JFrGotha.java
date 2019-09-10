@@ -2204,7 +2204,7 @@ private void mniRRActionPerformed(java.awt.event.ActionEvent evt) {
 }
 
 private void mniRMIActionPerformed(java.awt.event.ActionEvent evt) {
-    JFrame jfr = new JFrToolsRMI();
+    JFrToolsRMI jfr = new JFrToolsRMI(this, true);
     this.displayFrame(jfr, MEDIUM_FRAME_WIDTH, MEDIUM_FRAME_HEIGHT);
 }
 
