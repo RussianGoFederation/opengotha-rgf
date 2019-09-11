@@ -202,9 +202,6 @@ public final class PlayerList extends JPanel {
                 table.getRowSorter().toggleSortOrder(i);
         }
 
-        ((TableRowSorter) table.getRowSorter()).setComparator(getColumnIndex(Column.RANK), rankComparator);
-        ((TableRowSorter) table.getRowSorter()).setComparator(getColumnIndex(Column.GRADE), rankComparator);
-
         table.getRowSorter().addRowSorterListener(rowSorterEvent -> {
             List<? extends RowSorter.SortKey> origKeys =  table.getRowSorter().getSortKeys();
             List<RowSorter.SortKey> sortKeys = new LinkedList<>();
@@ -293,11 +290,11 @@ public final class PlayerList extends JPanel {
                     case REGISTRATION: return player.getRegisteringStatus() == PlayerRegistrationStatus.FINAL ? "F" : "P";
                     case LAST_NAME:    return player.getName();
                     case FIRST_NAME:   return player.getFirstName();
-                    case RANK:         return Player.convertIntToKD(player.getRank());
+                    case RANK:         return Rank.fromInt(player.getRank());
                     case COUNTRY:      return player.getCountry();
                     case CLUB:         return player.getClub();
                     case RATING:       return player.getRating();
-                    case GRADE:        return player.getStrGrade();
+                    case GRADE:        return Rank.fromString(player.getStrGrade());
                     case SMMS:         return player.smms(tournament.getTournamentParameterSet().getGeneralParameterSet());
                     default:           return null;
                 }
@@ -313,6 +310,10 @@ public final class PlayerList extends JPanel {
                 case SMMS:
                 case RATING:
                     return Integer.class;
+
+                case RANK:
+                case GRADE:
+                    return Rank.class;
 
                 default:
                     return String.class;
@@ -383,6 +384,4 @@ public final class PlayerList extends JPanel {
     public interface PlayerDoubleClickListener {
         void onPlayerDoubleClicked(Player player);
     }
-
-    private static final Comparator<String> rankComparator = Comparator.comparingInt(a -> Rank.fromString(a).getValue());
 }
