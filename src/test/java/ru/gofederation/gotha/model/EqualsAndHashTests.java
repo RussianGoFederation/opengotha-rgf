@@ -27,6 +27,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 public class EqualsAndHashTests {
     @ParameterizedTest
     @ValueSource(classes = {
+        Rank.class,
         RatedPlayer.class
     })
     public void verifyRatedPlayer(Class<?> cls) {

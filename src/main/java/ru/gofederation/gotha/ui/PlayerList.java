@@ -42,6 +42,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
@@ -56,6 +57,7 @@ import javax.swing.table.TableRowSorter;
 import info.vannier.gotha.Player;
 import info.vannier.gotha.TournamentInterface;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.Rank;
 import ru.gofederation.gotha.util.GothaLocale;
 import ru.gofederation.gotha.util.TableColumnConfig;
 
@@ -209,8 +211,8 @@ public final class PlayerList extends JPanel {
             if (origKeys.size() > 0) {
                 RowSorter.SortKey key = origKeys.get(0);
                 sortKeys.add(key);
+                sortKeys.add(new RowSorter.SortKey(getColumnIndex(Column.RATING), key.getSortOrder()));
                 sortKeys.add(new RowSorter.SortKey(getColumnIndex(Column.LAST_NAME), key.getSortOrder()));
-                sortKeys.add(new RowSorter.SortKey(getColumnIndex(Column.FIRST_NAME), key.getSortOrder()));
             }
             rowSorterEvent.getSource().setSortKeys(sortKeys);
         });
@@ -382,20 +384,5 @@ public final class PlayerList extends JPanel {
         void onPlayerDoubleClicked(Player player);
     }
 
-    private static final Comparator<String> rankComparator = new Comparator<String>() {
-        private final Pattern rankPattern = Pattern.compile("(\\d{1,2})([KD])");
-
-        @Override
-        public int compare(String a, String b) {
-            Matcher am = rankPattern.matcher(a);
-            Matcher bm = rankPattern.matcher(b);
-            if (am.find() && bm.find()) {
-                int c = am.group(2).compareTo(bm.group(2));
-                if (c != 0) return c;
-                return (Integer.parseInt(am.group(1)) - Integer.parseInt(bm.group(1))) * ("D".equals(am.group(2)) ? -1 : 1);
-            } else {
-                throw new IllegalStateException();
-            }
-        }
-    };
+    private static final Comparator<String> rankComparator = Comparator.comparingInt(a -> Rank.fromString(a).getValue());
 }
