@@ -27,10 +27,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -51,6 +53,7 @@ public final class RatingListControls extends JPanel {
     private static final String BUTTON = "button";
     private static final String PROGRESS = "progress";
 
+    private final JLabel useRatingListLabel;
     private final JCheckBox useRatingListCheckbox;
     private final JButton updateButton;
     private final JProgressBar updateProgress;
@@ -65,6 +68,7 @@ public final class RatingListControls extends JPanel {
     public RatingListControls() {
         preferences = GothaPreferences.instance();
 
+        useRatingListLabel = new JLabel();
         useRatingListCheckbox = new JCheckBox();
         JRadioButton rdbAGA = new JRadioButton();
         JRadioButton rdbEGF = new JRadioButton();
@@ -87,8 +91,9 @@ public final class RatingListControls extends JPanel {
         updatePanel.add(updateButton, BUTTON);
         updatePanel.add(updateProgress, PROGRESS);
 
-        setLayout(new MigLayout("insets 0", "[fill]unrel[]rel[]rel[]", "[]unrel[]rel[]rel[]"));
-        add(useRatingListCheckbox, "span, wrap");
+        setLayout(new MigLayout("insets 0", "[fill]unrel[]rel[]rel[]", "[]rel[]rel[]rel[]"));
+        add(useRatingListLabel, "hidemode 3, span, wrap");
+        add(useRatingListCheckbox, "hidemode 3, span, wrap");
         add(rdbEGF, "gapbefore indent");
         add(rdbFFG, "wrap");
         add(rdbAGA, "gapbefore indent");
@@ -108,6 +113,15 @@ public final class RatingListControls extends JPanel {
         loadPreferences();
         updateLocale(GothaLocale.getCurrentLocale());
 
+        setForceUseRatingList(false);
+    }
+
+    public void setForceUseRatingList(boolean force) {
+        useRatingListLabel.setVisible(force);
+        useRatingListCheckbox.setVisible(!force);
+        if (force) {
+            useRatingListCheckbox.isSelected();
+        }
         setRatingListEnabled(useRatingListCheckbox.isSelected());
     }
 
@@ -128,6 +142,7 @@ public final class RatingListControls extends JPanel {
 
     private void updateLocale(GothaLocale locale) {
         this.locale = locale;
+        useRatingListLabel.setText(locale.getString("rating_list.use"));
         useRatingListCheckbox.setText(locale.getString("rating_list.use"));
         for (JRadioButton rb : ratingOrigins.keySet()) {
             String type = locale.getString(ratingOrigins.get(rb).getL10nKey());
@@ -175,6 +190,11 @@ public final class RatingListControls extends JPanel {
         }
 
         return UND;
+    }
+
+    public void setSelectedRatingListType(RatingListType newRlType) {
+        ratingOrigins.forEach((radioButton, ratingListType) ->
+            radioButton.setSelected(ratingListType == newRlType));
     }
 
     private void downloadRatingList() {

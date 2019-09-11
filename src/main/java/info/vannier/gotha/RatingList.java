@@ -26,8 +26,8 @@ public class RatingList {
     private RatingListType ratingListType = RatingListType.UND;
     private String strPublicationDate = "";
     private ArrayList<RatedPlayer> alRatedPlayers = new ArrayList<RatedPlayer>();
-    private HashMap<String, RatedPlayer> hmPinRatedPlayers; 
-    private HashMap<String, RatedPlayer> hmNaFiRatedPlayers; 
+    private HashMap<String, RatedPlayer> hmPinRatedPlayers;
+    private HashMap<String, RatedPlayer> hmNaFiRatedPlayers;
 
     /**
      * Creates a new instance of RatingList
@@ -92,14 +92,14 @@ public class RatingList {
         } catch (Exception ex){
             Logger.getLogger(RatingList.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         // Parse rating list
         for (String strLine : vLines){
-            if (strLine.length() == 0) continue;            
+            if (strLine.length() == 0) continue;
             int pos;
-            
+
             if (ratingListType == RatingListType.EGF){
-                pos = strLine.indexOf("(");                
+                pos = strLine.indexOf("(");
                 if (pos >= 0) {
                     String str = strLine.substring(pos);
                     String[] dateElements = str.split(" ");
@@ -114,12 +114,12 @@ public class RatingList {
                     String strNF = strLine.substring(11, 48);
                     String strName = strNF;
                     String strFirstName = "x";
-                    
+
                     pos = strNF.indexOf(" ");
-                    
+
                     if (pos > 0) strName = strNF.substring(0, pos).trim();
                     if ((pos + 1) < strNF.length()) strFirstName = strNF.substring(pos + 1, strNF.length()).trim();
-                    
+
                     String strCountry = strLine.substring(49, 52).trim();
                     String strClub = strLine.substring(53, 57).trim();
                     int rating = new Integer(strLine.substring(71, 75).trim()).intValue();
@@ -136,19 +136,19 @@ public class RatingList {
                     strPublicationDate = strLine.substring(pos + 11, strLine.length());
                 }
                 if (strLine.length() < 60) continue;
-                
+
                 String strNF = strLine.substring(0, 38);
                 if (strNF.matches("[a-zA-Z].*")){
                     pos = strNF.indexOf(" ");
                     String strName = strNF.substring(0, pos).trim();
                     String strFirstName = strNF.substring(pos + 1, strNF.length()).trim();
                     int rating = new Integer(strLine.substring(38, 43).trim()).intValue();
-                    String strFfgLicenceStatus = strLine.substring(44, 45); 
+                    String strFfgLicenceStatus = strLine.substring(44, 45);
                     String strFfgLicence = strLine.substring(46, 53);
 //                    String strCC = strLine.substring(54, 58).trim();
                     String strClub = strLine.substring(54, 58).trim();
                     String strCountry = strLine.substring(59, 61).trim();
-                    
+
 //                    if (strCC.length() <= 2){
 //                        strCountry = strCC;
 //                        strClub = "";
@@ -163,7 +163,7 @@ public class RatingList {
                     this.alRatedPlayers.add(rP);
                 }
             }
- 
+
             if (ratingListType == RatingListType.AGA){
                 if (strLine.length() < 10) continue;
                 int AGA_NAFI = 0;
@@ -173,15 +173,15 @@ public class RatingList {
                 int AGA_EXPIRATION = 4;
                 int AGA_CLUB = 5;
                 String[] myStrArr = strLine.split("\t");
-                
+
                 String name = "XXX";
                 String firstName = "xxx";
                 String agaID = "";
                 String agaExpirationDate = "";
                 String club = "";
                 String country = "US";
-                int rawRating = -2850; 
-                
+                int rawRating = -2850;
+
                 if(myStrArr.length > AGA_NAFI){
                     String strNaFi = myStrArr[AGA_NAFI].trim();
                     if (strNaFi.length() == 0) continue;
@@ -190,7 +190,7 @@ public class RatingList {
                     name = nameStrArr[0].trim();
                     if(nameStrArr.length > 1) firstName = nameStrArr[1].trim();
                 }
-                
+
                 if(myStrArr.length > AGA_ID){
                     agaID = myStrArr[AGA_ID];
                 }
@@ -209,63 +209,59 @@ public class RatingList {
                     try{
                         Float d = (Float.parseFloat(strAgaRating));
                         rawRating = (int) Math.round(d.floatValue() * 100.0);
-                    }catch(Exception e){} 
+                    }catch(Exception e){}
                  }
                 if(myStrArr.length > AGA_CLUB){
                     club = myStrArr[AGA_CLUB];
                 }
-                
+
                 RatedPlayer rP = new RatedPlayer(
                         "", "", "", agaID, agaExpirationDate, name, firstName, country, club, rawRating, "", AGA);
                 this.alRatedPlayers.add(rP);
             }
-        } 
+        }
     }
 
     public int indexOf(RatedPlayer rp){
         return this.alRatedPlayers.indexOf(rp);
     }
-    
-    public RatedPlayer getRatedPlayer(String egfPin){       
+
+    public RatedPlayer getRatedPlayer(String egfPin){
         return hmPinRatedPlayers.get(egfPin);
     }
 
     public RatedPlayer getRatedPlayer(String name, String firstName){
         String strNaFi = (name + firstName).replaceAll(" ", "").toUpperCase();
         return hmNaFiRatedPlayers.get(strNaFi);
-         
+
     }
 
     public RatedPlayer getRatedPlayer(Player p){
         String egfPin = p.getEgfPin();
-        
+
         if (!egfPin.equals("")){
             RatedPlayer rp = hmPinRatedPlayers.get(egfPin);
             if (rp != null) return rp;
         }
-        
+
         return getRatedPlayer(p.getName(), p.getFirstName());
     }
 
-        
-    // 
+
+    //
     public String getRatedPlayerString(Player p){
         RatedPlayer rp = getRatedPlayer(p);
         return getRatedPlayerString(rp);
     }
- 
-    public String getRatedPlayerString(RatedPlayer rp){
-        String strPlayerString = "";
-        if (rp !=null){
-            String strAGAID = "";
-            if (rp.getRatingOrigin() == AGA) strAGAID = ":" + rp.getAgaId();
-            
-            strPlayerString = rp.getName() + " " + rp.getFirstName() + strAGAID + " " +
-                    rp.getCountry() + " " + rp.getClub() + " " + rp.getStrRawRating();
-        }
-        return strPlayerString;
+
+    /**
+     * @deprecated use {@link RatedPlayer#toString()} instead
+     */
+    @Deprecated
+    public String getRatedPlayerString(RatedPlayer rp) {
+        return rp.toString();
     }
-    
+
     public ArrayList<RatedPlayer> getALRatedPlayers() {
         return this.alRatedPlayers;
     }
@@ -278,31 +274,31 @@ public class RatingList {
             rp = null;
         }
         return rp;
-        
+
     }
-  
+
     /**
      * Search a RatedPlayer by AGAId
      * @param strId
-     * @return 
+     * @return
      */
-    
+
     public int getRatedPlayerByAGAID(String strId){
         int nbRP = this.alRatedPlayers.size();
         for (int i = 0; i < nbRP; i++){
             RatedPlayer rp = this.alRatedPlayers.get(i);
             if (rp.getAgaId().contentEquals(strId)) return i;
         }
-        return -1;     
+        return -1;
     }
 
 //    public RatedPlayer getRatedPlayerByAGAID(String strId){
 //        for (RatedPlayer rp : this.alRatedPlayers){
 //            if (rp.getAgaId().contentEquals(strId)) return rp;
 //        }
-//        return null;     
+//        return null;
 //    }
-    
+
     public String getStrPublicationDate() {
         return strPublicationDate;
     }
