@@ -139,7 +139,7 @@ public class JFrTeamsPairing extends javax.swing.JFrame {
         getContentPane().add(spnRoundNumber, "wmin 36lp, gapright push, wrap");
 
         pnlTeams.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.teams")));
-        pnlTeams.setLayout(new MigLayout("flowy, insets panel, debug"));
+        pnlTeams.setLayout(new MigLayout("flowy, insets panel"));
 
         lblPairableTeams.setText(locale.getString("tournament.teams.pairable"));
         pnlTeams.add(lblPairableTeams);
