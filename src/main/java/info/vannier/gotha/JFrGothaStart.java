@@ -13,6 +13,7 @@ import java.rmi.RemoteException;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
 
 import ru.gofederation.gotha.util.GothaLocale;
@@ -30,7 +31,7 @@ public class JFrGothaStart extends javax.swing.JFrame {
 		this.locale = GothaLocale.getCurrentLocale();
 
         // Log Platform and JDK elements
-        
+
         String strOS = System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version");
         LogElements.incrementElement("gotha.os", strOS);
         String strJRE = System.getProperty("java.version") + " " + System.getProperty("java.vm.name");
@@ -78,10 +79,10 @@ public class JFrGothaStart extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
-        getContentPane().setLayout(new MigLayout("flowy", ":push[fill, sgx column, 170lp]20lp[fill, sgx column]:push", "[grow 100][grow 0]unrel:push[grow 0]rel[grow 0][grow 100]"));
+        getContentPane().setLayout(new MigLayout("insets dialog, flowy", "push[fill, sg]unrel:20lp:[fill, sg]push", "push[]unrel:20lp:[][]push"));
 
         pnlRunningMode.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("start.mode"))); // NOI18N
-        pnlRunningMode.setLayout(new MigLayout("gap 15lp, ins 10lp, flowy"));
+        pnlRunningMode.setLayout(new MigLayout("insets panel, flowy", null, "push[]push[]push[]push"));
 
         grpRunningMode.add(rdbSAL);
         rdbSAL.setSelected(true);
@@ -93,35 +94,23 @@ public class JFrGothaStart extends javax.swing.JFrame {
         grpRunningMode.add(rdbClient);
         pnlRunningMode.add(rdbClient);
 
-        getContentPane().add(pnlRunningMode, "skip, spany 3, wrap");
+        getContentPane().add(pnlRunningMode, "spany 3, growy, wrap");
 
         pnlLocale.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("start.language"))); // NOI18N
-        pnlLocale.setLayout(new MigLayout("ins 10lp"));
+        pnlLocale.setLayout(new MigLayout("insets panel"));
 
         languageComboBox.setModel(ru.gofederation.gotha.util.GothaLocale.getCurrentLocale());
-        languageComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                languageComboBoxActionPerformed(evt);
-            }
-        });
-        pnlLocale.add(languageComboBox, "w 120lp");
+        languageComboBox.addActionListener(this::languageComboBoxActionPerformed);
+        pnlLocale.add(languageComboBox, "wmin 140lp");
 
-        getContentPane().add(pnlLocale, "skip");
+        getContentPane().add(pnlLocale);
 
         btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnHelpActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnHelp, "sg buttons");
+        btnHelp.addActionListener(this::btnHelpActionPerformed);
+        getContentPane().add(btnHelp);
 
-        btnStart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStartActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnStart, "sg buttons");
+        btnStart.addActionListener(this::btnStartActionPerformed);
+        getContentPane().add(btnStart);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -196,7 +185,7 @@ public class JFrGothaStart extends javax.swing.JFrame {
                 strTN = (String) JOptionPane.showInputDialog(this, locale.getString("start.select_tournament"), "OpenGotha",
                         JOptionPane.INFORMATION_MESSAGE, null, lstTou, lstTou[0]);
             }
-            
+
             tournament = GothaRMIClient.getTournament(Gotha.serverName, strTN);
             try {
                 Gotha.clientName = tournament.addGothaRMIClient(Gotha.getHostName());
@@ -205,15 +194,15 @@ public class JFrGothaStart extends javax.swing.JFrame {
             }
             Gotha.runningMode = Gotha.RUNNING_MODE_CLI;
         }
-        
+
         // Log elements
         String strRM = "";
         switch(Gotha.runningMode){
             case Gotha.RUNNING_MODE_SAL : strRM = "SAL"; break;
             case Gotha.RUNNING_MODE_SRV : strRM = "SRV"; break;
             case Gotha.RUNNING_MODE_CLI : strRM = "CLI"; break;
-            default : strRM = "???"; 
-        }       
+            default : strRM = "???";
+        }
         LogElements.incrementElement("gotha.runningmode", strRM);
 
         try {
