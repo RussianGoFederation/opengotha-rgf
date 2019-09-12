@@ -1,6 +1,6 @@
 /*
  * Gotha.java
- * 
+ *
  */
 package info.vannier.gotha;
 
@@ -41,13 +41,13 @@ public class Gotha {
     static final java.util.Date GOTHA_RELEASE_DATE = (new GregorianCalendar(2018, Calendar.FEBRUARY, 12)).getTime();
     // Data version for serialization
     static final long GOTHA_DATA_VERSION = 201L;
-    
+
     // Should definitely stay below or equal to 32, due to internal limits in costValue() method
     public static final int MAX_NUMBER_OF_ROUNDS = 20;
     // Should definitely stay below 16000, due to internal limits in PairingParameterSet parameter values
     // Should definitely stay below 9999, due to printing issues
     static final int MAX_NUMBER_OF_PLAYERS = 1200;
-    // Should definitely stay below 10, due to complexity issues in costValue function    
+    // Should definitely stay below 10, due to complexity issues in costValue function
     static final int MAX_NUMBER_OF_CATEGORIES = 9;
     static final int MAX_RANK = 8;      // =  9D
     static final int MIN_RANK = -30;    // = 30K
@@ -166,7 +166,7 @@ public class Gotha {
 
         return str;
     }
-    
+
     /**
     * Eliminates forbidden characters : \ / : * ? " < > |
     * These 9 characters are forbidden in Windows file names
@@ -209,7 +209,7 @@ public class Gotha {
         }
         return strI1 + strF1;
     }
-    
+
     public static String forceToASCII(String s){
         // Latin 9 upper
         s = s.replaceAll("[ÀÁÂÃÄÅ]", "A");  // 192 - 197
@@ -220,7 +220,7 @@ public class Gotha {
         s = s.replaceAll("[ÒÓÔÕÖØ]", "O");  // 210-214 and 216
         s = s.replaceAll("[ÙÚÛÜ]", "U");    // 217 - 220
         s = s.replaceAll("Ý", "Y");         // 221
-        
+
         // Latin 9 lower
         s = s.replaceAll("[àáâãäå]", "a");  // 224 - 229
         s = s.replaceAll("ç", "c");         // 231
@@ -239,7 +239,7 @@ public class Gotha {
         s = s.replace("i", "i");
         s = s.replace("ö", "o");
         s = s.replace("ç", "c");
-        
+
         s = s.replace("I", "I");
         s = s.replace("Ğ", "G");
         s = s.replace("Ü", "U");
@@ -252,9 +252,9 @@ public class Gotha {
 //        s = s.replaceAll("[[^a-z]&&[^A-Z]&&[^ ]]", "");
         for (int iC = 0; iC < s.length(); iC++){
             char c = s.charAt(iC);
-           if (c > 127) 
+           if (c > 127)
                s = s.replace(c, '?');
-        }        
+        }
         return s;
     }
 
@@ -276,8 +276,8 @@ public class Gotha {
     }
 
     /**
-     * Returns a new string that is a substring of this string. 
-     * The substring begins at the specified beginIndex and extends to the character at index endIndex - 1. 
+     * Returns a new string that is a substring of this string.
+     * The substring begins at the specified beginIndex and extends to the character at index endIndex - 1.
      * Thus the length of the substring is endIndex-beginIndex.
      * <br>The difference with the substring method of String class is that sousChaine always returns a String and does not throw any exception.
      * <br>If beginIndex >=  str's length, an empty String is returned
@@ -285,15 +285,15 @@ public class Gotha {
      * <br> if endIndex > str's length, the returned string is shortened to str's length - beginIndex
      */
     public static String sousChaine(String str, int beginIndex, int endIndex){
-        if (str == null) return "";       
+        if (str == null) return "";
         int lgth = str.length();
         if (beginIndex >= lgth) return "";
         if (endIndex <= beginIndex) return "";
         if (endIndex > lgth) endIndex = lgth;
-        
+
         return str.substring(beginIndex, endIndex);
     }
-    
+
     public static Image getIconImage() {
         URL iconURL = null;
         try {
@@ -329,29 +329,29 @@ public class Gotha {
     public static boolean isDateExpired(String strDate){
         boolean bExpired = false;
         Calendar currentCal = Calendar.getInstance();
-        
+
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyy");
         try {
             Date d = sdf.parse(strDate);
             Calendar c = Calendar.getInstance();
             c.setTime(d);
             c.add(Calendar.DAY_OF_MONTH, 1);
-        
+
         if (c.before(currentCal)) bExpired = true;
 
         } catch (ParseException ex) {
 //            Logger.getLogger(Gotha.class.getName()).log(Level.SEVERE, null, ex);
             bExpired = false;
         }
-        
+
         return bExpired;
-        
+
     }
-    
+
     public static TournamentInterface getTournamentFromFile(File f) throws IOException, ClassNotFoundException {
         TournamentInterface t = new Tournament();
 
-        String strReport = ExternalDocument.importTournamentFromXMLFile(f, t, true, true, true, true, true); 
+        String strReport = ExternalDocument.importTournamentFromXMLFile(f, t, true, true, true, true, true);
         try {
             t.getShortName();
         } catch (RemoteException ex) {
@@ -499,7 +499,7 @@ public class Gotha {
     public static void displayGothaHelp(String topic) {
         HelpSet hs;
         // What is the help language ?
-        
+
         String strHelpDirectory = "english";
         File f = new File(Gotha.runningDirectory, "gothahelp/" + strHelpDirectory + "/helpset.hs");
         try {
@@ -536,7 +536,7 @@ public class Gotha {
         String strPD = gothaPrefs.get(strK, "true");
         return strPD.equals("true");
     }
-    
+
     public static boolean isJournalingReportEnabled(){
         /*
         Preferences prefsRoot = Preferences.userRoot();
@@ -548,7 +548,7 @@ public class Gotha {
          */
         return false;
     }
-    
+
     public static void setRatingListsDownloadEnabled(boolean enabled){
         Preferences prefsRoot = Preferences.userRoot();
         Preferences gothaPrefs = prefsRoot.node(Gotha.strPreferences);
@@ -562,7 +562,7 @@ public class Gotha {
         String strK = "photosDownload";
         gothaPrefs.put(strK, "" + enabled);
     }
-    
+
     public static void setJournalingReportEnabled(boolean enabled){
         /*
         Preferences prefsRoot = Preferences.userRoot();
