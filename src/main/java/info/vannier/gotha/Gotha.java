@@ -538,12 +538,15 @@ public class Gotha {
     }
     
     public static boolean isJournalingReportEnabled(){
+        /*
         Preferences prefsRoot = Preferences.userRoot();
         Preferences gothaPrefs = prefsRoot.node(Gotha.strPreferences);
 
         String strK = "journalingReport";
         String strIA = gothaPrefs.get(strK, "true");
         return strIA.equals("true");
+         */
+        return false;
     }
     
     public static void setRatingListsDownloadEnabled(boolean enabled){
@@ -561,10 +564,12 @@ public class Gotha {
     }
     
     public static void setJournalingReportEnabled(boolean enabled){
+        /*
         Preferences prefsRoot = Preferences.userRoot();
         Preferences gothaPrefs = prefsRoot.node(Gotha.strPreferences);
         String strK = "journalingReport";
         gothaPrefs.put(strK, "" + enabled);
+         */
     }
 
     public static File getRunningDirectory() {
