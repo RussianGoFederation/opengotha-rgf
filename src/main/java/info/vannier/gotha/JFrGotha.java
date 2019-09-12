@@ -2546,7 +2546,7 @@ private void mniExperimentalToolsActionPerformed(java.awt.event.ActionEvent evt)
 
 private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
     JFrame jfr = new JFrToolsMemory();
-    this.displayFrame(jfr, SMALL_FRAME_WIDTH, SMALL_FRAME_HEIGHT);
+    this.displayFrame(jfr);
 }
 
     private void mniDiscardRoundsActionPerformed(java.awt.event.ActionEvent evt) {
