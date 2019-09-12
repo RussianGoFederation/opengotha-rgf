@@ -4,6 +4,8 @@
 
 package info.vannier.gotha;
 
+import net.miginfocom.swing.MigLayout;
+
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -20,6 +22,8 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import ru.gofederation.gotha.util.GothaLocale;
+
 /**
  *
  * @author Luc Vannier
@@ -27,14 +31,14 @@ import javax.swing.table.DefaultTableModel;
 public class JFrTeamsManager extends javax.swing.JFrame {
     private static final long REFRESH_DELAY = 2000;
     private long lastComponentsUpdateTime = 0;
-    
+
     private static final int PL_NUMBER_OF_COLS = 4;
     private static final int PL_NAME_COL = 0;
-    
+
     private static final int PL_COUNTRY_COL = 1;
     private static final int PL_CLUB_COL = 2;
     private static final int PL_RATING_COL = 3;
-    
+
     private static final int TM_NUMBER_OF_COLS = 7;
     private static final int TM_TEAM_NUMBER_COL = 0;
     private static final int TM_TEAM_NAME_COL = 1;
@@ -48,21 +52,22 @@ public class JFrTeamsManager extends javax.swing.JFrame {
 
     /**  current Tournament */
     private TournamentInterface tournament;
-    
+
     private int processedRoundNumber = 0;
 
+    private final GothaLocale locale = GothaLocale.getCurrentLocale();
 
     /** Creates new form JFrTeamsManager */
     public JFrTeamsManager(TournamentInterface tournament) throws RemoteException{
         this.tournament = tournament;
         processedRoundNumber = tournament.presumablyCurrentRoundNumber();
- 
+
         initComponents();
         customInitComponents();
         setupRefreshTimer();
 
     }
-        
+
     private volatile boolean running = true;
     javax.swing.Timer timer = null;
     private void setupRefreshTimer() {
@@ -134,7 +139,7 @@ public class JFrTeamsManager extends javax.swing.JFrame {
                 } catch (IOException ex) {
                     Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                                
+
                 // extract player from data
                 Player player = JFrTeamsManager.this.findPlayerFromTransferData(data);
                 if (player == null){
@@ -231,10 +236,10 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         final int COUNTRY_WIDTH = 25;
         final int CLUB_WIDTH = 40;
 
-        JFrGotha.formatColumn(tblTeamablePlayers, PL_NAME_COL, "Last name", NAME_WIDTH, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(tblTeamablePlayers, PL_COUNTRY_COL, "Co", COUNTRY_WIDTH, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(tblTeamablePlayers, PL_CLUB_COL, "Club", CLUB_WIDTH, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(tblTeamablePlayers, PL_RATING_COL, "Rating", RATING_WIDTH, JLabel.RIGHT, JLabel.RIGHT); 
+        JFrGotha.formatColumn(tblTeamablePlayers, PL_NAME_COL, "Last name", NAME_WIDTH, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tblTeamablePlayers, PL_COUNTRY_COL, "Co", COUNTRY_WIDTH, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tblTeamablePlayers, PL_CLUB_COL, "Club", CLUB_WIDTH, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tblTeamablePlayers, PL_RATING_COL, "Rating", RATING_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
     }
 
     private void initTeamsTable(){
@@ -246,13 +251,13 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         final int TM_PL_CLUB_WIDTH = 40;
         final int TM_PL_RATING_WIDTH = 40;
 
-        JFrGotha.formatColumn(tblTeams, TM_TEAM_NUMBER_COL, "Nr", TM_TEAM_NUMBER_WIDTH, JLabel.RIGHT, JLabel.RIGHT); 
-        JFrGotha.formatColumn(tblTeams, TM_TEAM_NAME_COL, "Team name", TM_TEAM_NAME_WIDTH, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(tblTeams, TM_BOARD_NUMBER_COL, "Board", TM_BOARD_NUMBER_WIDTH, JLabel.RIGHT, JLabel.RIGHT); 
-        JFrGotha.formatColumn(tblTeams, TM_PL_NAME_COL, "Player name", TM_PL_NAME_WIDTH, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(tblTeams, TM_PL_COUNTRY_COL, "Co", TM_PL_COUNTRY_WIDTH, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(tblTeams, TM_PL_CLUB_COL, "Club", TM_PL_CLUB_WIDTH, JLabel.LEFT, JLabel.LEFT); 
-        JFrGotha.formatColumn(tblTeams, TM_PL_RATING_COL, "Rating", TM_PL_RATING_WIDTH, JLabel.RIGHT, JLabel.RIGHT); 
+        JFrGotha.formatColumn(tblTeams, TM_TEAM_NUMBER_COL, "Nr", TM_TEAM_NUMBER_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
+        JFrGotha.formatColumn(tblTeams, TM_TEAM_NAME_COL, "Team name", TM_TEAM_NAME_WIDTH, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tblTeams, TM_BOARD_NUMBER_COL, "Board", TM_BOARD_NUMBER_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
+        JFrGotha.formatColumn(tblTeams, TM_PL_NAME_COL, "Player name", TM_PL_NAME_WIDTH, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tblTeams, TM_PL_COUNTRY_COL, "Co", TM_PL_COUNTRY_WIDTH, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tblTeams, TM_PL_CLUB_COL, "Club", TM_PL_CLUB_WIDTH, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(tblTeams, TM_PL_RATING_COL, "Rating", TM_PL_RATING_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
     }
 
     private void updateComponents() {
@@ -264,7 +269,7 @@ public class JFrTeamsManager extends javax.swing.JFrame {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.txfTeamSize.setText("" + teamSize);
-        
+
         DefaultTableModel teamablePlayersModel = (DefaultTableModel) tblTeamablePlayers.getModel();
         DefaultTableModel teamsModel = (DefaultTableModel) tblTeams.getModel();
 
@@ -274,7 +279,7 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         while (teamsModel.getRowCount() > 0) {
             teamsModel.removeRow(0);
         }
-        
+
         this.spnRoundNumber.setValue(this.processedRoundNumber + 1);
 
         HashMap<String, Player> hmTeamablePlayers = new HashMap<String, Player>();
@@ -288,7 +293,7 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         PlayerComparator playerComparator = new PlayerComparator(PlayerComparator.RATING_ORDER);
         Collections.sort(alTeamablePlayers, playerComparator);
 
-        this.txfNbTeamablePlayers.setText("" + alTeamablePlayers.size());
+        this.lblTeamablePlayers.setText(locale.format("tournament.teams.available_players", alTeamablePlayers.size()));
 
         ArrayList<Team> alTeams = new ArrayList<Team>();
         try {
@@ -296,8 +301,8 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.txfNbTeams.setText("" + alTeams.size());
-        
+        this.lblNbTeams.setText(locale.format("tournament.teams.count", alTeams.size()));
+
         fillPlayersTable(alTeamablePlayers, tblTeamablePlayers);
         fillTeamsTable(alTeams, tblTeams);
 
@@ -342,7 +347,7 @@ public class JFrTeamsManager extends javax.swing.JFrame {
                     row[TM_TEAM_NUMBER_COL] = "";
                     row[TM_TEAM_NAME_COL] = "";
                 }
-                
+
                 row[TM_BOARD_NUMBER_COL] = "" + (iTM + 1);
                 Player p = t.getTeamMember(processedRoundNumber, iTM);
                 if (p == null){
@@ -363,15 +368,7 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         }
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
         pupTeams = new javax.swing.JPopupMenu();
         mniRemoveOneTeam = new javax.swing.JMenuItem();
         mniRemoveAllTeams = new javax.swing.JMenuItem();
@@ -399,13 +396,11 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         pnlPlayers = new javax.swing.JPanel();
         scpTeamablePlayers = new javax.swing.JScrollPane();
         tblTeamablePlayers = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
-        txfNbTeamablePlayers = new javax.swing.JTextField();
+        lblTeamablePlayers = new javax.swing.JLabel();
         pnlTeams = new javax.swing.JPanel();
         scpTeams = new javax.swing.JScrollPane();
         tblTeams = new javax.swing.JTable();
-        txfNbTeams = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
+        lblNbTeams = new javax.swing.JLabel();
         btnCreateNewTeam = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         txfTeamSize = new javax.swing.JTextField();
@@ -414,134 +409,70 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         spnRoundNumber = new javax.swing.JSpinner();
 
         mniRemoveOneTeam.setText("jMenuItem1");
-        mniRemoveOneTeam.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniRemoveOneTeamActionPerformed(evt);
-            }
-        });
+        mniRemoveOneTeam.addActionListener(this::mniRemoveOneTeamActionPerformed);
         pupTeams.add(mniRemoveOneTeam);
 
         mniRemoveAllTeams.setText("jMenuItem1");
-        mniRemoveAllTeams.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniRemoveAllTeamsActionPerformed(evt);
-            }
-        });
+        mniRemoveAllTeams.addActionListener(this::mniRemoveAllTeamsActionPerformed);
         pupTeams.add(mniRemoveAllTeams);
         pupTeams.add(jSeparator4);
 
-        mniUnteamOneMember.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniUnteamOneMemberActionPerformed(evt);
-            }
-        });
+        mniUnteamOneMember.addActionListener(this::mniUnteamOneMemberActionPerformed);
         pupTeams.add(mniUnteamOneMember);
 
-        mniUnteamOneMemberAllRounds.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniUnteamOneMemberAllRoundsActionPerformed(evt);
-            }
-        });
+        mniUnteamOneMemberAllRounds.addActionListener(this::mniUnteamOneMemberAllRoundsActionPerformed);
         pupTeams.add(mniUnteamOneMemberAllRounds);
 
         mniUnteamOneTeam.setText("Unteam one team");
-        mniUnteamOneTeam.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniUnteamOneTeamActionPerformed(evt);
-            }
-        });
+        mniUnteamOneTeam.addActionListener(this::mniUnteamOneTeamActionPerformed);
         pupTeams.add(mniUnteamOneTeam);
 
         mniUnteamOneTeamAllRounds.setText("Unteam one team for all rounds");
-        mniUnteamOneTeamAllRounds.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniUnteamOneTeamAllRoundsActionPerformed(evt);
-            }
-        });
+        mniUnteamOneTeamAllRounds.addActionListener(this::mniUnteamOneTeamAllRoundsActionPerformed);
         pupTeams.add(mniUnteamOneTeamAllRounds);
 
         mniUnteamAllTeams.setText("Unteam all teams");
-        mniUnteamAllTeams.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniUnteamAllTeamsActionPerformed(evt);
-            }
-        });
+        mniUnteamAllTeams.addActionListener(this::mniUnteamAllTeamsActionPerformed);
         pupTeams.add(mniUnteamAllTeams);
 
         mniUnteamAllTeamsAllRounds.setText("Unteam all teams for all rounds");
-        mniUnteamAllTeamsAllRounds.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniUnteamAllTeamsAllRoundsActionPerformed(evt);
-            }
-        });
+        mniUnteamAllTeamsAllRounds.addActionListener(this::mniUnteamAllTeamsAllRoundsActionPerformed);
         pupTeams.add(mniUnteamAllTeamsAllRounds);
         pupTeams.add(jSeparator1);
 
         mniRenameTeam.setText("Rename one team");
-        mniRenameTeam.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniRenameTeamActionPerformed(evt);
-            }
-        });
+        mniRenameTeam.addActionListener(this::mniRenameTeamActionPerformed);
         pupTeams.add(mniRenameTeam);
         pupTeams.add(jSeparator2);
 
         mniReorderMembersOfOneTeam.setText("Reorder players of one team by rating");
-        mniReorderMembersOfOneTeam.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniReorderMembersOfOneTeamActionPerformed(evt);
-            }
-        });
+        mniReorderMembersOfOneTeam.addActionListener(this::mniReorderMembersOfOneTeamActionPerformed);
         pupTeams.add(mniReorderMembersOfOneTeam);
 
         mniReorderMembersOfOneTeamAllRounds.setText("Reorder players of one team by rating for all rounds");
-        mniReorderMembersOfOneTeamAllRounds.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniReorderMembersOfOneTeamAllRoundsActionPerformed(evt);
-            }
-        });
+        mniReorderMembersOfOneTeamAllRounds.addActionListener(this::mniReorderMembersOfOneTeamAllRoundsActionPerformed);
         pupTeams.add(mniReorderMembersOfOneTeamAllRounds);
 
         mniReorderPlayersOfAllTeams.setText("Reorder players of all teams by rating");
-        mniReorderPlayersOfAllTeams.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniReorderPlayersOfAllTeamsActionPerformed(evt);
-            }
-        });
+        mniReorderPlayersOfAllTeams.addActionListener(this::mniReorderPlayersOfAllTeamsActionPerformed);
         pupTeams.add(mniReorderPlayersOfAllTeams);
 
         mniReorderPlayersOfAllTeamsAllRounds.setText("Reorder players of all teams by rating for all rounds");
-        mniReorderPlayersOfAllTeamsAllRounds.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniReorderPlayersOfAllTeamsAllRoundsActionPerformed(evt);
-            }
-        });
+        mniReorderPlayersOfAllTeamsAllRounds.addActionListener(this::mniReorderPlayersOfAllTeamsAllRoundsActionPerformed);
         pupTeams.add(mniReorderPlayersOfAllTeamsAllRounds);
         pupTeams.add(jSeparator3);
 
         mniRenumberTeams.setText("Renumber teams according to mean rating");
-        mniRenumberTeams.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniRenumberTeamsActionPerformed(evt);
-            }
-        });
+        mniRenumberTeams.addActionListener(this::mniRenumberTeamsActionPerformed);
         pupTeams.add(mniRenumberTeams);
 
         mniChangeTeamNumber.setText("Change number of One team ");
-        mniChangeTeamNumber.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniChangeTeamNumberActionPerformed(evt);
-            }
-        });
+        mniChangeTeamNumber.addActionListener(this::mniChangeTeamNumberActionPerformed);
         pupTeams.add(mniChangeTeamNumber);
         pupTeams.add(jSeparator5);
 
         mniCancel.setText("Cancel");
-        mniCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniCancelActionPerformed(evt);
-            }
-        });
+        mniCancel.addActionListener(this::mniCancelActionPerformed);
         pupTeams.add(mniCancel);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -554,89 +485,40 @@ public class JFrTeamsManager extends javax.swing.JFrame {
                 formWindowClosing(evt);
             }
         });
-        getContentPane().setLayout(null);
+        getContentPane().setLayout(new MigLayout("insets dialog, wrap 3", "[][]unrel[]", "[][]unrel[]unrel[]"));
 
-        btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.setText("help");
-        btnHelp.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnHelpActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnHelp);
-        btnHelp.setBounds(20, 480, 260, 30);
 
-        btnClose.setText("Close");
-        btnClose.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCloseActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnClose);
-        btnClose.setBounds(300, 480, 470, 30);
 
-        pnlPlayers.setBorder(javax.swing.BorderFactory.createTitledBorder("Players"));
-        pnlPlayers.setLayout(null);
 
-        scpTeamablePlayers.setToolTipText("");
 
-        tblTeamablePlayers.setAutoCreateRowSorter(true);
-        tblTeamablePlayers.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Last name", "Co", "Club", "Rating"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblTeamablePlayers.setToolTipText("To team a player, select the player, then drag and drop it to the desired team ");
-        scpTeamablePlayers.setViewportView(tblTeamablePlayers);
 
-        pnlPlayers.add(scpTeamablePlayers);
-        scpTeamablePlayers.setBounds(10, 50, 240, 280);
 
-        jLabel1.setText("teamable players");
-        pnlPlayers.add(jLabel1);
-        jLabel1.setBounds(50, 20, 170, 14);
 
-        txfNbTeamablePlayers.setEditable(false);
-        txfNbTeamablePlayers.setText("1999");
-        pnlPlayers.add(txfNbTeamablePlayers);
-        txfNbTeamablePlayers.setBounds(10, 20, 30, 20);
 
-        getContentPane().add(pnlPlayers);
-        pnlPlayers.setBounds(20, 90, 260, 370);
+
+
+
+
+
+
+
+
+        jLabel9.setText("Round");
+        getContentPane().add(jLabel9);
+
+        spnRoundNumber.addChangeListener(this::spnRoundNumberStateChanged);
+        getContentPane().add(spnRoundNumber, "wmin 36lp");
 
         pnlTeams.setBorder(javax.swing.BorderFactory.createTitledBorder("Teams"));
-        pnlTeams.setLayout(null);
+        pnlTeams.setLayout(new MigLayout("flowy, insets panel"));
 
-        scpTeams.setToolTipText("");
+        lblNbTeams.setText("teams");
+        pnlTeams.add(lblNbTeams);
 
         tblTeams.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
+            new Object [][] {},
             new String [] {
                 "Team number", "Team name", "Board number", "Name", "Co", "Club", "Rating"
             }
@@ -671,32 +553,15 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         scpTeams.setViewportView(tblTeams);
 
         pnlTeams.add(scpTeams);
-        scpTeams.setBounds(10, 50, 405, 300);
-
-        txfNbTeams.setEditable(false);
-        txfNbTeams.setText("120");
-        pnlTeams.add(txfNbTeams);
-        txfNbTeams.setBounds(10, 20, 30, 20);
-
-        jLabel2.setText("teams");
-        pnlTeams.add(jLabel2);
-        jLabel2.setBounds(50, 20, 170, 14);
 
         btnCreateNewTeam.setText("Create a new Team");
-        btnCreateNewTeam.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateNewTeamActionPerformed(evt);
-            }
-        });
+        btnCreateNewTeam.addActionListener(this::btnCreateNewTeamActionPerformed);
         pnlTeams.add(btnCreateNewTeam);
-        btnCreateNewTeam.setBounds(10, 360, 395, 23);
 
-        getContentPane().add(pnlTeams);
-        pnlTeams.setBounds(340, 40, 425, 390);
+        getContentPane().add(pnlTeams, "push, grow, spany 3");
 
         jLabel3.setText("Team size");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(30, 10, 80, 14);
 
         txfTeamSize.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         txfTeamSize.setText("4");
@@ -705,47 +570,73 @@ public class JFrTeamsManager extends javax.swing.JFrame {
                 txfTeamSizeFocusLost(evt);
             }
         });
-        getContentPane().add(txfTeamSize);
-        txfTeamSize.setBounds(120, 10, 20, 20);
+        getContentPane().add(txfTeamSize, "wmin 36lp");
+
+        pnlPlayers.setBorder(javax.swing.BorderFactory.createTitledBorder("Players"));
+        pnlPlayers.setLayout(new MigLayout("flowy, insets panel"));
+
+        lblTeamablePlayers.setText("teamable players");
+        pnlPlayers.add(lblTeamablePlayers);
+
+        tblTeamablePlayers.setAutoCreateRowSorter(true);
+        tblTeamablePlayers.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {},
+            new String [] {
+                "Last name", "Co", "Club", "Rating"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblTeamablePlayers.setToolTipText("To team a player, select the player, then drag and drop it to the desired team ");
+        scpTeamablePlayers.setViewportView(tblTeamablePlayers);
+
+        pnlPlayers.add(scpTeamablePlayers);
+
+        getContentPane().add(pnlPlayers, "push, grow, spanx 2, spany 2");
 
         btnPrint.setText("Print ...");
-        btnPrint.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPrintActionPerformed(evt);
-            }
-        });
+        btnPrint.addActionListener(this::btnPrintActionPerformed);
         getContentPane().add(btnPrint);
-        btnPrint.setBounds(340, 440, 420, 30);
 
-        jLabel9.setText("Round");
-        getContentPane().add(jLabel9);
-        jLabel9.setBounds(30, 50, 80, 14);
+        btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg")));
+        btnHelp.setText("help");
+        btnHelp.addActionListener(this::btnHelpActionPerformed);
+        getContentPane().add(btnHelp, "spanx 3, split 2, tag help");
 
-        spnRoundNumber.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                spnRoundNumberStateChanged(evt);
-            }
-        });
-        getContentPane().add(spnRoundNumber);
-        spnRoundNumber.setBounds(120, 40, 40, 30);
+        btnClose.setText("Close");
+        btnClose.addActionListener(this::btnCloseActionPerformed);
+        getContentPane().add(btnClose, "tag cancel");
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
-    private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHelpActionPerformed
+    private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
         Gotha.displayGothaHelp("Teams Manager frame");
-}//GEN-LAST:event_btnHelpActionPerformed
+}
 
-    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {
         cleanClose();
-}//GEN-LAST:event_btnCloseActionPerformed
+}
 
     private void cleanClose(){
         running = false;
         dispose();
     }
 
-    private void btnCreateNewTeamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewTeamActionPerformed
+    private void btnCreateNewTeamActionPerformed(java.awt.event.ActionEvent evt) {
         int teamSize = 0;
         try {
             teamSize = tournament.getTeamSize();
@@ -761,9 +652,9 @@ public class JFrTeamsManager extends javax.swing.JFrame {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-    }//GEN-LAST:event_btnCreateNewTeamActionPerformed
+    }
 
-    private void tblTeamsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTeamsMouseClicked
+    private void tblTeamsMouseClicked(java.awt.event.MouseEvent evt) {
         this.pupTeams.setVisible(false);
         // Right click
         if (evt.getModifiers() != InputEvent.BUTTON3_MASK) return;
@@ -819,12 +710,12 @@ public class JFrTeamsManager extends javax.swing.JFrame {
             this.mniReorderMembersOfOneTeamAllRounds.setText("Reorder members of " + team.getTeamName() + " by rating for all rounds");
             this.mniChangeTeamNumber.setText("Change number of " + team.getTeamName());
          }
-        
+
         Point p = evt.getLocationOnScreen();
         pupTeams.setLocation(p);
         pupTeams.setVisible(true);
 
-    }//GEN-LAST:event_tblTeamsMouseClicked
+    }
     /**
      * Returns the first selected team
      * or null if no team is selected
@@ -857,7 +748,7 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         return boardNumber;
     }
 
-    private void mniUnteamOneTeamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniUnteamOneTeamActionPerformed
+    private void mniUnteamOneTeamActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         Team team = this.selectedTeam();
         try {
@@ -866,9 +757,9 @@ public class JFrTeamsManager extends javax.swing.JFrame {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-    }//GEN-LAST:event_mniUnteamOneTeamActionPerformed
+    }
 
-    private void mniUnteamAllTeamsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniUnteamAllTeamsActionPerformed
+    private void mniUnteamAllTeamsActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         try {
             tournament.unteamAllTeams(processedRoundNumber);
@@ -876,9 +767,9 @@ public class JFrTeamsManager extends javax.swing.JFrame {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-    }//GEN-LAST:event_mniUnteamAllTeamsActionPerformed
+    }
 
-    private void mniRenameTeamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRenameTeamActionPerformed
+    private void mniRenameTeamActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         Team team = this.selectedTeam();
         String oldName = team.getTeamName();
@@ -892,9 +783,9 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         }
         this.tournamentChanged();
 
-    }//GEN-LAST:event_mniRenameTeamActionPerformed
+    }
 
-    private void mniRemoveOneTeamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRemoveOneTeamActionPerformed
+    private void mniRemoveOneTeamActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         try {
             tournament.removeTeam(this.selectedTeam());
@@ -902,9 +793,9 @@ public class JFrTeamsManager extends javax.swing.JFrame {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-    }//GEN-LAST:event_mniRemoveOneTeamActionPerformed
+    }
 
-    private void mniRemoveAllTeamsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRemoveAllTeamsActionPerformed
+    private void mniRemoveAllTeamsActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         try {
             tournament.removeAllTeams();
@@ -913,9 +804,9 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         }
         this.tournamentChanged();
 
-    }//GEN-LAST:event_mniRemoveAllTeamsActionPerformed
+    }
 
-    private void mniReorderMembersOfOneTeamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniReorderMembersOfOneTeamActionPerformed
+    private void mniReorderMembersOfOneTeamActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         Team team = this.selectedTeam();
         try {
@@ -924,9 +815,9 @@ public class JFrTeamsManager extends javax.swing.JFrame {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-    }//GEN-LAST:event_mniReorderMembersOfOneTeamActionPerformed
+    }
 
-    private void mniUnteamOneMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniUnteamOneMemberActionPerformed
+    private void mniUnteamOneMemberActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         Team team = this.selectedTeam();
         int bn = this.selectedBoard();
@@ -937,9 +828,9 @@ public class JFrTeamsManager extends javax.swing.JFrame {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-    }//GEN-LAST:event_mniUnteamOneMemberActionPerformed
+    }
 
-    private void mniReorderPlayersOfAllTeamsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniReorderPlayersOfAllTeamsActionPerformed
+    private void mniReorderPlayersOfAllTeamsActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         try {
             tournament.reorderTeamMembersByRating(processedRoundNumber);
@@ -947,9 +838,9 @@ public class JFrTeamsManager extends javax.swing.JFrame {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-    }//GEN-LAST:event_mniReorderPlayersOfAllTeamsActionPerformed
+    }
 
-    private void mniRenumberTeamsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRenumberTeamsActionPerformed
+    private void mniRenumberTeamsActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         try {
             tournament.renumberTeamsByTotalRating();
@@ -957,9 +848,9 @@ public class JFrTeamsManager extends javax.swing.JFrame {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-    }//GEN-LAST:event_mniRenumberTeamsActionPerformed
+    }
 
-    private void txfTeamSizeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txfTeamSizeFocusLost
+    private void txfTeamSizeFocusLost(java.awt.event.FocusEvent evt) {
         int newTS = -1;
         try{
             newTS = Integer.parseInt(txfTeamSize.getText());
@@ -995,9 +886,9 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         }
 
         this.tournamentChanged();
-    }//GEN-LAST:event_txfTeamSizeFocusLost
+    }
 
-    private void mniChangeTeamNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniChangeTeamNumberActionPerformed
+    private void mniChangeTeamNumberActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         Team t1 = this.selectedTeam();
         // Ask for a new number
@@ -1038,44 +929,44 @@ public class JFrTeamsManager extends javax.swing.JFrame {
             Logger.getLogger(JFrGamesPair.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-    }//GEN-LAST:event_mniChangeTeamNumberActionPerformed
+    }
 
-    private void mniCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniCancelActionPerformed
+    private void mniCancelActionPerformed(java.awt.event.ActionEvent evt) {
         this.pupTeams.setVisible(false);
-    }//GEN-LAST:event_mniCancelActionPerformed
+    }
 
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {
          this.pupTeams.setVisible(false);
-    }//GEN-LAST:event_formWindowClosed
+    }
 
-    private void tblTeamsFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblTeamsFocusLost
+    private void tblTeamsFocusLost(java.awt.event.FocusEvent evt) {
         this.pupTeams.setVisible(false);
-    }//GEN-LAST:event_tblTeamsFocusLost
+    }
 
-    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {
         TournamentPrinting.printTeamsList(tournament);
-}//GEN-LAST:event_btnPrintActionPerformed
+    }
 
-    private void spnRoundNumberStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spnRoundNumberStateChanged
+    private void spnRoundNumberStateChanged(javax.swing.event.ChangeEvent evt) {
         int demandedRN = (Integer) (spnRoundNumber.getValue()) - 1;
         this.demandedDisplayedRoundNumberHasChanged(demandedRN);
-    }//GEN-LAST:event_spnRoundNumberStateChanged
+    }
 
-    private void mniUnteamOneMemberAllRoundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniUnteamOneMemberAllRoundsActionPerformed
+    private void mniUnteamOneMemberAllRoundsActionPerformed(java.awt.event.ActionEvent evt) {
         Team team = this.selectedTeam();
         int bn = this.selectedBoard();
 
         try {
             for (int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++){
-                this.tournament.unteamTeamMember(team, r, bn);    
+                this.tournament.unteamTeamMember(team, r, bn);
             }
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-    }//GEN-LAST:event_mniUnteamOneMemberAllRoundsActionPerformed
+    }
 
-    private void mniUnteamOneTeamAllRoundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniUnteamOneTeamAllRoundsActionPerformed
+    private void mniUnteamOneTeamAllRoundsActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         Team team = this.selectedTeam();
         try {
@@ -1086,21 +977,21 @@ public class JFrTeamsManager extends javax.swing.JFrame {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-    }//GEN-LAST:event_mniUnteamOneTeamAllRoundsActionPerformed
+    }
 
-    private void mniUnteamAllTeamsAllRoundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniUnteamAllTeamsAllRoundsActionPerformed
+    private void mniUnteamAllTeamsAllRoundsActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         try {
             for (int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++){
-                 tournament.unteamAllTeams(r);     
+                 tournament.unteamAllTeams(r);
             }
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-    }//GEN-LAST:event_mniUnteamAllTeamsAllRoundsActionPerformed
+    }
 
-    private void mniReorderMembersOfOneTeamAllRoundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniReorderMembersOfOneTeamAllRoundsActionPerformed
+    private void mniReorderMembersOfOneTeamAllRoundsActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         Team team = this.selectedTeam();
         try {
@@ -1112,9 +1003,9 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         }
         this.tournamentChanged();
 
-    }//GEN-LAST:event_mniReorderMembersOfOneTeamAllRoundsActionPerformed
+    }
 
-    private void mniReorderPlayersOfAllTeamsAllRoundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniReorderPlayersOfAllTeamsAllRoundsActionPerformed
+    private void mniReorderPlayersOfAllTeamsAllRoundsActionPerformed(java.awt.event.ActionEvent evt) {
         pupTeams.setVisible(false);
         try {
             for (int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++){
@@ -1124,11 +1015,11 @@ public class JFrTeamsManager extends javax.swing.JFrame {
             Logger.getLogger(JFrTeamsManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.tournamentChanged();
-    }//GEN-LAST:event_mniReorderPlayersOfAllTeamsAllRoundsActionPerformed
+    }
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {
         cleanClose();
-    }//GEN-LAST:event_formWindowClosing
+    }
 
     private void demandedDisplayedRoundNumberHasChanged(int demandedRN) {
         int numberOfRounds = 0;
@@ -1149,13 +1040,12 @@ public class JFrTeamsManager extends javax.swing.JFrame {
         updateAllViews();
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnCreateNewTeam;
     private javax.swing.JButton btnHelp;
     private javax.swing.JButton btnPrint;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel lblTeamablePlayers;
+    private javax.swing.JLabel lblNbTeams;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPopupMenu.Separator jSeparator1;
@@ -1187,10 +1077,7 @@ public class JFrTeamsManager extends javax.swing.JFrame {
     private javax.swing.JSpinner spnRoundNumber;
     private javax.swing.JTable tblTeamablePlayers;
     private javax.swing.JTable tblTeams;
-    private javax.swing.JTextField txfNbTeamablePlayers;
-    private javax.swing.JTextField txfNbTeams;
     private javax.swing.JTextField txfTeamSize;
-    // End of variables declaration//GEN-END:variables
 
     private void tournamentChanged() {
         try {
