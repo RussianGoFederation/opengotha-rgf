@@ -66,7 +66,6 @@ public class JFrGothaStart extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        grpLanguage = new javax.swing.ButtonGroup();
         grpRunningMode = new javax.swing.ButtonGroup();
         btnStart = new javax.swing.JButton();
         pnlRunningMode = new javax.swing.JPanel();
@@ -75,7 +74,7 @@ public class JFrGothaStart extends javax.swing.JFrame {
         rdbClient = new javax.swing.JRadioButton();
         btnHelp = new javax.swing.JButton();
         pnlLocale = new javax.swing.JPanel();
-        languageComboBox = new javax.swing.JComboBox<>();
+        javax.swing.JComboBox<GothaLocale> languageComboBox = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -153,8 +152,8 @@ public class JFrGothaStart extends javax.swing.JFrame {
         }
 
         if (grpRunningMode.getSelection() == this.rdbServer.getModel()) {
-
-            String strIPAd = Gotha.getBestIPAd().toString();
+            InetAddress inetAddress = Gotha.getBestIPAd();
+            String strIPAd = inetAddress != null ? inetAddress.toString() : "";
             strIPAd = strIPAd.replace("/", "");
             strIPAd = JOptionPane.showInputDialog(locale.getString("start.input_this_server_ip"), strIPAd);
             if (strIPAd == null) return;
@@ -175,13 +174,12 @@ public class JFrGothaStart extends javax.swing.JFrame {
             Gotha.serverName = strSN;
 
             String[] lstTou = GothaRMIClient.tournamentNamesList(Gotha.serverName);
-            String strTN = "";
+            String strTN;
             if (lstTou == null || lstTou.length == 0){
                 String strMessage = locale.format("start.no_tournaments_found_on_server", strSN);
                 JOptionPane.showMessageDialog(this, strMessage);
                 return;
-            }
-            if (lstTou.length > 0) {
+            } else {
                 strTN = (String) JOptionPane.showInputDialog(this, locale.getString("start.select_tournament"), "OpenGotha",
                         JOptionPane.INFORMATION_MESSAGE, null, lstTou, lstTou[0]);
             }
@@ -196,7 +194,7 @@ public class JFrGothaStart extends javax.swing.JFrame {
         }
 
         // Log elements
-        String strRM = "";
+        String strRM;
         switch(Gotha.runningMode){
             case Gotha.RUNNING_MODE_SAL : strRM = "SAL"; break;
             case Gotha.RUNNING_MODE_SRV : strRM = "SRV"; break;
@@ -224,22 +222,19 @@ public class JFrGothaStart extends javax.swing.JFrame {
 
     /**
      * Recursively searches for a directory containing a directory whose name is strFile
-     * @param rootDir
-     * @param strFile
-     * @return
      */
-    public File findADirectoryContaining(File rootDir, String strFile){
+    private File findADirectoryContaining(File rootDir, String strFile){
         if (new File(rootDir, strFile).exists()){
             return rootDir;
         }
         else{
             File[] lst = rootDir.listFiles();
             if (lst == null) return null;
-            for (int i = 0; i < lst.length; i++){
-                if (!lst[i].isDirectory()) continue;
-                if (lst[i].isHidden()) continue;
-                File f = findADirectoryContaining(lst[i], strFile);
-                if (f!= null){
+            for (File file : lst) {
+                if (!file.isDirectory()) continue;
+                if (file.isHidden()) continue;
+                File f = findADirectoryContaining(file, strFile);
+                if (f != null) {
                     return f;
                 }
             }
@@ -250,25 +245,16 @@ public class JFrGothaStart extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                new JFrGothaStart().setVisible(true);
-            }
-        });
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> new JFrGothaStart().setVisible(true));
     }
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+
     private javax.swing.JButton btnHelp;
     private javax.swing.JButton btnStart;
-    private javax.swing.ButtonGroup grpLanguage;
     private javax.swing.ButtonGroup grpRunningMode;
-    private javax.swing.JComboBox<ru.gofederation.gotha.util.GothaLocale> languageComboBox;
     private javax.swing.JPanel pnlLocale;
     private javax.swing.JPanel pnlRunningMode;
     private javax.swing.JRadioButton rdbClient;
     private javax.swing.JRadioButton rdbSAL;
     private javax.swing.JRadioButton rdbServer;
-    // End of variables declaration//GEN-END:variables
 }
