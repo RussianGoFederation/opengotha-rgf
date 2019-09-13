@@ -139,238 +139,238 @@ public class JFrPublish extends javax.swing.JFrame {
 
         pnlContents.setLayout(new MigLayout("insets panel"));
 
-        pnlPL.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.player_list"))); // NOI18N
+        pnlPL.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.player_list")));
         pnlPL.setLayout(new MigLayout("insets panel, flowy"));
 
-        jLabel1.setText(locale.getString("publish.player_list.sort_by")); // NOI18N
+        jLabel1.setText(locale.getString("publish.player_list.sort_by"));
         pnlPL.add(jLabel1);
 
         grpSortType.add(rdbSortByName);
-        rdbSortByName.setText(locale.getString("publish.player_list.sort_by.name")); // NOI18N
+        rdbSortByName.setText(locale.getString("publish.player_list.sort_by.name"));
         rdbSortByName.addActionListener(this::allSortRDBActionPerformed);
         pnlPL.add(rdbSortByName, "gapleft indent");
 
-        rdbSortByRank.setText(locale.getString("publish.player_list.sort_by.rank")); // NOI18N
+        rdbSortByRank.setText(locale.getString("publish.player_list.sort_by.rank"));
         rdbSortByRank.setEnabled(false);
         rdbSortByRank.addActionListener(this::allSortRDBActionPerformed);
         pnlPL.add(rdbSortByRank, "gapleft indent");
 
         grpSortType.add(rdbSortByGrade);
-        rdbSortByGrade.setText(locale.getString("publish.player_list.sort_by.grade")); // NOI18N
+        rdbSortByGrade.setText(locale.getString("publish.player_list.sort_by.grade"));
         rdbSortByGrade.addActionListener(this::allSortRDBActionPerformed);
         pnlPL.add(rdbSortByGrade, "gapleft indent");
 
         pnlContents.add(pnlPL);
 
-        pnlGL.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.games_list"))); // NOI18N
+        pnlGL.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.games_list")));
         pnlGL.setLayout(new MigLayout("insets panel, flowy"));
 
-        jLabel3.setText(locale.getString("publish.games_list.for_each_player")); // NOI18N
+        jLabel3.setText(locale.getString("publish.games_list.for_each_player"));
         pnlGL.add(jLabel3);
 
         ckbShowPlayerGrade.setSelected(true);
-        ckbShowPlayerGrade.setText(locale.getString("publish.games_list.grade")); // NOI18N
+        ckbShowPlayerGrade.setText(locale.getString("publish.games_list.grade"));
         ckbShowPlayerGrade.addActionListener(this::allContentsCKBActionPerformed);
         pnlGL.add(ckbShowPlayerGrade, "gapleft indent");
 
-        ckbShowPlayerCountry.setText(locale.getString("publish.games_list.country")); // NOI18N
+        ckbShowPlayerCountry.setText(locale.getString("publish.games_list.country"));
         ckbShowPlayerCountry.addActionListener(this::allContentsCKBActionPerformed);
         pnlGL.add(ckbShowPlayerCountry, "gapleft indent");
 
         ckbShowPlayerClub.setSelected(true);
-        ckbShowPlayerClub.setText(locale.getString("publish.games_list.club")); // NOI18N
+        ckbShowPlayerClub.setText(locale.getString("publish.games_list.club"));
         ckbShowPlayerClub.addActionListener(this::allContentsCKBActionPerformed);
         pnlGL.add(ckbShowPlayerClub, "gapleft indent");
 
         pnlContents.add(pnlGL, "wrap");
 
-        pnlNPP.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.non_playing_player_list"))); // NOI18N
+        pnlNPP.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.non_playing_player_list")));
         pnlNPP.setLayout(new MigLayout("flowy, insets panel"));
 
         ckbShowByePlayer.setSelected(true);
-        ckbShowByePlayer.setText(locale.getString("publish.non_playing_player_list.show_bye")); // NOI18N
+        ckbShowByePlayer.setText(locale.getString("publish.non_playing_player_list.show_bye"));
         ckbShowByePlayer.setEnabled(false);
         ckbShowByePlayer.addActionListener(this::allContentsCKBActionPerformed);
         pnlNPP.add(ckbShowByePlayer);
 
         ckbShowNotPairedPlayers.setSelected(true);
-        ckbShowNotPairedPlayers.setText(locale.getString("publish.non_playing_player_list.show_unpaired")); // NOI18N
+        ckbShowNotPairedPlayers.setText(locale.getString("publish.non_playing_player_list.show_unpaired"));
         ckbShowNotPairedPlayers.addActionListener(this::allContentsCKBActionPerformed);
         pnlNPP.add(ckbShowNotPairedPlayers);
 
-        ckbShowNotParticipatingPlayers.setText(locale.getString("publish.non_playing_player_list.show_not_participating")); // NOI18N
+        ckbShowNotParticipatingPlayers.setText(locale.getString("publish.non_playing_player_list.show_not_participating"));
         ckbShowNotParticipatingPlayers.addActionListener(this::allContentsCKBActionPerformed);
         pnlNPP.add(ckbShowNotParticipatingPlayers);
 
         ckbShowNotFinallyRegisteredPlayers.setSelected(true);
-        ckbShowNotFinallyRegisteredPlayers.setText(locale.getString("publish.non_playing_player_list.show_non_final_registration")); // NOI18N
+        ckbShowNotFinallyRegisteredPlayers.setText(locale.getString("publish.non_playing_player_list.show_non_final_registration"));
         ckbShowNotFinallyRegisteredPlayers.setEnabled(false);
         ckbShowNotFinallyRegisteredPlayers.addActionListener(this::allContentsCKBActionPerformed);
         pnlNPP.add(ckbShowNotFinallyRegisteredPlayers);
 
         pnlContents.add(pnlNPP);
 
-        pnlML.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.matches"))); // NOI18N
+        pnlML.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.matches")));
         pnlML.setLayout(new MigLayout("insets panel"));
 
         ckbDisplayIndGames.setSelected(true);
-        ckbDisplayIndGames.setText(locale.getString("publish.matches.individual_games")); // NOI18N
+        ckbDisplayIndGames.setText(locale.getString("publish.matches.individual_games"));
         ckbDisplayIndGames.addActionListener(this::allContentsCKBActionPerformed);
         pnlML.add(ckbDisplayIndGames);
 
         pnlContents.add(pnlML, "wrap");
 
-        pnlSt.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.standings"))); // NOI18N
+        pnlSt.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.standings")));
         pnlSt.setLayout(new MigLayout("insets panel, flowy"));
 
-        ckbDisplayNPPlayers.setText(locale.getString("publish.standings.display_non_playing")); // NOI18N
+        ckbDisplayNPPlayers.setText(locale.getString("publish.standings.display_non_playing"));
         ckbDisplayNPPlayers.addActionListener(this::allContentsCKBActionPerformed);
         pnlSt.add(ckbDisplayNPPlayers, "wrap");
 
         ckbDisplayNumCol.setSelected(true);
-        ckbDisplayNumCol.setText(locale.getString("publish.standings.display_num")); // NOI18N
+        ckbDisplayNumCol.setText(locale.getString("publish.standings.display_num"));
         ckbDisplayNumCol.addActionListener(this::allContentsCKBActionPerformed);
         pnlSt.add(ckbDisplayNumCol);
 
         ckbDisplayPlCol.setSelected(true);
-        ckbDisplayPlCol.setText(locale.getString("publish.standings.display_pl")); // NOI18N
+        ckbDisplayPlCol.setText(locale.getString("publish.standings.display_pl"));
         ckbDisplayPlCol.addActionListener(this::allContentsCKBActionPerformed);
         pnlSt.add(ckbDisplayPlCol);
 
-        ckbDisplayCoCol.setText(locale.getString("publish.standings.display_country")); // NOI18N
+        ckbDisplayCoCol.setText(locale.getString("publish.standings.display_country"));
         ckbDisplayCoCol.addActionListener(this::allContentsCKBActionPerformed);
         pnlSt.add(ckbDisplayCoCol);
 
-        ckbDisplayClCol.setText(locale.getString("publish.standings.display_club")); // NOI18N
+        ckbDisplayClCol.setText(locale.getString("publish.standings.display_club"));
         ckbDisplayClCol.addActionListener(this::allContentsCKBActionPerformed);
         pnlSt.add(ckbDisplayClCol, "wrap");
 
-        jLabel5.setText(locale.getString("publish.standings.game_format")); // NOI18N
+        jLabel5.setText(locale.getString("publish.standings.game_format"));
         pnlSt.add(jLabel5);
 
         grpGameFormat.add(rdbGameFormatFull);
-        rdbGameFormatFull.setText(locale.getString("publish.standings.game_format_full")); // NOI18N
+        rdbGameFormatFull.setText(locale.getString("publish.standings.game_format_full"));
         rdbGameFormatFull.addActionListener(this::allGameFormatRDBActionPerformed);
         pnlSt.add(rdbGameFormatFull, "gapleft indent");
 
         grpGameFormat.add(rdbGameFormatShort);
-        rdbGameFormatShort.setText(locale.getString("publish.standings.game_format_short")); // NOI18N
+        rdbGameFormatShort.setText(locale.getString("publish.standings.game_format_short"));
         rdbGameFormatShort.addActionListener(this::allGameFormatRDBActionPerformed);
         pnlSt.add(rdbGameFormatShort, "gapleft indent");
 
         pnlContents.add(pnlSt, "spanx 2");
 
-        tpnPublish.addTab(locale.getString("publish.contents"), pnlContents); // NOI18N
+        tpnPublish.addTab(locale.getString("publish.contents"), pnlContents);
 
         pnlPar.setLayout(new MigLayout("insets panel"));
 
-        pnlActions.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.buttons_action"))); // NOI18N
+        pnlActions.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.buttons_action")));
         pnlActions.setLayout(new MigLayout("flowy, insets panel"));
 
         ckbPrint.setSelected(true);
-        ckbPrint.setText(locale.getString("publish.buttons_action_print")); // NOI18N
+        ckbPrint.setText(locale.getString("publish.buttons_action_print"));
         ckbPrint.addActionListener(this::allParametersCKBActionPerformed);
         pnlActions.add(ckbPrint);
 
         ckbExportToLocalFile.setSelected(true);
-        ckbExportToLocalFile.setText(locale.getString("publish.buttons_action_export_file")); // NOI18N
+        ckbExportToLocalFile.setText(locale.getString("publish.buttons_action_export_file"));
         ckbExportToLocalFile.setEnabled(false);
         ckbExportToLocalFile.addActionListener(this::allParametersCKBActionPerformed);
         pnlActions.add(ckbExportToLocalFile);
 
         pnlPar.add(pnlActions);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.html_export"))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("publish.html_export")));
         jPanel1.setLayout(new MigLayout("insets panel"));
 
-        ckbHTMLAutoscroll.setText(locale.getString("publish.html_export_autoscroll")); // NOI18N
-        ckbHTMLAutoscroll.setToolTipText(locale.getString("publish.html_export_autoscroll_tooltip")); // NOI18N
+        ckbHTMLAutoscroll.setText(locale.getString("publish.html_export_autoscroll"));
+        ckbHTMLAutoscroll.setToolTipText(locale.getString("publish.html_export_autoscroll_tooltip"));
         ckbHTMLAutoscroll.addActionListener(this::allParametersCKBActionPerformed);
         jPanel1.add(ckbHTMLAutoscroll);
 
         pnlPar.add(jPanel1);
 
-        tpnPublish.addTab(locale.getString("publish.parameters"), pnlPar); // NOI18N
+        tpnPublish.addTab(locale.getString("publish.parameters"), pnlPar);
 
         pnlPub.setLayout(new MigLayout("insets panel, wrap 3", "[fill, sg]u[fill, sg]u[fill, sg]", "[]u[][][]u[]u[]"));
 
-        jLabel2.setText(locale.getString("tournament.round")); // NOI18N
+        jLabel2.setText(locale.getString("tournament.round"));
         pnlPub.add(jLabel2, "skip 1, split 2, gapleft push");
 
         spnRoundNumber.addChangeListener(this::spnRoundNumberStateChanged);
         pnlPub.add(spnRoundNumber, "gapright push, wrap");
 
-        btnPublishPL.setText(locale.getString("publish.publish_player_list")); // NOI18N
+        btnPublishPL.setText(locale.getString("publish.publish_player_list"));
         btnPublishPL.addActionListener(this::btnPublishPLActionPerformed);
         pnlPub.add(btnPublishPL, "h min*1.5, sg big");
 
-        btnPublishGL.setText(locale.getString("publish.publish_games")); // NOI18N
+        btnPublishGL.setText(locale.getString("publish.publish_games"));
         btnPublishGL.addActionListener(this::btnPublishGLActionPerformed);
         pnlPub.add(btnPublishGL, "sg big");
 
         btnExportRLEGF.setForeground(new java.awt.Color(255, 0, 0));
-        btnExportRLEGF.setText(locale.getString("publish.publish_export_egf")); // NOI18N
+        btnExportRLEGF.setText(locale.getString("publish.publish_export_egf"));
         btnExportRLEGF.addActionListener(this::btnExportRLEGFActionPerformed);
         pnlPub.add(btnExportRLEGF, "sg big, split 4, flowy, gapbottom push, spany 5");
         btnExportRLEGF.setBounds(540, 80, 230, 50);
 
         btnExportRLFFG.setForeground(new java.awt.Color(255, 0, 0));
-        btnExportRLFFG.setText(locale.getString("publish.publish_export_ffg")); // NOI18N
+        btnExportRLFFG.setText(locale.getString("publish.publish_export_ffg"));
         btnExportRLFFG.addActionListener(this::btnExportRLFFGActionPerformed);
         pnlPub.add(btnExportRLFFG, "sg big, gapbottom push");
         btnExportRLFFG.setBounds(540, 180, 230, 50);
 
         btnExportRLAGA.setForeground(new java.awt.Color(255, 0, 0));
-        btnExportRLAGA.setText(locale.getString("publish.publish_export_aga")); // NOI18N
+        btnExportRLAGA.setText(locale.getString("publish.publish_export_aga"));
         btnExportRLAGA.addActionListener(this::btnExportRLAGAActionPerformed);
         pnlPub.add(btnExportRLAGA, "sg big, gapbottom push");
         btnExportRLAGA.setBounds(540, 280, 230, 50);
 
         btnExportPlayersCSV.setForeground(new java.awt.Color(0, 128, 0));
-        btnExportPlayersCSV.setText(locale.getString("publish.publish_export_players_csv")); // NOI18N
+        btnExportPlayersCSV.setText(locale.getString("publish.publish_export_players_csv"));
         btnExportPlayersCSV.addActionListener(this::btnExportPlayersCSVActionPerformed);
         pnlPub.add(btnExportPlayersCSV, "sg big");
         btnExportPlayersCSV.setBounds(540, 380, 230, 50);
 
-        btnPrintTP.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        btnPrintTP.setFont(new java.awt.Font("Tahoma", 0, 10));
         btnPrintTP.setForeground(new java.awt.Color(0, 0, 255)); // TODO: theme
-        btnPrintTP.setText(locale.getString("publish.publish_print_tournament_settings")); // NOI18N
+        btnPrintTP.setText(locale.getString("publish.publish_print_tournament_settings"));
         btnPrintTP.addActionListener(this::btnPrintTPActionPerformed);
         pnlPub.add(btnPrintTP);
 
-        btnPrintRS.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        btnPrintRS.setFont(new java.awt.Font("Tahoma", 0, 10));
         btnPrintRS.setForeground(new java.awt.Color(0, 0, 255));
-        btnPrintRS.setText(locale.getString("publish.publish_print_result_sheets")); // NOI18N
+        btnPrintRS.setText(locale.getString("publish.publish_print_result_sheets"));
         btnPrintRS.addActionListener(this::btnPrintRSActionPerformed);
         pnlPub.add(btnPrintRS, "wrap");
         btnPrintRS.setBounds(260, 130, 260, 25);
 
-        btnPrintNPP.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        btnPrintNPP.setFont(new java.awt.Font("Tahoma", 0, 10));
         btnPrintNPP.setForeground(new java.awt.Color(0, 0, 255));
-        btnPrintNPP.setText(locale.getString("publish.publish_print_non_playing_players")); // NOI18N
+        btnPrintNPP.setText(locale.getString("publish.publish_print_non_playing_players"));
         btnPrintNPP.addActionListener(this::btnPrintNPPActionPerformed);
         pnlPub.add(btnPrintNPP, "skip 1, wrap");
         btnPrintNPP.setBounds(260, 170, 260, 25);
 
-        btnPublishSt.setText(locale.getString("publish.publish_standings")); // NOI18N
+        btnPublishSt.setText(locale.getString("publish.publish_standings"));
         btnPublishSt.addActionListener(this::btnPublishStActionPerformed);
         pnlPub.add(btnPublishSt, "sg big, skip 1, wrap");
         btnPublishSt.setBounds(260, 220, 260, 40);
 
-        pnlTeams.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.teams"))); // NOI18N
+        pnlTeams.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.teams")));
         pnlTeams.setLayout(new MigLayout("insets panel", "[grow, fill, sg]unrel[grow, fill, sg]"));
 
-        btnPublishTL.setText(locale.getString("publish.publish_teams_list")); // NOI18N
+        btnPublishTL.setText(locale.getString("publish.publish_teams_list"));
         btnPublishTL.addActionListener(this::btnPublishTLActionPerformed);
         pnlTeams.add(btnPublishTL, "sg big, h min*1.5");
         btnPublishTL.setBounds(10, 30, 230, 50);
 
-        btnPublishML.setText(locale.getString("publish.publish_team_matches")); // NOI18N
+        btnPublishML.setText(locale.getString("publish.publish_team_matches"));
         btnPublishML.addActionListener(this::btnPublishMLActionPerformed);
         pnlTeams.add(btnPublishML, "sg big, wrap");
         btnPublishML.setBounds(260, 30, 260, 50);
 
-        btnPublishTS.setText(locale.getString("publish.publish_team_standings")); // NOI18N
+        btnPublishTS.setText(locale.getString("publish.publish_team_standings"));
         btnPublishTS.addActionListener(this::btnPublishTSActionPerformed);
         pnlTeams.add(btnPublishTS, "sg big, skip 1");
         btnPublishTS.setBounds(260, 120, 260, 50);
@@ -378,21 +378,22 @@ public class JFrPublish extends javax.swing.JFrame {
         pnlPub.add(pnlTeams, "spanx 2");
         pnlTeams.setBounds(0, 260, 530, 180);
 
-        tpnPublish.addTab(locale.getString("publish.publish"), pnlPub); // NOI18N
+        tpnPublish.addTab(locale.getString("publish.publish"), pnlPub);
 
         getContentPane().add(tpnPublish, "wrap");
 
-        btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg"))); // NOI18N
-        btnHelp.setText(locale.getString("btn.help")); // NOI18N
+        btnHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/info/vannier/gotha/gothalogo16.jpg")));
+        btnHelp.setText(locale.getString("btn.help"));
         btnHelp.addActionListener(this::btnHelpActionPerformed);
         getContentPane().add(btnHelp, "split 2, tag help");
 
-        btnClose.setText(locale.getString("btn.close")); // NOI18N
+        btnClose.setText(locale.getString("btn.close"));
         btnClose.addActionListener(this::btnCloseActionPerformed);
         getContentPane().add(btnClose, "tag cancel");
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }
+
     private void customInitComponents() throws RemoteException {
         int w = JFrGotha.MEDIUM_FRAME_WIDTH;
         int h = JFrGotha.MEDIUM_FRAME_HEIGHT;
@@ -405,16 +406,16 @@ public class JFrPublish extends javax.swing.JFrame {
         updateAllViews();
     }
 
-    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {
         cleanClose();
-    }//GEN-LAST:event_btnCloseActionPerformed
+    }
 
     private void cleanClose(){
         running = false;
         dispose();
     }
 
-    private void btnExportRLFFGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportRLFFGActionPerformed
+    private void btnExportRLFFGActionPerformed(java.awt.event.ActionEvent evt) {
         if (tournament == null) {
             JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
@@ -441,13 +442,13 @@ public class JFrPublish extends javax.swing.JFrame {
         Gotha.exportDirectory = f.getParentFile();
 
         ExternalDocument.generateTouFile(tournament, f);
-    }//GEN-LAST:event_btnExportRLFFGActionPerformed
+    }
 
-    private void btnPrintTPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintTPActionPerformed
+    private void btnPrintTPActionPerformed(java.awt.event.ActionEvent evt) {
         TournamentPrinting.printTournamentParameters(tournament);
-    }//GEN-LAST:event_btnPrintTPActionPerformed
+    }
 
-    private void btnExportRLAGAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportRLAGAActionPerformed
+    private void btnExportRLAGAActionPerformed(java.awt.event.ActionEvent evt) {
         if (tournament == null) {
             JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
@@ -480,9 +481,9 @@ public class JFrPublish extends javax.swing.JFrame {
         Gotha.exportDirectory = f.getParentFile();
 
         ExternalDocument.generateAGAResultsFile(tournament, f);
-    }//GEN-LAST:event_btnExportRLAGAActionPerformed
+    }
 
-    private void btnExportRLEGFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportRLEGFActionPerformed
+    private void btnExportRLEGFActionPerformed(java.awt.event.ActionEvent evt) {
         if (tournament == null) {
             JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
@@ -504,14 +505,14 @@ public class JFrPublish extends javax.swing.JFrame {
         } else {
             return;
         }
-    }//GEN-LAST:event_btnExportRLEGFActionPerformed
+    }
 
-    private void spnRoundNumberStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spnRoundNumberStateChanged
+    private void spnRoundNumberStateChanged(javax.swing.event.ChangeEvent evt) {
         int demandedRN = (Integer) (spnRoundNumber.getValue()) - 1;
         this.demandedDisplayedRoundNumberHasChanged(demandedRN);
-    }//GEN-LAST:event_spnRoundNumberStateChanged
+    }
 
-    private void btnExportPlayersCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportPlayersCSVActionPerformed
+    private void btnExportPlayersCSVActionPerformed(java.awt.event.ActionEvent evt) {
         if (tournament == null) {
             JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
             return;
@@ -525,13 +526,13 @@ public class JFrPublish extends javax.swing.JFrame {
         Gotha.exportDirectory = f.getParentFile();
 
         ExternalDocument.generatePlayersCSVFile(tournament, f);
-    }//GEN-LAST:event_btnExportPlayersCSVActionPerformed
+    }
 
-    private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHelpActionPerformed
+    private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
         Gotha.displayGothaHelp("Publish menu");
-    }//GEN-LAST:event_btnHelpActionPerformed
+    }
 
-    private void allSortRDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allSortRDBActionPerformed
+    private void allSortRDBActionPerformed(java.awt.event.ActionEvent evt) {
         TournamentParameterSet tps;
         DPParameterSet dpps;
         try {
@@ -563,9 +564,9 @@ public class JFrPublish extends javax.swing.JFrame {
                 Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_allSortRDBActionPerformed
+    }
 
-    private void allGameFormatRDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allGameFormatRDBActionPerformed
+    private void allGameFormatRDBActionPerformed(java.awt.event.ActionEvent evt) {
         TournamentParameterSet tps;
         DPParameterSet dpps;
         try {
@@ -594,9 +595,9 @@ public class JFrPublish extends javax.swing.JFrame {
                 Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_allGameFormatRDBActionPerformed
+    }
 
-    private void allContentsCKBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allContentsCKBActionPerformed
+    private void allContentsCKBActionPerformed(java.awt.event.ActionEvent evt) {
         TournamentParameterSet tps;
         DPParameterSet dpps;
         try {
@@ -700,9 +701,9 @@ public class JFrPublish extends javax.swing.JFrame {
                 Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_allContentsCKBActionPerformed
+    }
 
-    private void allParametersCKBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allParametersCKBActionPerformed
+    private void allParametersCKBActionPerformed(java.awt.event.ActionEvent evt) {
         TournamentParameterSet tps;
         PublishParameterSet pubPS;
         try {
@@ -744,49 +745,49 @@ public class JFrPublish extends javax.swing.JFrame {
                 Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_allParametersCKBActionPerformed
+    }
 
-    private void btnPublishPLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPublishPLActionPerformed
+    private void btnPublishPLActionPerformed(java.awt.event.ActionEvent evt) {
         TournamentPublishing.publish(tournament, processedRoundNumber,
                 TournamentPublishing.TYPE_PLAYERSLIST, TournamentPublishing.SUBTYPE_DEFAULT);
-    }//GEN-LAST:event_btnPublishPLActionPerformed
+    }
 
-    private void btnPublishGLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPublishGLActionPerformed
+    private void btnPublishGLActionPerformed(java.awt.event.ActionEvent evt) {
         TournamentPublishing.publish(tournament, processedRoundNumber,
                 TournamentPublishing.TYPE_GAMESLIST, TournamentPublishing.SUBTYPE_DEFAULT);
-    }//GEN-LAST:event_btnPublishGLActionPerformed
+    }
 
-    private void btnPublishStActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPublishStActionPerformed
+    private void btnPublishStActionPerformed(java.awt.event.ActionEvent evt) {
         TournamentPublishing.publish(tournament, processedRoundNumber,
                 TournamentPublishing.TYPE_STANDINGS, TournamentPublishing.SUBTYPE_DEFAULT);
-    }//GEN-LAST:event_btnPublishStActionPerformed
+    }
 
-    private void btnPrintNPPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintNPPActionPerformed
+    private void btnPrintNPPActionPerformed(java.awt.event.ActionEvent evt) {
         TournamentPrinting.printNotPlayingPlayersList(tournament, processedRoundNumber);
-    }//GEN-LAST:event_btnPrintNPPActionPerformed
+    }
 
-    private void btnPublishMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPublishMLActionPerformed
+    private void btnPublishMLActionPerformed(java.awt.event.ActionEvent evt) {
         TournamentPublishing.publish(tournament, processedRoundNumber,
                 TournamentPublishing.TYPE_MATCHESLIST, TournamentPublishing.SUBTYPE_DEFAULT);
-    }//GEN-LAST:event_btnPublishMLActionPerformed
+    }
 
-    private void btnPublishTLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPublishTLActionPerformed
+    private void btnPublishTLActionPerformed(java.awt.event.ActionEvent evt) {
         TournamentPublishing.publish(tournament, processedRoundNumber,
                 TournamentPublishing.TYPE_TEAMSLIST, TournamentPublishing.SUBTYPE_DEFAULT);
-    }//GEN-LAST:event_btnPublishTLActionPerformed
+    }
 
-    private void btnPublishTSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPublishTSActionPerformed
+    private void btnPublishTSActionPerformed(java.awt.event.ActionEvent evt) {
        TournamentPublishing.publish(tournament, processedRoundNumber,
                 TournamentPublishing.TYPE_TEAMSSTANDINGS, TournamentPublishing.SUBTYPE_DEFAULT);
-    }//GEN-LAST:event_btnPublishTSActionPerformed
+    }
 
-    private void btnPrintRSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintRSActionPerformed
+    private void btnPrintRSActionPerformed(java.awt.event.ActionEvent evt) {
         TournamentPrinting.printResultSheets(tournament, processedRoundNumber);
-    }//GEN-LAST:event_btnPrintRSActionPerformed
+    }
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {
         cleanClose();
-    }//GEN-LAST:event_formWindowClosing
+    }
 
     private void demandedDisplayedRoundNumberHasChanged(int demandedRN) {
         int numberOfRounds = 0;
@@ -922,8 +923,6 @@ public class JFrPublish extends javax.swing.JFrame {
 
     }
 
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnExportPlayersCSV;
     private javax.swing.JButton btnExportRLAGA;
@@ -983,5 +982,4 @@ public class JFrPublish extends javax.swing.JFrame {
     private javax.swing.JRadioButton rdbSortByRank;
     private javax.swing.JSpinner spnRoundNumber;
     private javax.swing.JTabbedPane tpnPublish;
-    // End of variables declaration//GEN-END:variables
 }
