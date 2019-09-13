@@ -292,7 +292,7 @@ public class JFrPublish extends javax.swing.JFrame {
 
         tpnPublish.addTab(locale.getString("publish.parameters"), pnlPar); // NOI18N
 
-        pnlPub.setLayout(new MigLayout("insets panel, wrap 3, debug", "[fill, sg]u[fill, sg]u[fill, sg]", "[]u[][][]u[]u[]"));
+        pnlPub.setLayout(new MigLayout("insets panel, wrap 3", "[fill, sg]u[fill, sg]u[fill, sg]", "[]u[][][]u[]u[]"));
 
         jLabel2.setText(locale.getString("tournament.round")); // NOI18N
         pnlPub.add(jLabel2, "skip 1, split 2, gapleft push");
