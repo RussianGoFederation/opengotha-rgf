@@ -49,6 +49,7 @@ public final class PlacementParameterSet implements java.io.Serializable{
         plaCriteria[0] = PlacementCriterion.MMS;
         plaCriteria[1] = PlacementCriterion.SOSM;
         plaCriteria[2] = PlacementCriterion.SODOSM;
+        plaCriteria[3] = PlacementCriterion.RATING;
     }
 
     public void initForSwiss() {
@@ -57,6 +58,7 @@ public final class PlacementParameterSet implements java.io.Serializable{
         plaCriteria[0] = PlacementCriterion.NBW;
         plaCriteria[1] = PlacementCriterion.SOSW;
         plaCriteria[2] = PlacementCriterion.SOSOSW;
+        plaCriteria[3] = PlacementCriterion.RATING;
     }
 
     public void initForSwissCat() {
