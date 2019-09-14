@@ -10,13 +10,16 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
+import java.security.AccessController;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 import ru.gofederation.gotha.util.GothaLocale;
+import sun.security.action.GetPropertyAction;
 
 /**
  *
@@ -240,7 +243,38 @@ public class JFrGothaStart extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> new JFrGothaStart().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(getNativeLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            new JFrGothaStart().setVisible(true);
+        });
+    }
+
+    /**
+     * Returns LookAndFeel class name based on current OS.
+     * Falls back to {@link UIManager#getSystemLookAndFeelClassName()}.
+     */
+    private static String getNativeLookAndFeelClassName() {
+        String systemLaf = AccessController.doPrivileged(new GetPropertyAction("swing.systemlaf"));
+        if (systemLaf != null) {
+            return systemLaf;
+        }
+
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")){
+            return "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+        }
+        else if (os.contains("osx")){
+            return "com.apple.laf.AquaLookAndFeel";
+        }
+        else if (os.contains("nix") || os.contains("aix") || os.contains("nux")){
+            return "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
+        }
+
+        return UIManager.getCrossPlatformLookAndFeelClassName();
     }
 
     private javax.swing.JButton btnHelp;

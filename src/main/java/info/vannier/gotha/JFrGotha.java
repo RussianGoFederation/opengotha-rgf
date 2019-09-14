@@ -28,6 +28,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.table.*;
 
 import ru.gofederation.gotha.printing.StandingsPrinter;
+import ru.gofederation.gotha.ui.FrameBase;
 import ru.gofederation.gotha.ui.RgfTournamentExportDialog;
 import ru.gofederation.gotha.ui.RgfTournamentImportDialog;
 import ru.gofederation.gotha.ui.TournamentOpener;
@@ -1128,7 +1129,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         }
         try {
             JFrame jfr = new JFrTournamentOptions(tournament);
-            this.displayFrame(jfr, BIG_FRAME_WIDTH, BIG_FRAME_HEIGHT);
+            this.displayFrame(jfr);
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -2948,7 +2949,6 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
         th.repaint();
         TableColumn tc = tbl.getColumnModel().getColumn(col);
         DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
-        dtcr.setBackground(Color.LIGHT_GRAY);
         dtcr.setHorizontalAlignment(align);
         tc.setHeaderRenderer(dtcr);
     }
@@ -3195,7 +3195,7 @@ class ControlPanelTableCellRenderer extends JLabel implements TableCellRenderer 
         if (cpWarning[rowIndex][colIndex]) {
             this.setForeground(Color.red);
         } else {
-            setForeground(Color.black);
+            setForeground(UIManager.getColor("Table.foreground"));
         }
         this.setHorizontalAlignment(JLabel.CENTER);
         if (colIndex == 0) { //
