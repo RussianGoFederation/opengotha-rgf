@@ -17,7 +17,7 @@
 
 import org.apache.tools.ant.filters.EscapeUnicode
 
-version '3.46.04-RGF.1-SNAPSHOT13'
+version '3.46.04-RGF.1'
 
 repositories {
     mavenCentral()
