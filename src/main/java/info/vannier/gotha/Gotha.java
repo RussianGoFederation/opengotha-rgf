@@ -58,8 +58,8 @@ public class Gotha {
     static final int RUNNING_MODE_UNDEFINED = 0;    // Undefined
     static final int RUNNING_MODE_SAL = 1;          // Stand alone
     static final int RUNNING_MODE_SRV = 2;          // Server
-    static final int RUNNING_MODE_CLI = 3;          // Client
-    static int runningMode = RUNNING_MODE_UNDEFINED;
+    public static final int RUNNING_MODE_CLI = 3;   // Client
+    public static int runningMode = RUNNING_MODE_UNDEFINED;
     static String serverName = "";  // relevant only when in Client mode
     static String clientName = "";  // relevant in Client mode
     public static String strPreferences = "info/vannier/opengotha";

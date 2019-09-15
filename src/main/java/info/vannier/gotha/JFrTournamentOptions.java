@@ -4,23 +4,18 @@
 
 package info.vannier.gotha;
 
-import com.toedter.calendar.JDateChooser;
-
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -39,6 +34,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 
 import ru.gofederation.gotha.model.RatingListType;
+import ru.gofederation.gotha.ui.TournamentDetailsPanel;
 import ru.gofederation.gotha.util.GothaLocale;
 
 import static ru.gofederation.gotha.ui.FrameBase.scaleFont;
@@ -59,6 +55,8 @@ public class JFrTournamentOptions extends JFrame {
     private TournamentInterface tournament;
 
 	private GothaLocale locale;
+
+	private final TournamentDetailsPanel tournamentDetails;
 
     private volatile boolean running = true;
     javax.swing.Timer timer = null;
@@ -90,6 +88,8 @@ public class JFrTournamentOptions extends JFrame {
 		this.locale = GothaLocale.getCurrentLocale();
 
         this.tournament = tournament;
+
+        this.tournamentDetails = new TournamentDetailsPanel(tournament, TournamentDetailsPanel.Mode.EDIT);
 
         initComponents();
         customInitComponents();
@@ -150,20 +150,6 @@ public class JFrTournamentOptions extends JFrame {
         btnAdjustCategoryLimits = new javax.swing.JButton();
         txfNumberOfCategories = new JSpinner();
         pnlTournamentDetails = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        txfShortName = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        txfName = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        txfLocation = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        txfBeginDate = new JDateChooser();
-        jLabel5 = new javax.swing.JLabel();
-        txfNumberOfRounds = new JSpinner();
-        jLabel8 = new javax.swing.JLabel();
-        txfEndDate = new JDateChooser();
-        jLabel37 = new javax.swing.JLabel();
-        txfDirector = new javax.swing.JTextField();
         lblSystemName = new javax.swing.JLabel();
         pnlMcMahon = new javax.swing.JPanel();
         lblMMBar = new javax.swing.JLabel();
@@ -419,86 +405,9 @@ public class JFrTournamentOptions extends JFrame {
         pnlGen.add(lblSystemName, "spanx 2, ax r");
 
         pnlTournamentDetails.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.details")));
-        pnlTournamentDetails.setLayout(new MigLayout("wrap 2"));
+        pnlTournamentDetails.setLayout(new MigLayout("insets panel"));
 
-        jLabel2.setFont(smallFont);
-        jLabel2.setText(locale.getString("tournament.name"));
-        pnlTournamentDetails.add(jLabel2);
-
-        txfName.setText("Unnamed Tournament");
-        txfName.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txfNameFocusLost(evt);
-            }
-        });
-        pnlTournamentDetails.add(txfName, "wmin 120lp, pushx, growx");
-
-        jLabel1.setFont(smallFont);
-        jLabel1.setText(locale.getString("tournament.short_name"));
-        pnlTournamentDetails.add(jLabel1);
-
-        txfShortName.setToolTipText(locale.getString("tournament.short_name.tooltip"));
-        txfShortName.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txfShortNameFocusLost(evt);
-            }
-        });
-        pnlTournamentDetails.add(txfShortName, "growx");
-
-        jLabel3.setFont(smallFont);
-        jLabel3.setText(locale.getString("tournament.location"));
-        pnlTournamentDetails.add(jLabel3);
-
-        txfLocation.setText("Unknown location");
-        txfLocation.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txfLocationFocusLost(evt);
-            }
-        });
-        pnlTournamentDetails.add(txfLocation, "growx");
-
-        jLabel37.setFont(smallFont);
-        jLabel37.setText(locale.getString("tournament.director"));
-        pnlTournamentDetails.add(jLabel37, "newline unrel");
-
-        txfDirector.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txfDirectorFocusLost(evt);
-            }
-        });
-        pnlTournamentDetails.add(txfDirector, "growx");
-
-        jLabel4.setFont(smallFont);
-        jLabel4.setText(locale.getString("tournament.begin_date"));
-        pnlTournamentDetails.add(jLabel4, "newline unrel");
-
-        txfBeginDate.setLocale(locale.getLocale());
-        txfBeginDate.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txfBeginDateFocusLost(evt);
-            }
-        });
-        pnlTournamentDetails.add(txfBeginDate, "wmin 120lp, sgx date");
-
-        jLabel8.setFont(smallFont);
-        jLabel8.setText(locale.getString("tournament.end_date"));
-        pnlTournamentDetails.add(jLabel8);
-
-        txfEndDate.setLocale(locale.getLocale());
-        txfEndDate.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txfEndDateFocusLost(evt);
-            }
-        });
-        pnlTournamentDetails.add(txfEndDate, "sgx date");
-
-        jLabel5.setFont(smallFont);
-        jLabel5.setText(locale.getString("tournament.number_of_rounds"));
-        pnlTournamentDetails.add(jLabel5, "newline unrel");
-
-        txfNumberOfRounds.setModel(new SpinnerNumberModel(0, 0, Gotha.MAX_NUMBER_OF_ROUNDS, 1));
-        txfNumberOfRounds.addChangeListener(this::txfNumberOfRoundsChanged);
-        pnlTournamentDetails.add(txfNumberOfRounds, "wmin 40lp");
+        pnlTournamentDetails.add(tournamentDetails);
 
         pnlGen.add(pnlTournamentDetails, "growx, pushx");
 
@@ -1991,119 +1900,6 @@ public class JFrTournamentOptions extends JFrame {
         }
     }
 
-    private void txfNumberOfRoundsChanged(ChangeEvent evt) {
-        TournamentParameterSet tps;
-        try {
-            tps = tournament.getTournamentParameterSet();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        }
-        GeneralParameterSet gps = tps.getGeneralParameterSet();
-
-        int oldNbRounds = gps.getNumberOfRounds();
-        int newNbRounds = oldNbRounds;
-        try {
-            newNbRounds = ((Integer) this.txfNumberOfRounds.getValue());
-        } catch (NumberFormatException ex) {
-        }
-        if (newNbRounds <= 0) newNbRounds = oldNbRounds;
-        if (newNbRounds > Gotha.MAX_NUMBER_OF_ROUNDS) newNbRounds = Gotha.MAX_NUMBER_OF_ROUNDS;
-
-        // Refuse to decrease number of rounds if round not empty
-        for (int r = oldNbRounds - 1; r >= newNbRounds; r-- ){
-            try {
-                if ((tournament.gamesList(r).size() > 0) || (tournament.getByePlayer(r) != null)) {
-                    newNbRounds = r + 1;
-                    break;
-                }
-            } catch (RemoteException ex) {
-                Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        if (newNbRounds == oldNbRounds){
-            this.txfNumberOfRounds.setValue(oldNbRounds);
-            return;
-        }
-
-        gps.setNumberOfRounds(newNbRounds);
-        tps.setGeneralParameterSet(gps);
-        try {
-            tournament.setTournamentParameterSet(tps);
-            this.tournamentChanged();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    private void txfBeginDateFocusLost(java.awt.event.FocusEvent evt) {
-        TournamentParameterSet tps;
-        try {
-            tps = tournament.getTournamentParameterSet();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        }
-        GeneralParameterSet gps = tps.getGeneralParameterSet();
-        Date oldBeginDate = gps.getBeginDate();
-        Date newBeginDate = txfBeginDate.getDate();
-        if (newBeginDate.equals(oldBeginDate)) return;
-        gps.setBeginDate(newBeginDate);
-
-        tps.setGeneralParameterSet(gps);
-        try {
-            tournament.setTournamentParameterSet(tps);
-            this.tournamentChanged();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    private void txfLocationFocusLost(java.awt.event.FocusEvent evt) {
-        TournamentParameterSet tps;
-        try {
-            tps = tournament.getTournamentParameterSet();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        }
-        GeneralParameterSet gps = tps.getGeneralParameterSet();
-        String oldLocation = gps.getLocation();
-        String newLocation = txfLocation.getText();
-        if (newLocation.compareTo(oldLocation) == 0) return;
-        gps.setLocation(newLocation);
-        tps.setGeneralParameterSet(gps);
-        try {
-            tournament.setTournamentParameterSet(tps);
-            this.tournamentChanged();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void txfNameFocusLost(java.awt.event.FocusEvent evt) {
-        TournamentParameterSet tps;
-        try {
-            tps = tournament.getTournamentParameterSet();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        }
-        GeneralParameterSet gps = tps.getGeneralParameterSet();
-        String oldName = gps.getName();
-        String newName = txfName.getText();
-        if (newName.compareTo(oldName) == 0) return;
-        gps.setName(newName);
-        tps.setGeneralParameterSet(gps);
-        try {
-            tournament.setTournamentParameterSet(tps);
-            this.tournamentChanged();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     private void txfNumberOfCategoriesChanged(ChangeEvent evt) {
         TournamentParameterSet tps;
         try {
@@ -2261,32 +2057,6 @@ public class JFrTournamentOptions extends JFrame {
         dispose();
     }
 
-    private void txfShortNameFocusLost(java.awt.event.FocusEvent evt) {
-        TournamentParameterSet tps;
-        try {
-            tps = tournament.getTournamentParameterSet();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        }
-        GeneralParameterSet gps = tps.getGeneralParameterSet();
-        String oldShortName = gps.getShortName();
-        String newShortName = txfShortName.getText();
-        newShortName = Gotha.eliminateForbiddenCharacters(newShortName);
-        txfShortName.setText(newShortName);
-        if (newShortName.compareTo(oldShortName) == 0) return;
-        gps.setShortName(newShortName);
-        tps.setGeneralParameterSet(gps);
-        try {
-            tournament.setTournamentParameterSet(tps);
-            tournament.setHasBeenSavedOnce(false);
-            this.tournamentChanged();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
     private void rdbHdBaseMMSActionPerformed(java.awt.event.ActionEvent evt) {
         this.updHdBase();
     }
@@ -2342,52 +2112,6 @@ public class JFrTournamentOptions extends JFrame {
 
     private void cbxTeamCritFocusLost(java.awt.event.FocusEvent evt) {
         updateTeamCriteriaFromComboBoxes();
-    }
-
-    private void txfEndDateFocusLost(java.awt.event.FocusEvent evt) {
-        TournamentParameterSet tps;
-        try {
-            tps = tournament.getTournamentParameterSet();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        }
-        GeneralParameterSet gps = tps.getGeneralParameterSet();
-        Date oldEndDate = gps.getEndDate();
-        Date newEndDate = txfEndDate.getDate();
-        if (newEndDate.equals(oldEndDate)) return;
-        gps.setEndDate(newEndDate);
-
-        tps.setGeneralParameterSet(gps);
-        try {
-            tournament.setTournamentParameterSet(tps);
-            this.tournamentChanged();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    private void txfDirectorFocusLost(java.awt.event.FocusEvent evt) {
-        TournamentParameterSet tps;
-        try {
-            tps = tournament.getTournamentParameterSet();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        }
-        GeneralParameterSet gps = tps.getGeneralParameterSet();
-        String oldDirector = gps.getDirector();
-        String newDirector = txfDirector.getText();
-        if (newDirector.compareTo(oldDirector) == 0) return;
-        gps.setDirector(newDirector);
-        tps.setGeneralParameterSet(gps);
-        try {
-            tournament.setTournamentParameterSet(tps);
-            this.tournamentChanged();
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrTournamentOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     private void rdbHdCorrectionActionPerformed(java.awt.event.ActionEvent evt) {
@@ -2658,7 +2382,6 @@ public class JFrTournamentOptions extends JFrame {
     }
 
     private void initPnlGen()throws RemoteException{
-        if (Gotha.runningMode == Gotha.RUNNING_MODE_CLI) this.txfShortName.setEditable(false);
         updatePnlGen();
     }
     private void initPnlHan()throws RemoteException{
@@ -2756,13 +2479,7 @@ public class JFrTournamentOptions extends JFrame {
         }
 
         // Identification Panel
-        this.txfShortName.setText(gps.getShortName());
-        this.txfName.setText(gps.getName());
-        this.txfLocation.setText(gps.getLocation());
-        this.txfDirector.setText(gps.getDirector());
-        this.txfBeginDate.setDate(gps.getBeginDate());
-        this.txfEndDate.setDate(gps.getEndDate());
-        this.txfNumberOfRounds.setValue(gps.getNumberOfRounds());
+        this.tournamentDetails.updateForm(gps);
 
         // Categories Panel
         if (this.pnlCategories.isVisible()){
@@ -3169,14 +2886,12 @@ public class JFrTournamentOptions extends JFrame {
     private javax.swing.ButtonGroup grpRandom;
     private javax.swing.ButtonGroup grpSeedingFormer;
     private javax.swing.ButtonGroup grpSeedingLatter;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
@@ -3186,19 +2901,14 @@ public class JFrTournamentOptions extends JFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel lblHandicap;
     private javax.swing.JLabel lblMMBar;
@@ -3277,24 +2987,17 @@ public class JFrTournamentOptions extends JFrame {
     private javax.swing.JTabbedPane tpnParameters;
     private javax.swing.JTextArea txaTeamWarning;
     private javax.swing.JTextArea txaWarning;
-    private JDateChooser txfBeginDate;
-    private javax.swing.JTextField txfDirector;
-    private JDateChooser txfEndDate;
     private javax.swing.JTextField txfHdCeiling;
     private javax.swing.JTextField txfLastRoundForSeedSystem1;
-    private javax.swing.JTextField txfLocation;
     private javax.swing.JTextField txfMMBar;
     private javax.swing.JTextField txfMMFloor;
     private javax.swing.JTextField txfMMZero;
-    private javax.swing.JTextField txfName;
     private javax.swing.JTextField txfNoHdRankThreshold;
     private JSpinner txfNumberOfCategories;
-    private JSpinner txfNumberOfRounds;
     private javax.swing.JTextField txfSeClub;
     private javax.swing.JTextField txfSeClubsGroup;
     private javax.swing.JTextField txfSeCountry;
     private javax.swing.JTextField txfSeRankThreshold;
-    private javax.swing.JTextField txfShortName;
 
     JLabel[] tabLblCat;
     JTextField[] tabTxfLowerLimitOfCat;
