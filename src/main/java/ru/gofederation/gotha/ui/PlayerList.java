@@ -203,15 +203,31 @@ public final class PlayerList extends JPanel {
         }
 
         table.getRowSorter().addRowSorterListener(rowSorterEvent -> {
-            List<? extends RowSorter.SortKey> origKeys =  table.getRowSorter().getSortKeys();
-            List<RowSorter.SortKey> sortKeys = new LinkedList<>();
+            List<RowSorter.SortKey> origKeys =  rowSorterEvent.getSource().getSortKeys();
+
             if (origKeys.size() > 0) {
-                RowSorter.SortKey key = origKeys.get(0);
-                sortKeys.add(key);
-                sortKeys.add(new RowSorter.SortKey(getColumnIndex(Column.RATING), key.getSortOrder()));
-                sortKeys.add(new RowSorter.SortKey(getColumnIndex(Column.LAST_NAME), key.getSortOrder()));
+                List<RowSorter.SortKey> newKeys = new ArrayList<>(3);
+                SortOrder order = origKeys.get(0).getSortOrder();
+                newKeys.add(origKeys.get(0));
+
+                boolean hasRatingSort = false;
+                for (RowSorter.SortKey key : newKeys) {
+                    if (key.getColumn() == getColumnIndex(Column.RATING)) hasRatingSort = true;
+                }
+                if (!hasRatingSort) {
+                    newKeys.add(new RowSorter.SortKey(getColumnIndex(Column.RATING), order));
+                }
+
+                boolean hasNameSort = false;
+                for (RowSorter.SortKey key : newKeys) {
+                    if (key.getColumn() == getColumnIndex(Column.LAST_NAME)) hasNameSort = true;
+                }
+                if (!hasNameSort) {
+                    newKeys.add(new RowSorter.SortKey(getColumnIndex(Column.LAST_NAME), order));
+                }
+
+                rowSorterEvent.getSource().setSortKeys(newKeys);
             }
-            rowSorterEvent.getSource().setSortKeys(sortKeys);
         });
     }
 
