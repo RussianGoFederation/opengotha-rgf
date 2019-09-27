@@ -37,6 +37,7 @@ import javax.print.attribute.standard.MediaSize;
 
 import info.vannier.gotha.Gotha;
 import ru.gofederation.gotha.util.GothaLocale;
+import sun.font.FontDesignMetrics;
 
 public abstract class Printer implements Printable {
     private static final String MEDIA_PRINTABLE_AREA = "media_printable_area";
@@ -55,11 +56,20 @@ public abstract class Printer implements Printable {
         this.pageFormat = pageFormat;
         if (null == this.font) this.font = graphics.getFont().deriveFont(10f);
         graphics.setFont(this.font);
-        this.fontMetrics = graphics.getFontMetrics(this.font);
+        this.fontMetrics = getFontMetrics(graphics, this.font);
         this.locale = GothaLocale.getCurrentLocale();
         graphics.setColor(Color.BLACK);
 
         graphics.translate((int) pageFormat.getImageableX(), (int) pageFormat.getImageableY());
+    }
+
+    private FontMetrics getFontMetrics(Graphics graphics, Font font) {
+        FontMetrics fontMetrics = graphics.getFontMetrics(font);
+        if (0 == fontMetrics.getHeight()) {
+            // We probably hit this bug: https://bugs.openjdk.java.net/browse/JDK-8139178
+            fontMetrics = FontDesignMetrics.getMetrics(font);
+        }
+        return fontMetrics;
     }
 
     public void setFont(Font font) {
