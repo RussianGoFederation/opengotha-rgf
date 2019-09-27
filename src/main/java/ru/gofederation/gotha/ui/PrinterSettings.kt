@@ -96,8 +96,6 @@ class PrinterSettings(private val printable: Printable) : Panel() {
         marginLeftValue = preferences.getInt(MARGIN_LEFT, (2.5 * CM).toInt()).toFloat() / CM
         marginRightValue = preferences.getInt(MARGIN_RIGHT, (2.5 * CM).toInt()).toFloat() / CM
         marginBottomValue = preferences.getInt(MARGIN_BOTTOM, (2.5 * CM).toInt()).toFloat() / CM
-
-        LOG.info("test")
     }
 
     private val fontSelector = JComboBox<Font>()
