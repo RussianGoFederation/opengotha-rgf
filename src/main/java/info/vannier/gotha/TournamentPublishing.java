@@ -7,6 +7,9 @@ import java.util.logging.Logger;
 
 import ru.gofederation.gotha.printing.PairingPrinter;
 import ru.gofederation.gotha.printing.StandingsPrinter;
+import ru.gofederation.gotha.ui.Dialog;
+import ru.gofederation.gotha.ui.PrinterSettings;
+import ru.gofederation.gotha.util.GothaLocale;
 
 /**
  *
@@ -23,7 +26,7 @@ public class TournamentPublishing {
     public static final int TYPE_STANDINGS = 21;
     public static final int TYPE_TEAMSSTANDINGS = 22;
     public static final int TYPE_TOURNAMENT_PARAMETERS = 101;
-    
+
     public static final int SUBTYPE_DEFAULT = 0;
     public static final int SUBTYPE_ST_CAT = 1; // Standings by cat
 
@@ -35,26 +38,27 @@ public class TournamentPublishing {
             Logger.getLogger(TournamentPublishing.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
-     * 
+     *
      * @param tournament
      * @param tps may differ of tournament.getTournamentParameterSet() (in Standings, when use temporary parameter set)
      * @param roundNumber
      * @param type
-     * @param subtype 
+     * @param subtype
      */
     public static void publish(TournamentInterface tournament, TournamentParameterSet tps, int roundNumber, int type, int subtype) throws RemoteException {
         PublishParameterSet pubPS = tps.getPublishParameterSet();
-        
+
         if (pubPS.isPrint()) print(tournament, tps, roundNumber, type, subtype);
-        
+
         File f;
         f = exportToLocalFile(tournament, tps, roundNumber, type, subtype);
-                
+
     }
-    
+
     private static void print(TournamentInterface tournament, TournamentParameterSet tps, int roundNumber, int type, int subtype) throws RemoteException {
+        GothaLocale locale = GothaLocale.getCurrentLocale();
         switch(type){
             case TournamentPublishing.TYPE_PLAYERSLIST:
                 TournamentPrinting.printPlayersList(tournament);
@@ -66,7 +70,8 @@ public class TournamentPublishing {
                 TournamentPrinting.printTournamentParameters(tournament);
                 break;
             case TournamentPublishing.TYPE_GAMESLIST:
-                PairingPrinter.print(tournament, roundNumber);
+                new Dialog(null, new PrinterSettings(new PairingPrinter(tournament, roundNumber)), locale.getString("printing.print_setup"), true)
+                    .setVisible(true);
                 break;
             case TournamentPublishing.TYPE_RESULTSHEETS:
                 TournamentPrinting.printResultSheets(tournament, roundNumber);
@@ -75,7 +80,8 @@ public class TournamentPublishing {
                 TournamentPrinting.printNotPlayingPlayersList(tournament, roundNumber);
                 break;
             case TournamentPublishing.TYPE_STANDINGS:
-                StandingsPrinter.print(tournament, tps, roundNumber);
+                new Dialog(null, new PrinterSettings(new StandingsPrinter(tournament, tps, roundNumber)), locale.getString("printing.print_setup"), true)
+                    .setVisible(true);
                 break;
             case TournamentPublishing.TYPE_MATCHESLIST:
                 TournamentPrinting.printMatchesList(tournament, roundNumber);
@@ -96,7 +102,7 @@ public class TournamentPublishing {
                 f = ExternalDocument.generateTeamsListHTMLFile(tournament);
                 break;
             case TournamentPublishing.TYPE_TOURNAMENT_PARAMETERS:
-                // 
+                //
                 break;
             case TournamentPublishing.TYPE_GAMESLIST:
                 f = ExternalDocument.generateGamesListHTMLFile(tournament, roundNumber);
@@ -105,7 +111,7 @@ public class TournamentPublishing {
                 //
                 break;
             case TournamentPublishing.TYPE_NOTPLAYINGLIST:
-                // 
+                //
                 break;
             case TournamentPublishing.TYPE_STANDINGS:
                 f = ExternalDocument.generateStandingsHTMLFile(tournament, roundNumber);
@@ -117,10 +123,10 @@ public class TournamentPublishing {
                 f = ExternalDocument.generateTeamsStandingsHTMLFile(tournament, roundNumber);
                 break;
         }
-                
+
         return f;
     }
-    
+
 
 
 }

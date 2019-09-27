@@ -39,14 +39,10 @@ public class PairingPrinter extends TablePrinter {
 
     private CellPrinter resultCellPrinter = null;
 
-    private PairingPrinter(TournamentInterface tournament, int round) throws RemoteException {
+    public PairingPrinter(TournamentInterface tournament, int round) throws RemoteException {
         this.gps = tournament.getTournamentParameterSet().getGeneralParameterSet();
         this.games = tournament.gamesList(round);
         this.round = round;
-    }
-
-    public static void print(TournamentInterface tournament, int round) throws RemoteException {
-        new PairingPrinter(tournament, round).print();
     }
 
     @Override

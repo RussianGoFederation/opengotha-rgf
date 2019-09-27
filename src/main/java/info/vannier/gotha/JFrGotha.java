@@ -53,7 +53,9 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import ru.gofederation.gotha.printing.StandingsPrinter;
+import ru.gofederation.gotha.ui.Dialog;
 import ru.gofederation.gotha.ui.NewTournamentPanel;
+import ru.gofederation.gotha.ui.PrinterSettings;
 import ru.gofederation.gotha.ui.RgfTournamentExportDialog;
 import ru.gofederation.gotha.ui.RgfTournamentImportDialog;
 import ru.gofederation.gotha.ui.TournamentOpener;
@@ -843,7 +845,9 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         PlacementParameterSet printPPS = printTPS.getPlacementParameterSet();
         printPPS.setPlaCriteria(displayedCriteria);
         try {
-            StandingsPrinter.print(tournament, printTPS, this.displayedRoundNumber);
+            StandingsPrinter sp = new StandingsPrinter(tournament, printTPS, this.displayedRoundNumber);
+            Dialog dialog = new Dialog(this, new PrinterSettings(sp), locale.getString("printing.print_setup"), true);
+            dialog.setVisible(true);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -921,8 +925,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             return;
         }
         NewTournamentPanel ntp = new NewTournamentPanel(this);
-        ru.gofederation.gotha.ui.Dialog dialog = new ru.gofederation.gotha.ui.Dialog(ntp, this);
-        dialog.setTitle(locale.getString(locale.getString("tournament.create")));
+        ru.gofederation.gotha.ui.Dialog dialog = new ru.gofederation.gotha.ui.Dialog(this, ntp, locale.getString("tournament.create"), false);
         dialog.setVisible(true);
     }
 

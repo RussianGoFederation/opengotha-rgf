@@ -29,6 +29,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import ru.gofederation.gotha.printing.PairingPrinter;
+import ru.gofederation.gotha.ui.Dialog;
+import ru.gofederation.gotha.ui.PrinterSettings;
 import ru.gofederation.gotha.util.GothaLocale;
 
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
@@ -52,7 +54,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
     private static final int WHITE_PLAYER_COL = 1;
     private static final int BLACK_PLAYER_COL = 2;
     private static final int HANDICAP_COL = 3;
-    
+
     private int playersSortType = PlayerComparator.SCORE_ORDER;
     private int gamesSortType = GameComparator.TABLE_NUMBER_ORDER;
     /**  current Tournament */
@@ -99,7 +101,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
      * initialize the form.
      * Unlike initComponents, customInitComponents is editable
      */
-    private void customInitComponents() throws RemoteException {    
+    private void customInitComponents() throws RemoteException {
         getRootPane().setDefaultButton(btnSearch);
         initPlayersComponents();
         initPreviousGamesComponents();
@@ -129,7 +131,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         final int SCORE_WIDTH = 40;
         final int COUNTRY_WIDTH = 25;
         final int CLUB_WIDTH = 40;
-        
+
         JFrGotha.formatColumn(tbl, NAME_COL, locale.getString("player.first_name"), NAME_WIDTH, JLabel.LEFT, JLabel.LEFT);
         JFrGotha.formatColumn(tbl, RANK_COL, locale.getString("player.rank_s"), RANK_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
         JFrGotha.formatColumn(tbl, SCORE_COL, locale.getString("player.score_s"), SCORE_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
@@ -143,7 +145,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         final int COLOR_WIDTH = 25;
         final int HANDICAP_WIDTH = 25;
         final int RESULT_WIDTH = 25;
-        
+
         JFrGotha.formatColumn(tblPreviousGames, 0, locale.getString("game.round_s"), ROUND_NUMBER_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
         JFrGotha.formatColumn(tblPreviousGames, 1, locale.getString("game.opponent"), OPPONENT_WIDTH, JLabel.LEFT, JLabel.CENTER);
         JFrGotha.formatColumn(tblPreviousGames, 2, locale.getString("game.color"), COLOR_WIDTH, JLabel.CENTER, JLabel.CENTER);
@@ -156,7 +158,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         final int TABLE_NUMBER_WIDTH = 40;
         final int PLAYER_WIDTH = 150;
         final int HANDICAP_WIDTH = 20;
-        
+
         JFrGotha.formatColumn(tbl, TABLE_NUMBER_COL, locale.getString("game.board"), TABLE_NUMBER_WIDTH, JLabel.RIGHT, JLabel.RIGHT);
         JFrGotha.formatColumn(tbl, WHITE_PLAYER_COL, locale.getString("game.white"), PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
         JFrGotha.formatColumn(tbl, BLACK_PLAYER_COL, locale.getString("game.black"), PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
@@ -272,7 +274,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
      * From a non sorted alP array, returns a score sorted array
      * Sorting is made according to tournament ppas and processedRoundNumber
      * @param alP
-     * @return 
+     * @return
      */
     private ArrayList<Player> scoreSortedPlayers(ArrayList<Player> alP){
         ArrayList<Player> alSSP = new ArrayList<Player>();
@@ -291,7 +293,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
                 }
             }
         }
-        
+
         return alSSP;
     }
 
@@ -480,7 +482,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
     /**
      * Produces a list of selected players in tblPairablePlayers
-     * If no player is selected, returns the full list  
+     * If no player is selected, returns the full list
      */
     private ArrayList<Player> selectedPlayersList() {
         ArrayList<Player> alSelectedPlayers = new ArrayList<Player>();
@@ -507,11 +509,11 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
     /**
      * Produces a list of selected games in tblGames
-     * If no game is selected, returns all the games  
+     * If no game is selected, returns all the games
      */
     private ArrayList<Game> selectedGamesList() {
         ArrayList<Game> alSelectedGames = new ArrayList<Game>();
-        
+
         boolean bNoGameSelected = false;
         if (this.tblGames.getSelectedRowCount() == 0) {
             bNoGameSelected = true;
@@ -980,7 +982,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         if (evt.getModifiers() != InputEvent.BUTTON3_MASK) return;
         Point p = evt.getLocationOnScreen();
         this.pupPairablePlayers.setLocation(p);
-        pupPairablePlayers.setVisible(true); 
+        pupPairablePlayers.setVisible(true);
     }//GEN-LAST:event_tblPairablePlayersMouseClicked
 
     private void setVisibilityOfPairablePlayersAndPreviousGamesPanels() {
@@ -991,10 +993,11 @@ public class JFrGamesPair extends javax.swing.JFrame {
             playerDetailsLayout.show(playerDetailsPanel, UNPAIRABLE_PLAYERS);
         }
     }
-    
+
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
         try {
-            PairingPrinter.print(tournament, processedRoundNumber);
+            new Dialog(this, new PrinterSettings(new PairingPrinter(tournament, processedRoundNumber)), locale.getString("printing.print_setup"), true)
+                .setVisible(true);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -1026,7 +1029,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
     private void btnByePlayerActionPerformed(java.awt.event.ActionEvent evt) {
         try {
-            // If  no bye player exists, it is a request for choosing one 
+            // If  no bye player exists, it is a request for choosing one
             if (tournament.getByePlayer(processedRoundNumber) == null) {
                 ArrayList<Player> alP = selectedPlayersList();
                 tournament.chooseAByePlayer(alP, processedRoundNumber);
@@ -1075,7 +1078,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         this.pupGames.setVisible(false);
         // Right click
         if (evt.getModifiers() != InputEvent.BUTTON3_MASK) return;
-        
+
         ArrayList<Game> alGames = this.selectedGamesList();
         Point pInScreen = evt.getLocationOnScreen();
         Point pInSourceComponent = evt.getPoint();
@@ -1089,8 +1092,8 @@ public class JFrGamesPair extends javax.swing.JFrame {
             // This should not happen
             System.out.println("tblGamesMouseClicked" + " alGames empty!!!");
             return;
-        } 
-        
+        }
+
         Game game = alGames.get(0);
         String strW = game.getWhitePlayer().fullName();
         if (strW.length() > 20) {
@@ -1106,7 +1109,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
         pupGames.setLocation(pInScreen);
         pupGames.setVisible(true);
-        
+
     }
 
     private void btnUnpairActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1160,7 +1163,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
                 return;
             }
         }
-        
+
         if (alPlayersToPair.size() % 2 != 0) {
             // if no possibility to choose a bye player, Error message
             Player bP = null;
@@ -1325,7 +1328,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         win.setVisible(true);
         win.setIconImage(Gotha.getIconImage());
     }
-    
+
     private void btnGenerateReportActionPerformed(java.awt.event.ActionEvent evt) {
         generateReport();
     }
@@ -1362,7 +1365,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         }
 
         txaReport.setText(strReport);
-    
+
     }
     private void btnDlgPairingReportCloseActionPerformed(java.awt.event.ActionEvent evt) {
         this.dlgPairingReport.dispose();
@@ -1521,7 +1524,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
     private void mniSortByRankActionPerformed(java.awt.event.ActionEvent evt) {
         playersSortType = PlayerComparator.RANK_ORDER;
-        pupPairablePlayers.setVisible(false);   
+        pupPairablePlayers.setVisible(false);
         this.updateComponents();
 
     }
@@ -1594,7 +1597,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         cleanClose();
     }
 
-    
+
     // Variables declaration - do not modify
     private javax.swing.JButton btnByePlayer;
     private javax.swing.JButton btnClose;

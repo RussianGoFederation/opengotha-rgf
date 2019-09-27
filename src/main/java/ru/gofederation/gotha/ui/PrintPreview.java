@@ -18,6 +18,7 @@
 package ru.gofederation.gotha.ui;
 
 import net.miginfocom.layout.LC;
+import net.miginfocom.layout.UnitValue;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.BasicStroke;
@@ -58,11 +59,19 @@ public class PrintPreview extends JScrollPane {
     private JPanel mControls = null;
     private JSlider mZoomSlider = null;
 
+    public PrintPreview() {
+        setPreferredSize(new Dimension(200, 200));
+    }
+
     public PrintPreview(Pageable pg) {
+        this();
+
         setPageable(pg);
     }
 
     public PrintPreview(final Printable pr, final PageFormat p) {
+        this();
+
         setPrintable(pr, p);
 
         this.addComponentListener(new ComponentAdapter() {
@@ -83,7 +92,6 @@ public class PrintPreview extends JScrollPane {
         LC lc = (LC) l.getLayoutConstraints();
         int wrapAfter = Math.max(1, (this.getWidth() - this.verticalScrollBar.getWidth()) / pageWidth);
         lc.setWrapAfter(wrapAfter);
-        System.out.println("" + this.getWidth() + " " + pageWidth + " " + wrapAfter);
         l.setLayoutConstraints(lc);
         mMainPanel.invalidate();
         validate();
@@ -189,6 +197,10 @@ public class PrintPreview extends JScrollPane {
         }
 
         onResize();
+    }
+
+    public void zoomFitWidth() {
+        zoom((getViewport().getWidth() - verticalScrollBar.getWidth()) / pages.get(0).mPageFormat.getWidth());
     }
 
     class Page extends JComponent {

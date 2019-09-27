@@ -17,9 +17,12 @@
 
 package ru.gofederation.gotha.ui
 
+import info.vannier.gotha.Gotha
 import net.miginfocom.layout.CC
 import ru.gofederation.gotha.util.GothaLocale
 import java.awt.Window
+import java.util.logging.Logger
+import java.util.prefs.Preferences
 import javax.swing.JDialog
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
@@ -27,6 +30,10 @@ import javax.swing.SwingUtilities
 abstract class Panel(
     private val gothaLocale: GothaLocale = GothaLocale.getCurrentLocale()
 ) : JPanel() {
+    open val preferencesNode: String = this.javaClass.name
+    val preferences: Preferences by lazy(LazyThreadSafetyMode.NONE) {
+        Preferences.userRoot().node(Gotha.strPreferences).node(preferencesNode)
+    }
 
     init {
         locale = gothaLocale.locale
@@ -41,14 +48,18 @@ abstract class Panel(
     }
 
     companion object {
+        val LOG = Logger.getLogger(this::class.java.simpleName)
+
         const val HELP_ICON = "/info/vannier/gotha/gothalogo16.jpg"
 
-        private const val INPUT_L: String = "240lp"
+        const val INPUT_L: String = "240lp"
         private const val INPUT_M: String = "180lp"
+        const val INPUT_S: String = "58lp"
         private const val INPUT_XS: String = "42lp"
 
         val inputLargeCC: CC = CC().minWidth(INPUT_L)
         val inputMediumCC: CC = CC().minWidth(INPUT_M)
+        val inputSmallCC: CC = CC().minWidth(INPUT_S)
         val inputXSmallCC: CC = CC().minWidth(INPUT_XS)
     }
 }

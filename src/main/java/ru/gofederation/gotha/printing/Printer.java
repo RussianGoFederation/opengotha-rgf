@@ -17,6 +17,7 @@
 
 package ru.gofederation.gotha.printing;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -52,12 +53,17 @@ public abstract class Printer implements Printable {
     protected void init(Graphics graphics, PageFormat pageFormat) {
         this.graphics = graphics;
         this.pageFormat = pageFormat;
-        this.font = graphics.getFont().deriveFont(10f);
+        if (null == this.font) this.font = graphics.getFont().deriveFont(10f);
+        graphics.setFont(this.font);
         this.fontMetrics = graphics.getFontMetrics(this.font);
         this.locale = GothaLocale.getCurrentLocale();
-        graphics.setFont(this.font);
+        graphics.setColor(Color.BLACK);
 
         graphics.translate((int) pageFormat.getImageableX(), (int) pageFormat.getImageableY());
+    }
+
+    public void setFont(Font font) {
+        this.font = font;
     }
 
     private Preferences getPreferences() {

@@ -55,7 +55,7 @@ public class StandingsPrinter extends TablePrinter implements Printable {
     private final int lastPlaCritCol;
     private final int columnCount;
 
-    private StandingsPrinter(TournamentInterface tournament, TournamentParameterSet tps, int round) throws RemoteException {
+    public StandingsPrinter(TournamentInterface tournament, TournamentParameterSet tps, int round) throws RemoteException {
         PlacementParameterSet pps = tps.getPlacementParameterSet();
         DPParameterSet dps = tps.getDPParameterSet();
 
@@ -86,10 +86,6 @@ public class StandingsPrinter extends TablePrinter implements Printable {
         this.firstPlaCritCol = n;
         this.lastPlaCritCol = (n += this.placementCriteria.size());
         this.columnCount = n;
-    }
-
-    public static void print(TournamentInterface tournament, TournamentParameterSet tps, int round) throws RemoteException {
-        new StandingsPrinter(tournament, tps, round).print();
     }
 
     @Override

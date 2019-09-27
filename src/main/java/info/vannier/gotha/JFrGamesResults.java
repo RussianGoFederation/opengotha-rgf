@@ -23,6 +23,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import ru.gofederation.gotha.printing.PairingPrinter;
+import ru.gofederation.gotha.ui.Dialog;
+import ru.gofederation.gotha.ui.PrinterSettings;
 import ru.gofederation.gotha.util.GothaLocale;
 
 /**
@@ -97,7 +99,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
     private void customInitComponents() throws RemoteException {
         initGamesComponents();
         this.updateAllViews();
-        
+
         getRootPane().setDefaultButton(btnSearch);
     }
 
@@ -114,7 +116,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
 
     private void updateComponents() {
         this.spnRoundNumber.setValue(this.processedRoundNumber + 1);
-        
+
         // If Team presentation, color may vary in each column
         if (this.ckbTeamOrder.isSelected()){
             JFrGotha.formatColumn(tblGames, LEFT_PLAYER_COL, "", PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
@@ -125,8 +127,8 @@ public class JFrGamesResults extends javax.swing.JFrame {
             JFrGotha.formatColumn(tblGames, LEFT_PLAYER_COL, locale.getString("game.white"), PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
             JFrGotha.formatColumn(tblGames, RIGHT_PLAYER_COL, locale.getString("game.black"), PLAYER_WIDTH, JLabel.LEFT, JLabel.CENTER);
         }
-        
- 
+
+
         ArrayList<Game> alCurrentActualGames = null;
         try {
             alCurrentActualGames = tournament.gamesList(processedRoundNumber);
@@ -189,7 +191,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) tblM.getModel();
         int numberOfLines = (teamSize + 1) * alCM.size();
         model.setRowCount(numberOfLines);
-        
+
         int ln = 0;
         for (ComparableMatch cm : alCM) {
             Match m = null;
@@ -199,18 +201,18 @@ public class JFrGamesResults extends javax.swing.JFrame {
                 Logger.getLogger(JFrGamesResults.class.getName()).log(Level.SEVERE, null, ex);
             }
             if (m == null) continue;
-            
+
 //            int wResult = m.getTeamScore(m.getWhiteTeam());
 //            int bResult = m.getTeamScore(m.getBlackTeam());
 //            String strWTeamResult = "" + Gotha.formatFractNumber(wResult, 1);
 //            String strBTeamResult = "" + Gotha.formatFractNumber(bResult, 1);
 //            String strTeamResult = strWTeamResult + "-" + strBTeamResult;
 //            model.setValueAt(strTeamResult, ln, RESULT_COL);
-            
+
             String strWTeamNbW = Gotha.formatFractNumber(m.getWX2(m.getWhiteTeam()), 2);
             String strBTeamNbW = Gotha.formatFractNumber(m.getWX2(m.getBlackTeam()), 2);
             model.setValueAt(strWTeamNbW + "-" + strBTeamNbW, ln, RESULT_COL);
- 
+
             model.setValueAt("" + (cm.board0TableNumber + 1) + "---", ln, JFrGamesResults.TABLE_NUMBER_COL);
             Team wt = m.getWhiteTeam();
             Team bt = m.getBlackTeam();
@@ -223,7 +225,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
                 Game g = null;
                 try {
                     Player wPlayer = m.getWhiteTeam().getTeamMember(processedRoundNumber, ib);
-                    Player bPlayer = m.getBlackTeam().getTeamMember(processedRoundNumber, ib);                   
+                    Player bPlayer = m.getBlackTeam().getTeamMember(processedRoundNumber, ib);
                     g = tournament.getGame(processedRoundNumber, wPlayer);
                     if (!bPlayer.hasSameKeyString(tournament.opponent(g, wPlayer))) g = null;
                 } catch (RemoteException ex) {
@@ -358,7 +360,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
 
         int oldResult = g.getResult();
         int newResult = oldResult;
-        
+
         boolean wb = this.wbOrder(processedRoundNumber, tn);
         if (this.ckbTeamOrder.isSelected()) wb = this.wbOrder(processedRoundNumber, tn);
         else wb = true;
@@ -441,8 +443,12 @@ public class JFrGamesResults extends javax.swing.JFrame {
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {
         try {
-            if (!this.ckbTeamOrder.isSelected()) PairingPrinter.print(tournament, processedRoundNumber);
-            else TournamentPrinting.printMatchesList(tournament, processedRoundNumber);
+            if (!this.ckbTeamOrder.isSelected()) {
+                new Dialog(this, new PrinterSettings(new PairingPrinter(tournament, processedRoundNumber)), locale.getString("printing.print_setup"), true)
+                    .setVisible(true);
+            } else {
+                TournamentPrinting.printMatchesList(tournament, processedRoundNumber);
+            }
         } catch (RemoteException e) {
             // TODO
         }
@@ -540,7 +546,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGamesResults.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         int nbRounds = Gotha.MAX_NUMBER_OF_ROUNDS;
         try {
             nbRounds = tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds();
@@ -552,7 +558,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
                     locale.getString("alert.message"), JOptionPane.WARNING_MESSAGE);
             this.processedRoundNumber = nbRounds - 1;
         }
-        
+
         updateComponents();
     }
 
@@ -575,7 +581,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
         updateAllViews();
     }
 
-    // finds the 
+    // finds the
     /**
      * finds g, the game at tn table number and rn round number finds m, the
      * match containing g if white player of g is member of black team in m
@@ -639,7 +645,7 @@ class ResultsTableCellRenderer extends JLabel implements TableCellRenderer {
         }
 
         if (teamLine) {
-            // team Line   
+            // team Line
             setFont(teamFont);
             setForeground(Color.BLACK);
         } else {

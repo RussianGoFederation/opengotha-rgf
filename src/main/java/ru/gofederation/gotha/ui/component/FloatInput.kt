@@ -15,24 +15,21 @@
  * along with OpenGotha. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.gofederation.gotha.ui
+package ru.gofederation.gotha.ui.component
 
-import javax.swing.JDialog
-import javax.swing.JFrame
-import javax.swing.JPanel
+import java.text.NumberFormat
+import javax.swing.text.JTextComponent
+import kotlin.reflect.KProperty
 
-class Dialog(
-    parent: JFrame?,
-    panel: JPanel,
-    title: String = "",
-    resizable: Boolean = false
-) : JDialog(parent, title, ModalityType.DOCUMENT_MODAL) {
-    init {
-        isResizable = resizable
-        contentPane = panel
+class FloatInput(
+    val input: JTextComponent,
+    val format: NumberFormat
+) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): Float {
+        return format.parse(input.text).toFloat()
+    }
 
-        pack()
-
-        setLocationRelativeTo(parent)
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Float) {
+        input.text = format.format(value)
     }
 }

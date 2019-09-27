@@ -17,6 +17,7 @@
 
 package ru.gofederation.gotha.printing;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.print.PageFormat;
 import java.text.DateFormat;
@@ -66,7 +67,11 @@ public abstract class TablePrinter extends Printer {
         }
 
         int startingRow = page * rowsPerPage;
-        for (int column = 0; column < getColumnCount(); column ++) {
+        int printColumnCount = getColumnCount();
+        while (columnPositions[printColumnCount - 1] > pageFormat.getImageableWidth()) {
+            printColumnCount --;
+        }
+        for (int column = 0; column < printColumnCount; column ++) {
             graphics.drawString(getHeader(column), columnPositions[column], fontMetrics.getHeight() + headerHeight());
             for (int row = startingRow; row < startingRow + rowsPerPage && row < rowCount; row++) {
                 int y = fontMetrics.getHeight() * (row - startingRow + 2) + headerHeight();
@@ -78,6 +83,12 @@ public abstract class TablePrinter extends Printer {
         printFooter();
 
         return PAGE_EXISTS;
+    }
+
+    @Override
+    public void setFont(Font font) {
+        didInit = false;
+        super.setFont(font);
     }
 
     private int measureMaxColumnWidth(int column) {
