@@ -337,6 +337,7 @@ class PrinterSettings(private val printable: Printable) : Panel() {
                 printerJob.print(HashPrintRequestAttributeSet().apply {
                     val mediaSizeName = (mediaSize.selectedItem as Media).media
                     add(mediaSizeName)
+                    add(if (portrait.isSelected) OrientationRequested.PORTRAIT else OrientationRequested.LANDSCAPE)
                     add(MediaPrintableArea(
                         marginLeftValue,
                         marginTopValue,
