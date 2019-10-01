@@ -25,7 +25,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,6 +52,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import ru.gofederation.gotha.presenter.ITableColumn;
+import ru.gofederation.gotha.presenter.StandingsTableModel;
 import ru.gofederation.gotha.printing.StandingsPrinter;
 import ru.gofederation.gotha.ui.Dialog;
 import ru.gofederation.gotha.ui.NewTournamentPanel;
@@ -78,15 +80,6 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
     public static final int MEDIUM_FRAME_HEIGHT = 553;
     public static final int SMALL_FRAME_WIDTH = 540;
     public static final int SMALL_FRAME_HEIGHT = 350;
-    private static final int NUM_COL = 0;
-    private static final int PL_COL = 1;
-    private static final int NAME_COL = 2;
-    private static final int GRADE_COL = 3;
-    private static final int COUNTRY_COL = GRADE_COL + 1;
-    private static final int CLUB_COL = COUNTRY_COL + 1;
-    private static final int NBW_COL = CLUB_COL + 1;
-    private static final int ROUND0_RESULT_COL = NBW_COL + 1;
-    private static final int CRIT0_COL = ROUND0_RESULT_COL + Gotha.MAX_NUMBER_OF_ROUNDS;
 
     private static final int TEAM_PL_COL = 0;
     private static final int TEAM_NAME_COL = 1;
@@ -507,6 +500,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         tblStandings.setEnabled(false);
         tblStandings.setModel(new DefaultTableModel(0, 33));
         tblStandings.setRowSelectionAllowed(false);
+        tblStandings.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         scpStandings.setViewportView(tblStandings);
 
         pnlStandings.add(scpStandings, "grow, push, spany");
@@ -1152,9 +1146,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
 
         updateDisplayCriteria();
         updateDisplayTeamCriteria();
-        DefaultTableModel model = (DefaultTableModel) tblStandings.getModel();
-        model.setColumnCount(ROUND0_RESULT_COL + Gotha.MAX_NUMBER_OF_ROUNDS + PlacementParameterSet.PLA_MAX_NUMBER_OF_CRITERIA);
-        model = (DefaultTableModel) tblTeamsStandings.getModel();
+        DefaultTableModel model = (DefaultTableModel) tblTeamsStandings.getModel();
         model.setColumnCount(TEAM_ROUND0_RESULT_COL + Gotha.MAX_NUMBER_OF_ROUNDS + TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA);
 
         // Set the renderer for tblStandings
@@ -1312,165 +1304,19 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         PlacementParameterSet displayedPPS = displayedTPS.getPlacementParameterSet();
         displayedPPS.setPlaCriteria(displayedCriteria);
 
-        int gameFormat = tps.getDPParameterSet().getGameFormat();
+        StandingsTableModel stm = new StandingsTableModel(tournament, displayedTPS, displayedRoundNumber);
+        tblStandings.setModel(stm);
+        tblStandings.clearSelection();
+
+        List<? extends ITableColumn> columns = stm.getColumnIdentifiers();
+        TableColumnModel columnModel = tblStandings.getColumnModel();
+        for (int i = 0; i < columns.size(); i++) {
+            columnModel.getColumn(i).setPreferredWidth(columns.get(i).getPrefWidth());
+        }
 
         lastDisplayedStandingsUpdateTime = tournament.getCurrentTournamentTime();
-        ArrayList<ScoredPlayer> alOrderedScoredPlayers = new ArrayList<ScoredPlayer>();
-        try {
-            alOrderedScoredPlayers = tournament.orderedScoredPlayersList(displayedRoundNumber, displayedTPS.getPlacementParameterSet());
-
-            DPParameterSet dpps = tps.getDPParameterSet();
-            if (!dpps.isDisplayNPPlayers()){
-                // Eliminate non-players
-                for (Iterator<ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
-                    ScoredPlayer sP = it.next();
-                    if (!tournament.isPlayerImplied(sP)) {
-                        it.remove();
-                    }
-                }
-            }
-
-        } catch (RemoteException ex) {
-            Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        boolean bFull = true;
-        if (gameFormat == DPParameterSet.DP_GAME_FORMAT_SHORT) {
-            bFull = false;
-        }
-        String[][] hG = ScoredPlayer.halfGamesStrings(alOrderedScoredPlayers, displayedRoundNumber, displayedTPS, bFull);
-
-        tblStandings.clearSelection();
-        tblStandings.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-        DefaultTableColumnModel columnModel = (DefaultTableColumnModel) tblStandings.getColumnModel();
-
-        String strNumHeader = "Num";
-        if (!tps.getDPParameterSet().isDisplayNumCol()) {
-            strNumHeader = "";
-        }
-        columnModel.getColumn(NUM_COL).setHeaderValue(strNumHeader);
-
-        String strPlHeader = "Pl";
-        if (!tps.getDPParameterSet().isDisplayPlCol()) {
-            strPlHeader = "";
-        }
-        columnModel.getColumn(PL_COL).setHeaderValue(strPlHeader);
-
-        columnModel.getColumn(NAME_COL).setHeaderValue("Name");
-        columnModel.getColumn(GRADE_COL).setHeaderValue("Gr");
-        String strCoHeader = "Co";
-        if (!tps.getDPParameterSet().isDisplayCoCol()) {
-            strCoHeader = "";
-        }
-        columnModel.getColumn(COUNTRY_COL).setHeaderValue(strCoHeader);
-
-        String strClHeader = "Cl";
-        if (!tps.getDPParameterSet().isDisplayClCol()) {
-            strClHeader = "";
-        }
-        columnModel.getColumn(CLUB_COL).setHeaderValue(strClHeader);
-
-        columnModel.getColumn(NBW_COL).setHeaderValue("NBW");
-
-        for (int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++) {
-            columnModel.getColumn(ROUND0_RESULT_COL + r).setHeaderValue("R" + (r + 1));
-        }
-        for (int c = 0; c < PlacementParameterSet.PLA_MAX_NUMBER_OF_CRITERIA; c++) {
-            columnModel.getColumn(CRIT0_COL + c).setHeaderValue(displayedCriteria[c].getShortName());
-        }
-        int numWidth = 30;
-        if (!tps.getDPParameterSet().isDisplayNumCol()) {
-            numWidth = 0;
-        }
-        columnModel.getColumn(NUM_COL).setPreferredWidth(numWidth);
-        int plWidth = 30;
-        if (!tps.getDPParameterSet().isDisplayPlCol()) {
-            plWidth = 0;
-        }
-        columnModel.getColumn(PL_COL).setPreferredWidth(plWidth);
-        int coWidth = 20;
-        if (!tps.getDPParameterSet().isDisplayCoCol()) {
-            coWidth = 0;
-        }
-        columnModel.getColumn(COUNTRY_COL).setPreferredWidth(coWidth);
-        int clWidth = 30;
-        if (!tps.getDPParameterSet().isDisplayClCol()) {
-            clWidth = 0;
-        }
-        columnModel.getColumn(CLUB_COL).setPreferredWidth(clWidth);
-
-        columnModel.getColumn(NAME_COL).setPreferredWidth(110);
-        columnModel.getColumn(GRADE_COL).setPreferredWidth(30);
-        columnModel.getColumn(NBW_COL).setPreferredWidth(20);
-        for (int r = 0; r <= displayedRoundNumber; r++) {
-            int roundColWidth = 55;
-            if (gameFormat == DPParameterSet.DP_GAME_FORMAT_SHORT) {
-                roundColWidth = 35;
-            }
-            columnModel.getColumn(ROUND0_RESULT_COL + r).setPreferredWidth(roundColWidth);
-        }
-        for (int r = displayedRoundNumber + 1; r <= Gotha.MAX_NUMBER_OF_ROUNDS; r++) {
-            columnModel.getColumn(ROUND0_RESULT_COL + r).setMinWidth(0);
-            columnModel.getColumn(ROUND0_RESULT_COL + r).setPreferredWidth(0);
-        }
-
-        for (int c = 0; c < PlacementParameterSet.PLA_MAX_NUMBER_OF_CRITERIA; c++) {
-            if (displayedPPS.getPlaCriteria()[c] == PlacementCriterion.NUL) {
-                columnModel.getColumn(CRIT0_COL + c).setMinWidth(0);
-                columnModel.getColumn(CRIT0_COL + c).setPreferredWidth(0);
-            } else {
-                columnModel.getColumn(CRIT0_COL + c).setPreferredWidth(40);
-            }
-        }
-
-        DefaultTableModel model = (DefaultTableModel) tblStandings.getModel();
-        model.setRowCount(alOrderedScoredPlayers.size());
-        String[] strPlace = ScoredPlayer.catPositionStrings(alOrderedScoredPlayers, displayedRoundNumber, displayedTPS);
-        for (int iSP = 0; iSP < alOrderedScoredPlayers.size(); iSP++) {
-            int iCol = 0;
-            ScoredPlayer sp = alOrderedScoredPlayers.get(iSP);
-            String strNum = "" + (iSP + 1);
-            if (!tps.getDPParameterSet().isDisplayNumCol()) {
-                strNum = "";
-            }
-            model.setValueAt(strNum, iSP, iCol++);
-
-            String strPl = "" + strPlace[iSP];
-            if (!tps.getDPParameterSet().isDisplayPlCol()) {
-                strPl = "";
-            }
-            model.setValueAt("" + strPl, iSP, iCol++);
-
-            model.setValueAt(sp.fullName(), iSP, iCol++);
-            model.setValueAt(sp.getStrGrade(), iSP, iCol++);
-
-            String strCo = sp.getCountry();
-            if (!tps.getDPParameterSet().isDisplayCoCol()) {
-                strCo = "";
-            }
-            model.setValueAt(strCo, iSP, iCol++);
-
-            String strCl = sp.getClub();
-            if (!tps.getDPParameterSet().isDisplayClCol()) {
-                strCl = "";
-            }
-            model.setValueAt(strCl, iSP, iCol++);
-
-
-            model.setValueAt(sp.formatScore(PlacementCriterion.NBW, this.displayedRoundNumber), iSP, iCol++);
-            for (int r = 0; r <= displayedRoundNumber; r++) {
-                model.setValueAt((hG[r][iSP]), iSP, iCol++);
-            }
-            for (int r = displayedRoundNumber + 1; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++) {
-                model.setValueAt("", iSP, iCol++);
-            }
-            for (int c = 0; c < displayedCriteria.length; c++) {
-                model.setValueAt(sp.formatScore(displayedCriteria[c], this.displayedRoundNumber), iSP, iCol++);
-            }
-        }
-
         java.util.Date dh = new java.util.Date(lastDisplayedStandingsUpdateTime);
-		lblUpdateTime.setText(this.locale.format("standings.update_time", dh));
+        lblUpdateTime.setText(this.locale.format("standings.update_time", dh));
     }
 
     private void updateTeamsStandingsComponents() throws RemoteException {
@@ -2031,14 +1877,14 @@ private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {
         tblStandings.clearSelection();
         return;
     }
-    TableModel model = tblStandings.getModel();
+    StandingsTableModel model = (StandingsTableModel) tblStandings.getModel();
 
     int rowNumber = -1;
     int startRow = tblStandings.getSelectedRow() + 1;
     int nbRows = model.getRowCount();
     for (int iR = 0; iR < nbRows; iR++) {
         int row = (startRow + iR) % nbRows;
-        String str = (String) model.getValueAt(row, NAME_COL);
+        String str = (String) model.getValueAt(row, StandingsTableModel.ColumnType.NAME);
         str = str.toLowerCase();
         if (!str.contains(strSearchPlayer)) {
             continue;
