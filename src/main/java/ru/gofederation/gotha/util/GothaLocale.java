@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataListener;
 
-public enum GothaLocale implements ComboBoxModel<GothaLocale> {
+public enum GothaLocale implements ComboBoxModel<GothaLocale>, I10n {
     EN(Locale.forLanguageTag("en")), // Default locale comes first. Should always be EN.
     RU(Locale.forLanguageTag("ru"));
 
@@ -73,7 +73,28 @@ public enum GothaLocale implements ComboBoxModel<GothaLocale> {
         return this.resources;
     }
 
+    /**
+     * @deprecated Use {@link #tr(String)} instead
+     */
+    @Deprecated
     public String getString(String key) {
+        return tr(key);
+    }
+
+    public MessageFormat getFormat(String key) {
+        return new MessageFormat(this.getString(key), this.locale);
+    }
+
+    /**
+     * @deprecated Use {@link #tr(String, Object...)} instead
+     */
+    @Deprecated
+    public String format(String key, Object... args) {
+        return tr(key, args);
+    }
+
+    @Override
+    public String tr(String key) {
         ResourceBundle bundle = getResources();
         if (bundle.containsKey(key)) {
             return bundle.getString(key);
@@ -84,11 +105,8 @@ public enum GothaLocale implements ComboBoxModel<GothaLocale> {
         return key;
     }
 
-    public MessageFormat getFormat(String key) {
-        return new MessageFormat(this.getString(key), this.locale);
-    }
-
-    public String format(String key, Object... args) {
+    @Override
+    public String tr(String key, Object... args) {
         return getFormat(key).format(args);
     }
 
