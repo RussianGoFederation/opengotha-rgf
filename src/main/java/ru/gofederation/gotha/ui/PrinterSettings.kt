@@ -54,7 +54,6 @@ class PrinterSettings(private val printable: Printable) : Panel() {
 
     private val numberOfCopies = JSpinner().apply {
         model = SpinnerNumberModel(preferences.getInt(COPIES, 1), 1, 100, 1)
-        isEnabled = false
     }
     private val collate = JCheckBox(tr("printing.copies.collage")).apply {
         isSelected = preferences.getBoolean(COLLATE, true)
@@ -337,6 +336,7 @@ class PrinterSettings(private val printable: Printable) : Panel() {
                 printerJob.print(HashPrintRequestAttributeSet().apply {
                     val mediaSizeName = (mediaSize.selectedItem as Media).media
                     add(mediaSizeName)
+                    add(Copies(numberOfCopies.value.toString().toInt()))
                     add(if (portrait.isSelected) OrientationRequested.PORTRAIT else OrientationRequested.LANDSCAPE)
                     add(MediaPrintableArea(
                         marginLeftValue,
