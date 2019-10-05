@@ -170,6 +170,9 @@ public class PlayerEditor extends JPanel {
         // Rating controls
         JPanel ratingsPanel = new JPanel();
         ratingsPanel.setLayout(new MigLayout("insets 0", "[][sg b]unrel[][sg b]unrel[][sg b]unrel[][sg b]", "[]unrel[][]"));
+        changeRating = new JButton(locale.getString("player.btn_change_rating"));
+        changeRating.addActionListener((event) -> changeRating());
+        ratingsPanel.add(changeRating, "spanx 4");
         smmsByHand = new JCheckBox(locale.getString("player.smms_by_hand"));
         smmsByHand.addActionListener(this::smmsByHandActionPerformed);
         ratingsPanel.add(smmsByHand, "spanx 3");
@@ -267,10 +270,6 @@ public class PlayerEditor extends JPanel {
         welcomeSheetScroll.setVisible(false);
         welcomeSheetScroll.setViewportView(welcomeSheetPane);
         add(welcomeSheetScroll, "pos 0 0 840 1188, hidemode 3");
-
-        // Change rating button. TODO: add to layout
-        changeRating = new JButton(locale.getString("player.btn_change_rating"));
-        changeRating.addActionListener((event) -> changeRating());
     }
 
     private void initCountriesList(){
@@ -640,7 +639,7 @@ public class PlayerEditor extends JPanel {
             oldRating = 0;
         }
 
-        String strMessage = "Enter new rating (" + Player.MIN_RATING + " <= rating <= " + Player.MAX_RATING + ")";
+        String strMessage = locale.format("player.enter_new_rating", Player.MIN_RATING, Player.MAX_RATING);
         String strResponse = JOptionPane.showInputDialog(strMessage);
         int newRating = oldRating;
         try{
