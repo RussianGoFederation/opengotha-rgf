@@ -379,6 +379,7 @@ class PrinterSettings(private val printable: Printable) : Panel() {
     }
 
     private fun savePreferences() {
+        preferences.put(PRINTER, (printService.selectedItem as PrintService).name)
         preferences.putInt(MARGIN_TOP, (marginTopValue * CM).toInt())
         preferences.putInt(MARGIN_LEFT, (marginLeftValue * CM).toInt())
         preferences.putInt(MARGIN_RIGHT, (marginRightValue * CM).toInt())
