@@ -541,48 +541,7 @@ public class PlayerEditor extends JPanel {
             Preferences prefs = Preferences.userRoot().node(Gotha.strPreferences + "/playersmanager");
             prefs.put("defaultregistration", registration.toString());
         }
-        /*
-        if (this.playerMode == JFrPlayersManager.PLAYER_MODE_NEW) {
-            try {
-                tournament.addPlayer(p);
-                // Keep current registration status as default registration status
-                registration = FINAL;
-                if (grpRegistration.getSelection() == rdbPreliminary.getModel()) registration = PRELIMINARY;
-                Preferences prefs = Preferences.userRoot().node(Gotha.strPreferences + "/playersmanager");
-                prefs.put("defaultregistration", registration.toString());
 
-                resetRatingListControls();
-                resetPlayerControls();
-                this.tournamentChanged();
-            } catch (TournamentException te) {
-                JOptionPane.showMessageDialog(this, te.getMessage(), "Message", JOptionPane.ERROR_MESSAGE);
-                resetRatingListControls();
-                return;
-            } catch (RemoteException ex) {
-                resetRatingListControls();
-                return;
-            }
-
-        } else if (this.playerMode == JFrPlayersManager.PLAYER_MODE_MODIF) {
-            try {
-                if (tournament.isPlayerImplied(p)){
-                    p.setRegisteringStatus(FINAL);
-                }
-                tournament.modifyPlayer(playerInModification, p);
-                resetRatingListControls();
-            } catch (RemoteException ex) {
-                resetRatingListControls();
-                Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (TournamentException ex) {
-                resetRatingListControls();
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Message", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            this.tournamentChanged();
-            resetPlayerControls();
-
-        }
-         */
         // Print Welcome sheet
         if (this.welcomeSheet.isSelected()) {
             instanciateWelcomeSheet(new File(Gotha.runningDirectory, "welcomesheet/welcomesheet.html"),
