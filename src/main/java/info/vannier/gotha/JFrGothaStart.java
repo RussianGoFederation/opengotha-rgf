@@ -10,7 +10,6 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
-import java.security.AccessController;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +18,6 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import ru.gofederation.gotha.util.GothaLocale;
-import sun.security.action.GetPropertyAction;
 
 /**
  *
@@ -258,7 +256,7 @@ public class JFrGothaStart extends javax.swing.JFrame {
      * Falls back to {@link UIManager#getSystemLookAndFeelClassName()}.
      */
     private static String getNativeLookAndFeelClassName() {
-        String systemLaf = AccessController.doPrivileged(new GetPropertyAction("swing.systemlaf"));
+        String systemLaf = System.getProperty("swing.systemlaf");
         if (systemLaf != null) {
             return systemLaf;
         }
