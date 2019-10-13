@@ -46,9 +46,12 @@ public final class Rating {
             }
 
             return rating / 100 - 21;
+        } else {
+            int rk = (rating + 950)/100 - 30;
+            if (rk > 8 ) rk = 8;
+            if (rk < -30) rk = -30;
+            return rk;
         }
-
-        throw new IllegalArgumentException("Not implemented");
     }
 
     public static int rankToRating(RatingOrigin origin, int rank) {

@@ -25,8 +25,8 @@ import java.util.regex.Pattern;
 public class Rank implements Comparable<Rank> {
     private static final Pattern rankPattern = Pattern.compile("(\\d{1,2})([KD])");
     private static final Map<Integer, Rank> cache = new HashMap<>();
-    private static final int MIN_RANK = -30;
-    private static final int MAX_RANK = 8;
+    public static final int MIN_RANK = -30;
+    public static final int MAX_RANK = 8;
 
     /**
      * -30[30k]..8[9d]
@@ -36,6 +36,10 @@ public class Rank implements Comparable<Rank> {
     private Rank(int rank) {
         assert (MIN_RANK <= rank && rank <= MAX_RANK);
         this.rank = rank;
+    }
+
+    public static Rank fromRating(RatingOrigin origin, int rating) {
+        return fromInt(Rating.ratingToRank(origin, rating));
     }
 
     public static Rank fromString(String value) {

@@ -18,19 +18,35 @@
 package ru.gofederation.gotha.model;
 
 public enum RatingOrigin {
-    UNDEF,
+    UNDEF(-900, 2949),
     /** Rating coming from European Go DataBase */
-    EGF,
+    EGF(-900, 2949),
     /** Rating coming from FFG Rating list */
-    FFG,
+    FFG(-900, 2949),
     /** Rating coming from American Go Association */
-    AGA,
+    AGA(-900, 2949),
     /** Rating coming from Russian Go Federation */
-    RGF,
+    RGF(0, 3000),
     /** Rating specified by the organiser or imported from vBar-separated file */
-    MAN,
+    MAN(-900, 2949),
     /** Rating computed from rank */
-    INI;
+    INI(-900, 2949);
+
+    RatingOrigin(int minRating, int maxRating) {
+        this.minRating = minRating;
+        this.maxRating = maxRating;
+    }
+
+    private final int minRating;
+    private final int maxRating;
+
+    public int getMinRating() {
+        return minRating;
+    }
+
+    public int getMaxRating() {
+        return maxRating;
+    }
 
     public static RatingOrigin fromString(String origin) {
         for (RatingOrigin ratingOrigin : values()) {

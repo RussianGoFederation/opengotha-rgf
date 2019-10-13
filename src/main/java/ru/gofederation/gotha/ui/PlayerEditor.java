@@ -71,6 +71,7 @@ import info.vannier.gotha.PlayerException;
 import info.vannier.gotha.RatedPlayer;
 import info.vannier.gotha.TournamentInterface;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.Rank;
 import ru.gofederation.gotha.model.RatingOrigin;
 import ru.gofederation.gotha.util.GothaLocale;
 
@@ -473,15 +474,15 @@ public class PlayerEditor extends JPanel {
         PlayerRegistrationStatus registration = getSelectedRegistrationStatus();
 
         int rating;
-        int rank = Player.convertKDPToInt(this.rank.getText());
+        Rank rank = Rank.fromString(this.rank.getText());
 
         String strOrigin;
         try{
             strOrigin = this.ratingOrigin.getText().substring(0, 3);
             rating = Integer.parseInt(this.rating.getText());
-        }catch(Exception e){
+        } catch (Exception e){
             strOrigin = "INI";
-            rating = Player.ratingFromRank(RatingOrigin.RGF, rank); // TODO: somehow set proper origin
+            rating = Player.ratingFromRank(RatingOrigin.RGF, rank.getValue()); // TODO: somehow set proper origin
         }
 
         int smmsCorrection;
@@ -510,7 +511,7 @@ public class PlayerEditor extends JPanel {
                 .setFfgLicence(this.ffgLicence.getText(), this.ffgLicenceStatus.getText())
                 .setAgaId(this.agaId.getText(), this.agaExpirationDate.getText())
                 .setRgfId(rgfId)
-                .setRank(rank)
+                .setRank(rank.getValue())
                 .setRating(rating, RatingOrigin.fromString(strOrigin))
                 .setGrade(this.grade.getText())
                 .setSmmsCorrection(smmsCorrection)
@@ -598,22 +599,30 @@ public class PlayerEditor extends JPanel {
             oldRating = 0;
         }
 
-        String strMessage = locale.format("player.enter_new_rating", Player.MIN_RATING, Player.MAX_RATING);
-        String strResponse = JOptionPane.showInputDialog(strMessage);
-        int newRating = oldRating;
-        try{
-            newRating = Integer.parseInt(strResponse);
-            if (newRating < Player.MIN_RATING) newRating = Player.MIN_RATING;
-            if (newRating > Player.MAX_RATING) newRating = Player.MAX_RATING;
-        }catch(Exception e){
-            newRating = oldRating;
-        }
+        RatingPanel ratingPanel = new RatingPanel();
+        ratingPanel.setRating(oldRating);
 
-        if (newRating != oldRating){
-            this.rating.setText("" + newRating);
-            this.ratingOrigin.setText("MAN");
-        }
+        int response = JOptionPane.showConfirmDialog(this, ratingPanel, "Rating", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
+        if (response == JOptionPane.OK_OPTION) {
+            int newRating = oldRating;
+            try {
+                newRating = ratingPanel.getRating();
+                if (newRating < Player.MIN_RATING) newRating = Player.MIN_RATING;
+                if (newRating > Player.MAX_RATING) newRating = Player.MAX_RATING;
+            } catch (Exception e){
+                newRating = oldRating;
+            }
+
+            if (newRating != oldRating){
+                this.rating.setText("" + newRating);
+                RatingOrigin ratingOrigin = ratingPanel.getOrigin();
+                String rank = Rank.fromRating(ratingOrigin, newRating).toString();
+                this.rank.setText(rank);
+                this.grade.setText(rank);
+                this.ratingOrigin.setText("MAN");
+            }
+        }
     }
 
     private void manageRankGradeAndRatingValues(){

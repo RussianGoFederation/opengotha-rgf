@@ -10,16 +10,16 @@ import java.util.List;
  *
  * All datas except dc and sdc are updated by (and only by) fillBaseScoringInfo(), according to gps as defined in current tournament
  * dc and sdc are updated by (and only by) fillDirScoringInfo(), according to pps and round number  as defined in argument.
- * 
+ *
  * ScoredPlayer does not contain any information about pairing
  * @author Luc Vannier
  */
 public class ScoredPlayer extends Player implements java.io.Serializable{
     private static final long serialVersionUID = Gotha.GOTHA_DATA_VERSION;
 
-    // For a given round and a given player, the status should be one and only one of the status below  
+    // For a given round and a given player, the status should be one and only one of the status below
 
-    public final static int UNKNOWN = 0;        // For a given round and a given player, this status should not happen in actual round/actual player  
+    public final static int UNKNOWN = 0;        // For a given round and a given player, this status should not happen in actual round/actual player
     public final static int ABSENT = -3;        // For a given round and a given player, qualifies the fact that this player has been declared as not participating
     public final static int NOT_ASSIGNED = -2;  // For a given round and a given player, qualifies the fact that this player has been assigned as a neither as bye nor to a real game
     public final static int BYE = -1;           // For a given round and a given player, qualifies the fact that this player has been assigned as a Bye player
@@ -42,7 +42,7 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
     private int[] nbwVirtualX2;       // number of wins * 2
     private int[] mmsVirtualX2;       // mcmahon score * 2
     private int[] stsVirtualX2;       // Strasbourg score * 2
-    
+
     // Second level scores
     private int[] cuswX2;      // Sum of successive nbw2
     private int[] cusmX2;      // Sum of successive mms2
@@ -106,7 +106,7 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
         if (result == Game.RESULT_EQUAL_BYDEF) gWP = false;
         if (result == Game.RESULT_BOTHLOSE_BYDEF) gWP = false;
         if (result == Game.RESULT_BOTHWIN_BYDEF) gWP = false;
-        return gWP;   
+        return gWP;
     }
     public int getNBWX2(int rn){
         if (isValidRoundNumber(rn)) return nbwX2[rn];
@@ -129,7 +129,7 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
     public void setSTSX2(int rn, int value){
         if (isValidRoundNumber(rn)) stsX2[rn] = value;
     }
-        
+
     public int getNBWVirtualX2(int rn){
         if (isValidRoundNumber(rn)) return nbwVirtualX2[rn];
         else return 0;
@@ -151,7 +151,7 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
     public void setSTSVirtualX2(int rn, int value){
         if (isValidRoundNumber(rn)) stsVirtualX2[rn] = value;
     }
-    
+
     public int getCUSWX2(int rn){
         if (isValidRoundNumber(rn)) return cuswX2[rn];
         else return 0;
@@ -286,7 +286,7 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
         nbwVirtualX2  = new int[numberOfRounds];
         mmsVirtualX2  = new int[numberOfRounds];
         stsVirtualX2  = new int[numberOfRounds];
-        
+
         cuswX2 = new int[numberOfRounds];
         cusmX2 = new int[numberOfRounds];
 
@@ -301,7 +301,7 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
         sosmM2X2 = new int[numberOfRounds];
 
         sdsmX4 = new int[numberOfRounds];
-       
+
         sostsX2 = new int[numberOfRounds];
 
         extX2  = new int[numberOfRounds];
@@ -319,7 +319,7 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
             nbwVirtualX2[r] = 0;
             mmsVirtualX2[r] = 0;
             stsVirtualX2[r] = 0;
-            
+
             cuswX2[r] = 0;
             cusmX2[r] = 0;
 
@@ -330,7 +330,7 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
             sosmX2[r] = 0;
             sosmM1X2[r] = 0;
             sosmM2X2[r] = 0;
-            
+
             sostsX2[r] = 0;
 
             extX2[r] = 0;
@@ -353,7 +353,7 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
             case NBW    : return (rn >= 0) ? nbwX2[rn] : 0;                     // Number of Wins
             case MMS    : return (rn >= 0) ? mmsX2[rn] : 2 * smms(generalParameterSet);  // McMahon score
             case STS    : return (rn >= 0) ? stsX2[rn] : 2 * smms(generalParameterSet);  // STS score
-                
+
             case SOSW   : return (rn >= 0) ? this.soswX2[rn] : 0;	// Sum of Opponents McMahon scores
             case SOSWM1 : return (rn >= 0) ? this.soswM1X2[rn] : 0;
             case SOSWM2 : return (rn >= 0) ? this.soswM2X2[rn] : 0;
@@ -367,7 +367,7 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
             case SODOSM : return (rn >= 0) ? this.getSdsmX4()[rn] : 0;	// Sum of Defeated Opponents Scores
             case SOSOSM : return (rn >= 0) ? this.sssmX2[rn] : 0;	// Sum of opponents SOS
             case CUSSM  : return (rn >= 0) ? this.cusmX2[rn] : 0;	// Cuss
-           
+
             case SOSTS  : return (rn >= 0) ? this.sostsX2[rn] : 0;	// Sum of Opponents STS scores
 
             case EXT    : return (rn >= 0) ? this.extX2[rn] : 0;       // Exploits tentes

@@ -4,6 +4,7 @@
 package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.Rank;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
 
@@ -29,7 +30,7 @@ public class Player implements java.io.Serializable{
      * Rank between -30 (30K) and +8 (9D)
      */
     private int rank = -20;
-    
+
     /**
      * Rating.
      * from -900 to 2949
@@ -39,15 +40,15 @@ public class Player implements java.io.Serializable{
     public static final int MAX_RATING = 2949;
 
     private int rating = MIN_RATING;
-    
+
     private RatingOrigin ratingOrigin = UNDEF;
-        
+
     /**
      * strGrade is relevant when player is registered from EGF rating list
      * "" when not relevant
      */
     private String strGrade = "";
-    
+
     /**
      * When computing smms, rank is taken as a basis, then framed by McMahon floor and McMahon bar.
      * Then smms is added smsCorrection, which may be 0, 1 or 2, 1 0 for Bar Group, 1 for Super Group and 2 for Supersuper Group
@@ -58,9 +59,9 @@ public class Player implements java.io.Serializable{
     private int smmsByHand = -1;
 
     private boolean[] participating = new boolean[Gotha.MAX_NUMBER_OF_ROUNDS];
-    
+
     private PlayerRegistrationStatus registeringStatus;
-        
+
     /** Creates a new instance of Player */
     public Player() {
     }
@@ -84,26 +85,26 @@ public class Player implements java.io.Serializable{
         if (club.length() > 4) throw new PlayerException("Club name should have at most 4 character");
         this.club = club;
         this.egfPin = egfPin;
-        this.ffgLicence = ffgLicence;  
-        this.ffgLicenceStatus = ffgLicenceStatus;  
+        this.ffgLicence = ffgLicence;
+        this.ffgLicenceStatus = ffgLicenceStatus;
         this.agaId = agaId;
         this.agaExpirationDate = agaExpirationDate;
         // If rank is out of limits, set it according to strGrade, if exists
         if(rank < Gotha.MIN_RANK || rank > Gotha.MAX_RANK) rank = Player.convertKDPToInt(strGrade);
         this.rank = rank;
- 
+
         this.rating = rating;
         this.ratingOrigin = ratingOrigin;
-        
+
         if (strGrade.equals("")) strGrade = Player.convertIntToKD(rank);
         strGrade = strGrade.toUpperCase();
-        this.strGrade = strGrade;        
+        this.strGrade = strGrade;
 
         this.smmsCorrection = smmsCorrection;
         this.registeringStatus = registeringStatus;
-        
 
-      
+
+
         for(int i = 0; i < Gotha.MAX_NUMBER_OF_ROUNDS; i++) {
             participating[i] = true;
         }
@@ -138,8 +139,8 @@ public class Player implements java.io.Serializable{
             participating[i] = true;
         }
     }
-        
-    /** 
+
+    /**
      * Copies p into this
      **/
     public void deepCopy(Player p){
@@ -169,7 +170,7 @@ public class Player implements java.io.Serializable{
     public String getName() {
         return name;
     }
-        
+
     public String getFirstName()  {
         return firstName;
     }
@@ -184,7 +185,7 @@ public class Player implements java.io.Serializable{
 /** Concatenates name and firtName
      * Shortens if necessary
      * @param p
-     * @return 
+     * @return
      */
     public String shortenedFullName(){
         String strName = getName();
@@ -195,10 +196,10 @@ public class Player implements java.io.Serializable{
         if (strNF.length() > 22)  strNF = strNF.substring(0, 22);
         return strNF;
     }
-    
+
     public String augmentedPlayerName(DPParameterSet dpps){
         String strNF = shortenedFullName();
-            
+
 //        String strRk = Player.convertIntToKD(this.getRank());
         String strGr = this.getStrGrade();
         String strCo = Gotha.leftString(this.getCountry(), 2);
@@ -208,7 +209,7 @@ public class Player implements java.io.Serializable{
         boolean bGr = dpps.isShowPlayerGrade();
         boolean bCo = dpps.isShowPlayerCountry();
         boolean bCl = dpps.isShowPlayerClub();
-        
+
         if (!bGr && !bCo && !bCl) return strNF;
         String strPl = strNF + "(";
         boolean bFirst = true;
@@ -226,24 +227,24 @@ public class Player implements java.io.Serializable{
             strPl += strCl;
         }
         strPl += ")";
-        
+
         return strPl;
     }
-    
+
     public int getRank() {
         return rank;
     }
-        
+
     public void setRank(int rank) {
         if (rank > Gotha.MAX_RANK) return;
         if (rank < Gotha.MIN_RANK) return;
         this.rank = rank;
     }
-    
+
     private void computeKeyString(){
         this.keyString = (name + firstName).replaceAll(" ", "").toUpperCase();
     }
-    
+
     public static String computeKeyString(String strNaFi){
         return strNaFi.replaceAll(" ", "").toUpperCase();
     }
@@ -256,9 +257,9 @@ public class Player implements java.io.Serializable{
         if (this.keyString == null) computeKeyString();
         return this.keyString;
    }
- 
+
     /**
-     * 2 players never have the same key string. 
+     * 2 players never have the same key string.
      * hasSameKeyString is, thus a way to test if 2 references refer to the same player
      **/
     public boolean hasSameKeyString(Player p){
@@ -266,21 +267,21 @@ public class Player implements java.io.Serializable{
         if (getKeyString().compareTo(p.getKeyString()) == 0) return true;
         else return false;
     }
-    
+
     public int getRating() {
         return rating;
     }
-        
+
     public void setRating(int val) {
         if (val > Player.MAX_RATING) val = MAX_RATING;
         if (val < Player.MIN_RATING) val = MIN_RATING;
         this.rating = val;
     }
-    
+
     public RatingOrigin getRatingOrigin() {
         return ratingOrigin;
     }
-    
+
     public void setRatingOrigin(RatingOrigin val) {
         this.ratingOrigin = val;
     }
@@ -294,27 +295,27 @@ public class Player implements java.io.Serializable{
             r = r -2050;
             if (r >= 0) r = r + 100;
             if (r < 0) r = r - 100;
-            
+
             // Generate a eeee.ff string
             int e = r /100;
             int f = Math.abs(r %100);
             String strF = ".00";
             if (f > 9) strF = "." + f;
-            else strF = ".0" + f; 
-            
+            else strF = ".0" + f;
+
             strRR = "" + e + strF;
         }
         return "" + strRR;
     }
-    
+
     public String getClub()  {
         return club;
     }
-    
+
     public void setClub(String val)  {
         this.club = val;
     }
-       
+
     public boolean[] getParticipating() {
         return participating.clone();
     }
@@ -330,19 +331,19 @@ public class Player implements java.io.Serializable{
     public void setParticipating(int roundNumber, boolean val) {
         this.participating[roundNumber] = val;
     }
-       
+
     public PlayerRegistrationStatus getRegisteringStatus() {
         return registeringStatus;
     }
-    
+
     public void setRegisteringStatus(PlayerRegistrationStatus val) {
         this.registeringStatus = val;
     }
-    
+
     public String getCountry() {
         return country;
     }
-    
+
     public void setCountry(String val) {
         this.country = val;
     }
@@ -374,25 +375,27 @@ public class Player implements java.io.Serializable{
 //        int smms = getRank() + 30;
 //        int floor = gps.getGenMMFloor();
 //        int bar = gps.getGenMMBar();
-//        
+//
 //        if (smms < floor + 30) smms = floor + 30;
 //        if (smms > bar + 30) smms = bar + 30;
-        
+
         int zero = gps.getGenMMZero();
         int smms = getRank() - zero;
         int floor = gps.getGenMMFloor();
         int bar = gps.getGenMMBar();
-        
+
         if (smms < floor - zero) smms = floor - zero;
         if (smms > bar - zero) smms = bar - zero;
-        
+
         smms += smmsCorrection;
-        
+
+        System.out.println("" + getRank() + " " + Rank.fromInt(getRank()) + " " + smms);
+
         return smms;
     }
 
     /**
-     * Converts a String rank into an int rank 
+     * Converts a String rank into an int rank
      */
     public static int convertKDPToInt(String strKDP) {
         String strDraft = strKDP.trim();
@@ -422,7 +425,7 @@ public class Player implements java.io.Serializable{
         }
         return rank;
     }
-    
+
     /**
      * Converts a IntScore to a String representing score /ratio
      */
@@ -437,47 +440,40 @@ public class Player implements java.io.Serializable{
         if (score > 0 && score < ratio) strEnt = "";
         return strEnt + strFract;
     }
-    
+
     /**
-     * Converts an int rank into a String rank 
+     * Converts an int rank into a String rank
      */
     public static String convertIntToKD(int rank) {
         String strRank = "";
-        
+
         if (rank >=0) strRank  = "" + (rank +1) + "D";
         if (rank < 0) strRank  = "" + (-rank)   + "K";
         return strRank;
     }
-    
+
     /**
      * Converts rating to rank
-     * rank = (rating + 1000)/100 - 30; 
+     * rank = (rating + 1000)/100 - 30;
      */
     public static int rankFromRating(RatingOrigin origin, int rating) {
-        if (origin.equals(RatingOrigin.RGF)) {
-            return Rating.ratingToRank(origin, rating);
-        }
-
-        int rk = (rating + 950)/100 - 30;
-        if (rk > 8 ) rk = 8;
-        if (rk < -30) rk = -30;
-        return rk;
+        return Rating.ratingToRank(origin, rating);
     }
-    
+
     /**
      * Converts rank to rating
-     * rating = (rank + 30) *100 - 1000; 
+     * rating = (rank + 30) *100 - 1000;
      */
     public static int ratingFromRank(RatingOrigin origin, int rank) {
         if (origin.equals(RatingOrigin.RGF)) {
             return Rating.rankToRating(origin, rank);
         }
 
-        return (rank + 30) * 100 - 900;     
+        return (rank + 30) * 100 - 900;
     }
 
     /**
-     * Generates a numberOfRounds characters String with '+' for participating 
+     * Generates a numberOfRounds characters String with '+' for participating
      * and '-' for not participating
      */
     public static String convertParticipationToString(Player p, int numberOfRounds){
@@ -489,10 +485,10 @@ public class Player implements java.io.Serializable{
         }
         return buf.toString();
     }
-    
+
     /**
      * builds an Id String : EGF if exists, else FFG if exists, else AGA if exists, else ""
-     * @return 
+     * @return
      */
     public String getAnIdString(){
         String egfP = this.getEgfPin();
@@ -503,7 +499,7 @@ public class Player implements java.io.Serializable{
         else if (agaI != null && agaI.length() > 0) return "AGA Id : " + agaI;
         return "";
     }
-    
+
     public String getFfgLicence() {
         return ffgLicence;
     }
@@ -519,7 +515,7 @@ public class Player implements java.io.Serializable{
     public void setEgfPin(String egfPin) {
         this.egfPin = egfPin;
     }
-    
+
     public String getAgaId() {
         return agaId;
     }

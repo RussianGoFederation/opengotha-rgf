@@ -43,6 +43,10 @@ abstract class Panel(
         return gothaLocale.getString(key)
     }
 
+    protected fun tr(key: String, vararg args: Any): String {
+        return gothaLocale.format(key, *args)
+    }
+
     protected fun closeWindow() {
         SwingUtilities.getWindowAncestor(this)?.dispose()
     }
@@ -53,7 +57,7 @@ abstract class Panel(
         const val HELP_ICON = "/info/vannier/gotha/gothalogo16.jpg"
 
         const val INPUT_L: String = "240lp"
-        private const val INPUT_M: String = "180lp"
+        const val INPUT_M: String = "180lp"
         const val INPUT_S: String = "58lp"
         private const val INPUT_XS: String = "42lp"
 
