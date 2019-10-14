@@ -36,6 +36,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
@@ -52,6 +53,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import ru.gofederation.gotha.io.TableXlsxExporter;
 import ru.gofederation.gotha.presenter.ITableColumn;
 import ru.gofederation.gotha.presenter.StandingsTableModel;
 import ru.gofederation.gotha.printing.StandingsPrinter;
@@ -268,7 +270,6 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         mniImportVBS = new javax.swing.JMenuItem();
         mniImportXML = new javax.swing.JMenuItem();
         mniImportRgf = new javax.swing.JMenuItem();
-        mniExport = new javax.swing.JMenuItem();
         mniExit = new javax.swing.JMenuItem();
         mniBuildTestTournament = new javax.swing.JMenuItem();
         mnuPlayers = new javax.swing.JMenu();
@@ -679,9 +680,18 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
 
         mnuTournament.add(mnuImport);
 
-        mniExport.setText(locale.getString("menu.tournament.export"));
-        mniExport.addActionListener(this::mniExportActionPerformed);
-        mnuTournament.add(mniExport);
+        JMenu exportMenu = new JMenu(locale.getString("menu.tournament.export"));
+        JMenuItem exportXlsx = new JMenuItem(locale.getString("menu.export.standings_xlsx"));
+        exportXlsx.addActionListener(actionEvent -> {
+            try {
+                StandingsTableModel stm = new StandingsTableModel(tournament, getDisplayedTPS(), displayedRoundNumber);
+                new TableXlsxExporter(locale).exportToFile(stm, this, new MyFileFilter(new String[]{"xlsx"}, locale.getString("export.xlsx_filter")), "xlsx");
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
+        exportMenu.add(exportXlsx);
+        mnuTournament.add(exportMenu);
         mnuTournament.add(new JSeparator());
 
         mniExit.setText(locale.getString("menu.tournament.exit"));
@@ -1271,6 +1281,15 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
                 displayedTeamCriteria[5] = displayedTeamPPS.getPlaCriteria()[5];
             }
         }
+    }
+
+    private TournamentParameterSet getDisplayedTPS() throws RemoteException {
+        // Define displayedTPS
+        TournamentParameterSet tps = tournament.getTournamentParameterSet();
+        TournamentParameterSet displayedTPS = new TournamentParameterSet(tps);
+        PlacementParameterSet displayedPPS = displayedTPS.getPlacementParameterSet();
+        displayedPPS.setPlaCriteria(displayedCriteria);
+        return tps;
     }
 
     private void updateStandingsComponents() throws RemoteException {
@@ -2215,10 +2234,6 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
         }
     }
 
-    private void mniExportActionPerformed(java.awt.event.ActionEvent evt) {
-        JOptionPane.showMessageDialog(this, locale.getString("error.html_exports_in_publish_menu"), locale.getString("alert.message"), JOptionPane.INFORMATION_MESSAGE);
-    }
-
     private void mniSaveActionPerformed(java.awt.event.ActionEvent evt) {
         if (tournament == null) {
             JOptionPane.showMessageDialog(this, locale.getString("error.no_open_tournament"), locale.getString("alert.message"), JOptionPane.ERROR_MESSAGE);
@@ -2643,7 +2658,6 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JMenuItem mniDiscardRounds;
     private javax.swing.JMenuItem mniExit;
     private javax.swing.JMenuItem mniExperimentalTools;
-    private javax.swing.JMenuItem mniExport;
     private javax.swing.JMenuItem mniGamesOptions;
     private javax.swing.JMenuItem mniHelpAbout;
     private javax.swing.JMenuItem mniImportH9;
