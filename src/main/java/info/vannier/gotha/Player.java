@@ -389,8 +389,6 @@ public class Player implements java.io.Serializable{
 
         smms += smmsCorrection;
 
-        System.out.println("" + getRank() + " " + Rank.fromInt(getRank()) + " " + smms);
-
         return smms;
     }
 
