@@ -1,11 +1,12 @@
 /**
- * ExternalDocument.java 
+ * ExternalDocument.java
  */
 package info.vannier.gotha;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.rmi.RemoteException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,10 +35,11 @@ import static ru.gofederation.gotha.model.RatingOrigin.INI;
 
 /**
  * ExternalTournamentDocument enables importing Players and Games and tournament parameters from a file
- * 
+ *
  * @author Luc Vannier
  */
 public class ExternalDocument {
+    private static final DateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public final static String DEFAULT_CHARSET = "UTF-8";
     public final static int DT_UNDEFINED = 0;
@@ -326,7 +328,7 @@ public class ExternalDocument {
         return doc;
     }
 
-    public static String importTournamentFromXMLFile(File sourceFile, TournamentInterface tournament, 
+    public static String importTournamentFromXMLFile(File sourceFile, TournamentInterface tournament,
             boolean bPlayers, boolean bGames, boolean bTPS, boolean bTeams, boolean bClubsGroups) {
         // What dataVersion ?
         long dataVersion = ExternalDocument.importDataVersionFromXMLFile(sourceFile);
@@ -481,7 +483,7 @@ public class ExternalDocument {
                 }
             }
         }
-        
+
         // Import Clubs groups
         int nbImportedClubsGroups = 0;
         int nbNotImportedClubsGroups = 0;
@@ -494,7 +496,7 @@ public class ExternalDocument {
                 Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
             }
             ArrayList<ClubsGroup> alClubsGroups = ExternalDocument.importClubsGroupsFromXMLFile(sourceFile);
-            if (alClubsGroups != null) {              
+            if (alClubsGroups != null) {
                 for(ClubsGroup cg : alClubsGroups){
                     try {
                         if (tournament.addClubsGroup(cg)) nbImportedClubsGroups++;
@@ -513,8 +515,8 @@ public class ExternalDocument {
 
             nbReplacedClubsGroups = nbClubsGroupsBeforeImport + nbImportedClubsGroups - nbClubsGroupsAfterImport;
         }
-      
-        
+
+
 
         try {
             tournament.updateNumberOfRoundsIfNecesary();
@@ -593,11 +595,13 @@ public class ExternalDocument {
 
             String name = extractNodeValue(nnm, "name", "");
             String firstName = extractNodeValue(nnm, "firstName", "");
+            String patronymic = extractNodeValue(nnm, "patronymic", "");
+            Date dateOfBirth = extractNodeDateValue(nnm, "dateOfBirth", null);
             String country = extractNodeValue(nnm, "country", "");
             String club = extractNodeValue(nnm, "club", "");
             String egfPin = extractNodeValue(nnm, "egfPin", "");
             String ffgLicence = extractNodeValue(nnm, "ffgLicence", "");
-            String ffgLicenceStatus = extractNodeValue(nnm, "ffgLicenceStatus", "");          
+            String ffgLicenceStatus = extractNodeValue(nnm, "ffgLicenceStatus", "");
             String agaId = extractNodeValue(nnm, "agaId", "");
             String agaExpirationDate = extractNodeValue(nnm, "agaExpirationDate", "");
             int rgfId = extractNodeIntValue(nnm, "rgfId", 0);
@@ -643,6 +647,8 @@ public class ExternalDocument {
                 p = new Player.Builder()
                     .setName(name)
                     .setFirstName(firstName)
+                    .setPatronymic(patronymic)
+                    .setDateOfBirth(dateOfBirth)
                     .setCountry(country)
                     .setClub(club)
                     .setEgfPin(egfPin)
@@ -783,10 +789,10 @@ public class ExternalDocument {
 
         String strGenMMS2ValueBye = extractNodeValue(nnmGPS, "genMMS2ValueBye", "0");
         gps.setGenMMS2ValueBye(new Integer(strGenMMS2ValueBye).intValue());
-        
+
         String strGenRoundDownNBWMMS = extractNodeValue(nnmGPS, "genRoundDownNBWMMS", "true");
         gps.setGenRoundDownNBWMMS(Boolean.valueOf(strGenRoundDownNBWMMS).booleanValue());
-        
+
         String strGenCountNotPlayedGamesAsHalfPoint = extractNodeValue(nnmGPS, "genCountNotPlayedGamesAsHalfPoint", "false");
         gps.setGenCountNotPlayedGamesAsHalfPoint(Boolean.valueOf(strGenCountNotPlayedGamesAsHalfPoint).booleanValue());
 
@@ -852,7 +858,7 @@ public class ExternalDocument {
         paiPS.setPaiMaMinimizeScoreDifference(new Long(extractNodeValue(nnmPaiPS, "paiMaMinimizeScoreDifference", "100000000000")).longValue());
         paiPS.setPaiMaDUDDWeight(new Long(extractNodeValue(nnmPaiPS, "paiMaDUDDWeight", "100000000")).longValue());
         paiPS.setPaiMaCompensateDUDD(Boolean.valueOf(extractNodeValue(nnmPaiPS, "paiMaCompensateDUDD", "true")).booleanValue());
-        
+
         String strDUDDU = extractNodeValue(nnmPaiPS, "paiMaDUDDUpperMode", "MID");
         int duddu = PairingParameterSet.PAIMA_DUDD_MID;
         if (strDUDDU.equals("TOP")) {
@@ -947,13 +953,13 @@ public class ExternalDocument {
         Node nDPPS = nlDPPS.item(0);
         if (nDPPS != null) {
             NamedNodeMap nnmDPPS = nDPPS.getAttributes();
-            
+
             String strPlayerSortType = extractNodeValue(nnmDPPS, "playerSortType", "name");
             int playerSortType = PlayerComparator.NAME_ORDER;
             if (strPlayerSortType.equals("rank")) playerSortType = PlayerComparator.RANK_ORDER;
             if (strPlayerSortType.equals("grade")) playerSortType = PlayerComparator.GRADE_ORDER;
             dpps.setPlayerSortType(playerSortType);
-            
+
             String strGameFormat = extractNodeValue(nnmDPPS, "gameFormat", "full");
             int gameFormat = DPParameterSet.DP_GAME_FORMAT_FULL;
             if (strGameFormat.equals("short")) gameFormat = DPParameterSet.DP_GAME_FORMAT_SHORT;
@@ -977,7 +983,7 @@ public class ExternalDocument {
 
             String strDisplayNPPlayers = extractNodeValue(nnmDPPS, "displayNPPlayers", "false");
             dpps.setDisplayNPPlayers(Boolean.valueOf(strDisplayNPPlayers).booleanValue());
-            
+
             String strDisplayNumCol = extractNodeValue(nnmDPPS, "displayNumCol", "true");
             dpps.setDisplayNumCol(Boolean.valueOf(strDisplayNumCol).booleanValue());
             String strDisplayPlCol = extractNodeValue(nnmDPPS, "displayPlCol", "true");
@@ -986,9 +992,9 @@ public class ExternalDocument {
             dpps.setDisplayCoCol(Boolean.valueOf(strDisplayCoCol).booleanValue());
             String strDisplayClCol = extractNodeValue(nnmDPPS, "displayClCol", "false");
             dpps.setDisplayClCol(Boolean.valueOf(strDisplayClCol).booleanValue());
-            
+
             String strDisplayIndGamesInMatches = extractNodeValue(nnmDPPS, "displayIndGamesInMatches", "true");
-            dpps.setDisplayIndGamesInMatches(Boolean.valueOf(strDisplayIndGamesInMatches).booleanValue());          
+            dpps.setDisplayIndGamesInMatches(Boolean.valueOf(strDisplayIndGamesInMatches).booleanValue());
         }
         tps.setDPParameterSet(dpps);
 
@@ -998,13 +1004,13 @@ public class ExternalDocument {
         Node nPubPS = nlPubPS.item(0);
         if (nPubPS != null) {
             NamedNodeMap nnmPubPS = nPubPS.getAttributes();
-            
+
             String strPrint = extractNodeValue(nnmPubPS, "print", "true");
             pubPS.setPrint(Boolean.valueOf(strPrint).booleanValue());
             String strExportToLocalFile = extractNodeValue(nnmPubPS, "exportToLocalFile", "true");
             pubPS.setExportToLocalFile(Boolean.valueOf(strExportToLocalFile).booleanValue());
             String strHtmlAutoScroll = extractNodeValue(nnmPubPS, "htmlAutoScroll", "false");
-            pubPS.setHtmlAutoScroll(Boolean.valueOf(strHtmlAutoScroll).booleanValue());  
+            pubPS.setHtmlAutoScroll(Boolean.valueOf(strHtmlAutoScroll).booleanValue());
         }
         tps.setPublishParameterSet(pubPS);
 
@@ -1019,7 +1025,7 @@ public class ExternalDocument {
         }
 
         NodeList nlTeamList = doc.getElementsByTagName("Team");
-        
+
         if (nlTeamList == null || nlTeamList.getLength() == 0) {
             return null;
         }
@@ -1067,7 +1073,7 @@ public class ExternalDocument {
                     for (int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++){
                         t.setTeamMember(p, r, boardNumber);
                     }
-                    
+
                 }
                 else{
                     t.setTeamMember(p, roundNumber, boardNumber);
@@ -1137,20 +1143,20 @@ public class ExternalDocument {
         if (doc == null) {
             return null;
         }
-         
-        NodeList nlClubsGroupList = doc.getElementsByTagName("ClubsGroup"); 
-        // Is there a ClubsGroups node in file ?        
+
+        NodeList nlClubsGroupList = doc.getElementsByTagName("ClubsGroup");
+        // Is there a ClubsGroups node in file ?
         if (nlClubsGroupList == null || nlClubsGroupList.getLength() == 0) {
             return null;
         }
-        
+
         ArrayList<ClubsGroup> alClubsGroups = new ArrayList<ClubsGroup>();
         for(int i = 0; i < nlClubsGroupList.getLength(); i++){
             Node nClubsGroup = nlClubsGroupList.item(i);
             NamedNodeMap nnmClubsGroup = nClubsGroup.getAttributes();
             String strCGName = extractNodeValue(nnmClubsGroup, "name", "Unnamed Clubs Group");
             ClubsGroup cg = new ClubsGroup(strCGName);
-            
+
             NodeList nlElements = nClubsGroup.getChildNodes();
             for(int iel = 0; iel < nlElements.getLength(); iel++){
                 Node nClub = nlElements.item(iel);
@@ -1183,6 +1189,17 @@ public class ExternalDocument {
         } catch (Exception e) {
         }
         return value;
+    }
+
+    public static Date extractNodeDateValue(NamedNodeMap nnm, String attributeName, Date defaultValue) {
+        String strValue = extractNodeValue(nnm, attributeName, null);
+        if (null == strValue) return null;
+
+        try {
+            return isoDateFormat.parse(strValue);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
     /**
@@ -1234,7 +1251,7 @@ public class ExternalDocument {
                     wP = tournament.getPlayerByObsoleteCanonicalName(strWhitePlayer);
                 }
                 if (wP == null) continue;
-                
+
                 if (importedDataVersion <= 200) bP = tournament.getPlayerByObsoleteCanonicalName(strBlackPlayer);
                 else bP = tournament.getPlayerByKeyString(strBlackPlayer);
                 if (bP == null) {
@@ -1332,8 +1349,8 @@ public class ExternalDocument {
 
     /**
      * Gathers potential half-games to build games into an ArrayList<Game>.
-     * If necessary, reaffects round numbers so that a given game has been played in one only round, 
-     * and so that a given player may not have played 2 games in the same round. 
+     * If necessary, reaffects round numbers so that a given game has been played in one only round,
+     * and so that a given player may not have played 2 games in the same round.
      **/
     private static void buildALGames(ArrayList<PotentialHalfGame> alPotentialHalfGames, ArrayList<Player> alPlayers, ArrayList<Game> alGames) {
         // Initialize tabGames
@@ -1344,7 +1361,7 @@ public class ExternalDocument {
             }
         }
 
-        // vBProcessedHalfGames is mapped like alPotentialHalfGames. 
+        // vBProcessedHalfGames is mapped like alPotentialHalfGames.
         // An element of vBProcessedPHG is set to true when processed
         ArrayList<Boolean> alBProcessedPHG = new ArrayList<Boolean>();
         for (PotentialHalfGame phg : alPotentialHalfGames) {
@@ -1505,7 +1522,7 @@ public class ExternalDocument {
             return;
         }
 
-        // Headers       
+        // Headers
         try {
             String shortName = gps.getShortName();
 
@@ -1639,7 +1656,7 @@ public class ExternalDocument {
             return;
         }
 
-        // Headers       
+        // Headers
         try {
             output.write("; CL[" + tournament.egfClass() + "]");
             output.write("\n; EV[" + gps.getName() + "]");
@@ -1707,7 +1724,7 @@ public class ExternalDocument {
             Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        boolean bFull = true; 
+        boolean bFull = true;
         int gameFormat = tps.getDPParameterSet().getGameFormat();
         if (gameFormat == DPParameterSet.DP_GAME_FORMAT_SHORT) bFull = false;
         String[][] hG = ScoredPlayer.halfGamesStrings(alOrderedScoredPlayers, roundNumber, tps, bFull);
@@ -1841,7 +1858,7 @@ public class ExternalDocument {
 
         // Assign a dummy AGA Id to people without Aga Id
         // For each player without an agaId, find an available Id, starting from 99999 and decreasing
-        // To find a not assigned one, search alOrderedScoredPlayers starting from upper index and decreasing  
+        // To find a not assigned one, search alOrderedScoredPlayers starting from upper index and decreasing
         int iMax = alOrderedScoredPlayers.size() - 1;
         int newId = 99999;
 
@@ -1884,7 +1901,7 @@ public class ExternalDocument {
         // Sort on primary criteria
         pc = new PlayerComparator(PlayerComparator.AGAID_ORDER);
         Collections.sort(alOrderedScoredPlayers, pc);
-        
+
         for (Iterator<ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
             ScoredPlayer sP = it.next();
             try {
@@ -2036,7 +2053,7 @@ public class ExternalDocument {
             Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public static File generatePlayersListHTMLFile(TournamentInterface tournament){
         String shortName = "TournamentShortName";
         try {
@@ -2047,13 +2064,13 @@ public class ExternalDocument {
         String defaultFileName = shortName + "_PlayersList";
 
         File f = new File(Gotha.exportHTMLDirectory, defaultFileName + ".html");
-        // Manage css       
+        // Manage css
         createCSSFile(f);
-        
+
         generatePlayersListHTMLFileContents(tournament, f);
         return f;
-    }    
-            
+    }
+
     public static File generateTeamsListHTMLFile(TournamentInterface tournament){
         String shortName = "TournamentShortName";
         try {
@@ -2063,15 +2080,15 @@ public class ExternalDocument {
         }
         String defaultFileName = shortName + "_TeamsList";
         File f = new File(Gotha.exportHTMLDirectory, defaultFileName + ".html");
-        
-        // Manage css       
+
+        // Manage css
         Gotha.exportHTMLDirectory = f.getParentFile();
         createCSSFile(f);
-        
+
         generateTeamsListHTMLFileContents(tournament, f);
         return f;
-    } 
-    
+    }
+
     public static File generateGamesListHTMLFile(TournamentInterface tournament, int round){
         String shortName = "TournamentShortName";
         try {
@@ -2082,15 +2099,15 @@ public class ExternalDocument {
         String defaultFileName = shortName + "_GamesListR" + (round + 1);
 
         File f = new File(Gotha.exportHTMLDirectory, defaultFileName + ".html");
-        
-        // Manage css       
+
+        // Manage css
         createCSSFile(f);
-        
+
         generateGamesListHTMLFileContents(tournament, round, f);
         return f;
-    }    
+    }
 
-    
+
     public static File generateStandingsHTMLFile(TournamentInterface tournament, int round){
         String shortName = "TournamentShortName";
         try {
@@ -2100,15 +2117,15 @@ public class ExternalDocument {
         }
         String defaultFileName = shortName + "_StandingsR" + (round + 1);
         File f = new File(Gotha.exportHTMLDirectory, defaultFileName + ".html");
-         
-        // Manage css       
+
+        // Manage css
         Gotha.exportHTMLDirectory = f.getParentFile();
         createCSSFile(f);
-        
+
         generateStandingsHTMLFileContents(tournament, round, f);
         return f;
-    }        
-    
+    }
+
     public static File generateMatchesListHTMLFile(TournamentInterface tournament, int round){
         // Choose a File
         String shortName = "TournamentShortName";
@@ -2119,15 +2136,15 @@ public class ExternalDocument {
         }
         String defaultFileName = shortName + "_MatchesListR" + (round + 1);
         File f = new File(Gotha.exportHTMLDirectory, defaultFileName + ".html");
-        
-        // Manage css       
+
+        // Manage css
         Gotha.exportHTMLDirectory = f.getParentFile();
         createCSSFile(f);
-        
+
         generateMatchesListHTMLFileContents(tournament, round, f);
         return f;
     }
-        
+
     public static File generateTeamsStandingsHTMLFile(TournamentInterface tournament, int round){
         String shortName = "TournamentShortName";
         try {
@@ -2137,16 +2154,16 @@ public class ExternalDocument {
         }
         String defaultFileName = shortName + "_TeamsStandingsR" + (round + 1);
         File f = new File(Gotha.exportHTMLDirectory, defaultFileName + ".html");
-        
-        // Manage css       
+
+        // Manage css
         Gotha.exportHTMLDirectory = f.getParentFile();
         createCSSFile(f);
-        
+
         generateTeamsStandingsHTMLFileContents(tournament, round, f);
-        
+
         return f;
     }
-    
+
     private static void createCSSFile(File f){
                // If current.css does not exist, create one from default.css
         File currentCSSFile = new File(f.getParentFile(), "current.css");
@@ -2163,8 +2180,8 @@ public class ExternalDocument {
             }
         }
     }
-    
-    public static void generatePlayersListHTMLFileContents(TournamentInterface tournament, File f){      
+
+    public static void generatePlayersListHTMLFileContents(TournamentInterface tournament, File f){
         TournamentParameterSet tps;
         try{
             tps = tournament.getTournamentParameterSet();
@@ -2175,12 +2192,12 @@ public class ExternalDocument {
         GeneralParameterSet gps = tps.getGeneralParameterSet();
         DPParameterSet dpps = tps.getDPParameterSet();
         PublishParameterSet pubPS = tps.getPublishParameterSet();
-        
+
         boolean bScroll = pubPS.isHtmlAutoScroll();
         String strMarqueeTagBeg = "\n<marquee direction =\"up\" height=\"550\" behavior=\"alternate\" loop=\"100\" SCROLLDELAY=\"1\" SCROLLAMOUNT=\"2\">";
         String strMarqueeTagEnd = "\n</marquee>";
-        
-        
+
+
         Writer output;
         try {
             output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), DEFAULT_CHARSET));
@@ -2203,7 +2220,7 @@ public class ExternalDocument {
             output.write("<h1 align=\"center\">" + gps.getName() + "</h1>");
             output.write("<h1 align=\"center\">" + "Players list" + "</h1>");
             if(bScroll) output.write(strMarqueeTagBeg);
-            
+
             output.write("<table align=\"center\" class=\"simple\">");
             output.write("\n<th class=\"right\"> </th>");
             output.write("\n<th class=\"left\">Pin/Lic/Id</th>");
@@ -2249,7 +2266,7 @@ public class ExternalDocument {
                 }
                 if (strPinLic.length() == 0) {
                     strPinLic = "--------";
-                }                
+                }
                 output.write("<td class=" + strPar + " align=\"left\">" + strPinLic + "</td>");
                 String strNF = p.fullName();
                 output.write("<td class=" + strPar + " align=\"left\">" + strNF + "</td>");
@@ -2291,8 +2308,8 @@ public class ExternalDocument {
             Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
- 
-    public static void generateTeamsListHTMLFileContents(TournamentInterface tournament, File f){  
+
+    public static void generateTeamsListHTMLFileContents(TournamentInterface tournament, File f){
         TeamTournamentParameterSet ttps;
         TournamentParameterSet tps;
         try{
@@ -2305,7 +2322,7 @@ public class ExternalDocument {
         GeneralParameterSet gps = tps.getGeneralParameterSet();
         TeamPlacementParameterSet tpps = ttps.getTeamPlacementParameterSet();
         PublishParameterSet pubPS = tps.getPublishParameterSet();
-        
+
         boolean bScroll = pubPS.isHtmlAutoScroll();
         String strMarqueeTagBeg = "\n<marquee direction =\"up\" height=\"550\" behavior=\"alternate\" loop=\"100\" SCROLLDELAY=\"1\" SCROLLAMOUNT=\"2\">";
         String strMarqueeTagEnd = "\n</marquee>";
@@ -2332,7 +2349,7 @@ public class ExternalDocument {
             output.write("<h1 align=\"center\">" + gps.getName() + "</h1>");
             output.write("<h1 align=\"center\">" + "Teams list" + "</h1>");
             if(bScroll) output.write(strMarqueeTagBeg);
-            
+
             output.write("<table align=\"center\" class=\"simple\">");
             output.write("\n<th align=\"right\">Nr&nbsp;</th>");
             output.write("\n<th align=\"left\">&nbsp;Team name&nbsp;</th>");
@@ -2399,12 +2416,12 @@ public class ExternalDocument {
         } catch (IOException ex) {
             Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
-           
+
 
     }
-    
+
     public static void generateGamesListHTMLFileContents(TournamentInterface tournament, int roundNumber, File f) {
-       
+
         TournamentParameterSet tps;
         try {
             tps = tournament.getTournamentParameterSet();
@@ -2416,11 +2433,11 @@ public class ExternalDocument {
         PlacementParameterSet pps = tps.getPlacementParameterSet();
         DPParameterSet dpps = tps.getDPParameterSet();
         PublishParameterSet pubPS = tps.getPublishParameterSet();
-        
+
         boolean bScroll = pubPS.isHtmlAutoScroll();
         String strMarqueeTagBeg = "\n<marquee direction =\"up\" height=\"550\" behavior=\"alternate\" loop=\"100\" SCROLLDELAY=\"1\" SCROLLAMOUNT=\"2\">";
         String strMarqueeTagEnd = "\n</marquee>";
-        
+
         Writer output;
         try {
             output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), DEFAULT_CHARSET));
@@ -2429,24 +2446,24 @@ public class ExternalDocument {
             return;
         }
         try {
-            // Headers       
-           
+            // Headers
+
         output.write("<html>");
             output.write("<head>");
             output.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" + DEFAULT_CHARSET + "\">");
             output.write("<title>" + gps.getName() + "</title>");
             output.write("<link href=\"current.css\" rel=\"stylesheet\" type=\"text/css\">");
             output.write("</head>");
-            
+
             output.write("<body>");
             output.write("<h1 align=\"center\">" + gps.getName() + "</h1>");
-            output.write("<h1 align=\"center\">" + "Games list. Round " + (roundNumber + 1) + "</h1>");  
+            output.write("<h1 align=\"center\">" + "Games list. Round " + (roundNumber + 1) + "</h1>");
             if(bScroll) output.write(strMarqueeTagBeg);
-            
+
             output.write("\n<table align=\"center\" class=\"simple\">");
-            output.write("\n<th class=\"right\">&nbsp;Tble&nbsp;</th>" + 
-                    "<th class=\"left\">&nbsp;White&nbsp;</th>" + 
-                    "<th class=\"left\">&nbsp;Black&nbsp; </th>" + 
+            output.write("\n<th class=\"right\">&nbsp;Tble&nbsp;</th>" +
+                    "<th class=\"left\">&nbsp;White&nbsp;</th>" +
+                    "<th class=\"left\">&nbsp;Black&nbsp; </th>" +
                     "<th class=\"center\">&nbsp;Hd&nbsp;</th>" +
                     "<th class=\"center\">&nbsp;Res&nbsp;</th>");
         } catch (IOException ex) {
@@ -2464,7 +2481,7 @@ public class ExternalDocument {
         int gamesSortType = GameComparator.TABLE_NUMBER_ORDER;
         GameComparator gameComparator = new GameComparator(gamesSortType);
         Collections.sort(alG, gameComparator);
-        
+
         for (int iG = 0; iG < alG.size(); iG++){
             try {
                 output.write("\n<tr>");
@@ -2491,21 +2508,21 @@ public class ExternalDocument {
             } catch (IOException ex) {
                 Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
             }
-  
+
         }
         try {
             output.write("\n</table>");
             if(bScroll) output.write(strMarqueeTagEnd);
-            
+
             output.write("\n<h4 align=center>" + Gotha.getGothaVersionnedName() + "<br>" + new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date()) + "</h4>");
             output.write("\n</body></html>");
             output.close();
         } catch (IOException ex) {
             Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
+
     }
-    
+
      public static void generateStandingsHTMLFileContents(TournamentInterface tournament, int roundNumber, File f) {
         TournamentParameterSet tps;
         try {
@@ -2517,7 +2534,7 @@ public class ExternalDocument {
         GeneralParameterSet gps = tps.getGeneralParameterSet();
         PlacementParameterSet pps = tps.getPlacementParameterSet();
         PublishParameterSet pubPS = tps.getPublishParameterSet();
-        
+
         boolean bScroll = pubPS.isHtmlAutoScroll();
         String strMarqueeTagBeg = "\n<marquee direction =\"up\" height=\"550\" behavior=\"alternate\" loop=\"100\" SCROLLDELAY=\"1\" SCROLLAMOUNT=\"2\">";
         String strMarqueeTagEnd = "\n</marquee>";
@@ -2534,7 +2551,7 @@ public class ExternalDocument {
             return;
         }
 
-        // Headers       
+        // Headers
         try {
             output.write("<html>");
             output.write("<head>");
@@ -2547,7 +2564,7 @@ public class ExternalDocument {
 
             output.write("<h1 align=\"center\">" + gps.getName() + "</h1>");
             if(bScroll) output.write(strMarqueeTagBeg);
-            
+
             output.write("\n<table align=\"center\" class=\"simple\">");
             if (tps.getDPParameterSet().isDisplayNumCol())
                 output.write("\n<th class=\"left\">&nbsp;Num&nbsp;</th>");
@@ -2559,7 +2576,7 @@ public class ExternalDocument {
             if (tps.getDPParameterSet().isDisplayCoCol())
                 output.write("<th class=\"middle\">&nbsp;Co&nbsp;</th>");
             if (tps.getDPParameterSet().isDisplayClCol())
-                output.write("<th class=\"middle\">&nbsp;Club&nbsp;</th>"); 
+                output.write("<th class=\"middle\">&nbsp;Club&nbsp;</th>");
             output.write("<th class=\"middle\">&nbsp;NbW&nbsp;</th>");
 
             for (int r = 0; r < roundNumber + 1; r++) {
@@ -2581,7 +2598,7 @@ public class ExternalDocument {
 //        int roundNumber = gps.getNumberOfRounds() - 1;
         try {
             alOrderedScoredPlayers = tournament.orderedScoredPlayersList(roundNumber, pps);
-            
+
             DPParameterSet dpps = tps.getDPParameterSet();
             if (!dpps.isDisplayNPPlayers()){
                 // Eliminate non-players
@@ -2595,7 +2612,7 @@ public class ExternalDocument {
         } catch (RemoteException ex) {
             Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
-        boolean bFull = true; 
+        boolean bFull = true;
         int gameFormat = tps.getDPParameterSet().getGameFormat();
         if (gameFormat == DPParameterSet.DP_GAME_FORMAT_SHORT) bFull = false;
 
@@ -2620,17 +2637,17 @@ public class ExternalDocument {
 //                String strRank = Player.convertIntToKD(sP.getRank());
                 String strGrade = sP.getStrGrade();
                 output.write("<td class=" + strPar + strAlCenter + ">" + strGrade + "</td>");
-                
+
                 if (tps.getDPParameterSet().isDisplayCoCol()){
                     String strCountry = sP.getCountry();
                     output.write("<td class=" + strPar + strAlCenter + ">" + strCountry + "</td>");
                 }
-                
+
                 if (tps.getDPParameterSet().isDisplayClCol()){
                     String strClub = sP.getClub();
                     output.write("<td class=" + strPar + strAlCenter + ">" + strClub + "</td>");
                 }
-                
+
                 output.write("<td class=" + strPar + strAlCenter + ">" + sP.formatScore(PlacementCriterion.NBW, roundNumber) + "</td>");
 
                 for (int r = 0; r <= roundNumber; r++) {
@@ -2678,7 +2695,7 @@ public class ExternalDocument {
         }
 
     }
-    
+
      public static void generateMatchesListHTMLFileContents(TournamentInterface tournament, int roundNumber, File f) {
         TournamentParameterSet tps;
         TeamTournamentParameterSet ttps;
@@ -2694,12 +2711,12 @@ public class ExternalDocument {
         TeamGeneralParameterSet tgps = ttps.getTeamGeneralParameterSet();
         TeamPlacementParameterSet tpps = ttps.getTeamPlacementParameterSet();
         PublishParameterSet pubPS = tps.getPublishParameterSet();
-        
+
         boolean bScroll = pubPS.isHtmlAutoScroll();
         String strMarqueeTagBeg = "\n<marquee direction =\"up\" height=\"550\" behavior=\"alternate\" loop=\"100\" SCROLLDELAY=\"1\" SCROLLAMOUNT=\"2\">";
         String strMarqueeTagEnd = "\n</marquee>";
 
-        
+
         Writer output;
         try {
             output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), DEFAULT_CHARSET));
@@ -2708,30 +2725,30 @@ public class ExternalDocument {
             return;
         }
         try {
-            // Headers       
-           
+            // Headers
+
             output.write("<html>");
             output.write("<head>");
             output.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" + DEFAULT_CHARSET + "\">");
             output.write("<title>" + gps.getName() + "</title>");
             output.write("<link href=\"current.css\" rel=\"stylesheet\" type=\"text/css\">");
             output.write("</head>");
-            
+
             output.write("<body>");
             output.write("<h1 align=\"center\">" + gps.getName() + "</h1>");
-            output.write("<h1 align=\"center\">" + "Matches list. Round " + (roundNumber + 1) + "</h1>");            
+            output.write("<h1 align=\"center\">" + "Matches list. Round " + (roundNumber + 1) + "</h1>");
             if(bScroll) output.write(strMarqueeTagBeg);
-            
+
             output.write("<table align=\"center\" class=\"simple\">");
-            output.write("\n<th class=\"right\">&nbsp;Tble&nbsp;</th>" + 
-                    "<th class=\"left\">&nbsp;&nbsp;</th>" + 
-                    "<th class=\"left\">&nbsp;&nbsp; </th>" + 
+            output.write("\n<th class=\"right\">&nbsp;Tble&nbsp;</th>" +
+                    "<th class=\"left\">&nbsp;&nbsp;</th>" +
+                    "<th class=\"left\">&nbsp;&nbsp; </th>" +
                     "<th class=\"center\">&nbsp;Hd&nbsp;</th>" +
                     "<th class=\"center\">&nbsp;Res&nbsp;</th>");
         } catch (IOException ex) {
             Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
-                
+
         // Contents
         ArrayList<Match> alM = null;
         try {
@@ -2750,10 +2767,10 @@ public class ExternalDocument {
                 output.write("\n<tr>");
                 String strPar = "pair";
                 if (!bPair) strPar = "impair";
-                
+
                 ComparableMatch cm = alCM.get(iCM);
                 Match m = tournament.getMatch(roundNumber, cm.board0TableNumber);
-                
+
                 String strTN = "" + (cm.board0TableNumber + 1) + "---";
                 output.write("<td class=" + strPar + ">" + strTN + "</td>");
                 String strWTN = cm.wst.getTeamName();
@@ -2761,13 +2778,13 @@ public class ExternalDocument {
                 String strBTN = cm.bst.getTeamName();
                 output.write("<td class=" + strPar + " align=\"left\">" + strBTN + "&nbsp;</td>");
                 output.write("<td class=" + strPar + " align=\"center\">" + "" + "&nbsp;</td>");
-                
+
                 String strWTeamNbW = Gotha.formatFractNumber(m.getWX2(m.getWhiteTeam()), 2);
                 String strBTeamNbW = Gotha.formatFractNumber(m.getWX2(m.getBlackTeam()), 2);
                 String strTeamResult = strWTeamNbW + "-" + strBTeamNbW;
                 output.write("<td class=" + strPar + " align=\"center\">" + strTeamResult + "&nbsp;</td>");
                 output.write("</tr>");
-                if (dpps.isDisplayIndGamesInMatches()){               
+                if (dpps.isDisplayIndGamesInMatches()){
                     Team wTeam = m.getWhiteTeam();
                     Team bTeam = m.getBlackTeam();
                     int nbBoards = tgps.getTeamSize();
@@ -2798,9 +2815,9 @@ public class ExternalDocument {
                             }
                         }
 
-                        String strNF = p1.augmentedPlayerName(dpps); 
+                        String strNF = p1.augmentedPlayerName(dpps);
                         output.write("<td class=" + strPar + " align=\"left\">" + strP1Color + " " + strNF + "&nbsp;</td>");
-                        strNF = p2.augmentedPlayerName(dpps); 
+                        strNF = p2.augmentedPlayerName(dpps);
                         output.write("<td class=" + strPar + " align=\"left\">" + strP2Color + " " + strNF + "&nbsp;</td>");
 
                         String strHd = "" + game.getHandicap();
@@ -2826,9 +2843,9 @@ public class ExternalDocument {
         } catch (IOException ex) {
             Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+
     }
-    
+
     public static void generateTeamsStandingsHTMLFileContents(TournamentInterface tournament, int round, File f) {
         TeamTournamentParameterSet ttps;
         TournamentParameterSet tps;
@@ -2842,7 +2859,7 @@ public class ExternalDocument {
         GeneralParameterSet gps = tps.getGeneralParameterSet();
         TeamPlacementParameterSet tpps = ttps.getTeamPlacementParameterSet();
         PublishParameterSet pubPS = tps.getPublishParameterSet();
-        
+
         boolean bScroll = pubPS.isHtmlAutoScroll();
         String strMarqueeTagBeg = "\n<marquee direction =\"up\" height=\"550\" behavior=\"alternate\" loop=\"100\" SCROLLDELAY=\"1\" SCROLLAMOUNT=\"2\">";
         String strMarqueeTagEnd = "\n</marquee>";
@@ -2850,7 +2867,7 @@ public class ExternalDocument {
         // Prepare tabCrit from pps
         TeamPlacementCriterion[] tC = tpps.getPlaCriteria();
         TeamPlacementCriterion[] tabCrit = TeamPlacementParameterSet.purgeUselessCriteria(tC);
-        
+
         Writer output;
         try {
             output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), DEFAULT_CHARSET));
@@ -2873,7 +2890,7 @@ public class ExternalDocument {
             output.write("<h1 align=\"center\">" + gps.getName() + "</h1>");
             output.write("<h1 align=\"center\">" + "Teams standings" + "</h1>");
             if(bScroll) output.write(strMarqueeTagBeg);
-            
+
             output.write("<table align=\"center\" class=\"simple\">");
             output.write("\n<th class=\"left\">&nbsp;Pl&nbsp;</th>"
                     + "<th class=\"middle\">&nbsp;Team name&nbsp;</th>");
@@ -2956,7 +2973,7 @@ public class ExternalDocument {
             Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public static void generateXMLFile(TournamentInterface tournament, File xmlFile) {
         DocumentBuilderFactory documentBuilderFactory =
                 DocumentBuilderFactory.newInstance();
@@ -3038,7 +3055,7 @@ public class ExternalDocument {
         Element emTeamTournamentParameterSet = generateXMLTeamTournamentParameterSetElement(document, ttps);
         rootElement.appendChild(emTeamTournamentParameterSet);
 
-        
+
         // Include Clubs groups
         ArrayList<ClubsGroup> alClubsGroup = new ArrayList<ClubsGroup>();
         try {
@@ -3046,12 +3063,12 @@ public class ExternalDocument {
         } catch (RemoteException ex) {
             Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         if (!alClubsGroup.isEmpty()) {
             Element emClubsGroups = generateXMLClubsGroupsElement(document, alClubsGroup);
             rootElement.appendChild(emClubsGroups);
         }
-       
+
         // Transform document into a DOM source
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = null;
@@ -3064,7 +3081,7 @@ public class ExternalDocument {
             return;
         }
         DOMSource source = new DOMSource(document);
-       
+
         // generate file
         Writer output = null;
         try {
@@ -3087,7 +3104,7 @@ public class ExternalDocument {
             output.close();
         } catch (IOException ex) {
             Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
-        }    
+        }
     }
 
     /**
@@ -3099,6 +3116,8 @@ public class ExternalDocument {
         for (Player p : alPlayers) {
             String strName = p.getName();
             String strFirstName = p.getFirstName();
+            String strPatronymic = p.getPatronymic();
+            Date dateOfBirth = p.getDateOfBirth();
             String strCountry = p.getCountry();
             String strClub = p.getClub();
             String strEgfPin = p.getEgfPin();
@@ -3125,6 +3144,12 @@ public class ExternalDocument {
             Element emPlayer = document.createElement("Player");
             emPlayer.setAttribute("name", strName);
             emPlayer.setAttribute("firstName", strFirstName);
+            if (strPatronymic.length() > 0) {
+                emPlayer.setAttribute("patronymic", strPatronymic);
+            }
+            if (null != dateOfBirth) {
+                emPlayer.setAttribute("dateOfBirth", isoDateFormat.format(dateOfBirth));
+            }
             emPlayer.setAttribute("country", strCountry);
             emPlayer.setAttribute("club", strClub);
             emPlayer.setAttribute("egfPin", strEgfPin);
@@ -3251,11 +3276,11 @@ public class ExternalDocument {
     }
 
     /**
-     * Generates an xml clubsgroups Element 
+     * Generates an xml clubsgroups Element
      * returns the Element
      */
     private static Element generateXMLClubsGroupsElement(Document document, ArrayList<ClubsGroup> alClubsGroups) {
-        Element emClubsGroups = document.createElement("ClubsGroups");      
+        Element emClubsGroups = document.createElement("ClubsGroups");
         for (ClubsGroup cg : alClubsGroups) {
             String strCGName = cg.getName();
             Element emClubsGroup = document.createElement("ClubsGroup");
@@ -3268,7 +3293,7 @@ public class ExternalDocument {
             }
             emClubsGroups.appendChild(emClubsGroup);
         }
-                    
+
         if(emClubsGroups.hasChildNodes()){
             return emClubsGroups;
         }
@@ -3277,9 +3302,9 @@ public class ExternalDocument {
         }
 
     }
-    
-    
-    
+
+
+
     /**
      * Generates an xml ByePlayers Element and includes all  bye players
      * returns the Element or null if no bye players
@@ -3357,14 +3382,14 @@ public class ExternalDocument {
         emGeneralParameterSet.setAttribute("genMMFloor", Player.convertIntToKD(gps.getGenMMFloor()));
         emGeneralParameterSet.setAttribute("genMMBar", Player.convertIntToKD(gps.getGenMMBar()));
         emGeneralParameterSet.setAttribute("genMMZero", Player.convertIntToKD(gps.getGenMMZero()));
-        
+
         emGeneralParameterSet.setAttribute("genNBW2ValueAbsent", "" + gps.getGenNBW2ValueAbsent());
         emGeneralParameterSet.setAttribute("genNBW2ValueBye", "" + gps.getGenNBW2ValueBye());
         emGeneralParameterSet.setAttribute("genMMS2ValueAbsent", "" + gps.getGenMMS2ValueAbsent());
         emGeneralParameterSet.setAttribute("genMMS2ValueBye", "" + gps.getGenMMS2ValueBye());
         emGeneralParameterSet.setAttribute("genRoundDownNBWMMS", "" + gps.isGenRoundDownNBWMMS());
         emGeneralParameterSet.setAttribute("genCountNotPlayedGamesAsHalfPoint", "" + gps.isGenCountNotPlayedGamesAsHalfPoint());
-        
+
 
         if (gps.getNumberOfCategories() > 1) {
             Element emCategories = document.createElement("Categories");
@@ -3516,7 +3541,7 @@ public class ExternalDocument {
                 strPlayerSortType = "name";
         }
         emDPParameterSet.setAttribute("playerSortType", strPlayerSortType);
-        
+
         String strGameFormat;
         switch (dpps.getGameFormat()) {
             case DPParameterSet.DP_GAME_FORMAT_FULL:
@@ -3529,36 +3554,36 @@ public class ExternalDocument {
                 strGameFormat = "full";
         }
         emDPParameterSet.setAttribute("gameFormat", strGameFormat);
-        
+
         emDPParameterSet.setAttribute("showPlayerGrade", Boolean.valueOf(dpps.isShowPlayerGrade()).toString());
         emDPParameterSet.setAttribute("showPlayerCountry", Boolean.valueOf(dpps.isShowPlayerCountry()).toString());
         emDPParameterSet.setAttribute("showPlayerClub", Boolean.valueOf(dpps.isShowPlayerClub()).toString());
-        
+
         emDPParameterSet.setAttribute("showByePlayer", Boolean.valueOf(dpps.isShowByePlayer()).toString());
         emDPParameterSet.setAttribute("showNotPairedPlayers", Boolean.valueOf(dpps.isShowNotPairedPlayers()).toString());
         emDPParameterSet.setAttribute("showNotParticipatingPlayers", Boolean.valueOf(dpps.isShowNotParticipatingPlayers()).toString());
         emDPParameterSet.setAttribute("showNotFinallyRegisteredPlayers", Boolean.valueOf(dpps.isShowNotFinallyRegisteredPlayers()).toString());
 
         emDPParameterSet.setAttribute("displayNPPlayers", Boolean.valueOf(dpps.isDisplayNPPlayers()).toString());
-        
+
         emDPParameterSet.setAttribute("displayNumCol", Boolean.valueOf(dpps.isDisplayNumCol()).toString());
         emDPParameterSet.setAttribute("displayPlCol", Boolean.valueOf(dpps.isDisplayPlCol()).toString());
         emDPParameterSet.setAttribute("displayCoCol", Boolean.valueOf(dpps.isDisplayCoCol()).toString());
         emDPParameterSet.setAttribute("displayClCol", Boolean.valueOf(dpps.isDisplayClCol()).toString());
         emDPParameterSet.setAttribute("displayIndGamesInMatches", Boolean.valueOf(dpps.isDisplayIndGamesInMatches()).toString());
-        
+
         emTournamentParameterSet.appendChild(emDPParameterSet);
 
         // PublishParameterSet
         PublishParameterSet pubPS = tps.getPublishParameterSet();
         Element emPublishParameterSet = document.createElement("PublishParameterSet");
-        
+
         emPublishParameterSet.setAttribute("print", Boolean.valueOf(pubPS.isPrint()).toString());
         emPublishParameterSet.setAttribute("exportToLocalFile", Boolean.valueOf(pubPS.isExportToLocalFile()).toString());
         emPublishParameterSet.setAttribute("htmlAutoScroll", Boolean.valueOf(pubPS.isHtmlAutoScroll()).toString());
-        
+
         emTournamentParameterSet.appendChild(emPublishParameterSet);
-       
+
         return emTournamentParameterSet;
     }
 
@@ -3641,7 +3666,7 @@ public class ExternalDocument {
     }
 
     /**
-     * Parses a Half Game String into a HalfGame   
+     * Parses a Half Game String into a HalfGame
      * @param strHalfGame
      * @return a HalfGame Object
      */
@@ -3707,7 +3732,7 @@ public class ExternalDocument {
         }
 
         // Now we've got  strOpponentNumber, strResult, strColor and strHandicap;
-        // Let's build phg               
+        // Let's build phg
         PotentialHalfGame phg = new PotentialHalfGame();
         try {
             phg.opponentNumber = (new Integer(strOpponentNumber).intValue() - 1);
@@ -3733,7 +3758,7 @@ public class ExternalDocument {
 
 /**
  * Represents the result of a player for one game.
- * It is named PotentialHalfGame because 2 instances of PotentialHalfGame (1 for each player) may 
+ * It is named PotentialHalfGame because 2 instances of PotentialHalfGame (1 for each player) may
  * make a game if coherence is found
  */
 class PotentialHalfGame {

@@ -3,8 +3,9 @@
  */
 package info.vannier.gotha;
 
+import java.util.Date;
+
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
-import ru.gofederation.gotha.model.Rank;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
 
@@ -16,6 +17,8 @@ public class Player implements java.io.Serializable{
     private static final long serialVersionUID = Gotha.GOTHA_DATA_VERSION;
     private String name;
     private String firstName;
+    private String patronymic;
+    private Date dateOfBirth;
     /** keyString is computed at creation/modification time */
     private transient String keyString = null;
     private String country;
@@ -116,6 +119,8 @@ public class Player implements java.io.Serializable{
         if (builder.getFirstName().length() < 1) throw new PlayerException("Player's first name should have at least 1 character");
         this.firstName = builder.getFirstName();
         this.computeKeyString();
+        this.patronymic = builder.getPatronymic();
+        this.dateOfBirth = builder.getDateOfBirth();
         if (builder.getCountry().length() == 1 || builder.getCountry().length() > 2) throw new PlayerException("Country name should either have 2 characters\nor be absent");
         this.country = builder.getCountry();
         if (builder.getClub().length() > 4) throw new PlayerException("Club name should have at most 4 character");
@@ -146,6 +151,8 @@ public class Player implements java.io.Serializable{
     public void deepCopy(Player p){
         this.name = p.getName();
         this.firstName = p.getFirstName();
+        this.patronymic = p.getPatronymic();
+        this.dateOfBirth = p.getDateOfBirth();
         this.keyString = p.getKeyString();
         this.country = p.getCountry();
         this.club = p.getClub();
@@ -173,6 +180,22 @@ public class Player implements java.io.Serializable{
 
     public String getFirstName()  {
         return firstName;
+    }
+
+    public String getPatronymic() {
+        return patronymic;
+    }
+
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String fullName(){
@@ -576,6 +599,8 @@ public class Player implements java.io.Serializable{
     public static final class Builder {
         private String name = "";
         private String firstName = "";
+        private String patronymic = "";
+        private Date dateOfBirth = null;
         private String country = "";
         private String club = "";
         private String egfPin = "";
@@ -607,6 +632,24 @@ public class Player implements java.io.Serializable{
 
         public Builder setFirstName(String firstName) {
             this.firstName = firstName;
+            return this;
+        }
+
+        public String getPatronymic() {
+            return patronymic;
+        }
+
+        public Builder setPatronymic(String patronymic) {
+            this.patronymic = patronymic;
+            return this;
+        }
+
+        public Date getDateOfBirth() {
+            return dateOfBirth;
+        }
+
+        public Builder setDateOfBirth(Date dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
             return this;
         }
 

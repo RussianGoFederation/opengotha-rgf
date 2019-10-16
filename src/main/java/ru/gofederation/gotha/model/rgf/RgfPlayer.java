@@ -17,7 +17,10 @@
 
 package ru.gofederation.gotha.model.rgf;
 
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Date;
 
 import info.vannier.gotha.GeneralParameterSet;
 import info.vannier.gotha.PlacementCriterion;
@@ -25,6 +28,7 @@ import info.vannier.gotha.PlayerException;
 import info.vannier.gotha.ScoredPlayer;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.RatingOrigin;
+import ru.gofederation.gotha.util.GsonDateAdapter;
 
 public final class RgfPlayer {
     @SerializedName("id")
@@ -35,6 +39,11 @@ public final class RgfPlayer {
     public String firstName;
     @SerializedName("lastName")
     public String lastName;
+    @SerializedName("patronymic")
+    public String patronymic;
+    @SerializedName("dateOfBirth")
+    @JsonAdapter(value = GsonDateAdapter.class)
+    public Date dateOfBirth;
     @SerializedName("mm0")
     public int mm0;
     @SerializedName("mmF")
@@ -52,6 +61,8 @@ public final class RgfPlayer {
         playerId = player.getRgfId() > 0 ? player.getRgfId() : -1;
         firstName = player.getFirstName();
         lastName = player.getName();
+        patronymic = player.getPatronymic();
+        dateOfBirth = player.getDateOfBirth();
         rating = player.getRating();
         mm0 = player.smms(gps);
         this.place = place;

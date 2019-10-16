@@ -17,6 +17,9 @@
 
 package ru.gofederation.gotha.ui;
 
+import com.toedter.calendar.JCalendar;
+import com.toedter.calendar.JDateChooser;
+
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.Color;
@@ -89,6 +92,8 @@ public class PlayerEditor extends JPanel {
 
     private JTextField firstName;
     private JTextField lastName;
+    private JTextField patronymic;
+    private JDateChooser birthday;
     private JLabel photo;
     private JTextField rating;
     private JTextField ratingOrigin;
@@ -129,7 +134,7 @@ public class PlayerEditor extends JPanel {
     }
 
     private void createUI() {
-        setLayout(new MigLayout("insets 0", null, "[][]unrel[][]unrel[]unrel[]unrel[][]"));
+        setLayout(new MigLayout("insets 0", null, "[][][]unrel[]unrel[][]unrel[]unrel[]unrel[][]"));
 
         // Last name
         add(new JLabel(locale.getString("player.last_name")));
@@ -138,7 +143,7 @@ public class PlayerEditor extends JPanel {
 
         // Photo
         photo = new JLabel();
-        add(photo, "spany 4, width 80, height 115");
+        add(photo, "spany 6, ay top, width 80, height 115");
 
         // Rounds
         JPanel rounds = new JPanel();
@@ -149,12 +154,23 @@ public class PlayerEditor extends JPanel {
             participation[i] = cb;
             rounds.add(cb, "hidemode 3, wmin 40lp");
         }
-        add(rounds, "spany 4, ay top, spanx, wrap");
+        add(rounds, "spany 6, ay top, spanx, wrap");
 
         // First name
         add(new JLabel(locale.getString("player.first_name")));
         firstName = new JTextField();
         add(firstName, "sgx name, wrap");
+
+        // Patronymic
+        add(new JLabel(locale.getString("player.patronymic")));
+        patronymic = new JTextField();
+        add(patronymic, "sgx name, wrap");
+
+        // Date of birth
+        add(new JLabel(locale.getString("player.date_of_birth")));
+        birthday = new JDateChooser();
+        birthday.setLocale(locale.getLocale());
+        add(birthday, "sgx name, wrap");
 
         // Country
         add(new JLabel(locale.getString("player.country")));
@@ -380,6 +396,8 @@ public class PlayerEditor extends JPanel {
 
         firstName.setText(player.getFirstName());
         lastName.setText(player.getName());
+        patronymic.setText(player.getPatronymic());
+        birthday.setDate(player.getDateOfBirth());
 
         int rating = player.getRating();
         this.rating.setText(Integer.toString(rating));
@@ -468,6 +486,7 @@ public class PlayerEditor extends JPanel {
         manageRankGradeAndRatingValues(); // Before anything else, fill unfilled grade/rank/rating fields
         this.firstName.setText(normalizeCase(this.firstName.getText()));
         this.lastName.setText(normalizeCase(this.lastName.getText()));
+        this.patronymic.setText(normalizeCase(this.patronymic.getText()));
 
         Player p;
 
@@ -505,6 +524,8 @@ public class PlayerEditor extends JPanel {
             p = new Player.Builder()
                 .setName(this.lastName.getText())
                 .setFirstName(this.firstName.getText())
+                .setPatronymic(this.patronymic.getText())
+                .setDateOfBirth(this.birthday.getDate())
                 .setCountry(((String)this.country.getSelectedItem()))
                 .setClub(this.club.getText().trim())
                 .setEgfPin(this.egfPin.getText())
@@ -656,6 +677,8 @@ public class PlayerEditor extends JPanel {
         setMode(Mode.NEW);
         this.firstName.setText("");
         this.lastName.setText("");
+        this.patronymic.setText("");
+        this.birthday.setDate(null);
         this.rank.setText("");
         this.smmsCorrection.setText("0");
         this.ratingOrigin.setText("");
