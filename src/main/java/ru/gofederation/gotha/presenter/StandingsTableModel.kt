@@ -120,15 +120,15 @@ class StandingsTableModel(
     }
 
     enum class ColumnType(internal val prefWidth: Int) {
-        NUMBER(30),
-        PLACE(20),
-        NAME(110),
-        GRADE(30),
-        COUNTRY(30),
-        CLUB(30),
-        NBW(20),
-        ROUND_RESULT(35), // Might be 55. See Column.prefWidth
-        CRITERION(40)
+        NUMBER(45),
+        PLACE(30),
+        NAME(165),
+        GRADE(45),
+        COUNTRY(45),
+        CLUB(45),
+        NBW(30),
+        ROUND_RESULT(52),
+        CRITERION(60)
 
     }
 
@@ -136,7 +136,7 @@ class StandingsTableModel(
         override val prefWidth: Int
             get() {
                 return if (type == ColumnType.ROUND_RESULT && this@StandingsTableModel.tps.dpParameterSet.gameFormat == DPParameterSet.DP_GAME_FORMAT_FULL) {
-                    55
+                    82
                 } else {
                     type.prefWidth
                 }
