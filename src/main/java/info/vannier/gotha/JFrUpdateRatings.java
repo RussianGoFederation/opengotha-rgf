@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -30,6 +31,10 @@ import javax.swing.table.TableModel;
 
 import ru.gofederation.gotha.model.RatingListFactory;
 import ru.gofederation.gotha.model.RatingListType;
+import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;
+import ru.gofederation.gotha.printing.PlayerListPrinter;
+import ru.gofederation.gotha.ui.Dialog;
+import ru.gofederation.gotha.ui.PrinterSettings;
 import ru.gofederation.gotha.ui.RatingListControls;
 import ru.gofederation.gotha.ui.component.RatingListComboBox;
 import ru.gofederation.gotha.util.GothaLocale;
@@ -283,7 +288,16 @@ public class JFrUpdateRatings extends javax.swing.JFrame implements RatingListCo
     }
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {
-        TournamentPrinting.printPlayersList(tournament, playersSortType);
+        try {
+            ArrayList<Player> players = tournament.playersList();
+            players.sort(Comparator.comparing(Player::fullName));
+            TableModel model = new PlayersQuickCheckTableModel(players, tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds());
+            PlayerListPrinter printer = new PlayerListPrinter(model);
+            Dialog dialog = new Dialog(this, new PrinterSettings(printer), locale.getString("printing.print_setup"), true);
+            dialog.setVisible(true);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateRLCellsWithRP(int row, RatedPlayer rp){

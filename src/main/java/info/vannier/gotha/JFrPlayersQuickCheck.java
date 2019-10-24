@@ -6,7 +6,10 @@ package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -14,15 +17,27 @@ import java.awt.event.KeyEvent;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.table.*;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
+import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;
+import ru.gofederation.gotha.printing.PlayerListPrinter;
+import ru.gofederation.gotha.ui.Dialog;
 import ru.gofederation.gotha.ui.FrameBase;
+import ru.gofederation.gotha.ui.PrinterSettings;
 import ru.gofederation.gotha.util.GothaLocale;
 
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
@@ -46,12 +61,12 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
     public static final int PARTICIPATING_COL0 = 7;
 
     private int playersSortType = PlayerComparator.NAME_ORDER;
-    private ArrayList<Player> alSelectedPlayersToKeepSelected = new ArrayList<Player>(); 
+    private ArrayList<Player> alSelectedPlayersToKeepSelected = new ArrayList<Player>();
 
     private TournamentInterface tournament;
 
     private final GothaLocale locale = GothaLocale.getCurrentLocale();
-    
+
     /**
      * Creates new form JFrPlayersQuickCheck
      */
@@ -85,7 +100,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
 
     public JFrPlayersQuickCheck(TournamentInterface tournament) throws RemoteException{
         this.tournament = tournament;
-        
+
         initComponents();
         customInitComponents();
         setupRefreshTimer();
@@ -265,13 +280,13 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         ArrayList<Player> alP = this.selectedPlayersList(this.tblRegisteredPlayers);
         // Keep a track of selected Players
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
-        
+
         if (alP.isEmpty()) {
             JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         this.setPlayersRegStatus(alP, 'F');
     }
 
@@ -279,13 +294,13 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         ArrayList<Player> alP = this.selectedPlayersList(this.tblRegisteredPlayers);
         // Keep a track of selected Players
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
-        
+
         if (alP.isEmpty()) {
             JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         this.setPlayersRegStatus(alP, 'P');
     }
 
@@ -293,13 +308,13 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         ArrayList<Player> alP = this.selectedPlayersList(this.tblRegisteredPlayers);
         // Keep a track of selected Players
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
-        
+
         if (alP.isEmpty()) {
             JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         this.changePlayersRank(alP, -1);
     }
 
@@ -307,13 +322,13 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         ArrayList<Player> alP = this.selectedPlayersList(this.tblRegisteredPlayers);
         // Keep a track of selected Players
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
-        
+
         if (alP.isEmpty()) {
             JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         this.changePlayersRank(alP, 1);
     }
 
@@ -350,7 +365,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
                     }
                 }
             }
-            
+
             if (nbNotRemovedPlayers != 0){
                 JOptionPane.showMessageDialog(this, locale.format("player.check.could_not_be_removed", nbNotRemovedPlayers),
                             locale.getString("alert.message"), JOptionPane.WARNING_MESSAGE);
@@ -360,7 +375,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             }
 
         }
-        
+
     }
 
     private void mniSortByRankActionPerformed(java.awt.event.ActionEvent evt) {
@@ -393,7 +408,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         if (evt.getKeyChar() == '+') this.changePlayersRank(alP, 1);
         else if (evt.getKeyChar() == '-') this.changePlayersRank(alP, -1);
         else if (evt.getKeyChar() == 'P' || evt.getKeyChar() == 'p') this.setPlayersRegStatus(alP, 'P');
@@ -405,7 +420,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
      */
     private void changePlayersRank(ArrayList<Player> alP, int deltaRank){
         boolean bSomethingHasChanged = false;
-        int confirm = JOptionPane.OK_OPTION;                
+        int confirm = JOptionPane.OK_OPTION;
         if (alP.size() > 1) confirm = JOptionPane.showConfirmDialog(this, locale.format("player.check.confirm_change_rank", alP.size()),
                 locale.getString("alert.message"), JOptionPane.OK_CANCEL_OPTION);
         if (confirm == JOptionPane.OK_OPTION){
@@ -419,27 +434,27 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             } catch (TournamentException ex) {
                 Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
             }
-            bSomethingHasChanged = true;  
+            bSomethingHasChanged = true;
         }
-        
+
         if (bSomethingHasChanged){
             this.tournamentChanged();
         }
     }
-    
-    /** 
+
+    /**
      * changes rank of players according to rating
      */
     private void setPlayersRanksFromRatings(ArrayList<Player> alP){
         int nbChanged = 0;
-        
+
         for (Player p : alP){
             int rating = p.getRating();
             int newRank = Player.rankFromRating(p.getRatingOrigin(), rating);
             if (p.getRank() != newRank)
                 nbChanged++;
         }
-        int confirm;                
+        int confirm;
         confirm = JOptionPane.showConfirmDialog(this, locale.format("player.check.confirm_change_rank", nbChanged),
                 locale.getString("alert.message"), JOptionPane.OK_CANCEL_OPTION);
         if (confirm != JOptionPane.OK_OPTION) return;
@@ -451,32 +466,32 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
                 int newRank = Player.rankFromRating(p.getRatingOrigin(), rating);
                 p.setRank(newRank);
                 tournament.modifyPlayer(p, p);
-                bSomethingHasChanged = true;  
+                bSomethingHasChanged = true;
             }
         } catch (RemoteException ex) {
             Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
         } catch (TournamentException ex) {
             Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         if (bSomethingHasChanged){
             this.tournamentChanged();
         }
     }
-    
-    /** 
+
+    /**
      * changes rank of players according to rating
      */
     private void setPlayersRatingsFromRanks(ArrayList<Player> alP){
         int nbChanged = 0;
-        
+
         for (Player p : alP){
             int rank = p.getRank();
             int newRating = Player.ratingFromRank(p.getRatingOrigin(), rank);
             if (p.getRating() != newRating)
                 nbChanged++;
         }
-        int confirm;                
+        int confirm;
         String str = "Rating will be changed for " + nbChanged + " players";
         confirm = JOptionPane.showConfirmDialog(this, locale.format("player.check.confirm_change_rating", nbChanged),
                 locale.getString("alert.message"), JOptionPane.OK_CANCEL_OPTION);
@@ -490,23 +505,23 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
                 if (p.getRating() != newRating){
                     p.setRating(newRating);
                     tournament.modifyPlayer(p, p);
-                    bSomethingHasChanged = true;  
+                    bSomethingHasChanged = true;
                 }
             }
-        
+
         } catch (RemoteException ex) {
             Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
         } catch (TournamentException ex) {
             Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         if (bSomethingHasChanged){
             this.tournamentChanged();
         }
     }
 
 
-    /** 
+    /**
      * changes rank of players according to rating
      */
     private void modifyRatings(ArrayList<Player> alP){
@@ -518,7 +533,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         }catch(Exception e){
             delta = 0;
         }
-  
+
         if (delta == 0) return;
 
         boolean bSomethingHasChanged = false;
@@ -527,19 +542,19 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
                 int newRating = p.getRating() + delta;
                 p.setRating(newRating);
                 tournament.modifyPlayer(p, p);
-                bSomethingHasChanged = true;  
+                bSomethingHasChanged = true;
             }
         } catch (RemoteException ex) {
             Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
         } catch (TournamentException ex) {
             Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         if (bSomethingHasChanged){
             this.tournamentChanged();
         }
     }
-    
+
     /** sets registration status of alP to newRegStatus
      */
     private void setPlayersRegStatus(ArrayList<Player> alP, char newRegStatus){
@@ -590,7 +605,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             this.tournamentChanged();
         }
     }
-    
+
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {
         cleanClose();
     }
@@ -605,16 +620,16 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             ArrayList<Player> alP = this.selectedPlayersList(this.tblRegisteredPlayers);
             if (alP.isEmpty()) {
                 JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
-                        JOptionPane.ERROR_MESSAGE); 
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
- 
+
             int nbJ = alP.size();
             if (JOptionPane.showConfirmDialog(this, locale.format("player.check.confirm_remove", nbJ), locale.getString("alert.message"),
                     JOptionPane.OK_CANCEL_OPTION) != JOptionPane.OK_OPTION) return;
             int nbPlayersRem = removePlayers(alP);
             int nbPlayersNotRem = alP.size() - nbPlayersRem;
-            
+
             StringBuilder sb = new StringBuilder();;
             int messageType = JOptionPane.INFORMATION_MESSAGE;
             if (nbPlayersNotRem >= 1){
@@ -654,18 +669,27 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             DefaultTableModel model = (DefaultTableModel)tblRegisteredPlayers.getModel();
             model.setValueAt(strPart, iRow, iCol);
             this.tournamentChanged();
-            
+
         }
         // Right click
         if (evt.getModifiers() != InputEvent.BUTTON3_MASK) return;
         Point p = evt.getLocationOnScreen();
         pupRegisteredPlayers.setLocation(p);
-        pupRegisteredPlayers.setVisible(true);     
-        
+        pupRegisteredPlayers.setVisible(true);
+
     }
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {
-        TournamentPrinting.printPlayersList(tournament, playersSortType);
+        try {
+            ArrayList<Player> players = tournament.playersList();
+            players.sort(Comparator.comparing(Player::fullName));
+            TableModel model = new PlayersQuickCheckTableModel(players, tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds());
+            PlayerListPrinter printer = new PlayerListPrinter(model);
+            Dialog dialog = new Dialog(this, new PrinterSettings(printer), locale.getString("printing.print_setup"), true);
+            dialog.setVisible(true);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
@@ -685,7 +709,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         ArrayList<Player> alP = this.selectedPlayersList(this.tblRegisteredPlayers);
         // Keep a track of selected Players
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
-        
+
         if (alP.isEmpty()) {
             JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
@@ -699,14 +723,14 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         ArrayList<Player> alP = this.selectedPlayersList(this.tblRegisteredPlayers);
         // Keep a track of selected Players
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
-        
+
         if (alP.isEmpty()) {
             JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
         this.setPlayersRatingsFromRanks(alP);
-        
+
     }
 
     private void btnUpdateRatingsActionPerformed(java.awt.event.ActionEvent evt) {
@@ -715,21 +739,21 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             jfr.setVisible(true);
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
-        }    
+        }
     }
 
     private void btnModifyRatingsActionPerformed(java.awt.event.ActionEvent evt) {
         ArrayList<Player> alP = this.selectedPlayersList(this.tblRegisteredPlayers);
         // Keep a track of selected Players
         alSelectedPlayersToKeepSelected = new ArrayList<Player>(alP);
-        
+
         if (alP.isEmpty()) {
             JOptionPane.showMessageDialog(this, locale.getString("player.select_at_least_one"), locale.getString("alert.message"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
         this.modifyRatings(alP);
-        
+
     }
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {
@@ -740,17 +764,17 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         initPnlRegisteredPlayers();
         this.updateAllViews();
     }
-    
+
     private void initPnlRegisteredPlayers() {
         JFrGotha.formatColumn(this.tblRegisteredPlayers, REG_COL, "R", 10, JLabel.LEFT, JLabel.LEFT);
         JFrGotha.formatColumn(this.tblRegisteredPlayers, NAME_COL, locale.getString("player.last_name"),110, JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(this.tblRegisteredPlayers, FIRSTNAME_COL, locale.getString("player.last_name"), 80, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(this.tblRegisteredPlayers, FIRSTNAME_COL, locale.getString("player.first_name"), 80, JLabel.LEFT, JLabel.LEFT);
         JFrGotha.formatColumn(this.tblRegisteredPlayers, COUNTRY_COL, locale.getString("player.country_s"), 30, JLabel.LEFT, JLabel.LEFT);
-        JFrGotha.formatColumn(this.tblRegisteredPlayers, CLUB_COL, locale.getString("player.club="), 40, JLabel.LEFT, JLabel.LEFT);
+        JFrGotha.formatColumn(this.tblRegisteredPlayers, CLUB_COL, locale.getString("player.club"), 40, JLabel.LEFT, JLabel.LEFT);
         JFrGotha.formatColumn(this.tblRegisteredPlayers, RANK_COL, locale.getString("player.rank_s"), 30, JLabel.RIGHT, JLabel.RIGHT);
         JFrGotha.formatColumn(this.tblRegisteredPlayers, RATING_COL, locale.getString("player.rating"), 40, JLabel.RIGHT, JLabel.RIGHT);
     }
-    
+
     private void tournamentChanged(){
         try {
             tournament.setLastTournamentModificationTime(tournament.getCurrentTournamentTime());
@@ -767,10 +791,10 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             setTitle(locale.format("player.check.window_title", tournament.getFullName()));        } catch (RemoteException ex) {
             Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         updateComponents();
-        
-    }        
+
+    }
 
     private void updateComponents(){
         ArrayList<Player> playersList = null;
@@ -791,8 +815,8 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
 
         updatePnlRegisteredPlayers(playersList);
     }
-    
-    private void updatePnlRegisteredPlayers(ArrayList<Player> playersList){
+
+    private void updatePnlRegisteredPlayers(ArrayList<Player> playersList) {
         this.pnlPlayersList.setVisible(true);
 
         int nbPreliminary = 0;
@@ -809,12 +833,12 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         DefaultTableModel model = (DefaultTableModel)tblRegisteredPlayers.getModel();
 
         ArrayList<Player> displayedPlayersList = new ArrayList<Player>(playersList);
-        
+
         PlayerComparator playerComparator = new PlayerComparator(playersSortType);
         Collections.sort(displayedPlayersList, playerComparator);
 
         model.setRowCount(displayedPlayersList.size());
-        
+
         int numberOfRounds = 0;
         try {
             numberOfRounds = tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds();
@@ -823,7 +847,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         }
 
         TableColumnModel tcm = this.tblRegisteredPlayers.getColumnModel();
-        
+
         for (int col = PARTICIPATING_COL0; col < PARTICIPATING_COL0 + numberOfRounds; col++){
             TableColumn tc = tcm.getColumn(col);
             tc.setMinWidth(0);
@@ -831,14 +855,14 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         }
 
         for (Player p:displayedPlayersList){
-            int line = displayedPlayersList.indexOf(p); 
+            int line = displayedPlayersList.indexOf(p);
             model.setValueAt((p.getRegisteringStatus()==PRELIMINARY)?"P":"F", line, JFrPlayersQuickCheck.REG_COL);
             model.setValueAt(p.getName(), line, JFrPlayersQuickCheck.NAME_COL);
             model.setValueAt(p.getFirstName(), line, JFrPlayersQuickCheck.FIRSTNAME_COL);
             model.setValueAt(p.getCountry(), line, JFrPlayersQuickCheck.COUNTRY_COL);
-            model.setValueAt(p.getClub(), line, JFrPlayersQuickCheck.CLUB_COL);           
+            model.setValueAt(p.getClub(), line, JFrPlayersQuickCheck.CLUB_COL);
             model.setValueAt(Player.convertIntToKD(p.getRank()), line, JFrPlayersQuickCheck.RANK_COL);
-            model.setValueAt(p.getRating(), line, JFrPlayersQuickCheck.RATING_COL); 
+            model.setValueAt(p.getRating(), line, JFrPlayersQuickCheck.RATING_COL);
             boolean[] bPart = p.getParticipating();
             for (int round = 0; round < numberOfRounds; round++){
                 String strPart = "";
@@ -846,13 +870,13 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
                 model.setValueAt(strPart, line, JFrPlayersQuickCheck.PARTICIPATING_COL0 + round);
             }
         }
-        
-        
+
+
         for (int nCol = 0; nCol < this.tblRegisteredPlayers.getColumnCount(); nCol++){
             TableColumn col = tblRegisteredPlayers.getColumnModel().getColumn(nCol);
             col.setCellRenderer(new PlayersQCTableCellRenderer());
         }
-        
+
         // Reselect players that may have been deselected by this update
         for (Player p:alSelectedPlayersToKeepSelected){
             int iSel = displayedPlayersList.indexOf(p);
@@ -860,10 +884,10 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         }
 
     }
-    
+
     private ArrayList<Player> selectedPlayersList(JTable tbl){
         ArrayList<Player> alSelectedPlayers = new ArrayList<Player>();
-       
+
         // gather selected players into alSelectedPlayers
         for ( int iRow = 0; iRow < tbl.getModel().getRowCount(); iRow++){
             if (tbl.isRowSelected(iRow)){
@@ -880,7 +904,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         }
         return alSelectedPlayers;
     }
-       
+
     private int removePlayers(ArrayList<Player> alP){
         int nbPlayersRem = 0;
         for (Player p : alP){
@@ -901,11 +925,11 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
                 }
             }
         }
-                
+
         return nbPlayersRem;
     }
-       
-  
+
+
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnDecreaseRank;
     private javax.swing.JButton btnHelp;
@@ -946,14 +970,14 @@ class PlayersQCTableCellRenderer extends JLabel implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
         boolean isSelected, boolean hasFocus, int rowIndex, int colIndex) {
-                
+
         Component comp = new DefaultTableCellRenderer().getTableCellRendererComponent(table,  value, isSelected, hasFocus, rowIndex, colIndex);
         TableModel model = table.getModel();
         String strRegStatus = "" + model.getValueAt(rowIndex, JFrPlayersQuickCheck.REG_COL);
 
         if (strRegStatus.compareTo("P") == 0) comp.setForeground(Color.RED);
-        else comp.setForeground(Color.BLACK);
-                
+        else comp.setForeground(UIManager.getColor(isSelected ? "Table.selectionForeground" : "Table.foreground"));
+
         return comp;
     }
 }
