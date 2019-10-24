@@ -15,7 +15,7 @@
  * along with OpenGotha. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.vannier.gotha.model;
+package ru.gofederation.gotha.model;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,9 +23,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
-
-import ru.gofederation.gotha.model.Rating;
-import ru.gofederation.gotha.model.RatingOrigin;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
