@@ -25,6 +25,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -55,6 +56,7 @@ import javax.swing.table.TableModel;
 
 import ru.gofederation.gotha.io.TableXlsxExporter;
 import ru.gofederation.gotha.presenter.ITableColumn;
+import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;
 import ru.gofederation.gotha.presenter.StandingsTableModel;
 import ru.gofederation.gotha.printing.StandingsPrinter;
 import ru.gofederation.gotha.ui.Dialog;
@@ -691,6 +693,18 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             }
         });
         exportMenu.add(exportXlsx);
+        JMenuItem exportPlayersXlsx = new JMenuItem(locale.getString("menu.export.players_xlsx"));
+        exportPlayersXlsx.addActionListener(actionEvent -> {
+            try {
+                ArrayList<Player> players = tournament.playersList();
+                players.sort(Comparator.comparing(Player::fullName));
+                TableModel model = new PlayersQuickCheckTableModel(players, tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds());
+                new TableXlsxExporter(locale).exportToFile(model, this, new MyFileFilter(new String[]{"xlsx"}, locale.getString("export.xlsx_filter")), "xlsx");
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
+        exportMenu.add(exportPlayersXlsx);
         mnuTournament.add(exportMenu);
         mnuTournament.add(new JSeparator());
 
