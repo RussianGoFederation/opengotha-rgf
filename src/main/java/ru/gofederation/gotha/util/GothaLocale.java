@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataListener;
 
-public enum GothaLocale implements ComboBoxModel<GothaLocale>, I10n {
+public enum GothaLocale implements ComboBoxModel<GothaLocale>, I18N {
     EN(Locale.forLanguageTag("en")), // Default locale comes first. Should always be EN.
     RU(Locale.forLanguageTag("ru"));
 

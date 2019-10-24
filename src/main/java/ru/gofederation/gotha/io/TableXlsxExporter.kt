@@ -19,7 +19,7 @@ package ru.gofederation.gotha.io
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import ru.gofederation.gotha.util.GothaLocale
-import ru.gofederation.gotha.util.I10n
+import ru.gofederation.gotha.util.I18N
 import java.awt.Component
 import java.io.File
 import java.io.FileOutputStream
@@ -29,7 +29,7 @@ import javax.swing.JOptionPane
 import javax.swing.filechooser.FileFilter
 import javax.swing.table.TableModel
 
-class TableXlsxExporter(gothaLocale: GothaLocale = GothaLocale.getCurrentLocale()) : I10n by gothaLocale {
+class TableXlsxExporter(gothaLocale: GothaLocale = GothaLocale.getCurrentLocale()) : I18N by gothaLocale {
     fun exportToFile(table: TableModel, parent: Component, filter: FileFilter?, ext: String) {
         val fc = JFileChooser()
         if (null != filter) fc.fileFilter = filter

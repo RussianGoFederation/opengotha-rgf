@@ -17,7 +17,7 @@
 
 package ru.gofederation.gotha.util
 
-interface I10n {
+interface I18N {
     fun tr(key: String): String
     fun tr(key: String, vararg values: Any): String
 }
