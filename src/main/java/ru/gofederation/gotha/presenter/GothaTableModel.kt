@@ -21,7 +21,7 @@ import javax.swing.table.AbstractTableModel
 
 abstract class GothaTableModel<T>(
     private val items: List<T>,
-    private val columns: List<TableColumn<T>>
+    private val columns: List<GothaTableColumn<T>>
 ) : AbstractTableModel() {
     override fun getRowCount(): Int {
         return items.size

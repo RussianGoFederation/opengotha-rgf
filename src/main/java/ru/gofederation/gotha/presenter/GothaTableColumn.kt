@@ -19,7 +19,7 @@ package ru.gofederation.gotha.presenter
 
 import javax.swing.table.TableCellRenderer
 
-abstract class TableColumn<T>(
+abstract class GothaTableColumn<T>(
     val header: String,
     override val prefWidth: Int
 ) : ITableColumn {
