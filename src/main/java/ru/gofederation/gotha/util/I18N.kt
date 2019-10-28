@@ -17,7 +17,10 @@
 
 package ru.gofederation.gotha.util
 
+import java.text.DateFormat
+
 interface I18N {
     fun tr(key: String): String
     fun tr(key: String, vararg values: Any): String
+    val dateFormat: DateFormat
 }

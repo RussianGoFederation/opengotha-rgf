@@ -62,6 +62,7 @@ public enum GothaLocale implements ComboBoxModel<GothaLocale>, I18N {
         return this.locale;
     }
 
+    @Override
     public DateFormat getDateFormat() {
         return dateFormat;
     }

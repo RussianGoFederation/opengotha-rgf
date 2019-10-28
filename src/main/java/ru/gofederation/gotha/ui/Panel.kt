@@ -20,6 +20,7 @@ package ru.gofederation.gotha.ui
 import info.vannier.gotha.Gotha
 import net.miginfocom.layout.CC
 import ru.gofederation.gotha.util.GothaLocale
+import ru.gofederation.gotha.util.I18N
 import java.awt.Window
 import java.util.logging.Logger
 import java.util.prefs.Preferences
@@ -28,8 +29,9 @@ import javax.swing.JPanel
 import javax.swing.SwingUtilities
 
 abstract class Panel(
-    private val gothaLocale: GothaLocale = GothaLocale.getCurrentLocale()
-) : JPanel() {
+    gothaLocale: GothaLocale = GothaLocale.getCurrentLocale()
+) : JPanel(),
+    I18N by gothaLocale {
     open val preferencesNode: String = this.javaClass.name
     val preferences: Preferences by lazy(LazyThreadSafetyMode.NONE) {
         Preferences.userRoot().node(Gotha.strPreferences).node(preferencesNode)
@@ -37,14 +39,8 @@ abstract class Panel(
 
     init {
         locale = gothaLocale.locale
-    }
 
-    protected fun tr(key: String): String {
-        return gothaLocale.getString(key)
-    }
 
-    protected fun tr(key: String, vararg args: Any): String {
-        return gothaLocale.format(key, *args)
     }
 
     protected fun closeWindow() {
