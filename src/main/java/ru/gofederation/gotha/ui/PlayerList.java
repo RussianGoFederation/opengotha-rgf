@@ -28,12 +28,8 @@ import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -52,7 +48,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableRowSorter;
 
 import info.vannier.gotha.Player;
 import info.vannier.gotha.TournamentInterface;
@@ -203,7 +198,7 @@ public final class PlayerList extends JPanel {
         }
 
         table.getRowSorter().addRowSorterListener(rowSorterEvent -> {
-            List<RowSorter.SortKey> origKeys =  rowSorterEvent.getSource().getSortKeys();
+            List<RowSorter.SortKey> origKeys = (List<RowSorter.SortKey>) rowSorterEvent.getSource().getSortKeys();
 
             if (origKeys.size() > 0) {
                 List<RowSorter.SortKey> newKeys = new ArrayList<>(3);
