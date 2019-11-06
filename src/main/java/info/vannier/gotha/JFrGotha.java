@@ -683,6 +683,11 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         mnuTournament.add(mnuImport);
 
         JMenu exportMenu = new JMenu(locale.getString("menu.tournament.export"));
+
+        mniPublishRGF.setText(locale.getString("menu.publish.publish_rgf"));
+        mniPublishRGF.addActionListener(this::mniPublishRGFActionPerformed);
+        exportMenu.add(mniPublishRGF);
+
         JMenuItem exportXlsx = new JMenuItem(locale.getString("menu.export.standings_xlsx"));
         exportXlsx.addActionListener(actionEvent -> {
             try {
@@ -769,17 +774,18 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
 
         mnuMain.add(mnuGames);
 
-        mnuPublish.setText(locale.getString("menu.publish"));
+        if (locale != GothaLocale.RU) {
+            // Publish menu disabled at explicit request of
+            // Maxim Podolyak <m.podolyak@gofederation.ru>
 
-        mniPublish.setText(locale.getString("menu.publish.publish"));
-        mniPublish.addActionListener(this::mniPublishActionPerformed);
-        mnuPublish.add(mniPublish);
+            mnuPublish.setText(locale.getString("menu.publish"));
 
-        mniPublishRGF.setText(locale.getString("menu.publish.publish_rgf"));
-        mniPublishRGF.addActionListener(this::mniPublishRGFActionPerformed);
-        mnuPublish.add(mniPublishRGF);
+            mniPublish.setText(locale.getString("menu.publish.publish"));
+            mniPublish.addActionListener(this::mniPublishActionPerformed);
+            mnuPublish.add(mniPublish);
 
-        mnuMain.add(mnuPublish);
+            mnuMain.add(mnuPublish);
+        }
 
         mnuOptions.setText(locale.getString("menu.options"));
 
