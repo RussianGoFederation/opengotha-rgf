@@ -10,7 +10,9 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
+import java.util.Enumeration;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -197,6 +199,12 @@ public class JFrGothaStart extends javax.swing.JFrame {
             default : strRM = "???";
         }
         LogElements.incrementElement("gotha.runningmode", strRM);
+
+        ResourceBundle fileChooserBundle = ResourceBundle.getBundle("l10n/FileChooser", locale.getLocale());
+        for (Enumeration<String> keys = fileChooserBundle.getKeys(); keys.hasMoreElements();) {
+            String key = keys.nextElement();
+            UIManager.put(key, fileChooserBundle.getString(key));
+        }
 
         try {
             new JFrGotha(tournament).setVisible(true);
