@@ -16,3 +16,5 @@
  */
 
 rootProject.name = 'OpenGotha'
+
+include ':rgf'
