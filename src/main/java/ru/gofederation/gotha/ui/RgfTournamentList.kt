@@ -15,228 +15,221 @@
  * along with OpenGotha. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.gofederation.gotha.ui;
+package ru.gofederation.gotha.ui
 
-import com.google.gson.Gson;
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import net.miginfocom.swing.MigLayout
+import ru.gofederation.api.Client
+import ru.gofederation.api.RgfTournament
+import ru.gofederation.api.TournamentList
+import ru.gofederation.api.TournamentListError
+import ru.gofederation.gotha.ui.component.watchProgress
+import ru.gofederation.gotha.util.I18N
+import java.awt.CardLayout
+import java.awt.Component
+import java.awt.Font
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
+import java.awt.event.MouseEvent
+import java.util.*
+import javax.swing.*
+import javax.swing.event.MouseInputAdapter
+import javax.swing.table.AbstractTableModel
+import javax.swing.table.DefaultTableCellRenderer
+import kotlin.streams.toList
 
-import net.miginfocom.swing.MigLayout;
+internal class RgfTournamentList(tournamentPickListener: TournamentPickListener) : Panel() {
+    private val tournamentsTable: JTable
+    private val progressBar: JProgressBar
+    private val layout: CardLayout
+    private val rgfApiClient = Client()
+    private var updateJob: Job? = null
 
-import java.awt.CardLayout;
-import java.awt.Component;
-import java.awt.EventQueue;
-import java.awt.Point;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.event.MouseInputAdapter;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-
-import info.vannier.gotha.Gotha;
-import ru.gofederation.gotha.model.rgf.RgfTournament;
-import ru.gofederation.gotha.model.rgf.RgfTournamentState;
-import ru.gofederation.gotha.util.GothaLocale;
-
-import static ru.gofederation.gotha.model.rgf.Rgf.API_BASE_PATH;
-
-final class RgfTournamentList extends JPanel {
-    private static final String PROGRESS = "progress";
-    private static final String LIST = "list";
-
-    private final GothaLocale locale;
-
-    private final JTable tournamentsTable;
-    private final JProgressBar progressBar;
-    private final CardLayout layout;
-
-    RgfTournamentList(TournamentPickListener tournamentPickListener) {
-        this.locale = GothaLocale.getCurrentLocale();
-
-        TableCellRenderer tableCellRenderer = new DefaultTableCellRenderer() {
-            DateFormat dateFormat = locale.getDateFormat();
-
-            public Component getTableCellRendererComponent(JTable table,
-                                                           Object value, boolean isSelected, boolean hasFocus,
-                                                           int row, int column) {
-                if (value instanceof Date) {
-                    value = dateFormat.format(value);
-                } else if (value instanceof RgfTournamentState) {
-                    value = locale.getString(((RgfTournamentState) value).getL10nKey());
+    init {
+        val tableCellRenderer = object : DefaultTableCellRenderer() {
+            override fun getTableCellRendererComponent(table: JTable?,
+                                                       value: Any?, isSelected: Boolean, hasFocus: Boolean,
+                                                       row: Int, column: Int): Component {
+                val newValue = when (value) {
+                    is Date ->
+                        dateFormat.format(value)
+                    is RgfTournament.State ->
+                        when (value) {
+                            RgfTournament.State.REGISTRATION -> tr("tournament.rgf.state.registration")
+                            RgfTournament.State.CONDUCTING -> tr("tournament.rgf.state.conducting")
+                            RgfTournament.State.MODERATION -> tr("tournament.rgf.state.moderation")
+                            RgfTournament.State.NON_RATING -> tr("tournament.rgf.state.non_rating")
+                            RgfTournament.State.RATED -> tr("tournament.rgf.state.rated")
+                            else -> ""
+                        }
+                    else -> value
                 }
-                return super.getTableCellRendererComponent(table, value, isSelected,
-                    hasFocus, row, column);
+                return super.getTableCellRendererComponent(table, newValue, isSelected, hasFocus, row, column)
             }
-        };
+        }
 
-        layout = new CardLayout();
-        setLayout(layout);
+        layout = CardLayout()
+        setLayout(layout)
 
-        tournamentsTable = new JTable();
-        tournamentsTable.setDefaultRenderer(Date.class, tableCellRenderer);
-        tournamentsTable.setDefaultRenderer(RgfTournamentState.class, tableCellRenderer);
-        tournamentsTable.addMouseListener(new MouseInputAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                Point point = e.getPoint();
-                int row = tournamentsTable.rowAtPoint(point);
-                if (e.getClickCount() == 2 && tournamentsTable.getSelectedRow() != -1) {
-                    TableModel model = (TableModel) tournamentsTable.getModel();
-                    RgfTournament tournament = model.getTournament(tournamentsTable.convertRowIndexToModel(row));
-                    tournamentPickListener.onTournamentPicked(tournament);
-                }
-            }
-        });
-        tournamentsTable.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent event) {
-                if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-                    event.consume();
-                    TableModel model = (TableModel) tournamentsTable.getModel();
-                    RgfTournament tournament = model.getTournament(
-                        tournamentsTable.convertRowIndexToModel(tournamentsTable.getSelectedRow()));
-                    tournamentPickListener.onTournamentPicked(tournament);
-                }
-            }
-        });
-
-        progressBar = new JProgressBar();
-        progressBar.setStringPainted(true);
-
-        JPanel tablePanel = new JPanel(new MigLayout("insets 0", "[grow,fill]", "[grow,fill]"));
-        tablePanel.add(new JScrollPane(tournamentsTable));
-
-        JPanel progressPanel = new JPanel(new MigLayout("flowy", "push[]push", "push[]rel[]push"));
-        progressPanel.add(new JLabel(locale.getString("tournament.rgf.download_in_progress")));
-        progressPanel.add(progressBar);
-
-        add(progressPanel, PROGRESS);
-        add(tablePanel, LIST);
-
-        new TableModel().update();
-    }
-
-    private void onListDownloaded(TableModel model) {
-        tournamentsTable.setModel(model);
-        tournamentsTable.getColumnModel().getColumn(TableModel.NAME_COLUMN).setPreferredWidth(400);
-        tournamentsTable.getColumnModel().getColumn(TableModel.LOCATION_COLUMN).setPreferredWidth(150);
-        tournamentsTable.setAutoCreateRowSorter(true);
-        // Twice to sort descending
-        tournamentsTable.getRowSorter().toggleSortOrder(TableModel.END_DATE_COLUMN);
-        tournamentsTable.getRowSorter().toggleSortOrder(TableModel.END_DATE_COLUMN);
-        layout.show(this, LIST);
-    }
-
-    private final class TableModel extends AbstractTableModel {
-        private static final int NAME_COLUMN = 0;
-        private static final int START_DATE_COLUMN = 1;
-        private static final int END_DATE_COLUMN = 2;
-        private static final int LOCATION_COLUMN = 3;
-        private static final int STATE_COLUMN = 4;
-        private static final int APPLICATIONS_COLUMN = 5;
-        private static final int PARTICIPANTS_COLUMN = 6;
-
-        private volatile List<RgfTournament> tournaments = new ArrayList<>();
-        private Thread updateThread = null;
-
-        public void update() {
-            if (null != updateThread) updateThread.interrupt();
-            updateThread = new Thread(() -> {
-                try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-                    Gotha.download(progressBar, false,  API_BASE_PATH + "tournaments", baos);
-                    byte[] b = baos.toByteArray();
-                    try (ByteArrayInputStream bais = new ByteArrayInputStream(b);
-                         Reader reader = new InputStreamReader(bais)) {
-                        ru.gofederation.gotha.model.rgf.RgfTournamentList list =
-                            new Gson().fromJson(reader, ru.gofederation.gotha.model.rgf.RgfTournamentList.class);
-                        tournaments =  list.getTournaments().stream()
-                            .filter(t -> t.applicationsCount > 0)
-                            .collect(Collectors.toList());
-                        EventQueue.invokeLater(() -> onListDownloaded(this));
+        tournamentsTable = JTable().apply {
+            setDefaultRenderer(Date::class.java, tableCellRenderer)
+            setDefaultRenderer(RgfTournament.State::class.java, tableCellRenderer)
+            model = TableModel(this@RgfTournamentList)
+            addMouseListener(object : MouseInputAdapter() {
+                override fun mouseClicked(e: MouseEvent?) {
+                    super.mouseClicked(e)
+                    val point = e!!.point
+                    val row = rowAtPoint(point)
+                    if (e.clickCount == 2 && selectedRow != -1) {
+                        val model = model as TableModel
+                        val tournament = model.getTournament(convertRowIndexToModel(row))
+                        tournamentPickListener.onTournamentPicked(tournament)
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
-            });
-            updateThread.start();
+            })
+            addKeyListener(object : KeyAdapter() {
+                override fun keyPressed(event: KeyEvent?) {
+                    if (event!!.keyCode == KeyEvent.VK_ENTER) {
+                        event.consume()
+                        val model = model as TableModel
+                        val tournament = model.getTournament(
+                            convertRowIndexToModel(selectedRow))
+                        tournamentPickListener.onTournamentPicked(tournament)
+                    }
+                }
+            })
+
         }
 
-        RgfTournament getTournament(int row) {
-            return tournaments.get(row);
+        progressBar = JProgressBar().apply {
+            isStringPainted = true
         }
 
-        @Override
-        public String getColumnName(int col) {
-            switch (col) {
-                case NAME_COLUMN:         return locale.getString("tournament.name");
-                case START_DATE_COLUMN:   return locale.getString("tournament.begin_date");
-                case END_DATE_COLUMN:     return locale.getString("tournament.end_date");
-                case LOCATION_COLUMN:     return locale.getString("tournament.location");
-                case STATE_COLUMN:        return locale.getString("tournament.rgf.state");
-                case APPLICATIONS_COLUMN: return locale.getString("tournament.rgf.applications");
-                case PARTICIPANTS_COLUMN: return locale.getString("tournament.rgf.participants");
-                default:                return null;
+        val tablePanel = JPanel(MigLayout("insets 0, flowy", "[grow,fill]", "[grow,fill][]")).apply {
+            add(JScrollPane(tournamentsTable))
+            add(JLabel(tr("tournament.rgf.import.filter_applications")).also {
+                it.font = it.font.deriveFont(Font.ITALIC)
+            })
+        }
+
+        val progressPanel = JPanel(MigLayout("flowy", "push[]push", "push[]rel[]push")).apply {
+            add(JLabel(tr("tournament.rgf.download_in_progress")))
+            add(progressBar)
+        }
+
+        add(progressPanel, PROGRESS)
+        add(tablePanel, LIST)
+
+        update()
+    }
+
+    fun update() {
+        updateJob?.cancel()
+        updateJob = launch(Dispatchers.Main) {
+            val tournamentsResult = withContext(Dispatchers.IO) {
+                val progress = Channel<Pair<Long, Long>>(Channel.CONFLATED)
+                launch(Dispatchers.Main) { progressBar.watchProgress(progress) }
+                rgfApiClient.fetchTournaments(progress)
             }
-        }
 
-        @Override
-        public int getRowCount() {
-            return tournaments.size();
-        }
-
-        @Override
-        public int getColumnCount() {
-            return 7;
-        }
-
-        @Override
-        public Object getValueAt(int row, int column) {
-            switch (column) {
-                case NAME_COLUMN:         return tournaments.get(row).name;
-                case START_DATE_COLUMN:   return tournaments.get(row).startDate;
-                case END_DATE_COLUMN:     return tournaments.get(row).endDate;
-                case LOCATION_COLUMN:     return tournaments.get(row).location;
-                case STATE_COLUMN:        return tournaments.get(row).state;
-                case APPLICATIONS_COLUMN: return tournaments.get(row).applicationsCount;
-                case PARTICIPANTS_COLUMN: return tournaments.get(row).participantsCount;
-                default:                return null;
-            }
-        }
-
-        @Override
-        public Class getColumnClass(int column) {
-            switch (column) {
-                case START_DATE_COLUMN:
-                case END_DATE_COLUMN:
-                    return Date.class;
-
-                case STATE_COLUMN:
-                    return RgfTournamentState.class;
-
-                default:
-                    return String.class;
+            when (tournamentsResult) {
+                is TournamentListError ->
+                    ExceptionDialog("tournament.rgf.import.download_error", tournamentsResult.exception)
+                        .show(this@RgfTournamentList)
+                is TournamentList -> {
+                    val model = (tournamentsTable.model as TableModel)
+                    model.tournaments = tournamentsResult.tournaments
+                        .stream()
+                        .filter { it.applicationsCount?:0 > 0 }
+                        .filter { it.endDate >= ru.gofederation.api.Date() }
+                        .toList()
+                    onListDownloaded(model)
+                }
             }
         }
     }
 
-    public interface TournamentPickListener {
-        void onTournamentPicked(RgfTournament tournament);
+    private fun onListDownloaded(model: TableModel) {
+        tournamentsTable.model = model
+        tournamentsTable.columnModel.getColumn(TableModel.NAME_COLUMN).preferredWidth = 400
+        tournamentsTable.columnModel.getColumn(TableModel.LOCATION_COLUMN).preferredWidth = 150
+        tournamentsTable.autoCreateRowSorter = true
+        tournamentsTable.rowSorter.toggleSortOrder(TableModel.END_DATE_COLUMN)
+        layout.show(this, LIST)
+    }
+
+    class TableModel(i18n: I18N) : AbstractTableModel(), I18N by i18n {
+        var tournaments: List<RgfTournament> = ArrayList()
+
+        internal fun getTournament(row: Int): RgfTournament {
+            return tournaments[row]
+        }
+
+        override fun getColumnName(col: Int): String? {
+            return when (col) {
+                NAME_COLUMN -> tr("tournament.name")
+                START_DATE_COLUMN -> tr("tournament.begin_date")
+                END_DATE_COLUMN -> tr("tournament.end_date")
+                LOCATION_COLUMN -> tr("tournament.location")
+                STATE_COLUMN -> tr("tournament.rgf.state")
+                APPLICATIONS_COLUMN -> tr("tournament.rgf.applications")
+                PARTICIPANTS_COLUMN -> tr("tournament.rgf.participants")
+                else -> null
+            }
+        }
+
+        override fun getRowCount(): Int {
+            return tournaments.size
+        }
+
+        override fun getColumnCount(): Int {
+            return 7
+        }
+
+        override fun getValueAt(row: Int, column: Int): Any? {
+            when (column) {
+                NAME_COLUMN -> return tournaments[row].name
+                START_DATE_COLUMN -> return tournaments[row].startDate
+                END_DATE_COLUMN -> return tournaments[row].endDate
+                LOCATION_COLUMN -> return tournaments[row].location
+                STATE_COLUMN -> return tournaments[row].state
+                APPLICATIONS_COLUMN -> return tournaments[row].applicationsCount
+                PARTICIPANTS_COLUMN -> return tournaments[row].participantsCount
+                else -> return null
+            }
+        }
+
+        override fun getColumnClass(column: Int): Class<*> {
+            when (column) {
+                START_DATE_COLUMN, END_DATE_COLUMN -> return Date::class.java
+
+                STATE_COLUMN -> return RgfTournament.State::class.java
+
+                else -> return String::class.java
+            }
+        }
+
+        companion object {
+            const val NAME_COLUMN = 0
+            const val START_DATE_COLUMN = 1
+            const val END_DATE_COLUMN = 2
+            const val LOCATION_COLUMN = 3
+            const val STATE_COLUMN = 4
+            const val APPLICATIONS_COLUMN = 5
+            const val PARTICIPANTS_COLUMN = 6
+        }
+    }
+
+    interface TournamentPickListener {
+        fun onTournamentPicked(tournament: RgfTournament)
+    }
+
+    companion object {
+        private const val PROGRESS = "progress"
+        private const val LIST = "list"
     }
 }

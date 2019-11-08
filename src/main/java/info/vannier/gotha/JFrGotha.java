@@ -2280,8 +2280,8 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
     }
 
     private void mniImportRgfActionPerformed(java.awt.event.ActionEvent evt) {
-        RgfTournamentImportDialog importPane = new RgfTournamentImportDialog(this, locale.getString("tournament.rgf.import.window_title"), true, this);
-        importPane.setVisible(true);
+        new RgfTournamentImportDialog(this)
+            .showModal(this, locale.getString("tournament.rgf.import.window_title"));
     }
 
     private void mniPublishRGFActionPerformed(java.awt.event.ActionEvent evt) {

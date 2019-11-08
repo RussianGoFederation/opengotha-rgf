@@ -44,10 +44,10 @@ public class GeneralParameterSet implements java.io.Serializable{
     private int basicTime = 60;
 
     // Complementary Time system
-    static final int  GEN_GP_CTS_SUDDENDEATH   = 1;
-    static final int  GEN_GP_CTS_STDBYOYOMI    = 2;
-    static final int  GEN_GP_CTS_CANBYOYOMI    = 3;
-    static final int  GEN_GP_CTS_FISCHER       = 4;
+    public static final int  GEN_GP_CTS_SUDDENDEATH   = 1;
+    public static final int  GEN_GP_CTS_STDBYOYOMI    = 2;
+    public static final int  GEN_GP_CTS_CANBYOYOMI    = 3;
+    public static final int  GEN_GP_CTS_FISCHER       = 4;
     private int complementaryTimeSystem = GEN_GP_CTS_CANBYOYOMI;
 
     static final int GEN_GP_CTS_STDBYOYOMITIME_MIN = 5;

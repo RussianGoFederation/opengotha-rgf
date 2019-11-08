@@ -17,11 +17,15 @@
 
 package ru.gofederation.gotha.ui;
 
-import com.google.gson.Gson;
+import com.sun.tools.javac.util.Convert;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.apache.xmlbeans.impl.common.IOUtil;
+
 import java.awt.Frame;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,6 +34,7 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
 
 import javax.swing.BorderFactory;
@@ -43,12 +48,12 @@ import javax.swing.JRadioButton;
 
 import info.vannier.gotha.GeneralParameterSet;
 import info.vannier.gotha.TournamentInterface;
-import ru.gofederation.gotha.model.rgf.RgfTournament;
-import ru.gofederation.gotha.model.rgf.RgfTournamentDetails;
-import ru.gofederation.gotha.model.rgf.RgfTournamentState;
+import ru.gofederation.api.ConvertersKt;
+import ru.gofederation.api.RgfTournament;
+import ru.gofederation.api.RgfTournamentKt;
 import ru.gofederation.gotha.util.GothaLocale;
 
-import static ru.gofederation.gotha.model.rgf.Rgf.API_BASE_PATH;
+import static ru.gofederation.api.Rgf.API_BASE_PATH;
 
 public final class RgfTournamentExportDialog extends JDialog {
     private final GothaLocale locale = GothaLocale.getCurrentLocale();
@@ -108,16 +113,15 @@ public final class RgfTournamentExportDialog extends JDialog {
         HttpURLConnection conn = null;
         boolean hadError = false;
         try {
-            RgfTournament rgfTournament = new RgfTournament(tournament);
-            rgfTournament.state = finishTournament.isSelected() ?
-                RgfTournamentState.MODERATION : RgfTournamentState.CONDUCTING;
-            Gson gson = new Gson();
-            String json = gson.toJson(new RgfTournamentDetails(rgfTournament));
-            byte[] data = json.getBytes(Charset.forName("UTF-8"));
+            RgfTournament rgfTournament = ConvertersKt.gotha2rgf(tournament);
+            // TODO
+            // rgfTournament.setState(finishTournament.isSelected() ?
+            //      RgfTournamentState.MODERATION : RgfTournamentState.CONDUCTING);
+            byte[] data = RgfTournamentKt.serializeTournament(rgfTournament).getBytes(StandardCharsets.UTF_8);
 
             URL url;
-            if (rgfTournament.id > 0) {
-                url = new URL(API_BASE_PATH + "tournaments/" + rgfTournament.id);
+            if (rgfTournament.getId() > 0) {
+                url = new URL(API_BASE_PATH + "tournaments/" + rgfTournament.getId());
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("PUT");
             } else {
@@ -142,14 +146,12 @@ public final class RgfTournamentExportDialog extends JDialog {
             }
 
             try (InputStream in = conn.getInputStream()) {
-                try (Reader reader = new InputStreamReader(in)) {
-                    RgfTournament postedTournament = new Gson().fromJson(reader, ru.gofederation.gotha.model.rgf.RgfTournamentDetails.class)
-                        .getTournament();
-
-                    if (null != postedTournament) {
-                        tournament.getTournamentParameterSet().getGeneralParameterSet().setRgfId(postedTournament.id);
-                        tournament.setLastTournamentModificationTime(tournament.getCurrentTournamentTime());
-                    }
+                try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                    IOUtil.copyCompletely(in, baos);
+                    RgfTournament postedTournament = RgfTournamentKt.parseApiResponse(new String(baos.toByteArray(), StandardCharsets.UTF_8))
+                        .getData().getTournament();
+                    tournament.getTournamentParameterSet().getGeneralParameterSet().setRgfId(postedTournament.getId());
+                    tournament.setLastTournamentModificationTime(tournament.getCurrentTournamentTime());
                 }
             }
         } catch (IOException e) {

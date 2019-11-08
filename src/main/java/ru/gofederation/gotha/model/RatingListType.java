@@ -17,7 +17,7 @@
 
 package ru.gofederation.gotha.model;
 
-import ru.gofederation.gotha.model.rgf.Rgf;
+import ru.gofederation.api.Rgf;
 
 public enum RatingListType {
     UND(0,    "",                                                                        "",                           ""),

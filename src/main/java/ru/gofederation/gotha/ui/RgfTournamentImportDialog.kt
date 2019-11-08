@@ -15,117 +15,94 @@
  * along with OpenGotha. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.gofederation.gotha.ui;
+package ru.gofederation.gotha.ui
 
-import com.google.gson.Gson;
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import net.miginfocom.swing.MigLayout
+import ru.gofederation.api.*
+import ru.gofederation.gotha.ui.component.addAll
+import java.lang.StringBuilder
+import javax.swing.*
 
-import net.miginfocom.swing.MigLayout;
+class RgfTournamentImportDialog(private val tournamentOpener: TournamentOpener) : Panel(), RgfTournamentList.TournamentPickListener {
+    private val rgfApiClient = Client()
+    private var fetchJob: Job? = null
 
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+    private val importApplications = JRadioButton(tr("tournament.rgf.import.applications"))
+    private val importParticipants = JRadioButton(tr("tournament.rgf.import.participants"))
 
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
+    init {
+        layout = MigLayout("insets dialog, flowy", "[grow,fill]", "[]unrel[grow,fill][]")
 
-import info.vannier.gotha.Gotha;
-import info.vannier.gotha.JFrGotha;
-import info.vannier.gotha.PlayerException;
-import ru.gofederation.gotha.model.rgf.RgfTournament;
-import ru.gofederation.gotha.model.rgf.RgfTournamentImportReport;
-import ru.gofederation.gotha.util.GothaLocale;
-import ru.gofederation.gotha.util.GothaPreferences;
+        add(JPanel(MigLayout("flowy, insets panel")).apply {
+            border = BorderFactory.createTitledBorder(tr("tournament.rgf.import.options"))
 
-import static ru.gofederation.gotha.model.rgf.Rgf.API_BASE_PATH;
+            add(importApplications.apply {
+                isSelected = true
+            })
 
-public final class RgfTournamentImportDialog extends JDialog implements RgfTournamentList.TournamentPickListener {
-    private final GothaLocale locale;
-    private final TournamentOpener tournamentOpener;
+            add(importParticipants.apply {
+                isEnabled = false
+            })
 
-    private final JRadioButton importApplications;
+            ButtonGroup().addAll(importApplications, importParticipants)
+        })
 
-    public RgfTournamentImportDialog(Frame owner, String title, boolean modal, TournamentOpener tournamentOpener) {
-        super(owner, title, modal);
+        add(RgfTournamentList(this))
 
-        this.locale = GothaLocale.getCurrentLocale();
-        this.tournamentOpener = tournamentOpener;
+        add(JLabel(tr("tournament.rgf.import.help")))
 
-        setLayout(new MigLayout("insets dialog, flowy", "[grow,fill]", "[]unrel[grow,fill][]"));
-
-        JPanel importOptionsPanel = new JPanel(new MigLayout("flowy, insets panel"));
-        importOptionsPanel.setBorder(BorderFactory.createTitledBorder(locale.getString("tournament.rgf.import.options")));
-        ButtonGroup importMode = new ButtonGroup();
-        importApplications = new JRadioButton(locale.getString("tournament.rgf.import.applications"));
-        importApplications.setSelected(true);
-        importMode.add(importApplications);
-        importOptionsPanel.add(importApplications);
-        JRadioButton importParticipants = new JRadioButton(locale.getString("tournament.rgf.import.participants"));
-        importParticipants.setEnabled(false);
-        importMode.add(importParticipants);
-        importOptionsPanel.add(importParticipants);
-
-        add(importOptionsPanel);
-
-        RgfTournamentList tournamentList = new RgfTournamentList(this);
-
-        add(tournamentList);
-
-        add(new JLabel(locale.getString("tournament.rgf.import.help")));
-
-        pack();
-
-        GothaPreferences preferences = GothaPreferences.instance();
-        preferences.persistWindowState(this, new Dimension(JFrGotha.BIG_FRAME_WIDTH, JFrGotha.BIG_FRAME_HEIGHT));
+//        val preferences = GothaPreferences.instance()
+// TODO       preferences.persistWindowState(this, Dimension(JFrGotha.BIG_FRAME_WIDTH, JFrGotha.BIG_FRAME_HEIGHT))
     }
 
-    private void loadTournament(int id) {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            int importMode = importApplications.isSelected()
-                ? RgfTournament.IMPORT_MODE_APPLICATIONS : RgfTournament.IMPORT_MODE_WALLIST;
-            String url = API_BASE_PATH + "tournaments/" + Integer.toString(id);
-            if (importMode == RgfTournament.IMPORT_MODE_APPLICATIONS) url += "?include=player_applications";
-            Gotha.download(null, false, url, baos);
-            byte[] b = baos.toByteArray();
-            try (ByteArrayInputStream bais = new ByteArrayInputStream(b);
-                 Reader reader = new InputStreamReader(bais)) {
+    private fun loadTournament(id: Int) {
+        fetchJob?.cancel()
+        fetchJob = launch {
+            val importMode = if (importApplications.isSelected)
+                RgfTournament.ImportMode.APPLICATIONS
+            else
+                RgfTournament.ImportMode.PARTICIPANTS
 
-                RgfTournament tournament = new Gson().fromJson(reader, ru.gofederation.gotha.model.rgf.RgfTournamentDetails.class)
-                    .getTournament();
-
-                RgfTournamentImportReport report = tournament.toGothaTournament(importMode);
-
-                JOptionPane reportPane = new JOptionPane();
-                if (report.hadError) {
-                    reportPane.setMessageType(JOptionPane.WARNING_MESSAGE);
-                    reportPane.setMessage(locale.format("tournament.rgf.import.report.with_errors", report.players, report.games) +
-                        "\n\n" +
-                        report.reportBuilder.toString());
-                } else {
-                    reportPane.setMessageType(JOptionPane.INFORMATION_MESSAGE);
-                    reportPane.setMessage(locale.format("tournament.rgf.import.report.no_errors", report.players, report.games));
-                }
-                reportPane.createDialog(this, locale.getString("tournament.rgf.import.report.window_title")).setVisible(true);
-
-                tournamentOpener.openTournament(report.tournament);
+            val tournamentRes = withContext(Dispatchers.IO) {
+                rgfApiClient.fetchTournament(id)
             }
-            dispose();
-        } catch (IOException | PlayerException e) {
-            e.printStackTrace();
-            // TODO
+
+            if (tournamentRes is TournamentErrorResult) {
+                ExceptionDialog("tournament.rgf.import.download_error", tournamentRes.exception)
+            } else if (tournamentRes is TournamentResult) {
+                val (tournament, report) = withContext(Dispatchers.Default) {
+                    tournamentRes.tournament.rgf2gotha(importMode)
+                }
+
+                val reportPane = JOptionPane()
+                if (report.hadError) {
+                    reportPane.messageType = JOptionPane.WARNING_MESSAGE
+                    reportPane.message = StringBuilder().also { sb ->
+                        sb.append(tr("tournament.rgf.import.report.with_errors", report.players, report.games))
+                        if (report.playerDoubles.size > 0) {
+                            sb.append("\n\n")
+                                .append(tr("tournament.rgf.import.error.player_doubles", report.playerDoubles.joinToString(", ")))
+                        }
+                        sb.toString()
+                    }
+                } else {
+                    reportPane.messageType = JOptionPane.INFORMATION_MESSAGE
+                    reportPane.message = tr("tournament.rgf.import.report.no_errors", report.players, report.games)
+                }
+                reportPane.createDialog(this@RgfTournamentImportDialog, tr("tournament.rgf.import.report.window_title")).isVisible = true
+
+                tournamentOpener.openTournament(tournament)
+
+                closeWindow()
+            }
         }
     }
 
-    @Override
-    public void onTournamentPicked(RgfTournament tournament) {
-        loadTournament(tournament.id);
+    override fun onTournamentPicked(tournament: RgfTournament) {
+        loadTournament(tournament.id)
     }
 }

@@ -17,7 +17,7 @@
 
 package ru.gofederation.gotha.model;
 
-import com.google.gson.Gson;
+import org.apache.poi.util.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,12 +27,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import info.vannier.gotha.Gotha;
 import info.vannier.gotha.RatedPlayer;
 import info.vannier.gotha.RatingList;
-import ru.gofederation.gotha.model.rgf.RgfRatingList;
+import ru.gofederation.api.RgfRatingList;
 
 import static ru.gofederation.gotha.model.RatingOrigin.AGA;
 import static ru.gofederation.gotha.model.RatingOrigin.EGF;
@@ -215,17 +214,18 @@ public final class RatingListFactory {
         ratingList.setPlayers(players);
     }
 
-    private void loadRGF(InputStream in, RatingList ratingList) {
-        RgfRatingList rl = new Gson().fromJson(new InputStreamReader(in), RgfRatingList.class);
-        Set<RgfRatingList.Player> rps = rl.getPlayers();
+    private void loadRGF(InputStream in, RatingList ratingList) throws IOException {
+        byte[] buff = IOUtils.toByteArray(in);
+        RgfRatingList rl = RgfRatingList.parse(buff);
+        List<RgfRatingList.Player> rps = rl.getPlayers();
         if (null == rps) throw new IllegalStateException();
         ArrayList<RatedPlayer> players = new ArrayList<>();
         for (RgfRatingList.Player rp : rps) {
             RatedPlayer player = new RatedPlayer.Builder()
-                .setRgfId(rp.id)
-                .setFirstName(rp.firstName)
-                .setName(rp.lastName)
-                .setRawRating(RatingOrigin.RGF, rp.rawRating)
+                .setRgfId(rp.getId())
+                .setFirstName(rp.getFirstName())
+                .setName(rp.getLastName())
+                .setRawRating(RatingOrigin.RGF, rp.getRating())
                 .setCountry("RU")
                 .build();
             players.add(player);

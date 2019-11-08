@@ -14,6 +14,7 @@ class Date(private val encoded: Int) : Comparable<Date> {
     companion object {
         private val regex: Regex = Regex("(\\d{4})-(\\d{2})-(\\d{2})")
 
+        operator fun invoke() = currentDate()
         operator fun invoke(year: Int, month: Int, day: Int) = Date((year shl 16) or (month shl 8) or (day shl 0))
         operator fun invoke(dateS: String): Date {
             regex.find(dateS)?.let { match ->
@@ -48,3 +49,5 @@ class Date(private val encoded: Int) : Comparable<Date> {
     }
 
 }
+
+expect fun currentDate(): Date

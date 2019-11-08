@@ -15,19 +15,15 @@
  * along with OpenGotha. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ru.gofederation.gotha.model.rgf;
+package ru.gofederation.api;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
+import java.util.List;
 
-public final class RgfTournamentPlayerApplication {
-    @SerializedName("playerId")
-    int rgfId;
-    @SerializedName("firstName")
-    String firstName;
-    @SerializedName("lastName")
-    String lastName;
-    @SerializedName("townName")
-    String townName;
-    @SerializedName("rating")
-    String rating;
+public final class RgfTournamentImportReport {
+    public boolean hadError = false;
+    public StringBuilder reportBuilder = new StringBuilder();
+    public int players = 0;
+    public int games = 0;
+    public List<String> playerDoubles = new ArrayList<>();
 }

@@ -18,20 +18,28 @@
 package ru.gofederation.gotha.ui
 
 import info.vannier.gotha.Gotha
+import info.vannier.gotha.JFrGotha
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 import net.miginfocom.layout.CC
 import ru.gofederation.gotha.util.GothaLocale
 import ru.gofederation.gotha.util.I18N
+import java.awt.Dimension
+import java.awt.Frame
 import java.awt.Window
 import java.util.logging.Logger
 import java.util.prefs.Preferences
 import javax.swing.JDialog
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
+import javax.swing.WindowConstants
 
 abstract class Panel(
     gothaLocale: GothaLocale = GothaLocale.getCurrentLocale()
 ) : JPanel(),
-    I18N by gothaLocale {
+    I18N by gothaLocale,
+    CoroutineScope by MainScope()
+{
     open val preferencesNode: String = this.javaClass.name
     val preferences: Preferences by lazy(LazyThreadSafetyMode.NONE) {
         Preferences.userRoot().node(Gotha.strPreferences).node(preferencesNode)
@@ -39,9 +47,19 @@ abstract class Panel(
 
     init {
         locale = gothaLocale.locale
-
-
     }
+
+    @JvmOverloads
+    fun showModal(parent: Frame, title: String, closeOperation: Int = WindowConstants.DISPOSE_ON_CLOSE) {
+        JDialog(parent, title, true).also {
+            it.locale = this.locale
+            it.contentPane = this
+            it.defaultCloseOperation = closeOperation
+            it.preferredSize = Dimension(JFrGotha.BIG_FRAME_WIDTH, JFrGotha.BIG_FRAME_HEIGHT)
+            it.pack()
+        }.isVisible = true
+    }
+
 
     protected fun closeWindow() {
         SwingUtilities.getWindowAncestor(this)?.dispose()
