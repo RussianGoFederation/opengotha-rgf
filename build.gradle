@@ -59,9 +59,13 @@ tasks.withType(ProcessResources).each { task ->
 }
 
 task createProperties {
+    def version = project.version
+    def outFile = file("${buildDir}/resources/main/build.properties")
+    inputs.property 'version', version
+    outputs.file outFile
     doLast {
         file("${buildDir}/resources/main").mkdirs()
-        file("${buildDir}/resources/main/build.properties").withWriter { w ->
+        file(outFile).withWriter { w ->
             Properties p = new Properties()
             p['version'] = project.version.toString()
             p.store w, null
