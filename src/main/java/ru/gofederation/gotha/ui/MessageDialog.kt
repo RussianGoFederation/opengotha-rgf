@@ -17,25 +17,31 @@
 
 package ru.gofederation.gotha.ui
 
+import kotlinx.coroutines.channels.Channel
+import net.miginfocom.swing.MigLayout
+import ru.gofederation.gotha.ui.component.watchProgress
 import ru.gofederation.gotha.util.GothaLocale
 import ru.gofederation.gotha.util.I18N
 import java.awt.Component
-import javax.swing.JOptionPane
-import javax.swing.WindowConstants
+import javax.swing.*
 
 sealed class MessageDialog(
     val type: Type,
-    title: String? = null,
     gothaLocale: GothaLocale = GothaLocale.getCurrentLocale()
 ) : I18N by gothaLocale {
-    val title = title ?: this.tr(type.titleKey)
-
     abstract fun message(): Message
 
-    fun show(parent: Component) {
+    fun show(parent: Component, title_: String? = null) {
+        val title = title_ ?: this.tr(type.titleKey)
         when (val message = message()) {
             is StringMessage ->
                 JOptionPane(message.toString(), type.type)
+                    .createDialog(parent, title).also {
+                        it.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
+                    }
+                    .isVisible = true
+            is ComponentMessage ->
+                JOptionPane(message, type.type)
                     .createDialog(parent, title).also {
                         it.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
                     }
@@ -61,3 +67,4 @@ sealed class Message
 class StringMessage(private val message: String) : Message() {
     override fun toString() = message
 }
+class ComponentMessage(val component: Component) : Message()
