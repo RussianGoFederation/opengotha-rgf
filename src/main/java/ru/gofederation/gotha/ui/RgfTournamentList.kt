@@ -40,7 +40,6 @@ import javax.swing.*
 import javax.swing.event.MouseInputAdapter
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
-import kotlin.streams.toList
 
 internal class RgfTournamentList(tournamentPickListener: TournamentPickListener) : Panel() {
     private val tournamentsTable: JTable
@@ -143,10 +142,8 @@ internal class RgfTournamentList(tournamentPickListener: TournamentPickListener)
                 is TournamentList -> {
                     val model = (tournamentsTable.model as TableModel)
                     model.tournaments = tournamentsResult.tournaments
-                        .stream()
                         .filter { it.applicationsCount?:0 > 0 }
                         .filter { it.endDate >= ru.gofederation.api.Date() }
-                        .toList()
                     onListDownloaded(model)
                 }
             }

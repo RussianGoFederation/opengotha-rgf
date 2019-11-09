@@ -21,7 +21,7 @@ import info.vannier.gotha.Player
 import ru.gofederation.gotha.model.PlayerRegistrationStatus
 import ru.gofederation.gotha.util.GothaLocale
 
-sealed class PlayerTableColumn(header: String, prefWidth: Int, gothaLocale: GothaLocale = GothaLocale.getCurrentLocale()) : GothaTableColumn<Player>(header, prefWidth) {
+sealed class PlayerTableColumn(header: String, prefWidth: Int) : GothaTableColumn<Player>(header, prefWidth) {
 
     class Registration() : PlayerTableColumn("R", 50) {
         override fun cellValue(obj: Player): Any = if (obj.registeringStatus == PlayerRegistrationStatus.FINAL) "F" else "P"

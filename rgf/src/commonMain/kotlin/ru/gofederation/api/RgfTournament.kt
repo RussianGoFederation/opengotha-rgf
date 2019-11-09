@@ -8,7 +8,7 @@ import kotlinx.serialization.json.JsonConfiguration
 
 @Serializable
 data class RgfTournament(
-    val id: Int,
+    val id: Int?,
     val tigrId: Int? = null,
     val name: String,
     val nameLat: String? = null,
@@ -22,7 +22,7 @@ data class RgfTournament(
     val endDate: Date,
     val system: String? = null,
     val roundCount: Int? = null,
-    val komi: Float? = null,
+    val komi_4: Int,
     val state: State? = null,
     val category: Category,
     val timing: Timing? = null,
@@ -91,7 +91,7 @@ data class RgfTournament(
         val result: Result,
         val round: Int,
         val board: Int,
-        val komi: Float,
+        val komi_4: Int,
         val handicap: Int
     ) {
         enum class Color {

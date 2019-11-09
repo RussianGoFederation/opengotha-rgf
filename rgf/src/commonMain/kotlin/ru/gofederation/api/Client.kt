@@ -2,10 +2,16 @@ package ru.gofederation.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.response.HttpResponse
+import io.ktor.content.TextContent
+import io.ktor.http.ContentType
 import io.ktor.http.Url
 import io.ktor.http.contentLength
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.io.ByteReadChannel
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -20,29 +26,55 @@ class Client(
         Json(JsonConfiguration.Stable.copy(strictMode = false))
     }
 
+    private suspend fun ByteReadChannel.readAll(progress: Channel<Pair<Long, Long>>?, contentLength: Long?): ByteArray {
+        var offset = 0
+        val byteArray = ByteArray(contentLength!!.toInt())
+        do {
+            val currentRead = this.readAvailable(byteArray, offset, byteArray.size)
+            offset += currentRead
+            progress?.send(Pair(offset.toLong(), contentLength ?: -1))
+        } while (currentRead > 0)
+        return byteArray
+    }
+
     @UseExperimental(ExperimentalStdlibApi::class)
     private suspend fun get(url: Url, progress: Channel<Pair<Long, Long>>?): String {
         try {
             progress?.send(Pair(0, -1))
+            val response = client.get<HttpResponse>(url)
+            return response.content.readAll(progress, response.contentLength()).decodeToString()
+        } finally {
+            progress?.close()
+        }
+    }
 
-            val response = client.get<HttpResponse>(url) {
-//                header("Authentication", "Basic TWlydDpyYmhmdmY=")
+    @UseExperimental(ExperimentalStdlibApi::class)
+    private suspend fun post(url: Url, authentication: String, body: TextContent, progress: Channel<Pair<Long, Long>>?): String {
+        try {
+            progress?.send(Pair(0, -1))
+
+            val response = client.post<HttpResponse>(url) {
+                header("Authorization", authentication)
+                this.body = body
             }
-//            if (response.status.value >= 400) throw ApiStatusException(response.status)
 
-            val contentLength: Long = response.contentLength() ?: -1
+            return response.content.readAll(progress, response.contentLength()).decodeToString()
+        } finally {
+            progress?.close()
+        }
+    }
 
-            var offset = 0
-            val byteArray = ByteArray(response.contentLength()!!.toInt())
-            do {
-                val currentRead = response.content.readAvailable(byteArray, offset, byteArray.size)
-                offset += currentRead
-                if (null != progress) {
-                    progress.send(Pair(offset.toLong(), contentLength))
-                }
-            } while (currentRead > 0)
+    @UseExperimental(ExperimentalStdlibApi::class)
+    private suspend fun put(url: Url, authentication: String, body: TextContent, progress: Channel<Pair<Long, Long>>?): String {
+        try {
+            progress?.send(Pair(0, -1))
 
-            return byteArray.decodeToString()
+            val response = client.put<HttpResponse>(url) {
+                header("Authorization", authentication)
+                this.body = body
+            }
+
+            return response.content.readAll(progress, response.contentLength()).decodeToString()
         } finally {
             progress?.close()
         }
@@ -68,8 +100,24 @@ class Client(
         }
     }
 
+    suspend fun postTournament(tournament: RgfTournament, authentication: String, progress: Channel<Pair<Long, Long>>? = null): TournamentCallResult {
+        return try {
+            val req = TournamentResponse(tournament)
+            val body = TextContent(json.stringify(TournamentResponse.serializer(), req), ContentType.Application.Json)
+            val rawResponse = if (tournament.id ?: 0 > 0) {
+                put(Url("$host$TOURNAMENTS_PATH/${tournament.id}"), authentication, body, progress)
+            } else {
+                post(Url("$host$TOURNAMENTS_PATH"), authentication, body, progress)
+            }
+            val response = json.parse(TournamentResponse.serializer(), rawResponse)
+            TournamentResult(response.data.tournament)
+        } catch (e: Exception) {
+            TournamentErrorResult(e)
+        }
+    }
+
     companion object {
-        private const val HOST = "https://gofederation.ru"
+        const val HOST: String = "https://gofederation.ru"
         private const val TOURNAMENTS_PATH = "/api/v3.0/tournaments"
     }
 }
@@ -96,6 +144,8 @@ data class TournamentListResponse(
 data class TournamentResponse(
     val data: Data
 ) {
+    constructor(tournament: RgfTournament) : this(Data(tournament))
+
     @Serializable
     data class Data(
         val tournament: RgfTournament

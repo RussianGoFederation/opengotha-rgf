@@ -14,13 +14,19 @@ class DateJvmTest {
 
     @Test
     fun `Api Date converts to JVM Date and back`() {
-        val date = Date(2019, 10, 5)
-        val jvmDate = date.toJvmDate()
+        val testCases = listOf(
+            Pair("2019-10-05", Date(2019, 10, 5)),
+            Pair("2013-07-28", Date(2013, 7, 28))
+        )
 
-        assertEquals(format.parse("2019-10-05"), jvmDate)
-        assertEquals("2019-10-05", format.format(jvmDate))
-        assertEquals("2019-10-05", date.toString())
-        assertEquals("2019-10-05", format.format(date.toJvmDate()))
-        assertEquals("2019-10-05", jvmDate.toApiDate().toString())
+        for ((s, date) in testCases) {
+            val jvmDate = date.toJvmDate()
+
+            assertEquals(format.parse(s), jvmDate)
+            assertEquals(s, format.format(jvmDate))
+            assertEquals(s, date.toString())
+            assertEquals(s, format.format(date.toJvmDate()))
+            assertEquals(s, jvmDate.toApiDate().toString())
+        }
     }
 }

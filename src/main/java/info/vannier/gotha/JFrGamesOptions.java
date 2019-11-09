@@ -94,7 +94,7 @@ public class JFrGamesOptions extends javax.swing.JDialog {
                 formWindowClosing(evt);
             }
         });
-        getContentPane().setLayout(new MigLayout("insets dialog, wrap 2", "[grow][]", "[]unrel[]unrel[]unrel[]"));
+        getContentPane().setLayout(new MigLayout("insets dialog, wrap 2", "[grow][48lp, fill]", "[]unrel[]unrel[]unrel[]"));
 
         jLabel2.setText(locale.getString("game.goban_size"));
         getContentPane().add(jLabel2);
@@ -119,7 +119,7 @@ public class JFrGamesOptions extends javax.swing.JDialog {
         getContentPane().add(txfKomi, "w 36lp");
 
         pnlTime.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("game.thinking_time")));
-        pnlTime.setLayout(new MigLayout("insets panel, wrap 4", null, "[]unrel[]unrel[][]unrel[][]unrel[][]unrel[]unrel[]"));
+        pnlTime.setLayout(new MigLayout("insets panel, wrap 4, debug", "[][][][48lp, fill]", "[]unrel[]unrel[][]unrel[][]unrel[][]unrel[]unrel[]"));
 
         pnlTime.add(new JLabel(locale.getString("game.thinking_time.basic_time")), "span 3");
 
@@ -164,7 +164,7 @@ public class JFrGamesOptions extends javax.swing.JDialog {
                 txfCanNbMovesFocusLost(evt);
             }
         });
-        pnlTime.add(txfCanNbMoves, "w 28lp, gapbefore indent");
+        pnlTime.add(txfCanNbMoves, "w 48lp, gapbefore indent");
 
         nbMovesLabel.setText(locale.format("game.moves", 15));
         pnlTime.add(nbMovesLabel);

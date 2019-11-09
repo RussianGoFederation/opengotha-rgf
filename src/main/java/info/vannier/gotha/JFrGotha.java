@@ -2300,8 +2300,8 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
             return;
         }
 
-        RgfTournamentExportDialog exportPane = new RgfTournamentExportDialog(this, locale.getString("tournament.rgf.publish.window_title"), true, tournament);
-        exportPane.setVisible(true);
+        new RgfTournamentExportDialog(tournament)
+            .showModal(this, locale.getString("tournament.rgf.publish.window_title"));
     }
 
     private File chooseAFile(File path, String extension) {

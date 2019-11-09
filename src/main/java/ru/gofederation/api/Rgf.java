@@ -18,7 +18,6 @@
 package ru.gofederation.api;
 
 public final class Rgf {
-    private static final String API_HOST = "https://gofederation.ru";
-//    private static final String API_HOST = "http://127.0.0.1:5000";
+    private static final String API_HOST = Client.HOST;
     public static final String API_BASE_PATH = API_HOST + "/api/v3.0/";
 }

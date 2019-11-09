@@ -103,6 +103,6 @@ class RgfTournamentImportDialog(private val tournamentOpener: TournamentOpener) 
     }
 
     override fun onTournamentPicked(tournament: RgfTournament) {
-        loadTournament(tournament.id)
+        tournament.id?.let { loadTournament(it) }
     }
 }

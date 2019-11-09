@@ -17,7 +17,7 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
         gps.shortName = this.name // TODO actually shorten the name
         gps.beginDate = this.startDate.toJvmDate()
         gps.endDate = this.endDate.toJvmDate()
-        gps.rgfId = this.id
+        gps.rgfId = this.id ?: 0
         this.timing?.also { timing ->
             gps.basicTime = timing.basicTime
             when (timing) {
@@ -87,11 +87,11 @@ fun gotha2rgf(gotha: TournamentInterface): RgfTournament {
     val gps = tps.generalParameterSet
     val pps = tps.placementParameterSet
 
-    val komi = java.lang.Float.valueOf(gps.strKomi)
+    val komi = (java.lang.Float.valueOf(gps.strKomi) * 4).toInt()
 
     val finalRound = gps.numberOfRounds - 1
 
-    val playersMap = HashMap<Player, RgfTournament.Player>()
+    val playersMap = HashMap<String, RgfTournament.Player>()
     val players = gotha.orderedScoredPlayersList(finalRound, pps)
         .mapIndexed { index, scoredPlayer ->
             val player = RgfTournament.Player(
@@ -107,19 +107,19 @@ fun gotha2rgf(gotha: TournamentInterface): RgfTournament {
                 sos_4 = getCoef(scoredPlayer, finalRound, PlacementCriterion.SOSM),
                 sodos_4 = getCoef(scoredPlayer, finalRound, PlacementCriterion.SODOSM)
             )
-            playersMap[scoredPlayer] = player
+            playersMap[scoredPlayer.keyString] = player
             player
         }
 
     val games = gotha.gamesList().map { game ->
         RgfTournament.Game(
-            player1id = playersMap[game.blackPlayer]?.id,
-            player2id = playersMap[game.whitePlayer]?.id,
+            player1id = playersMap[game.blackPlayer.keyString]?.id,
+            player2id = playersMap[game.whitePlayer.keyString]?.id,
             color = if (game.isKnownColor) RgfTournament.Game.Color.PLAYER_1_BLACK else RgfTournament.Game.Color.UNKNOWN,
             result = resultFromGotha(game.result),
             round = game.roundNumber + 1,
             board = game.tableNumber,
-            komi = komi,
+            komi_4 = komi,
             handicap = game.handicap
         )
     }.toMutableList()
@@ -127,15 +127,15 @@ fun gotha2rgf(gotha: TournamentInterface): RgfTournament {
     val byePlayers = gotha.byePlayers
     for (i in byePlayers.indices) {
         val player = byePlayers[i]
-        if (null != player && playersMap.containsKey(gotha.getPlayerByKeyString(player.keyString))) {
+        if (null != player && playersMap.containsKey(player.keyString)) {
             games.add(RgfTournament.Game(
                 player1id = null,
-                player2id = playersMap[player]?.id,
+                player2id = playersMap[player.keyString]?.id,
                 color = RgfTournament.Game.Color.UNKNOWN,
                 result = RgfTournament.Game.Result.PLAYER_2_WIN,
                 round = i,
                 board = 0,
-                komi = komi,
+                komi_4 = komi,
                 handicap = 0
             ))
         }
@@ -147,7 +147,7 @@ fun gotha2rgf(gotha: TournamentInterface): RgfTournament {
         location = gps.location,
         startDate = gps.beginDate.toApiDate(),
         endDate = gps.endDate.toApiDate(),
-        komi = komi,
+        komi_4 = komi,
         // TODO system = ...
         roundCount = gps.numberOfRounds,
         category = RgfTournament.Category.NOT_SET,
