@@ -12,5 +12,5 @@ fun Date.toJvmDate(): java.util.Date {
 }
 
 fun java.util.Date.toApiDate(): Date {
-    return Date.invoke(this.year, this.month, this.day)
+    return Date.invoke(this.year + 1900, this.month + 1, this.day - 1)
 }

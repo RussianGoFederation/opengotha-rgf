@@ -17,7 +17,10 @@ class DateJvmTest {
         val date = Date(2019, 10, 5)
         val jvmDate = date.toJvmDate()
 
-        assertEquals(date.toString(), format.format(jvmDate))
-        assertEquals(date, jvmDate.toApiDate())
+        assertEquals(format.parse("2019-10-05"), jvmDate)
+        assertEquals("2019-10-05", format.format(jvmDate))
+        assertEquals("2019-10-05", date.toString())
+        assertEquals("2019-10-05", format.format(date.toJvmDate()))
+        assertEquals("2019-10-05", jvmDate.toApiDate().toString())
     }
 }
