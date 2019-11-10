@@ -99,18 +99,18 @@ test {
 }
 
 dependencies {
-    compile project(':rgf')
-    compile group: 'com.ibm.icu', name: 'icu4j', version: '60.2'
-    compile group: 'com.miglayout', name: 'miglayout-swing', version: '5.2'
-    compile group: 'com.sun.woodstock.dependlibs', name: 'jhall', version: '2.0'
-    compile group: 'com.toedter', name: 'jcalendar', version: '1.4'
-    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-swing:$coroutines_version"
-    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit5:$kotlin_version"
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.2'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.3.2'
-    testCompile group: 'nl.jqno.equalsverifier', name: 'equalsverifier', version: '3.0.3'
-    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.3.2'
+    implementation project(':rgf')
+    implementation group: 'com.ibm.icu', name: 'icu4j', version: '60.2'
+    implementation group: 'com.miglayout', name: 'miglayout-swing', version: '5.2'
+    implementation group: 'com.sun.woodstock.dependlibs', name: 'jhall', version: '2.0'
+    implementation group: 'com.toedter', name: 'jcalendar', version: '1.4'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-swing:$coroutines_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit5:$kotlin_version"
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.2'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.3.2'
+    testImplementation group: 'nl.jqno.equalsverifier', name: 'equalsverifier', version: '3.0.3'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.3.2'
 }
