@@ -39,7 +39,7 @@ data class RgfTournament(
     val endDate: Date,
     val system: String? = null,
     val roundCount: Int? = null,
-    val komi_4: Int = 26,
+    val komi_4: Int? = 26,
     val state: State? = null,
     val category: Category,
     val timing: Timing? = null,
