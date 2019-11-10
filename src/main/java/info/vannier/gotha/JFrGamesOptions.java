@@ -119,7 +119,7 @@ public class JFrGamesOptions extends javax.swing.JDialog {
         getContentPane().add(txfKomi, "w 36lp");
 
         pnlTime.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("game.thinking_time")));
-        pnlTime.setLayout(new MigLayout("insets panel, wrap 4, debug", "[][][][48lp, fill]", "[]unrel[]unrel[][]unrel[][]unrel[][]unrel[]unrel[]"));
+        pnlTime.setLayout(new MigLayout("insets panel, wrap 4", "[][][][48lp, fill]", "[]unrel[]unrel[][]unrel[][]unrel[][]unrel[]unrel[]"));
 
         pnlTime.add(new JLabel(locale.getString("game.thinking_time.basic_time")), "span 3");
 
