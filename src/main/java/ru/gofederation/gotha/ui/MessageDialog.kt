@@ -17,13 +17,17 @@
 
 package ru.gofederation.gotha.ui
 
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import net.miginfocom.swing.MigLayout
 import ru.gofederation.gotha.ui.component.watchProgress
 import ru.gofederation.gotha.util.GothaLocale
 import ru.gofederation.gotha.util.I18N
 import java.awt.Component
+import java.awt.event.MouseEvent
 import javax.swing.*
+import javax.swing.event.MouseInputAdapter
 
 sealed class MessageDialog(
     val type: Type,
@@ -68,3 +72,29 @@ class StringMessage(private val message: String) : Message() {
     override fun toString() = message
 }
 class ComponentMessage(val component: Component) : Message()
+
+class ProgressDialog(message: String, val progress: Channel<Pair<Long, Long>>, val job: Job? = null) : Panel() {
+    private val progressBar = JProgressBar()
+
+    init {
+        layout = MigLayout("insets dialog, flowy", null, "[][]unrel[]")
+        add (JLabel(message))
+        add(progressBar)
+        add(JButton(tr("btn.cancel")).apply {
+            addMouseListener(object : MouseInputAdapter() {
+                override fun mouseClicked(e: MouseEvent?) {
+                    job?.cancel()
+                    closeWindow()
+                }
+            })
+        }, "tag cancel")
+    }
+
+    override fun showModal(dialog: JDialog, closeOperation: Int) {
+        launch {
+            progressBar.watchProgress(progress)
+            closeWindow()
+        }
+        super.showModal(dialog, closeOperation)
+    }
+}

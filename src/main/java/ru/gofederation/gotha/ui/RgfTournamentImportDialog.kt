@@ -17,13 +17,16 @@
 
 package ru.gofederation.gotha.ui
 
+import info.vannier.gotha.JFrGotha
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.miginfocom.swing.MigLayout
 import ru.gofederation.api.*
 import ru.gofederation.gotha.ui.component.addAll
+import java.awt.Dimension
 import java.lang.StringBuilder
 import javax.swing.*
 
@@ -55,12 +58,17 @@ class RgfTournamentImportDialog(private val tournamentOpener: TournamentOpener) 
 
         add(JLabel(tr("tournament.rgf.import.help")))
 
+        preferredSize = Dimension(JFrGotha.BIG_FRAME_WIDTH, JFrGotha.BIG_FRAME_HEIGHT)
+
 //        val preferences = GothaPreferences.instance()
 // TODO       preferences.persistWindowState(this, Dimension(JFrGotha.BIG_FRAME_WIDTH, JFrGotha.BIG_FRAME_HEIGHT))
     }
 
     private fun loadTournament(id: Int) {
         fetchJob?.cancel()
+
+        val progress = Channel<Pair<Long, Long>>()
+
         fetchJob = launch {
             val importMode = if (importApplications.isSelected)
                 RgfTournament.ImportMode.APPLICATIONS
@@ -68,7 +76,7 @@ class RgfTournamentImportDialog(private val tournamentOpener: TournamentOpener) 
                 RgfTournament.ImportMode.PARTICIPANTS
 
             val tournamentRes = withContext(Dispatchers.IO) {
-                rgfApiClient.fetchTournament(id)
+                rgfApiClient.fetchTournament(id, progress)
             }
 
             if (tournamentRes is TournamentErrorResult) {
@@ -101,6 +109,13 @@ class RgfTournamentImportDialog(private val tournamentOpener: TournamentOpener) 
 
             closeWindow()
         }
+
+        val window = getWindow()
+        if (null != window) {
+            ProgressDialog(tr("alert.download_in_progress"), progress, fetchJob)
+                .showModal(window, tr("alert.download_in_progress"))
+        }
+
     }
 
     override fun onTournamentPicked(tournament: RgfTournament) {

@@ -18,13 +18,12 @@
 package ru.gofederation.gotha.ui
 
 import info.vannier.gotha.Gotha
-import info.vannier.gotha.JFrGotha
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import net.miginfocom.layout.CC
 import ru.gofederation.gotha.util.GothaLocale
 import ru.gofederation.gotha.util.I18N
-import java.awt.Dimension
+import java.awt.Dialog
 import java.awt.Frame
 import java.awt.Window
 import java.util.logging.Logger
@@ -50,20 +49,26 @@ abstract class Panel(
     }
 
     @JvmOverloads
-    fun showModal(parent: Frame, title: String, closeOperation: Int = WindowConstants.DISPOSE_ON_CLOSE) {
-        JDialog(parent, title, true).also {
-            it.locale = this.locale
-            it.contentPane = this
-            it.defaultCloseOperation = closeOperation
-            it.preferredSize = Dimension(JFrGotha.BIG_FRAME_WIDTH, JFrGotha.BIG_FRAME_HEIGHT)
-            it.pack()
-        }.isVisible = true
+    fun showModal(parent: Window, title: String, closeOperation: Int = WindowConstants.DISPOSE_ON_CLOSE) =
+        showModal(JDialog(parent, title, Dialog.ModalityType.DOCUMENT_MODAL), closeOperation)
+
+    @JvmOverloads
+    fun showModal(parent: Frame, title: String, closeOperation: Int = WindowConstants.DISPOSE_ON_CLOSE) =
+        showModal(JDialog(parent, title, true), closeOperation)
+
+    protected open fun showModal(dialog: JDialog, closeOperation: Int) {
+        dialog.locale = this.locale
+        dialog.contentPane = this
+        dialog.defaultCloseOperation = closeOperation
+        dialog.pack()
+        dialog.isVisible = true
     }
 
+    protected fun getWindow(): Window? =
+        SwingUtilities.getWindowAncestor(this)
 
-    protected fun closeWindow() {
-        SwingUtilities.getWindowAncestor(this)?.dispose()
-    }
+    protected fun closeWindow() =
+        getWindow()?.dispose()
 
     companion object {
         val LOG = Logger.getLogger(this::class.java.simpleName)
