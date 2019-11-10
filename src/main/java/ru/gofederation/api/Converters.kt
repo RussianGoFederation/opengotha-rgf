@@ -118,7 +118,7 @@ fun gotha2rgf(gotha: TournamentInterface): RgfTournament {
                 lastName = scoredPlayer.name,
                 patronymic = scoredPlayer.patronymic,
                 rating = scoredPlayer.rating,
-                place = index,
+                place = index + 1,
                 mm0_4 = scoredPlayer.smms(gps),
                 mmF_4 = getCoef(scoredPlayer, finalRound, PlacementCriterion.MMS),
                 sos_4 = getCoef(scoredPlayer, finalRound, PlacementCriterion.SOSM),
