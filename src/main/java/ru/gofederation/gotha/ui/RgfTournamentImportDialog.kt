@@ -73,6 +73,7 @@ class RgfTournamentImportDialog(private val tournamentOpener: TournamentOpener) 
 
             if (tournamentRes is TournamentErrorResult) {
                 ExceptionDialog("tournament.rgf.import.download_error", tournamentRes.exception)
+                    .show(this@RgfTournamentImportDialog)
             } else if (tournamentRes is TournamentResult) {
                 val (tournament, report) = withContext(Dispatchers.Default) {
                     tournamentRes.tournament.rgf2gotha(importMode)
@@ -96,9 +97,9 @@ class RgfTournamentImportDialog(private val tournamentOpener: TournamentOpener) 
                 reportPane.createDialog(this@RgfTournamentImportDialog, tr("tournament.rgf.import.report.window_title")).isVisible = true
 
                 tournamentOpener.openTournament(tournament)
-
-                closeWindow()
             }
+
+            closeWindow()
         }
     }
 
