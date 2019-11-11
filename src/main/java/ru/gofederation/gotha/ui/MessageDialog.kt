@@ -90,11 +90,11 @@ class ProgressDialog(message: String, val progress: Channel<Pair<Long, Long>>, v
         }, "tag cancel")
     }
 
-    override fun showModal(dialog: JDialog, closeOperation: Int) {
+    override fun showModal(dialog: JDialog, parent: Component, closeOperation: Int) {
         launch {
             progressBar.watchProgress(progress)
             closeWindow()
         }
-        super.showModal(dialog, closeOperation)
+        super.showModal(dialog, parent, closeOperation)
     }
 }

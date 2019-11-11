@@ -23,6 +23,7 @@ import kotlinx.coroutines.MainScope
 import net.miginfocom.layout.CC
 import ru.gofederation.gotha.util.GothaLocale
 import ru.gofederation.gotha.util.I18N
+import java.awt.Component
 import java.awt.Dialog
 import java.awt.Frame
 import java.awt.Window
@@ -50,17 +51,18 @@ abstract class Panel(
 
     @JvmOverloads
     fun showModal(parent: Window, title: String, closeOperation: Int = WindowConstants.DISPOSE_ON_CLOSE) =
-        showModal(JDialog(parent, title, Dialog.ModalityType.DOCUMENT_MODAL), closeOperation)
+        showModal(JDialog(parent, title, Dialog.ModalityType.DOCUMENT_MODAL), parent, closeOperation)
 
     @JvmOverloads
     fun showModal(parent: Frame, title: String, closeOperation: Int = WindowConstants.DISPOSE_ON_CLOSE) =
-        showModal(JDialog(parent, title, true), closeOperation)
+        showModal(JDialog(parent, title, true), parent, closeOperation)
 
-    protected open fun showModal(dialog: JDialog, closeOperation: Int) {
+    protected open fun showModal(dialog: JDialog, parent: Component, closeOperation: Int) {
         dialog.locale = this.locale
         dialog.contentPane = this
         dialog.defaultCloseOperation = closeOperation
         dialog.pack()
+        dialog.setLocationRelativeTo(parent)
         dialog.isVisible = true
     }
 
