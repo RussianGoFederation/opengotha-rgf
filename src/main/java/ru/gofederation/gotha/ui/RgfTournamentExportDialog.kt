@@ -83,6 +83,7 @@ class RgfTournamentExportDialog(tournament: TournamentInterface) : Panel() {
                         .show(this@RgfTournamentExportDialog)
 
                     tournament.tournamentParameterSet.generalParameterSet.rgfId = res.tournament.id ?: 0
+                    tournament.setChangeSinceLastSaveAsFalse()
                 }
                 is TournamentErrorResult ->
                     ExceptionDialog("tournament.rgf.publish.error", res.exception)
