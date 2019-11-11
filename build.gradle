@@ -29,6 +29,7 @@ buildscript {
 plugins {
     id 'org.jetbrains.kotlin.jvm' version "$kotlin_version"
     id 'application'
+    id 'org.beryx.runtime' version '1.7.2'
 }
 
 version '3.46.04-RGF.1'
@@ -70,18 +71,32 @@ processResources.dependsOn createProperties
 
 startScripts {
     doLast {
-        unixScript.text = unixScript.text.replace('cd "`dirname \\"$PRG\\"`/../.." >/dev/null', 'cd "`dirname \\"$PRG\\"`" >/dev/null')
-        windowsScript.text =  windowsScript.text.replace('set APP_HOME=%DIRNAME%..\\..', 'set APP_HOME=%DIRNAME%')
+        unixScript.text = unixScript.text.replace('cd "`dirname \\"$PRG\\"`/.." >/dev/null', 'cd "`dirname \\"$PRG\\"`" >/dev/null')
+        windowsScript.text =  windowsScript.text
+            .replace('set APP_HOME=%DIRNAME%..', 'set APP_HOME=%DIRNAME%')
+            .replace('set JAVA_HOME="%~dp0.."', 'set JAVA_HOME="%~dp0"')
         // See https://github.com/gradle/gradle/issues/4675
     }
 }
 
-application {
-    executableDir = "/$applicationName-$version"
+distributions.main {
+    contents {
+        from startScripts
+    }
 }
 
 distTar {
     compression = Compression.GZIP
+}
+
+runtime {
+    options.set(['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages'])
+    modules.set(['java.desktop', 'java.rmi', 'jdk.crypto.ec'])
+    imageZip.set(file("${buildDir}/${rootProject.name}-${project.version}.zip"))
+
+    targetPlatform('windows-x64', System.getenv('JDK_WINDOWS'))
+    targetPlatform('linux-x64', System.getenv('JDK_LINUX'))
+    targetPlatform('osx-x64', System.getenv('JDK_OSX'))
 }
 
 test {
