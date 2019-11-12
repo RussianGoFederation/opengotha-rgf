@@ -36,7 +36,7 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
      */
     public JFrDiscardRounds(TournamentInterface tournament) throws RemoteException {
         this.tournament = tournament;
-        
+
         initComponents();
         customInitComponents();
         setupRefreshTimer();
@@ -65,7 +65,7 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         timer.start();
     }
 
- 
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -146,13 +146,13 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         for (int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++){
             bRoundsToKeep[r] = this.tabCkbRoundsToKeep[r].isSelected();
         }
-        
+
         int nbDiscardedRounds = 0;
         int nbRemovedGames = 0;
         int nbRemovedByes = 0;
         int nbRemovedPlayers = 0;
         int nbShiftedRounds = 0;
-                
+
         int nbRounds = Gotha.MAX_NUMBER_OF_ROUNDS;
             try {
                 nbRounds = tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds();
@@ -164,15 +164,15 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         for (int r = 0; r < nbRounds; r++){
             if(!bRoundsToKeep[r]) nbDiscardedRounds++;
         }
-        
-        // Discard games from unchecked rounds 
+
+        // Discard games from unchecked rounds
         ArrayList<Game> alGames = null;
         try {
             alGames = tournament.gamesList();
         } catch (RemoteException ex) {
             Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         for (Game g : alGames){
             int r = g.getRoundNumber();
             if (!bRoundsToKeep[r]) {
@@ -186,10 +186,10 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
                 nbRemovedGames++;
             }
         }
-        // Unassign bye players 
+        // Unassign bye players
         for(int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++){
             if (!bRoundsToKeep[r]){
-                try {    
+                try {
                     if (tournament.getByePlayer(r) != null){
                         tournament.unassignByePlayer(r);
                         nbRemovedByes++;
@@ -197,9 +197,9 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
                 } catch (RemoteException ex) {
                     Logger.getLogger(JFrDiscardRounds.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }   
-        }       
-        
+            }
+        }
+
         // If required, remove unimplied players
         if (this.ckbRemoveNotImpliedPlayers.isSelected()){
             ArrayList<Player> alP;
@@ -217,7 +217,7 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
                 Logger.getLogger(JFrDiscardRounds.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
 
         // If required, shift rounds
         if (this.ckbShiftRounds.isSelected()){
@@ -241,7 +241,7 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
                     }
                     Player p = tournament.getByePlayer(oldR);
                     tournament.setByePlayer(p, newR);
-                    tournament.setByePlayer(null, oldR);                   
+                    tournament.setByePlayer(null, oldR);
                 } catch (RemoteException ex) {
                     Logger.getLogger(JFrDiscardRounds.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -316,7 +316,7 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         updateAllViews();
     }
 
-    
+
     private void updateAllViews(){
         try {
             if (!tournament.isOpen()) cleanClose();
@@ -332,14 +332,14 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
             Logger.getLogger(JFrDiscardRounds.class.getName()).log(Level.SEVERE, null, ex);
         }
         for (int i = 0; i < nbRounds; i++) {
-            tabCkbRoundsToKeep[i].setVisible(true); 
+            tabCkbRoundsToKeep[i].setVisible(true);
         }
         for (int i = nbRounds; i < Gotha.MAX_NUMBER_OF_ROUNDS; i++) {
-            tabCkbRoundsToKeep[i].setVisible(false); 
+            tabCkbRoundsToKeep[i].setVisible(false);
         }
         this.pnlRoundsToKeep.setSize(new Dimension(220, 30 + (nbRounds + 4) / 5 * 25));
-    } 
-        
+    }
+
     private void tournamentChanged(){
         try {
             if (!tournament.isOpen()){
@@ -350,7 +350,7 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrDiscardRounds.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
+
 
     updateAllViews();
 

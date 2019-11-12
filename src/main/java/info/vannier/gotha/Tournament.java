@@ -75,7 +75,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
      */
     private transient long lastTournamentModificationTime = System.currentTimeMillis();
     public transient ScoredTeamsSet scoredTeamsSet;
-    
+
 
 
     public Tournament() throws RemoteException {
@@ -245,11 +245,11 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     public String getFullName() throws RemoteException {
         return this.getTournamentParameterSet().getGeneralParameterSet().getName();
     }
-    
+
     /**
      * The short name for a tournament is an identifier This identifier is used -
-     * - As the default name for save function 
-     * - As the name in the Registry for RMI access 
+     * - As the default name for save function
+     * - As the name in the Registry for RMI access
      *
      * @return
      * @throws java.rmi.RemoteException
@@ -282,7 +282,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     public void close() throws RemoteException {
         bOpen = false;
     }
-    
+
     @Override
     public boolean isHasBeenSavedOnce() throws RemoteException{
         return hasBeenSavedOnce;
@@ -1105,10 +1105,10 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 && sP1.groupNumber != sP2.groupNumber) {
             // 5 scenarii
             // scenario = 0 : Both players have already been drawn in the same sense
-            // scenario = 1 : One of the players has already been drawn in the same sense           
+            // scenario = 1 : One of the players has already been drawn in the same sense
             // scenario = 2 : Normal conditions (does not correct anything and no previous drawn in the same sense)
             //                This case also occurs if one DU/DD is increased, while one is compensated
-            // scenario = 3 : It corrects a previous DU/DD            //        
+            // scenario = 3 : It corrects a previous DU/DD            //
             // scenario = 4 : it corrects a previous DU/DD for both
             int scenario = 2;
             if (sP1.nbDU > 0 && sP1.groupNumber > sP2.groupNumber) {
@@ -1137,7 +1137,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 scenario++;
             }
 
-            
+
             long duddWeight = paiPS.getPaiMaDUDDWeight() / 5;
 
             ScoredPlayer upperSP = (sP1.groupNumber < sP2.groupNumber) ? sP1 : sP2;
@@ -1157,7 +1157,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 duddCost += duddWeight / 2 * (lowerSP.innerPlacement) / lowerSP.groupSize;
             }
 
-            if (scenario == 0) {            
+            if (scenario == 0) {
                 // Do nothing
             }
             else if (scenario == 1 ){
@@ -1172,7 +1172,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             else if (scenario == 4) {
                 duddCost += 4 * duddWeight;
             }
-            
+
         }
         // But, if players come from different categories, decrease duddCost(added in 3.11)
         int catGap = Math.abs(sP1.category(gps) - sP2.category(gps));
@@ -1222,7 +1222,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         } else {
             nbw2Threshold = 2 * gps.getNumberOfRounds();
         }
-        
+
         int mmBar = gps.getGenMMBar() - Gotha.MIN_RANK;
 
         int pseudoMMSSP1 = sP1.getCritValue(PlacementCriterion.MMS, roundNumber - 1) / 2;
@@ -1236,22 +1236,22 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         boolean bManyWins = nbwSP1X2 >= nbw2Threshold;
         boolean bAboveMMBar = (sP1.smms(gps) >= mmBar && paiPS.isPaiSeBarThresholdActive());
         if (bManyWins
-                || bStrongMMS 
+                || bStrongMMS
                 || bAboveMMBar) {
             secCase++;
             pseudoMMSSP1 = maxMMS;
         }
-        
+
         bStrongMMS = (2 * sP2.getRank() + sP2.getCritValue(PlacementCriterion.NBW, roundNumber - 1) >= 2 * paiPS.getPaiSeRankThreshold());
         bManyWins = nbwSP2X2 >= nbw2Threshold;
         bAboveMMBar = (sP2.smms(gps) >= mmBar && paiPS.isPaiSeBarThresholdActive());
         if (bManyWins
-                || bStrongMMS 
+                || bStrongMMS
                 || bAboveMMBar) {
             secCase++;
             pseudoMMSSP2 = maxMMS;
         }
-        
+
         // Secondary Criterion 1 : Minimize handicap
         long hdCost = 0;
         int secRange;   // secRange is the maximum score difference between 2 players for this tournament
@@ -1303,7 +1303,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         if (sP1.getCountry().compareTo(sP2.getCountry()) == 0) {
             malusGeo = malusCountry;
         }
-        
+
         boolean bCommonGroup = false;
         try {
             bCommonGroup = playersAreInCommonGroup(sP1, sP2);
@@ -1313,11 +1313,11 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         if (bCommonGroup) {
             malusGeo = Math.max(malusGeo, malusClubsGroup);
         }
-        
+
         if (sP1.getClub().compareTo(sP2.getClub()) == 0) {
             malusGeo = Math.max(malusGeo, malusClub);
         }
-        
+
         long geoNominalCost = (long) (geoMaxCost * (1.0 - malusGeo));
         long geoCost = geoNominalCost;
         if (secCase == 0) {
@@ -1419,7 +1419,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         Player player = this.homonymPlayerOf(p);
         byePlayers[roundNumber] = player;
     }
-    
+
     @Override
     public void chooseAByePlayer(ArrayList<Player> alPlayers, int roundNumber) throws RemoteException {
 
@@ -1512,7 +1512,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         game.setResult(result);
         this.setChangeSinceLastSave(true);
     }
-    
+
     @Override
     public void setRoundNumber(Game g, int rn) throws RemoteException {
         Game game = this.getGame(g.getRoundNumber(), g.getTableNumber());
@@ -1574,7 +1574,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     public int getTeamSize() throws RemoteException {
         return getTeamTournamentParameterSet().getTeamGeneralParameterSet().getTeamSize();
     }
-    
+
     @Override
     public void setTeamSize(int teamSize) throws RemoteException {
         int oldTS = this.getTeamSize();
@@ -1742,7 +1742,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 for (int bn = teamSize; bn < Gotha.MAX_NUMBER_OF_MEMBERS_BY_TEAM; bn++){
                     for (int ir = 0; ir < Gotha.MAX_NUMBER_OF_ROUNDS; ir++){
                         this.unteamTeamMember(team, ir, bn);
-                    }                   
+                    }
                 }
         }
 
@@ -1814,7 +1814,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     @Override
     public ArrayList<Game> incoherentTeamGames() throws RemoteException {
         ArrayList<Game> alIncohGames = new ArrayList<Game>();
-        
+
         return alIncohGames;
     }
 
@@ -1865,7 +1865,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
 
     /**
      * returns players implied in a team at boardNumber board
-     * 
+     *
      */
     @Override
     public ArrayList<Player> playersList(Team team, int boardNumber) throws RemoteException {
@@ -1877,7 +1877,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         }
         return alP;
     }
-    
+
     @Override
     public boolean[] membership(Player p, Team t, int boardNumber) throws RemoteException {
         boolean[] bM = new boolean[Gotha.MAX_NUMBER_OF_ROUNDS];
@@ -1979,7 +1979,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 }
             }
         }
-        
+
         return alMatches;
     }
 
@@ -2070,7 +2070,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             return;
         }
         Game game = alG.get(0);
-        
+
 //        if (game.getHandicap() != 0){
         if (game.getHandicap() == 0){
             if (pt0IsWhite) {
@@ -2353,7 +2353,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 sp.setSTSX2(nbRounds - 1, sp.getSTSX2(nbRounds - 1) + 4);
             }
         }
-        
+
         // 2bis) nbwVirtualX2 and mmsVirtualX2
         for (int r = 0; r < numberOfRoundsToCompute; r++) {
             // Initialize
@@ -2420,8 +2420,8 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             for (int r = 0; r < numberOfRoundsToCompute; r++) {
                 if (!sp.gameWasPlayed(r)) nbVPX2++;
                 sp.setNBWVirtualX2(r, sp.getNBWVirtualX2(r) + nbVPX2);
-                sp.setMMSVirtualX2(r, sp.getMMSVirtualX2(r) + nbVPX2);  
-            } 
+                sp.setMMSVirtualX2(r, sp.getMMSVirtualX2(r) + nbVPX2);
+            }
         }
 
         // 3) CUSSW and CUSSM
@@ -2461,8 +2461,8 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                         }
                         else{
                             oswX2[rr] = sOpp.getNBWX2(r);
-                        }                       
-                        doswX4[rr] = oswX2[rr] * result;                        
+                        }
+                        doswX4[rr] = oswX2[rr] * result;
                     }
                 }
                 int sosX2 = 0;
@@ -2523,9 +2523,9 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                     } else {
                         Game g = sp.getGame(rr);
                         Player opp = opponent(g, sp);
-                        int result = getWX2(g, sp);                       
+                        int result = getWX2(g, sp);
                         ScoredPlayer sOpp = hmScoredPlayers.get(opp.getKeyString());
-                        
+
                         if (bVirtual){
                             osmX2[rr] = sOpp.getMMSVirtualX2(r);
                             ostsX2[rr] = sOpp.getSTSVirtualX2(r);
@@ -2533,11 +2533,11 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                         else{
                             osmX2[rr] = sOpp.getMMSX2(r);
                             ostsX2[rr] = sOpp.getSTSX2(r);
-                        }                       
-                         
+                        }
+
                         // osmX2[rr] = sOpp.getMMSX2(r);
                         // ostsX2[rr] = sOpp.getSTSX2(r);
-                        
+
                         if (g.getWhitePlayer().hasSameKeyString(sp)) {
                             osmX2[rr] += 2 * g.getHandicap();
                             ostsX2[rr] += 2 * g.getHandicap();
@@ -2596,9 +2596,9 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 }
             }
         }
-        
-                
-        
+
+
+
         // 5) SOSOSW and SOSOSM
         for (int r = 0; r < numberOfRoundsToCompute; r++) {
             for (ScoredPlayer sp : hmScoredPlayers.values()) {
@@ -3159,7 +3159,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         // Is the asked name available ?
         String str = cg.getName();
         if (hmClubsGroups.get(str) != null) return false;
-       
+
         if (hmClubsGroups == null) {
             hmClubsGroups = new HashMap<String, ClubsGroup>();
         }
@@ -3167,12 +3167,12 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         this.setChangeSinceLastSave(true);
         return true;
     }
-    
+
     @Override
     public void removeClubsGroup(ClubsGroup cg) throws RemoteException{
         hmClubsGroups.remove(cg.getName());
     }
-    
+
     @Override
     public ClubsGroup getClubsGroupByName(String name) throws RemoteException{
         return this.hmClubsGroups.get(name);
@@ -3187,19 +3187,19 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     @Override
     public void addClubToClubsGroup(String groupName, String clubName) throws RemoteException{
         ClubsGroup cg = getClubsGroupByName(groupName);
-        cg.put(new Club(clubName)); 
+        cg.put(new Club(clubName));
     }
     @Override
     public void removeClubFromClubsGroup(String groupName, String clubName) throws RemoteException{
         ClubsGroup cg = getClubsGroupByName(groupName);
-        cg.remove(clubName); 
+        cg.remove(clubName);
     }
-    
+
      @Override
      public boolean playersAreInCommonGroup(Player p1, Player p2)throws RemoteException{
         String strClub1 = p1.getClub();
         String strClub2 = p2.getClub();
-        
+
         for (ClubsGroup cg : clubsGroupsList()){
             boolean bP1 = false;
             boolean bP2 = false;
@@ -3208,10 +3208,10 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 if (strClub1.equals(strClub)) bP1 = true;
                 if (strClub2.equals(strClub)) bP2 = true;
             }
-            if (bP1 && bP2) return true;            
+            if (bP1 && bP2) return true;
         }
         return false;
-    
+
     }
 
 	/**
