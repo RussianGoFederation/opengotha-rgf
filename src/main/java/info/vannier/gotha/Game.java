@@ -15,9 +15,9 @@ package info.vannier.gotha;
      * table number.
      * Unique for a given roundnumber
      * From 0 to Gotha.MAX_NUMBER_OF_TABLES - 1
-     */   
+     */
     private int tableNumber = -1;
-    
+
     private Player whitePlayer;
     private Player blackPlayer;
 
@@ -48,7 +48,7 @@ package info.vannier.gotha;
      */
     public static final int RESULT_WHITEWINS = 17;
     public static final int RESULT_WHITEWINS_BYDEF = RESULT_WHITEWINS + RESULT_BYDEF;
-    
+
     /**
      * Result : Black wins
      */
@@ -60,7 +60,7 @@ package info.vannier.gotha;
      */
     public static final int RESULT_EQUAL = 19;
     public static final int RESULT_EQUAL_BYDEF = RESULT_EQUAL + RESULT_BYDEF;
-   
+
     /**
      * Result : Both lose. Means 0 - 0
      */
@@ -73,10 +73,10 @@ package info.vannier.gotha;
     public static final int RESULT_BOTHWIN = 35;
     public static final int RESULT_BOTHWIN_BYDEF = RESULT_BOTHWIN + RESULT_BYDEF;
 
-    
+
     public Game() {
     }
-    
+
     public Game(int roundNumber, int tableNumber, Player whitePlayer, Player blackPlayer, boolean knownColor, int handicap, int result) {
         this.roundNumber = roundNumber;
         this.tableNumber = tableNumber;
@@ -95,7 +95,7 @@ package info.vannier.gotha;
                 case Game.RESULT_BOTHWIN_BYDEF:
                 case Game.RESULT_WHITEWINS:
                 case Game.RESULT_WHITEWINS_BYDEF:
-                    bWinner = true; 
+                    bWinner = true;
             }
         }
         else if (p.hasSameKeyString(blackPlayer)){
@@ -104,7 +104,7 @@ package info.vannier.gotha;
                 case Game.RESULT_BOTHWIN_BYDEF:
                 case Game.RESULT_BLACKWINS:
                 case Game.RESULT_BLACKWINS_BYDEF:
-                    bWinner = true; 
+                    bWinner = true;
             }
         }
         return bWinner;
@@ -141,16 +141,16 @@ package info.vannier.gotha;
     public void setHandicap(int val) {
         handicap = val;
         if (handicap < 0) handicap = 0;
-        if (handicap > 9) handicap = 9;  
+        if (handicap > 9) handicap = 9;
     }
 
     public int getResult()   {
         return result;
     }
     /**
-     * 
+     *
      * @param wb : true the string should put White first
-     * @return 
+     * @return
      */
     public String resultAsString(boolean wb){
         String strResult = " - ";
@@ -182,7 +182,7 @@ package info.vannier.gotha;
                 case Game.RESULT_BOTHLOSE_BYDEF : strResult = "0-0!"; break;
                 case Game.RESULT_BOTHWIN_BYDEF  : strResult = "1-1!"; break;
                 default                         : strResult = "?-?";
-            }            
+            }
         }
         return strResult;
 
@@ -199,14 +199,14 @@ package info.vannier.gotha;
     public void setRoundNumber(int round) {
         this.roundNumber = round;
     }
-     
+
      public boolean isKnownColor() {
          return knownColor;
      }
 
      public void setKnownColor(boolean knownColor) {
          this.knownColor = knownColor;
-     }        
+     }
 }
- 
+
 
