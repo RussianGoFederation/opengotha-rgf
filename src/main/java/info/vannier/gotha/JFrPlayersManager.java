@@ -190,28 +190,28 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         pnlPlayer.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("player"))); // NOI18N
         pnlPlayer.setLayout(new MigLayout("insets panel, flowy"));
 
-        pnlPlayer.add(ratingListControls);
+        pnlPlayer.add(ratingListControls, "spany 2");
 
         grpSetRank.add(rdbRankFromGoR);
         rdbRankFromGoR.setSelected(true);
         rdbRankFromGoR.setText("set Rank from rating (GoR)");
         rdbRankFromGoR.addActionListener(this::rdbRankFromGoRActionPerformed);
-        pnlPlayer.add(rdbRankFromGoR);
+        pnlPlayer.add(rdbRankFromGoR, "hidemode 3");
 
         grpSetRank.add(rdbRankFromGrade);
         rdbRankFromGrade.setText("set Rank from Grade");
         rdbRankFromGrade.addActionListener(this::rdbRankFromGradeActionPerformed);
-        pnlPlayer.add(rdbRankFromGrade);
+        pnlPlayer.add(rdbRankFromGrade, "hidemode 3");
 
         pnlPlayer.add(playerEditor, "spanx 2, growx, wrap");
 
-        pnlPlayer.add(ratingListSearch, "ay top, spany 2");
+        pnlPlayer.add(ratingListSearch, "ay top");
 
-        pnlPlayer.add(txfSearchId, "split 2, growx, flowx");
+        pnlPlayer.add(txfSearchId, "split 2, growx, flowx, ay top");
 
         btnSearchId.setText("Search by Id");
         btnSearchId.addActionListener(this::btnSearchIdActionPerformed);
-        pnlPlayer.add(btnSearchId);
+        pnlPlayer.add(btnSearchId, "ay top");
 
         getContentPane().add(pnlPlayer, "spany2, wrap");
 
