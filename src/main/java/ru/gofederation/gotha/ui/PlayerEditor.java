@@ -134,7 +134,7 @@ public class PlayerEditor extends JPanel {
     }
 
     private void createUI() {
-        setLayout(new MigLayout("insets 0", null, "[][][]unrel[]unrel[][]unrel[]unrel[]unrel[][]"));
+        setLayout(new MigLayout("insets 0", null, "[][][]unrel[]unrel[][]unrel[]unrel[]unrel[]"));
 
         // Last name
         add(new JLabel(locale.getString("player.last_name")));
@@ -262,19 +262,19 @@ public class PlayerEditor extends JPanel {
         registrationStatus = new ButtonGroup();
         registrationStatus.add(registrationFinal);
         registrationStatus.add(registrationPreliminary);
-        add(registration, "spanx, wrap");
+        add(registration, "spanx, split 3, flowx");
 
         // Register button
         register = new JButton(locale.getString("player.btn_register"));
         register.addActionListener(actionEvent -> {
             onRegisterAction();
         });
-        add(register, "span, split 2, growx");
+        add(register, "span, split 2, growx, ay bottom");
 
         // Reset button
         JButton reset = new JButton(locale.getString("player.btn_reset"));
         reset.addActionListener((actionEvent) -> resetForm());
-        add(reset, "wrap");
+        add(reset, "wrap, ay bottom");
 
         // Print welcome sheet?
         welcomeSheet = new JCheckBox(locale.getString("player.print_welcome_sheet"));
