@@ -18,6 +18,7 @@
 package ru.gofederation.api
 
 import info.vannier.gotha.*
+import ru.gofederation.gotha.model.PlayerRegistrationStatus
 import ru.gofederation.gotha.model.Rating
 import ru.gofederation.gotha.model.RatingOrigin
 
@@ -35,6 +36,7 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
         gps.beginDate = this.startDate.toJvmDate()
         gps.endDate = this.endDate.toJvmDate()
         gps.rgfId = this.id ?: 0
+        gps.numberOfRounds = this.roundCount ?: 5
         this.timing?.also { timing ->
             gps.basicTime = timing.basicTime
             when (timing) {
@@ -91,8 +93,64 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
                 }
             }
 
-        RgfTournament.ImportMode.PARTICIPANTS ->
-            throw NotImplementedError()
+        RgfTournament.ImportMode.PARTICIPANTS -> {
+            val playersMap = mutableMapOf<Int, Player>()
+
+            if (null != this.players) {
+                for (apiPlayer in this.players!!) {
+                    val player = Player.Builder().also { builder ->
+                        builder.firstName = apiPlayer.firstName
+                        builder.name = apiPlayer.lastName
+                        if (apiPlayer.playerId != null) {
+                            builder.rgfId = apiPlayer.playerId ?: 0
+                        }
+                        builder.setRating(apiPlayer.rating, RatingOrigin.RGF)
+                        builder.rank = Rating.ratingToRank(RatingOrigin.RGF, apiPlayer.rating)
+                        builder.registrationStatus = PlayerRegistrationStatus.FINAL
+                        builder.smmsByHand = apiPlayer.mm0_4
+                    }.build()
+                    playersMap[apiPlayer.id] = player
+
+                    try {
+                        tournament.addPlayer(player)
+                        report.players += 1
+                    } catch (e: TournamentPlayerDoubleException) {
+                        report.playerDoubles.add(e.playerName)
+                        report.hadError = true
+                    } catch (e: TournamentException) {
+                        report.reportBuilder.append(e.message).append("\n")
+                        report.hadError = true
+                    }
+                }
+            }
+
+            if (null != this.games) {
+                for (apiGame in this.games!!) {
+                    val game = Game().also {
+                        it.blackPlayer = playersMap[apiGame.player1id]
+                        it.whitePlayer = playersMap[apiGame.player2id]
+                        it.roundNumber = apiGame.round - 1
+                        it.tableNumber = apiGame.board
+                        it.handicap = apiGame.handicap
+                        it.isKnownColor = apiGame.color == RgfTournament.Game.Color.PLAYER_1_BLACK
+                        it.result = apiGame.result.toGotha()
+                    }
+
+                    if ((game.whitePlayer != null) and (game.blackPlayer == null) and (game.result == Game.RESULT_BLACKWINS_BYDEF)) {
+                        tournament.setByePlayer(game.whitePlayer, game.roundNumber)
+                    } else {
+                        if (game.tableNumber == 0) {
+                            game.tableNumber = (tournament
+                                .gamesList(game.roundNumber)
+                                .maxBy { it.tableNumber }
+                                ?.tableNumber ?: 0) + 1
+                        }
+                        val success = tournament.addGame(game)
+                        if (success) report.games += 1
+                    }
+                }
+            }
+        }
     }
 
     return Pair(tournament, report)
@@ -187,4 +245,16 @@ fun resultFromGotha(result: Int) = when (result) {
     Game.RESULT_UNKNOWN -> RgfTournament.Game.Result.NOT_PLAYED
     Game.RESULT_EQUAL_BYDEF -> RgfTournament.Game.Result.TIE_BYREF
     else -> RgfTournament.Game.Result.UNKNOWN
+}
+
+fun RgfTournament.Game.Result.toGotha() = when (this) {
+    RgfTournament.Game.Result.PLAYER_1_WIN -> Game.RESULT_BLACKWINS
+    RgfTournament.Game.Result.PLAYER_2_WIN -> Game.RESULT_WHITEWINS
+    RgfTournament.Game.Result.PLAYER_1_WIN_BYREF -> Game.RESULT_BLACKWINS_BYDEF
+    RgfTournament.Game.Result.PLAYER_2_WIN_BYREF -> Game.RESULT_WHITEWINS_BYDEF
+    RgfTournament.Game.Result.NOT_PLAYED -> Game.RESULT_UNKNOWN
+    RgfTournament.Game.Result.TIE -> Game.RESULT_EQUAL
+    RgfTournament.Game.Result.BOTH_LOST -> Game.RESULT_BOTHLOSE
+    RgfTournament.Game.Result.UNKNOWN -> Game.RESULT_UNKNOWN
+    RgfTournament.Game.Result.TIE_BYREF -> Game.RESULT_EQUAL_BYDEF
 }

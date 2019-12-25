@@ -34,6 +34,7 @@ class RgfTournamentImportDialog(private val tournamentOpener: TournamentOpener) 
     private val rgfApiClient = Client()
     private var fetchJob: Job? = null
 
+    private val tournamentList = RgfTournamentList(this)
     private val importApplications = JRadioButton(tr("tournament.rgf.import.applications"))
     private val importParticipants = JRadioButton(tr("tournament.rgf.import.participants"))
 
@@ -47,14 +48,18 @@ class RgfTournamentImportDialog(private val tournamentOpener: TournamentOpener) 
                 isSelected = true
             })
 
-            add(importParticipants.apply {
-                isEnabled = false
-            })
+            add(importParticipants)
 
             ButtonGroup().addAll(importApplications, importParticipants)
+
+            importApplications.addChangeListener {
+                tournamentList.filterMode =
+                    if (importApplications.isSelected) RgfTournament.ImportMode.APPLICATIONS
+                    else RgfTournament.ImportMode.PARTICIPANTS
+            }
         })
 
-        add(RgfTournamentList(this))
+        add(tournamentList)
 
         add(JLabel(tr("tournament.rgf.import.help")))
 

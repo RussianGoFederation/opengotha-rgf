@@ -40,6 +40,7 @@ import javax.swing.*
 import javax.swing.event.MouseInputAdapter
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
+import kotlin.properties.Delegates
 
 internal class RgfTournamentList(tournamentPickListener: TournamentPickListener) : Panel() {
     private val tournamentsTable: JTable
@@ -47,6 +48,15 @@ internal class RgfTournamentList(tournamentPickListener: TournamentPickListener)
     private val layout: CardLayout
     private val rgfApiClient = Client()
     private var updateJob: Job? = null
+    private var tournaments = emptyList<RgfTournament>()
+    private val filterLabel = JLabel(tr("tournament.rgf.import.filter_applications")).also {
+        it.font = it.font.deriveFont(Font.ITALIC)
+    }
+    var filterMode: RgfTournament.ImportMode by Delegates.observable(RgfTournament.ImportMode.APPLICATIONS)
+    { _, oldValue, newValue ->
+        filterLabel.isVisible = newValue == RgfTournament.ImportMode.APPLICATIONS
+        if (oldValue != newValue) updateFilter()
+    }
 
     init {
         val tableCellRenderer = object : DefaultTableCellRenderer() {
@@ -110,9 +120,7 @@ internal class RgfTournamentList(tournamentPickListener: TournamentPickListener)
 
         val tablePanel = JPanel(MigLayout("insets 0, flowy", "[grow,fill]", "[grow,fill][]")).apply {
             add(JScrollPane(tournamentsTable))
-            add(JLabel(tr("tournament.rgf.import.filter_applications")).also {
-                it.font = it.font.deriveFont(Font.ITALIC)
-            })
+            add(filterLabel, "hidemode 3")
         }
 
         val progressPanel = JPanel(MigLayout("flowy", "push[]push", "push[]rel[]push")).apply {
@@ -140,14 +148,28 @@ internal class RgfTournamentList(tournamentPickListener: TournamentPickListener)
                     ExceptionDialog("tournament.rgf.import.download_error", tournamentsResult.exception)
                         .show(this@RgfTournamentList)
                 is TournamentList -> {
-                    val model = (tournamentsTable.model as TableModel)
-                    model.tournaments = tournamentsResult.tournaments
-                        .filter { it.applicationsCount?:0 > 0 }
-                        .filter { it.endDate >= ru.gofederation.api.Date() }
-                    onListDownloaded(model)
+                    this@RgfTournamentList.tournaments = tournamentsResult.tournaments
+                    updateFilter()
                 }
             }
         }
+    }
+
+    private fun updateFilter() {
+        val model = (tournamentsTable.model as TableModel)
+
+        model.tournaments =
+            when (filterMode) {
+                RgfTournament.ImportMode.APPLICATIONS ->
+                    tournaments.filter { it.applicationsCount?:0 > 0 }
+                        .filter { it.endDate >= ru.gofederation.api.Date() }
+
+                RgfTournament.ImportMode.PARTICIPANTS -> tournaments
+
+                else -> tournaments
+            }
+
+        onListDownloaded(model)
     }
 
     private fun onListDownloaded(model: TableModel) {
