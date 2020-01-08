@@ -77,6 +77,8 @@ data class RgfTournament(
     data class Player (
         val id: Int,
         val playerId: Int? = null,
+        val newPlayer: Boolean = false,
+        val assessmentRating: Boolean = false,
         val firstName: String,
         val lastName: String,
         val patronymic: String? = null,

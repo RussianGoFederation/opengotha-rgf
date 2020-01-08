@@ -104,6 +104,8 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
                         if (apiPlayer.playerId != null) {
                             builder.rgfId = apiPlayer.playerId ?: 0
                         }
+                        builder.isRgfNew = apiPlayer.newPlayer
+                        builder.isRgfAssessmentRating = apiPlayer.assessmentRating
                         builder.setRating(apiPlayer.rating, RatingOrigin.RGF)
                         builder.rank = Rating.ratingToRank(RatingOrigin.RGF, apiPlayer.rating)
                         builder.registrationStatus = PlayerRegistrationStatus.FINAL
@@ -172,6 +174,8 @@ fun gotha2rgf(gotha: TournamentInterface): RgfTournament {
             val player = RgfTournament.Player(
                 id = index + 1,
                 playerId = if (scoredPlayer.rgfId > 0) scoredPlayer.rgfId else null,
+                newPlayer = scoredPlayer.isRgfNew,
+                assessmentRating = scoredPlayer.isRgfAssessmentRating,
                 firstName = scoredPlayer.firstName,
                 lastName = scoredPlayer.name,
                 patronymic = scoredPlayer.patronymic,

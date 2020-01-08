@@ -93,6 +93,8 @@ public class PlayerEditor extends JPanel {
     private JTextField firstName;
     private JTextField lastName;
     private JTextField patronymic;
+    private JCheckBox newRgf;
+    private JCheckBox expertAssessmentRgf;
     private JDateChooser birthday;
     private JLabel photo;
     private JTextField rating;
@@ -141,9 +143,20 @@ public class PlayerEditor extends JPanel {
         lastName = new JTextField();
         add(lastName, "width 120lp, sgx name");
 
+        // New (RGF)
+        newRgf = new JCheckBox(locale.getString("player.rgf.new"));
+        newRgf.setToolTipText(locale.getString("player.rgf.new.tooltip"));
+        add(newRgf, "spany 6, ay top, split 3, flowy");
+
+        // Expert assessment (RGF)
+        expertAssessmentRgf = new JCheckBox(locale.getString("player.rgf.expert_assessment"));
+        expertAssessmentRgf.setToolTipText(locale.getString("player.rgf.expert_assessment.tooltip"));
+        expertAssessmentRgf.setEnabled(false);
+        add(expertAssessmentRgf);
+
         // Photo
         photo = new JLabel();
-        add(photo, "spany 6, ay top, width 80, height 115");
+        add(photo, "width 80, height 115");
 
         // Rounds
         JPanel rounds = new JPanel();
@@ -328,6 +341,8 @@ public class PlayerEditor extends JPanel {
         firstName.setText(player.getFirstName());
         lastName.setText(player.getName());
 
+        expertAssessmentRgf.setSelected(false);
+
         int stdRating = player.getStdRating();
         RatingOrigin ratingOrigin = player.getRatingOrigin();
         String strRatingOrigin = ratingOrigin.toString();
@@ -375,6 +390,7 @@ public class PlayerEditor extends JPanel {
 
         if (player.getRgfId() > 0) {
             this.rgfId.setText(Integer.toString(player.getRgfId()));
+            this.newRgf.setEnabled(false);
         }
 
         for (int i = 0; i < Gotha.MAX_NUMBER_OF_ROUNDS; i++) {
@@ -446,6 +462,12 @@ public class PlayerEditor extends JPanel {
 
         if (player.getRgfId() > 0) {
             this.rgfId.setText(Integer.toString(player.getRgfId()));
+            this.newRgf.setEnabled(false);
+        }
+        if (player.getRatingOrigin() != RatingOrigin.RGF) {
+            this.expertAssessmentRgf.setSelected(true);
+        } else {
+            this.expertAssessmentRgf.setSelected(false);
         }
 
         this.agaId.setText(player.getAgaId());
@@ -532,6 +554,7 @@ public class PlayerEditor extends JPanel {
                 .setFfgLicence(this.ffgLicence.getText(), this.ffgLicenceStatus.getText())
                 .setAgaId(this.agaId.getText(), this.agaExpirationDate.getText())
                 .setRgfId(rgfId)
+                .setRgfNew(rgfId == 0 && newRgf.isSelected())
                 .setRank(rank.getValue())
                 .setRating(rating, RatingOrigin.fromString(strOrigin))
                 .setGrade(this.grade.getText())
@@ -642,6 +665,7 @@ public class PlayerEditor extends JPanel {
                 this.rank.setText(rank);
                 this.grade.setText(rank);
                 this.ratingOrigin.setText("MAN");
+                this.expertAssessmentRgf.setSelected(true);
             }
         }
     }
@@ -693,6 +717,8 @@ public class PlayerEditor extends JPanel {
         this.ffgLicenceStatus.setText("");
         this.egfPin.setText("");
         this.photo.setIcon(null);
+        this.newRgf.setEnabled(true);
+        this.expertAssessmentRgf.setSelected(false);
         this.rgfId.setText("");
         Preferences prefs = Preferences.userRoot().node(Gotha.strPreferences + "/playersmanager");
         String defaultRegistration = prefs.get("defaultregistration", FINAL.toString() );
