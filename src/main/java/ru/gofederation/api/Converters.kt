@@ -212,7 +212,7 @@ fun gotha2rgf(gotha: TournamentInterface): RgfTournament {
                 player2id = playersMap[player.keyString]?.id,
                 color = RgfTournament.Game.Color.UNKNOWN,
                 result = RgfTournament.Game.Result.PLAYER_2_WIN,
-                round = i,
+                round = i + 1,
                 board = 0,
                 komi_4 = komi,
                 handicap = 0
