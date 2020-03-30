@@ -106,7 +106,7 @@ data class RgfTournament(
         val player1: Player? = null,
         @Transient
         val player2: Player? = null,
-        val color: Color,
+        val color: Color = Color.UNKNOWN,
         val result: Result,
         val round: Int,
         val board: Int,
@@ -199,9 +199,8 @@ data class RgfTournament(
                     "can" -> return Canadian(basicTime, boyomi, moves)
                     "jap" -> return Japanese(basicTime, boyomi, moves, periods)
                     "fischer" -> return Fischer(basicTime, boyomi)
+                    else -> return SuddenDeath(basicTime)
                 }
-
-                throw Exception()
             }
 
             override fun serialize(encoder: Encoder, obj: Timing) {
