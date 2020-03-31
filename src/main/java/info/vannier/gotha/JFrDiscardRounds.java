@@ -99,7 +99,7 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         jLabel3.setText(locale.getString("tournament.discard_rounds.after"));
         getContentPane().add(jLabel3);
 
-        ckbRemoveNotImpliedPlayers.setSelected(true);
+        ckbRemoveNotImpliedPlayers.setSelected(false);
         ckbRemoveNotImpliedPlayers.setText(locale.getString("tournament.discard_rounds.remove_players"));
         getContentPane().add(ckbRemoveNotImpliedPlayers, "gapleft indent, spanx");
 
