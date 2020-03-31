@@ -1423,13 +1423,13 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     @Override
     public void chooseAByePlayer(ArrayList<Player> alPlayers, int roundNumber) throws RemoteException {
 
-        // The weight allocated to each player is 1000 * number of previous byes + rank
+        // The weight allocated to each player is 1000 * number of previous byes + mms2
         // The chosen player will be the player with the minimum weight
         Player bestPlayerForBye = null;
         int minWeight = 1000 * (Gotha.MAX_NUMBER_OF_ROUNDS - 1) + 38 + 1; // Nobody can have such a weight neither more
 
         for (Player p : alPlayers) {
-            int weightForBye = p.getRank() + this.mms2(p, roundNumber);
+            int weightForBye = this.mms2(p, roundNumber);
             for (int r = 0; r < roundNumber; r++) {
                 if (byePlayers[r] == null) {
                     continue;
