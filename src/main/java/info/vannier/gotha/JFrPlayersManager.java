@@ -349,7 +349,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
                 try {
                     ratingList = RatingListFactory.instance().loadDefaultFile(typeRatingList);
                     ratingListSearch.setRatingList(ratingList);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     // TODO log error
                     e.printStackTrace();
                     ratingList = new RatingList();
