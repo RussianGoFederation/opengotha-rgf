@@ -24,11 +24,19 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.miginfocom.swing.MigLayout
-import ru.gofederation.api.*
+import ru.gofederation.api.Client
+import ru.gofederation.api.RgfTournament
+import ru.gofederation.api.TournamentErrorResult
+import ru.gofederation.api.TournamentResult
+import ru.gofederation.api.rgf2gotha
 import ru.gofederation.gotha.ui.component.addAll
 import java.awt.Dimension
-import java.lang.StringBuilder
-import javax.swing.*
+import javax.swing.BorderFactory
+import javax.swing.ButtonGroup
+import javax.swing.JLabel
+import javax.swing.JOptionPane
+import javax.swing.JPanel
+import javax.swing.JRadioButton
 
 class RgfTournamentImportDialog(private val tournamentOpener: TournamentOpener) : Panel(), RgfTournamentList.TournamentPickListener {
     private val rgfApiClient = Client()
@@ -75,13 +83,11 @@ class RgfTournamentImportDialog(private val tournamentOpener: TournamentOpener) 
         val progress = Channel<Pair<Long, Long>>()
 
         fetchJob = launch {
-            val importMode = if (importApplications.isSelected)
-                RgfTournament.ImportMode.APPLICATIONS
-            else
-                RgfTournament.ImportMode.PARTICIPANTS
-
-            val tournamentRes = withContext(Dispatchers.IO) {
-                rgfApiClient.fetchTournament(id, progress)
+            val (importMode, tournamentRes) = withContext(Dispatchers.IO) {
+                if (importApplications.isSelected)
+                    Pair(RgfTournament.ImportMode.APPLICATIONS, rgfApiClient.fetchTournamentApplications(id, progress))
+                else
+                    Pair(RgfTournament.ImportMode.PARTICIPANTS, rgfApiClient.fetchTournament(id, progress))
             }
 
             if (tournamentRes is TournamentErrorResult) {

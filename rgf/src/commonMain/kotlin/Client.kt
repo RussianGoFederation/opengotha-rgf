@@ -109,13 +109,22 @@ class Client(
 
     suspend fun fetchTournament(id: Int, progress: Channel<Pair<Long, Long>>? = null): TournamentCallResult {
         return try {
-            val rawResponse = get(Url("$host$TOURNAMENTS_PATH/$id?include=player_applications"), progress)
+            val rawResponse = get(Url("$host$TOURNAMENTS_PATH/$id"), progress)
             val response = json.parse(TournamentResponse.serializer(), rawResponse)
             TournamentResult(response.data.tournament)
         } catch (e: Exception) {
             TournamentErrorResult(e)
         }
     }
+
+    suspend fun fetchTournamentApplications(id: Int, progress: Channel<Pair<Long, Long>>? = null): TournamentCallResult =
+        try {
+            val rawResponse = get(Url("$host$TOURNAMENTS_PATH/$id?include=player_applications"), progress)
+            val response = json.parse(TournamentResponse.serializer(), rawResponse)
+            TournamentResult(response.data.tournament)
+        } catch (e: Exception) {
+            TournamentErrorResult(e)
+        }
 
     suspend fun postTournament(tournament: RgfTournament, authentication: String, progress: Channel<Pair<Long, Long>>? = null): TournamentCallResult {
         return try {
