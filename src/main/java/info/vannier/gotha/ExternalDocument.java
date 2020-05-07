@@ -3,7 +3,37 @@
  */
 package info.vannier.gotha;
 
-import java.io.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.RatingOrigin;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.channels.FileChannel;
 import java.rmi.RemoteException;
 import java.text.DateFormat;
@@ -15,19 +45,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
-
-import ru.gofederation.gotha.model.PlayerRegistrationStatus;
-import ru.gofederation.gotha.model.RatingOrigin;
 
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
@@ -1273,41 +1290,41 @@ public class ExternalDocument {
             String strHandicap = extractNodeValue(nnm, "handicap", "0");
             int handicap = new Integer(strHandicap).intValue();
             String strResult = extractNodeValue(nnm, "result", "RESULT_UNKNOWN");
-            int result = Game.RESULT_UNKNOWN;
+            Game.Result result = Game.Result.UNKNOWN;
             if (strResult.equals("RESULT_WHITEWINS")) {
-                result = Game.RESULT_WHITEWINS;
+                result = Game.Result.WHITEWINS;
             }
             if (strResult.equals("RESULT_BLACKWINS")) {
-                result = Game.RESULT_BLACKWINS;
+                result = Game.Result.BLACKWINS;
             }
             if (strResult.equals("RESULT_EQUAL")) {
-                result = Game.RESULT_EQUAL;
+                result = Game.Result.EQUAL;
             }
             if (strResult.equals("RESULT_BOTHLOSE")) {
-                result = Game.RESULT_BOTHLOSE;
+                result = Game.Result.BOTHLOSE;
             }
             if (strResult.equals("RESULT_BOTHWIN")) {
-                result = Game.RESULT_BOTHWIN;
+                result = Game.Result.BOTHWIN;
             }
             if (strResult.equals("RESULT_WHITEWINS_BYDEF")) {
-                result = Game.RESULT_WHITEWINS_BYDEF;
+                result = Game.Result.WHITEWINS_BYDEF;
             }
             if (strResult.equals("RESULT_BLACKWINS_BYDEF")) {
-                result = Game.RESULT_BLACKWINS_BYDEF;
+                result = Game.Result.BLACKWINS_BYDEF;
             }
             if (strResult.equals("RESULT_EQUAL_BYDEF")) {
-                result = Game.RESULT_EQUAL_BYDEF;
+                result = Game.Result.EQUAL_BYDEF;
             }
             if (strResult.equals("RESULT_BOTHLOSE_BYDEF")) {
-                result = Game.RESULT_BOTHLOSE_BYDEF;
+                result = Game.Result.BOTHLOSE_BYDEF;
             }
             if (strResult.equals("RESULT_BOTHWIN_BYDEF")) {
-                result = Game.RESULT_BOTHWIN_BYDEF;
+                result = Game.Result.BOTHWIN_BYDEF;
             }
 
-            Game g = new Game(roundNumber, tableNumber, wP, bP, true, handicap, result);
-            g.setKnownColor(knownColor);
-            alGames.add(g);
+            Game.Builder gb = new Game.Builder(roundNumber, tableNumber, wP, bP, true, handicap, result);
+            gb.setKnownColor(knownColor);
+            alGames.add(gb.build());
         }
         return alGames;
     }
@@ -1354,10 +1371,10 @@ public class ExternalDocument {
      **/
     private static void buildALGames(ArrayList<PotentialHalfGame> alPotentialHalfGames, ArrayList<Player> alPlayers, ArrayList<Game> alGames) {
         // Initialize tabGames
-        Game[][] tabGames = new Game[Gotha.MAX_NUMBER_OF_ROUNDS][alPotentialHalfGames.size()]; // Of course, it is over-dimensionned
+        Game.Builder[][] tabGames = new Game.Builder[Gotha.MAX_NUMBER_OF_ROUNDS][alPotentialHalfGames.size()]; // Of course, it is over-dimensionned
         for (int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++) {
             for (int ng = 0; ng < alPotentialHalfGames.size(); ng++) {
-                tabGames[r][ng] = new Game();
+                tabGames[r][ng] = new Game.Builder();
             }
         }
 
@@ -1395,7 +1412,7 @@ public class ExternalDocument {
 
             int chosenGameNumber = -1;
             for (int numG = 0; numG < tabGames[chosenRoundNumber].length; numG++) {
-                Game game = tabGames[chosenRoundNumber][numG];
+                Game.Builder game = tabGames[chosenRoundNumber][numG];
                 if (game.getWhitePlayer() == null && game.getBlackPlayer() == null) {
                     chosenGameNumber = numG;
                     break;
@@ -1403,56 +1420,56 @@ public class ExternalDocument {
             }
 
             // Store this PotentialHalfGame into a Game
-            Game g = tabGames[chosenRoundNumber][chosenGameNumber];
+            Game.Builder g = tabGames[chosenRoundNumber][chosenGameNumber];
             Player player = alPlayers.get(phg.playerNumber);
             Player opponent = alPlayers.get(phg.opponentNumber);
 
-            int res = Game.RESULT_UNKNOWN;
+            Game.Result res = Game.Result.UNKNOWN;
             if (phg.color == 'w') {
                 g.setWhitePlayer(player);
                 g.setBlackPlayer(opponent);
                 if (phg.result == 1) {
-                    res = Game.RESULT_WHITEWINS;
+                    res = Game.Result.WHITEWINS;
                 } else if (phg.result == -1) {
-                    res = Game.RESULT_BLACKWINS;
+                    res = Game.Result.BLACKWINS;
                 }
                 g.setKnownColor(true);
             } else if (phg.color == 'b') {
                 g.setWhitePlayer(opponent);
                 g.setBlackPlayer(player);
                 if (phg.result == 1) {
-                    res = Game.RESULT_BLACKWINS;
+                    res = Game.Result.BLACKWINS;
                 } else if (phg.result == -1) {
-                    res = Game.RESULT_WHITEWINS;
+                    res = Game.Result.WHITEWINS;
                 }
                 g.setKnownColor(true);
             } else {
                 g.setWhitePlayer(player);
                 g.setBlackPlayer(opponent);
                 if (phg.result == 1) {
-                    res = Game.RESULT_WHITEWINS;
+                    res = Game.Result.WHITEWINS;
                 } else if (phg.result == -1) {
-                    res = Game.RESULT_BLACKWINS;
+                    res = Game.Result.BLACKWINS;
                 }
                 g.setKnownColor(false);
             }
             if (phg.bydef) {
-                res += Game.RESULT_BYDEF;
+                res = res.byDef();
             }
             g.setResult(res);
 
             g.setHandicap(phg.handicap);
-            g.setRoundNumber(chosenRoundNumber);
+            g.setRound(chosenRoundNumber);
 
             // Choose a table number
             int tN = 0;
-            for (int gN = 0; gN < tabGames[g.getRoundNumber()].length; gN++) {
-                Game game = tabGames[g.getRoundNumber()][gN];
-                if (tN <= game.getTableNumber()) {
-                    tN = game.getTableNumber() + 1;
+            for (int gN = 0; gN < tabGames[g.getRound()].length; gN++) {
+                Game.Builder game = tabGames[g.getRound()][gN];
+                if (tN <= game.getBoard()) {
+                    tN = game.getBoard() + 1;
                 }
             }
-            g.setTableNumber(tN);
+            g.setBoard(tN);
 
             // Freeze the potential halfGame or both potential halfGames just processed
             alBProcessedPHG.set(numPHG, true);
@@ -1471,9 +1488,9 @@ public class ExternalDocument {
         // Store the games into alGames
         for (int numR = 0; numR < Gotha.MAX_NUMBER_OF_ROUNDS; numR++) {
             for (int numG = 0; numG < alPotentialHalfGames.size(); numG++) {
-                Game g = tabGames[numR][numG];
-                if (g.getWhitePlayer() != null && g.getBlackPlayer() != null) {
-                    alGames.add(g);
+                Game.Builder gb = tabGames[numR][numG];
+                if (gb.getWhitePlayer() != null && gb.getBlackPlayer() != null) {
+                    alGames.add(gb.build());
                 }
             }
         }
@@ -1485,9 +1502,9 @@ public class ExternalDocument {
      * <br>If a game has already been played by either player of the pair in candidateRoundNumber, returns false.
      * <br>If not, returns true;
      */
-    private static boolean isASuitableRound(int candidateRoundNumber, Player p1, Player p2, Game[][] tabGames) {
+    private static boolean isASuitableRound(int candidateRoundNumber, Player p1, Player p2, Game.Builder[][] tabGames) {
         for (int ng = 0; ng < tabGames[candidateRoundNumber].length; ng++) {
-            Game g = tabGames[candidateRoundNumber][ng];
+            Game.Builder g = tabGames[candidateRoundNumber][ng];
             if (p1.hasSameKeyString(g.getWhitePlayer())) {
                 return false;
             }
@@ -1936,9 +1953,9 @@ public class ExternalDocument {
                 try {
                     Game g = it.next();
                     String result = "*";
-                    if (g.getResult() == Game.RESULT_WHITEWINS) {
+                    if (g.getResult() == Game.Result.WHITEWINS) {
                         result = "W";
-                    } else if (g.getResult() == Game.RESULT_BLACKWINS) {
+                    } else if (g.getResult() == Game.Result.BLACKWINS) {
                         result = "B";
                     } else {
                         result = "?";
@@ -2491,7 +2508,7 @@ public class ExternalDocument {
                 }
                 Game g = alG.get(iG);
 
-                String strTN = "" + (g.getTableNumber() + 1);
+                String strTN = "" + (g.getBoard() + 1);
                 output.write("<td class=" + strPar + ">" + strTN + "</td>");
                 Player wP = g.getWhitePlayer();
                 String strWP = wP.augmentedPlayerName(dpps);
@@ -2795,11 +2812,11 @@ public class ExternalDocument {
                         Player p1 = wTeam.getTeamMember(roundNumber, ib);
                         Player p2 = bTeam.getTeamMember(roundNumber, ib);
                         Game game = tournament.getGame(roundNumber, p1);
-                        strTN = "" + (game.getTableNumber() + 1);
+                        strTN = "" + (game.getBoard() + 1);
                         output.write("<td class=" + strPar + " align=\"right\">" + strTN + "&nbsp;</td>");
                         String strP1Color = "";
                         String strP2Color = "";
-                        if (game.isKnownColor()){
+                        if (game.getKnownColor()){
                             if (game.getWhitePlayer().hasSameKeyString(p1)){
 //                                strP1Color = " (w)";
 //                                strP2Color = " (b)";
@@ -3182,42 +3199,42 @@ public class ExternalDocument {
     private static Element generateXMLGamesElement(Document document, ArrayList<Game> alGames) {
         Element emGames = document.createElement("Games");
         for (Game g : alGames) {
-            String strRoundNumber = Integer.valueOf(g.getRoundNumber() + 1).toString();
-            String strTableNumber = Integer.valueOf(g.getTableNumber() + 1).toString();
+            String strRoundNumber = Integer.valueOf(g.getRound() + 1).toString();
+            String strTableNumber = Integer.valueOf(g.getBoard() + 1).toString();
             String strWhitePlayer = g.getWhitePlayer().getKeyString();
             String strBlackPlayer = g.getBlackPlayer().getKeyString();
-            String strKnownColor = g.isKnownColor() ? "true" : "false";
+            String strKnownColor = g.getKnownColor() ? "true" : "false";
             String strHandicap = Integer.valueOf(g.getHandicap()).toString();
             String strResult;
             switch (g.getResult()) {
-                case Game.RESULT_WHITEWINS:
+                case WHITEWINS:
                     strResult = "RESULT_WHITEWINS";
                     break;
-                case Game.RESULT_BLACKWINS:
+                case BLACKWINS:
                     strResult = "RESULT_BLACKWINS";
                     break;
-                case Game.RESULT_EQUAL:
+                case EQUAL:
                     strResult = "RESULT_EQUAL";
                     break;
-                case Game.RESULT_BOTHWIN:
+                case BOTHWIN:
                     strResult = "RESULT_BOTHWIN";
                     break;
-                case Game.RESULT_BOTHLOSE:
+                case BOTHLOSE:
                     strResult = "RESULT_BOTHLOSE";
                     break;
-                case Game.RESULT_WHITEWINS_BYDEF:
+                case WHITEWINS_BYDEF:
                     strResult = "RESULT_WHITEWINS_BYDEF";
                     break;
-                case Game.RESULT_BLACKWINS_BYDEF:
+                case BLACKWINS_BYDEF:
                     strResult = "RESULT_BLACKWINS_BYDEF";
                     break;
-                case Game.RESULT_EQUAL_BYDEF:
+                case EQUAL_BYDEF:
                     strResult = "RESULT_EQUAL_BYDEF";
                     break;
-                case Game.RESULT_BOTHWIN_BYDEF:
+                case BOTHWIN_BYDEF:
                     strResult = "RESULT_BOTHWIN_BYDEF";
                     break;
-                case Game.RESULT_BOTHLOSE_BYDEF:
+                case BOTHLOSE_BYDEF:
                     strResult = "RESULT_BOTHLOSE_BYDEF";
                     break;
                 default:
@@ -3641,7 +3658,7 @@ public class ExternalDocument {
     /**
      * Parses a Result Line and inserts all half games found into alHalfGames
      * @param strResultLine
-     * @param alHalfGames
+     * @param alPotentialHalfGames
      */
     private static void parseResultLine(int playerNumber, String strResultLine, ArrayList<PotentialHalfGame> alPotentialHalfGames) {
         String strDraft = strResultLine.trim();

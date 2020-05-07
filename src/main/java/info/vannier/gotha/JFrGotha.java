@@ -5,7 +5,41 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.io.TableXlsxExporter;
+import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.presenter.ITableColumn;
+import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;
+import ru.gofederation.gotha.presenter.StandingsTableModel;
+import ru.gofederation.gotha.printing.StandingsPrinter;
+import ru.gofederation.gotha.ui.Dialog;
+import ru.gofederation.gotha.ui.NewTournamentPanel;
+import ru.gofederation.gotha.ui.PrinterSettings;
+import ru.gofederation.gotha.ui.RgfTournamentExportDialog;
+import ru.gofederation.gotha.ui.RgfTournamentImportDialog;
+import ru.gofederation.gotha.ui.TournamentOpener;
+import ru.gofederation.gotha.util.GothaLocale;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -31,41 +65,6 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-
-import ru.gofederation.gotha.io.TableXlsxExporter;
-import ru.gofederation.gotha.presenter.ITableColumn;
-import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;
-import ru.gofederation.gotha.presenter.StandingsTableModel;
-import ru.gofederation.gotha.printing.StandingsPrinter;
-import ru.gofederation.gotha.ui.Dialog;
-import ru.gofederation.gotha.ui.NewTournamentPanel;
-import ru.gofederation.gotha.ui.PrinterSettings;
-import ru.gofederation.gotha.ui.RgfTournamentExportDialog;
-import ru.gofederation.gotha.ui.RgfTournamentImportDialog;
-import ru.gofederation.gotha.ui.TournamentOpener;
-import ru.gofederation.gotha.util.GothaLocale;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
@@ -1501,8 +1500,8 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             }
             int nbEntResults = 0;
             for (Game g : alGames) {
-                int result = g.getResult();
-                if (result != Game.RESULT_UNKNOWN) {
+                Game.Result result = g.getResult();
+                if (result != Game.Result.UNKNOWN) {
                     nbEntResults++;
                 }
             }

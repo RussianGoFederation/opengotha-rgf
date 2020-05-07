@@ -4,7 +4,13 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.util.GothaLocale;
 
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,12 +21,6 @@ import java.util.Collections;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
-
-import ru.gofederation.gotha.util.GothaLocale;
 
 /**
  *
@@ -519,8 +519,8 @@ public class JFrTeamsPairing extends javax.swing.JFrame {
                 int tn = 0;
                 try {
                     tn = tournament.findFirstAvailableTableNumber(processedRoundNumber);
-                    Game g = new Game(processedRoundNumber, tn, wp, bp, true, 0, Game.RESULT_UNKNOWN);
-                    tournament.addGame(g);
+                    Game.Builder g = new Game.Builder(processedRoundNumber, tn, wp, bp, true, 0, Game.Result.UNKNOWN);
+                    tournament.addGame(g.build());
                 } catch (RemoteException ex) {
                     Logger.getLogger(JFrTeamsPairing.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (TournamentException ex) {
@@ -620,7 +620,7 @@ public class JFrTeamsPairing extends javax.swing.JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrTeamsPairing.class.getName()).log(Level.SEVERE, null, ex);
         }
-        int oldB0TN = game.getTableNumber();
+        int oldB0TN = game.getBoard();
         String strOldB0TN = "" + (oldB0TN + 1);
         String strResponse = JOptionPane.showInputDialog(locale.format("tournament.teams.change_table_numbers", wt.getTeamName(), bt.getTeamName()), strOldB0TN);
 
@@ -653,10 +653,10 @@ public class JFrTeamsPairing extends javax.swing.JFrame {
             Game g2 = null;
             try {
                 g1 = tournament.getGame(processedRoundNumber, player);
-                oldTN = g1.getTableNumber();
+                oldTN = g1.getBoard();
                 ArrayList<Game> alGames = tournament.gamesList(this.processedRoundNumber);
                 for (Game g : alGames) {
-                    if (g.getTableNumber() == newTN) {
+                    if (g.getBoard() == newTN) {
                         g2 = g;
                         break;
                     }
@@ -665,10 +665,10 @@ public class JFrTeamsPairing extends javax.swing.JFrame {
                 tournament.removeGame(g1);
                 if (g2 != null) {
                     tournament.removeGame(g2);
-                    g2.setTableNumber(oldTN);
+                    g2 = g2.withBoard(oldTN);
                     tournament.addGame(g2);
                 }
-                g1.setTableNumber(newTN);
+                g1 = g1.withBoard(newTN);
                 tournament.addGame(g1);
 
             } catch (RemoteException ex) {
@@ -697,14 +697,7 @@ public class JFrTeamsPairing extends javax.swing.JFrame {
         }
         try {
             tournament.exchangeGameColors(g);
-            int oldResult = g.getResult();
-            if (oldResult == Game.RESULT_WHITEWINS) {
-                tournament.setResult(g, Game.RESULT_BLACKWINS);
-            }
-            if (oldResult == Game.RESULT_BLACKWINS) {
-                tournament.setResult(g, Game.RESULT_WHITEWINS);
-            }
-        } catch (RemoteException ex) {
+        } catch (RemoteException | TournamentException ex) {
             Logger.getLogger(JFrGamesRR.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

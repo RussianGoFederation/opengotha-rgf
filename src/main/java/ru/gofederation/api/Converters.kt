@@ -17,7 +17,15 @@
 
 package ru.gofederation.api
 
-import info.vannier.gotha.*
+import info.vannier.gotha.GeneralParameterSet
+import info.vannier.gotha.PlacementCriterion
+import info.vannier.gotha.Player
+import info.vannier.gotha.ScoredPlayer
+import info.vannier.gotha.Tournament
+import info.vannier.gotha.TournamentException
+import info.vannier.gotha.TournamentInterface
+import info.vannier.gotha.TournamentPlayerDoubleException
+import ru.gofederation.gotha.model.Game
 import ru.gofederation.gotha.model.PlayerRegistrationStatus
 import ru.gofederation.gotha.model.Rating
 import ru.gofederation.gotha.model.RatingOrigin
@@ -128,27 +136,32 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
 
             if (null != this.games) {
                 for (apiGame in this.games!!) {
-                    val game = Game().also {
-                        it.blackPlayer = playersMap[apiGame.player1id]
-                        it.whitePlayer = playersMap[apiGame.player2id]
-                        it.roundNumber = apiGame.round - 1
-                        it.tableNumber = apiGame.board
-                        it.handicap = apiGame.handicap
-                        it.isKnownColor = apiGame.color == RgfTournament.Game.Color.PLAYER_1_BLACK
-                        it.result = apiGame.result.toGotha()
-                    }
-
-                    if ((game.whitePlayer != null) and (game.blackPlayer == null) and (game.result == Game.RESULT_BLACKWINS_BYDEF)) {
-                        tournament.setByePlayer(game.whitePlayer, game.roundNumber)
-                    } else {
-                        if (game.tableNumber == 0) {
-                            game.tableNumber = (tournament
-                                .gamesList(game.roundNumber)
-                                .maxBy { it.tableNumber }
-                                ?.tableNumber ?: 0) + 1
+                    val blackPlayer = playersMap[apiGame.player1id]
+                    val whitePlayer = playersMap[apiGame.player2id]
+                    val roundNumber = apiGame.round - 1
+                    if (null != whitePlayer) {
+                        if (null != blackPlayer) {
+                            val game = Game.create(
+                                blackPlayer = blackPlayer,
+                                whitePlayer = whitePlayer,
+                                round = roundNumber,
+                                board = if (apiGame.board == 0) {
+                                    (tournament
+                                        .gamesList(roundNumber)
+                                        .maxBy { it.board }
+                                        ?.board ?: 0) + 1
+                                } else {
+                                    apiGame.board
+                                },
+                                handicap = apiGame.handicap,
+                                knownColor = apiGame.color == RgfTournament.Game.Color.PLAYER_1_BLACK,
+                                result = apiGame.result.toGotha()
+                            )
+                            val success = tournament.addGame(game)
+                            if (success) report.games += 1
+                        } else {
+                            tournament.setByePlayer(whitePlayer, apiGame.round - 1)
                         }
-                        val success = tournament.addGame(game)
-                        if (success) report.games += 1
                     }
                 }
             }
@@ -194,10 +207,10 @@ fun gotha2rgf(gotha: TournamentInterface): RgfTournament {
         RgfTournament.Game(
             player1id = playersMap[game.blackPlayer.keyString]?.id,
             player2id = playersMap[game.whitePlayer.keyString]?.id,
-            color = if (game.isKnownColor) RgfTournament.Game.Color.PLAYER_1_BLACK else RgfTournament.Game.Color.UNKNOWN,
+            color = if (game.knownColor) RgfTournament.Game.Color.PLAYER_1_BLACK else RgfTournament.Game.Color.UNKNOWN,
             result = resultFromGotha(game.result),
-            round = game.roundNumber + 1,
-            board = game.tableNumber,
+            round = game.round + 1,
+            board = game.board,
             komi_4 = komi,
             handicap = game.handicap
         )
@@ -239,26 +252,26 @@ private fun getCoef(player: ScoredPlayer, round: Int, crit: PlacementCriterion):
     return 4 * player.getCritValue(crit, round) / crit.coef
 }
 
-fun resultFromGotha(result: Int) = when (result) {
-    Game.RESULT_BLACKWINS -> RgfTournament.Game.Result.PLAYER_1_WIN
-    Game.RESULT_WHITEWINS -> RgfTournament.Game.Result.PLAYER_2_WIN
-    Game.RESULT_BLACKWINS_BYDEF -> RgfTournament.Game.Result.PLAYER_1_WIN_BYREF
-    Game.RESULT_WHITEWINS_BYDEF -> RgfTournament.Game.Result.PLAYER_2_WIN_BYREF
-    Game.RESULT_EQUAL -> RgfTournament.Game.Result.TIE
-    Game.RESULT_BOTHLOSE -> RgfTournament.Game.Result.BOTH_LOST
-    Game.RESULT_UNKNOWN -> RgfTournament.Game.Result.NOT_PLAYED
-    Game.RESULT_EQUAL_BYDEF -> RgfTournament.Game.Result.TIE_BYREF
+fun resultFromGotha(result: Game.Result) = when (result) {
+    Game.Result.BLACKWINS -> RgfTournament.Game.Result.PLAYER_1_WIN
+    Game.Result.WHITEWINS -> RgfTournament.Game.Result.PLAYER_2_WIN
+    Game.Result.BLACKWINS_BYDEF -> RgfTournament.Game.Result.PLAYER_1_WIN_BYREF
+    Game.Result.WHITEWINS_BYDEF -> RgfTournament.Game.Result.PLAYER_2_WIN_BYREF
+    Game.Result.EQUAL -> RgfTournament.Game.Result.TIE
+    Game.Result.BOTHLOSE -> RgfTournament.Game.Result.BOTH_LOST
+    Game.Result.UNKNOWN -> RgfTournament.Game.Result.NOT_PLAYED
+    Game.Result.EQUAL_BYDEF -> RgfTournament.Game.Result.TIE_BYREF
     else -> RgfTournament.Game.Result.UNKNOWN
 }
 
 fun RgfTournament.Game.Result.toGotha() = when (this) {
-    RgfTournament.Game.Result.PLAYER_1_WIN -> Game.RESULT_BLACKWINS
-    RgfTournament.Game.Result.PLAYER_2_WIN -> Game.RESULT_WHITEWINS
-    RgfTournament.Game.Result.PLAYER_1_WIN_BYREF -> Game.RESULT_BLACKWINS_BYDEF
-    RgfTournament.Game.Result.PLAYER_2_WIN_BYREF -> Game.RESULT_WHITEWINS_BYDEF
-    RgfTournament.Game.Result.NOT_PLAYED -> Game.RESULT_UNKNOWN
-    RgfTournament.Game.Result.TIE -> Game.RESULT_EQUAL
-    RgfTournament.Game.Result.BOTH_LOST -> Game.RESULT_BOTHLOSE
-    RgfTournament.Game.Result.UNKNOWN -> Game.RESULT_UNKNOWN
-    RgfTournament.Game.Result.TIE_BYREF -> Game.RESULT_EQUAL_BYDEF
+    RgfTournament.Game.Result.PLAYER_1_WIN -> Game.Result.BLACKWINS
+    RgfTournament.Game.Result.PLAYER_2_WIN -> Game.Result.WHITEWINS
+    RgfTournament.Game.Result.PLAYER_1_WIN_BYREF -> Game.Result.BLACKWINS_BYDEF
+    RgfTournament.Game.Result.PLAYER_2_WIN_BYREF -> Game.Result.WHITEWINS_BYDEF
+    RgfTournament.Game.Result.NOT_PLAYED -> Game.Result.UNKNOWN
+    RgfTournament.Game.Result.TIE -> Game.Result.EQUAL
+    RgfTournament.Game.Result.BOTH_LOST -> Game.Result.BOTHLOSE
+    RgfTournament.Game.Result.UNKNOWN -> Game.Result.UNKNOWN
+    RgfTournament.Game.Result.TIE_BYREF -> Game.Result.EQUAL_BYDEF
 }

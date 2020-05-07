@@ -5,8 +5,21 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.ui.FrameBase;
+import ru.gofederation.gotha.util.GothaLocale;
 
-import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -17,13 +30,6 @@ import java.util.Collections;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.table.*;
-
-import ru.gofederation.gotha.ui.FrameBase;
-import ru.gofederation.gotha.util.GothaLocale;
 
 /**
  *
@@ -419,53 +425,53 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
             Player wP = g.getWhitePlayer();
             Player bP = g.getBlackPlayer();
             int hd = g.getHandicap();
-            int res = g.getResult();
+            Game.Result res = g.getResult();
 
             // Build the game strings
             String strW = "w";
             String strB = "b";
             switch(res){
-                case Game.RESULT_WHITEWINS:
+                case WHITEWINS:
                     strW = "+/" + strW;
                     strB = "-/" + strB;
                     break;
-                case Game.RESULT_WHITEWINS_BYDEF:
+                case WHITEWINS_BYDEF:
                     strW = "+!" + strW;
                     strB = "-!" + strB;
                     break;
-                case Game.RESULT_BLACKWINS:
+                case BLACKWINS:
                     strW = "-/" + strW;
                     strB = "+/" + strB;
                     break;
-                case Game.RESULT_BLACKWINS_BYDEF:
+                case BLACKWINS_BYDEF:
                     strW = "-!" + strW;
                     strB = "+!" + strB;
                     break;
-                case Game.RESULT_EQUAL:
+                case EQUAL:
                     strW = "=/" + strW;
                     strB = "=/" + strB;
                     break;
-                case Game.RESULT_EQUAL_BYDEF:
+                case EQUAL_BYDEF:
                     strW = "=!" + strW;
                     strB = "=!" + strB;
                     break;
-                case Game.RESULT_UNKNOWN:
+                case UNKNOWN:
                     strW = "?" + strW;
                     strB = "?" + strB;
                     break;
-                case Game.RESULT_BOTHWIN:
+                case BOTHWIN:
                     strW = "+/" + strW;
                     strB = "+/" + strB;
                     break;
-                case Game.RESULT_BOTHWIN_BYDEF:
+                case BOTHWIN_BYDEF:
                     strW = "+!" + strW;
                     strB = "+!" + strB;
                     break;
-                case Game.RESULT_BOTHLOSE:
+                case BOTHLOSE:
                     strW = "-/" + strW;
                     strB = "-/" + strB;
                     break;
-                case Game.RESULT_BOTHLOSE_BYDEF:
+                case BOTHLOSE_BYDEF:
                     strW = "-!" + strW;
                     strB = "-!" + strB;
                     break;
@@ -565,27 +571,27 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
         Game g = findGame(p1, p2);
         if (g == null) createGame(p1, p2);
         else{
-            int oldResult = g.getResult();
-            int newResult = Game.RESULT_UNKNOWN;
-            if (oldResult == Game.RESULT_UNKNOWN){
-                if (p1.hasSameKeyString(g.getWhitePlayer())) newResult = Game.RESULT_WHITEWINS;
-                else newResult = Game.RESULT_BLACKWINS;
+            Game.Result oldResult = g.getResult();
+            Game.Result newResult = Game.Result.UNKNOWN;
+            if (oldResult == Game.Result.UNKNOWN){
+                if (p1.hasSameKeyString(g.getWhitePlayer())) newResult = Game.Result.WHITEWINS;
+                else newResult = Game.Result.BLACKWINS;
             }
-            else if (oldResult == Game.RESULT_WHITEWINS){
-                if (p1.hasSameKeyString(g.getWhitePlayer())) newResult = Game.RESULT_BLACKWINS;
-                else newResult = Game.RESULT_EQUAL;
+            else if (oldResult == Game.Result.WHITEWINS){
+                if (p1.hasSameKeyString(g.getWhitePlayer())) newResult = Game.Result.BLACKWINS;
+                else newResult = Game.Result.EQUAL;
             }
-            else if (oldResult == Game.RESULT_BLACKWINS){
-                if (p1.hasSameKeyString(g.getWhitePlayer())) newResult = Game.RESULT_EQUAL;
-                else newResult = Game.RESULT_WHITEWINS;
+            else if (oldResult == Game.Result.BLACKWINS){
+                if (p1.hasSameKeyString(g.getWhitePlayer())) newResult = Game.Result.EQUAL;
+                else newResult = Game.Result.WHITEWINS;
             }
-            else if (oldResult == Game.RESULT_EQUAL) newResult = Game.RESULT_BOTHWIN;
-            else if (oldResult == Game.RESULT_BOTHWIN) newResult = Game.RESULT_BOTHLOSE;
-            else if (oldResult == Game.RESULT_BOTHLOSE) newResult = Game.RESULT_UNKNOWN;
+            else if (oldResult == Game.Result.EQUAL) newResult = Game.Result.BOTHWIN;
+            else if (oldResult == Game.Result.BOTHWIN) newResult = Game.Result.BOTHLOSE;
+            else if (oldResult == Game.Result.BOTHLOSE) newResult = Game.Result.UNKNOWN;
 
             try {
                 tournament.setResult(g, newResult);
-            } catch (RemoteException ex) {
+            } catch (RemoteException | TournamentException ex) {
                             Logger.getLogger(JFrGamesRR.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -611,11 +617,11 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
             Logger.getLogger(JFrGamesRR.class.getName()).log(Level.SEVERE, null, ex);
         }
         for (Game g: alG1){
-            int r = g.getRoundNumber();
+            int r = g.getRound();
             bAvailable[r] = false;
         }
         for (Game g: alG2){
-            int r = g.getRoundNumber();
+            int r = g.getRound();
             bAvailable[r] = false;
         }
         for (int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++){
@@ -694,8 +700,8 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
             Logger.getLogger(JFrGamesPair.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Game g = alNewGames.get(0);
-        g.setRoundNumber(availableRound);
+        Game.Builder g = alNewGames.get(0).builder();
+        g.setRound(availableRound);
         // Give a table number
         int tN = 0;
         boolean bTNOK;  // Table number OK
@@ -703,7 +709,7 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
             bTNOK = true;
             try {
                 for (Game oldG : tournament.gamesList(availableRound)) {
-                    if (oldG.getTableNumber() == tN) {
+                    if (oldG.getBoard() == tN) {
                         tN++;
                         bTNOK = false;
                     }
@@ -713,10 +719,10 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
             }
         } while (!bTNOK);
 
-        g.setTableNumber(tN);
+        g.setBoard(tN);
 
         try {
-            tournament.addGame(g);
+            tournament.addGame(g.build());
         } catch (TournamentException ex) {
             Logger.getLogger(JFrGamesRR.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
@@ -730,7 +736,7 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
         if (g == null) return;
         try {
             tournament.exchangeGameColors(g);
-        } catch (RemoteException ex) {
+        } catch (RemoteException | TournamentException ex) {
             Logger.getLogger(JFrGamesRR.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -743,7 +749,7 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
         hd += deltaHd;
         try {
             tournament.setGameHandicap(g, hd);
-        } catch (RemoteException ex) {
+        } catch (RemoteException | TournamentException ex) {
             Logger.getLogger(JFrGamesRR.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

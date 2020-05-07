@@ -1,5 +1,7 @@
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.Game;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -97,16 +99,8 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
     }
     public boolean gameWasPlayed(int rn){
         Game g = getGame(rn);
-        boolean gWP = true;
         if (g == null) return false; // not paired
-        int result = g.getResult();
-        if (result == Game.RESULT_UNKNOWN) gWP = false;
-        if (result == Game.RESULT_WHITEWINS_BYDEF) gWP = false;
-        if (result == Game.RESULT_BLACKWINS_BYDEF) gWP = false;
-        if (result == Game.RESULT_EQUAL_BYDEF) gWP = false;
-        if (result == Game.RESULT_BOTHLOSE_BYDEF) gWP = false;
-        if (result == Game.RESULT_BOTHWIN_BYDEF) gWP = false;
-        return gWP;
+        return g.getResult().gameWasPlayer();
     }
     public int getNBWX2(int rn){
         if (isValidRoundNumber(rn)) return nbwX2[rn];
@@ -456,30 +450,29 @@ public static String[][] halfGamesStrings(List<ScoredPlayer> alOrderedScoredPlay
                 }
                 else{   //Real Game
                    Player opp = null;
-                   int result = g.getResult();
-                   if (result == Game.RESULT_UNKNOWN) strTyp = "/";
-                   else strTyp = (result >= Game.RESULT_BYDEF) ? "!" : "/";
+                   Game.Result result = g.getResult();
+                   if (result == Game.Result.UNKNOWN) strTyp = "/";
+                   else strTyp = (result.isByDef()) ? "!" : "/";
                    if (!bFull) strTyp ="";
-                   int res = result;
-                   if (result >= Game.RESULT_BYDEF) res = result - Game.RESULT_BYDEF;
+                   Game.Result res = result.notByDef();
                    if (g.getWhitePlayer().hasSameKeyString(sp)){
                        opp = g.getBlackPlayer();
                        strCol = "w";
-                       if (res == Game.RESULT_WHITEWINS || res == Game.RESULT_BOTHWIN) strRes = "+";
-                       else if (res == Game.RESULT_BLACKWINS || res == Game.RESULT_BOTHLOSE) strRes = "-";
-                       else if (res == Game.RESULT_EQUAL) strRes = "=";
+                       if (res == Game.Result.WHITEWINS || res == Game.Result.BOTHWIN) strRes = "+";
+                       else if (res == Game.Result.BLACKWINS || res == Game.Result.BOTHLOSE) strRes = "-";
+                       else if (res == Game.Result.EQUAL) strRes = "=";
                        else strRes = "?";
                    }
                    else{
                        opp = g.getWhitePlayer();
                        strCol = "b";
-                       if (res == Game.RESULT_BLACKWINS || res == Game.RESULT_BOTHWIN) strRes = "+";
-                       else if (res == Game.RESULT_WHITEWINS || res == Game.RESULT_BOTHLOSE) strRes = "-";
-                       else if (res == Game.RESULT_EQUAL) strRes = "=";
+                       if (res == Game.Result.BLACKWINS || res == Game.Result.BOTHWIN) strRes = "+";
+                       else if (res == Game.Result.WHITEWINS || res == Game.Result.BOTHLOSE) strRes = "-";
+                       else if (res == Game.Result.EQUAL) strRes = "=";
                        else strRes = "?" ;
 
                    }
-                   if (!g.isKnownColor()) strCol = "?";
+                   if (!g.getKnownColor()) strCol = "?";
                    if (!bFull) strCol = "";
                    int oppNum = hmPos.get(opp.getKeyString());
                    strOpp = "    " + (oppNum +1);

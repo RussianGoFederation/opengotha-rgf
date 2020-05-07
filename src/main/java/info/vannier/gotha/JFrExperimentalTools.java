@@ -8,6 +8,10 @@
  */
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.RatingListType;
+
+import javax.swing.JOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -15,9 +19,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-
-import ru.gofederation.gotha.model.RatingListType;
 
 import static ru.gofederation.gotha.model.RatingOrigin.EGF;
 
@@ -28,18 +29,18 @@ import static ru.gofederation.gotha.model.RatingOrigin.EGF;
 public class JFrExperimentalTools extends javax.swing.JFrame {
     private static final long REFRESH_DELAY = 2000;
     private long lastComponentsUpdateTime = 0;
-    
+
     private TournamentInterface tournament;
 
     /** Creates new form JFrVariousTools */
     public JFrExperimentalTools(TournamentInterface tournament) throws RemoteException{
         this.tournament = tournament;
-                
+
         initComponents();
         customInitComponents();
         setupRefreshTimer();
-    }    
-    
+    }
+
     private volatile boolean running = true;
     javax.swing.Timer timer = null;
     private void setupRefreshTimer() {
@@ -337,13 +338,13 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
                 nbModifiedPlayers++;
             }
         }
-        
+
         String strMessage = " players have been modified";
         if (nbModifiedPlayers <= 1) strMessage = " player has been modified";
         JOptionPane.showMessageDialog(this, "" + nbModifiedPlayers + strMessage, "Message", JOptionPane.INFORMATION_MESSAGE);
 
-        this.tournamentChanged();        
-        
+        this.tournamentChanged();
+
     }//GEN-LAST:event_btnForceConversionActionPerformed
 
     private void btnImportGradesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportGradesActionPerformed
@@ -353,18 +354,18 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         RatingList ratingList = new RatingList(RatingListType.EGF, new File(Gotha.runningDirectory, "ratinglists/egf_db.txt"));
         ArrayList<RatedPlayer> alRP = ratingList.getALRatedPlayers();
-        
+
         int nbGradesSetOrChanged = 0;
         int nbPlayersNotFound = 0;
-        
-        
+
+
         for (Player  p: alPlayers){
             String strName = p.getName();
             String strFirstName = p.getFirstName();
-            
+
             boolean bFound = false;
             for (RatedPlayer rp:alRP){
                 if(!strName.equals(rp.getName())) continue;
@@ -384,24 +385,24 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
                     nbGradesSetOrChanged++;
                 }
 
-                
-                break;             
+
+                break;
             }
             if (!bFound){
                nbPlayersNotFound++;
             }
-            
+
         }
-        
+
         tournamentChanged();
-        
+
         String str ="" + nbGradesSetOrChanged + " grades have been set or changed";
         if (nbPlayersNotFound != 0){
             str += "\n\n" + nbPlayersNotFound + " players have not been found in the rating list";
             JOptionPane.showMessageDialog(this, str);
         }
-        
- 
+
+
     }//GEN-LAST:event_btnImportGradesActionPerformed
 
     private void btnForceParticipationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForceParticipationActionPerformed
@@ -411,7 +412,7 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         boolean[] bPart = new boolean[Gotha.MAX_NUMBER_OF_ROUNDS];
             for (int i = 0; i < Gotha.MAX_NUMBER_OF_ROUNDS; i++) {
                 bPart[i] = true;
@@ -427,10 +428,10 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
                 Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-            
-        
-        tournamentChanged();            
-        
+
+
+        tournamentChanged();
+
     }//GEN-LAST:event_btnForceParticipationActionPerformed
 
     private void btnForceCaseCountryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForceCaseCountryActionPerformed
@@ -440,7 +441,7 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         for (Player  p: alPlayers){
             String strCountry = p.getCountry();
             strCountry = strCountry.toUpperCase();
@@ -453,8 +454,8 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
                 Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-            
-        tournamentChanged();            
+
+        tournamentChanged();
     }//GEN-LAST:event_btnForceCaseCountryActionPerformed
 
     private void btnForceCaseClubActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForceCaseClubActionPerformed
@@ -464,7 +465,7 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         for (Player  p: alPlayers){
             String strClub = p.getClub();
             if (strClub.length() < 1) continue;
@@ -481,7 +482,7 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
                 Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        tournamentChanged();      
+        tournamentChanged();
     }//GEN-LAST:event_btnForceCaseClubActionPerformed
 
     private void btnStrangeColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStrangeColorActionPerformed
@@ -498,19 +499,19 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
             int wR = wP.getRank();
             int bR = bP.getRank();
             if (hd > 0 && wR < bR){
-                String str = "Round " + (g.getRoundNumber() + 1) + " Table=" + (g.getTableNumber() + 1) + " " + wP.getName() + " " + wR + " - " + bP.getName() + " " + bR + "   hd = " + hd;
+                String str = "Round " + (g.getRound() + 1) + " Table=" + (g.getBoard() + 1) + " " + wP.getName() + " " + wR + " - " + bP.getName() + " " + bR + "   hd = " + hd;
                 System.out.println(str);
             }
-            
-            
-            
+
+
+
         }
     }//GEN-LAST:event_btnStrangeColorActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         cleanClose();
     }//GEN-LAST:event_formWindowClosing
-    
+
 
         /** This method is called from within the constructor to
      * initialize the form.
@@ -518,7 +519,7 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
      */
     private void customInitComponents() throws RemoteException {
         this.updateAllViews();
-        // updateComponents();  
+        // updateComponents();
     }
 
 
@@ -558,11 +559,11 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
         }
         updateComponents();
     }
-    
+
     private void updateComponents(){
 
     }
-    
+
     private void tournamentChanged(){
         try {
             tournament.setLastTournamentModificationTime(tournament.getCurrentTournamentTime());

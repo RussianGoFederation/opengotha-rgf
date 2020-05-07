@@ -1,7 +1,10 @@
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.Game;
+
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -123,7 +126,7 @@ public class Pairing {
             if (diffMMS2 / 2 > mmsDiffThreshold) {
                 nbGamesMMSDiffGreaterThan++;
                 String strDiffMMS = "" + (diffMMS2 /2) + ((diffMMS2%2 == 1)? ".5" : "");
-                strReport += "\nTable " + (g.getTableNumber() + 1) + " : MMSdiff=" + strDiffMMS + " " +
+                strReport += "\nTable " + (g.getBoard() + 1) + " : MMSdiff=" + strDiffMMS + " " +
                         wP.fullName() + "(" + mms2W/2 + ") - " + bP.fullName() + "(" + mms2B/2 + ")";
             }
         }
@@ -151,7 +154,7 @@ public class Pairing {
             int hd = g.getHandicap();
             if (hd > handicapThreshold) {
                 nbGamesHandicapGreaterThan++;
-                strReport += "\nTable " + (g.getTableNumber() + 1) + " : handicap = " + hd + " " + wP.fullName() + " - " + bP.fullName();
+                strReport += "\nTable " + (g.getBoard() + 1) + " : handicap = " + hd + " " + wP.fullName() + " - " + bP.fullName();
             }
         }
         strReport = "Number of pairs with a handicap greater than " + handicapThreshold + " : " + nbGamesHandicapGreaterThan +
@@ -190,8 +193,8 @@ public class Pairing {
             int mmsW = 0;
             int mmsB = 0;
             try {
-                mmsW = tournament.mms2(wP, g.getRoundNumber()) / 2;
-                mmsB = tournament.mms2(bP, g.getRoundNumber()) / 2;
+                mmsW = tournament.mms2(wP, g.getRound()) / 2;
+                mmsB = tournament.mms2(bP, g.getRound()) / 2;
             } catch (RemoteException ex) {
                 Logger.getLogger(Pairing.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -205,7 +208,7 @@ public class Pairing {
                 if (bP.hasSameKeyString(p)){
                     if (mmsB > mmsW) nbDD[i]++;
                     if (mmsB < mmsW) nbDU[i]++;
-                }                     
+                }
             }
         }
 
@@ -236,12 +239,12 @@ public class Pairing {
 
         strReport = "MMS draw up/down from round 1  to round " +
                 (roundNumber + 1) +
-                "\nNumber of players with at least one draw up or one draw down :" + 
+                "\nNumber of players with at least one draw up or one draw down :" +
                 nbDUDDPlayers +
-                "\nNumber of players with an unbalanced MMS draw up/down :" + 
+                "\nNumber of players with an unbalanced MMS draw up/down :" +
                 nbUnbalancedDUDDPlayers +
                 strReport;
-        
+
         strReport += "\nSum of absolute values of balances " +
                 sumBal;
 
@@ -270,7 +273,7 @@ public class Pairing {
         int nbPlayers = alP.size();
         int[] nbWeightedDU = new int[nbPlayers];
         int[] nbWeightedDD = new int[nbPlayers];
-        
+
         for (int i = 0; i < nbPlayers; i++){
             nbWeightedDU[i] = nbWeightedDD[i] = 0;
         }
@@ -281,8 +284,8 @@ public class Pairing {
             int mmsW = 0;
             int mmsB = 0;
             try {
-                mmsW = tournament.mms2(wP, g.getRoundNumber()) / 2;
-                mmsB = tournament.mms2(bP, g.getRoundNumber()) / 2;
+                mmsW = tournament.mms2(wP, g.getRound()) / 2;
+                mmsB = tournament.mms2(bP, g.getRound()) / 2;
             } catch (RemoteException ex) {
                 Logger.getLogger(Pairing.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -292,7 +295,7 @@ public class Pairing {
                 if (wP.hasSameKeyString(p)){
                     if (mmsW > mmsB){
                         nbWeightedDD[i] += mmsW - mmsB;
-                    }                   
+                    }
                     if (mmsW < mmsB){
                         nbWeightedDU[i] += mmsB - mmsW;
                     }
@@ -300,10 +303,10 @@ public class Pairing {
                 if (bP.hasSameKeyString(p)){
                     if (mmsB > mmsW){
                         nbWeightedDD[i]+= mmsB - mmsW;
-                    } 
+                    }
                     if (mmsB < mmsW){
                         nbWeightedDU[i]+= mmsW - mmsB;
-                        
+
                     }
                 }
             }
@@ -334,15 +337,15 @@ public class Pairing {
 
         strReport = "MMS weighted draw up/down from round 1  to round " +
                 (roundNumber + 1) +
-                "\nNumber of players with an unbalanced MMS weighted draw up/down :" + 
+                "\nNumber of players with an unbalanced MMS weighted draw up/down :" +
                 nbUnbalancedWeightedDUDDPlayers +
                 strReport;
-        
+
         strReport += "\nSum of absolute values of balances " +
                 sumBal;
 
         return strReport;
-    }    
+    }
     public static String unbalancedWBPlayersReport(TournamentInterface tournament, int roundNumber, int unbalancedWBThreshold){
         ArrayList<Player> alP = null;
         try {
@@ -366,9 +369,9 @@ public class Pairing {
             int nbW = 0;
             int nbB = 0;
             for (Game g : alG){
-                if (g.getRoundNumber() > roundNumber) continue;
+                if (g.getRound() > roundNumber) continue;
                 if (g.getHandicap() > 0) continue;
-                if (!g.isKnownColor()) continue;
+                if (!g.getKnownColor()) continue;
                 if (g.getWhitePlayer().hasSameKeyString(p)) nbW++;
                 if (g.getBlackPlayer().hasSameKeyString(p)) nbB++;
             }
@@ -409,7 +412,7 @@ public class Pairing {
 
             if (clubW.equals(clubB)) {
                 nbIntraClubPairs++;
-                strReport += "\nTable " + (g.getTableNumber() + 1) + " : club = " + clubW + " " + wP.fullName() + " - " + bP.fullName();
+                strReport += "\nTable " + (g.getBoard() + 1) + " : club = " + clubW + " " + wP.fullName() + " - " + bP.fullName();
             }
         }
         strReport = "Number of intra-club pairs : " + nbIntraClubPairs + strReport;
@@ -438,7 +441,7 @@ public class Pairing {
 
             if (countryW.equals(countryB)) {
                 nbIntraCountryPairs++;
-                strReport += "\nTable " + (g.getTableNumber() + 1) + " : country = " + countryW + " " + wP.fullName() + " - " + bP.fullName();
+                strReport += "\nTable " + (g.getBoard() + 1) + " : country = " + countryW + " " + wP.fullName() + " - " + bP.fullName();
             }
         }
         strReport = "Number of intra-country pairs : " + nbIntraCountryPairs + strReport;

@@ -1,6 +1,8 @@
 
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.Game;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -56,7 +58,7 @@ public class ComparableMatch{
                 Logger.getLogger(JFrTeamsPairing.class.getName()).log(Level.SEVERE, null, ex);
             }
             int b0TN = - 1;
-            if (g != null) b0TN = g.getTableNumber();
+            if (g != null) b0TN = g.getBoard();
             int iwt = sts.findTeamOutOf(wt, alOrderedScoredTeams);
             int ibt = sts.findTeamOutOf(bt, alOrderedScoredTeams);
             ScoredTeam wst = alOrderedScoredTeams.get(iwt);

@@ -5,7 +5,11 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.util.GothaLocale;
 
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -14,10 +18,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
-
-import ru.gofederation.gotha.util.GothaLocale;
 
 /**
  *
@@ -174,7 +174,7 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
         }
 
         for (Game g : alGames){
-            int r = g.getRoundNumber();
+            int r = g.getBoard();
             if (!bRoundsToKeep[r]) {
                 try {
                     tournament.removeGame(g);
@@ -242,7 +242,7 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
                     Player p = tournament.getByePlayer(oldR);
                     tournament.setByePlayer(p, newR);
                     tournament.setByePlayer(null, oldR);
-                } catch (RemoteException ex) {
+                } catch (RemoteException | TournamentException ex) {
                     Logger.getLogger(JFrDiscardRounds.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

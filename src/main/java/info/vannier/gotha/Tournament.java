@@ -1,5 +1,8 @@
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.util.GothaLocale;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -8,10 +11,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import ru.gofederation.gotha.util.GothaLocale;
 
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
 
@@ -123,7 +125,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     private ArrayList<Game> getAlGames(int roundNumber) {
         ArrayList<Game> alG = new ArrayList<Game>();
         for (Game g : hmGames.values()) {
-            if (g.getRoundNumber() == roundNumber) {
+            if (g.getRound() == roundNumber) {
                 alG.add(g);
             }
         }
@@ -217,16 +219,16 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         ArrayList<Player> alP = new ArrayList<Player>();
         ArrayList<Game> alG = this.getAlGames(roundNumber);
         for (Game g : alG) {
-            int res = g.getResult();
-            if (res == Game.RESULT_BLACKWINS_BYDEF
-                    || res == Game.RESULT_BOTHLOSE_BYDEF) {
+            Game.Result res = g.getResult();
+            if (res == Game.Result.BLACKWINS_BYDEF
+                    || res == Game.Result.BOTHLOSE_BYDEF) {
                 Player p = g.getWhitePlayer();
                 Player copyP = new Player();
                 copyP.deepCopy(p);
                 alP.add(copyP);
             }
-            if (res == Game.RESULT_WHITEWINS_BYDEF
-                    || res == Game.RESULT_BOTHLOSE_BYDEF) {
+            if (res == Game.Result.WHITEWINS_BYDEF
+                    || res == Game.Result.BOTHLOSE_BYDEF) {
                 Player p = g.getBlackPlayer();
                 Player copyP = new Player();
                 copyP.deepCopy(p);
@@ -398,7 +400,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     @Override
     public boolean isPlayerImpliedInRound(Player p, int r) throws RemoteException {
         for (Game g : hmGames.values()) {
-            if (g.getRoundNumber() != r) {
+            if (g.getRound() != r) {
                 continue;
             }
             Player wP = g.getWhitePlayer();
@@ -620,10 +622,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             return false;
         }
 
-        int r = g.getRoundNumber();
-        int t = g.getTableNumber();
-        Integer key = r * Gotha.MAX_NUMBER_OF_TABLES + t;
-        hmGames.put(key, g);
+        hmGames.put(g.getKey(), g);
         this.setChangeSinceLastSave(true);
         return true;
     }
@@ -631,10 +630,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     @Override
     public boolean removeGame(Game g) throws TournamentException, RemoteException {
         if (g == null) return false;
-        int r = g.getRoundNumber();
-        int t = g.getTableNumber();
-        Integer key = r * Gotha.MAX_NUMBER_OF_TABLES + t;
-        hmGames.remove(key);
+        hmGames.remove(g.getKey());
         this.setChangeSinceLastSave(true);
         return true;
     }
@@ -655,34 +651,18 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
      * exchange whitePlayer and blackPlayer
      */
     @Override
-    public void exchangeGameColors(Game g) throws RemoteException {
-        int r = g.getRoundNumber();
-        int t = g.getTableNumber();
-        Integer key = r * Gotha.MAX_NUMBER_OF_TABLES + t;
-        Game gameToModify = hmGames.get(key);
-        Player wP = gameToModify.getWhitePlayer();
-        Player bP = gameToModify.getBlackPlayer();
-        gameToModify.setWhitePlayer(bP);
-        gameToModify.setBlackPlayer(wP);
-        if (gameToModify.getResult() == Game.RESULT_WHITEWINS) {
-            gameToModify.setResult(Game.RESULT_BLACKWINS);
-        } else if (gameToModify.getResult() == Game.RESULT_BLACKWINS) {
-            gameToModify.setResult(Game.RESULT_WHITEWINS);
-        } else if (gameToModify.getResult() == Game.RESULT_WHITEWINS_BYDEF) {
-            gameToModify.setResult(Game.RESULT_BLACKWINS_BYDEF);
-        } else if (gameToModify.getResult() == Game.RESULT_BLACKWINS_BYDEF) {
-            gameToModify.setResult(Game.RESULT_WHITEWINS_BYDEF);
-        }
+    public void exchangeGameColors(Game g) throws RemoteException, TournamentException {
+        Game gameToModify = hmGames.get(g.getKey());
+        Game modifiedGame = gameToModify.exchangeColors();
+        replaceGame(gameToModify, modifiedGame);
         this.setChangeSinceLastSave(true);
     }
 
     @Override
-    public boolean setGameHandicap(Game g, int handicap) throws RemoteException {
-        int r = g.getRoundNumber();
-        int t = g.getTableNumber();
-        Integer key = r * Gotha.MAX_NUMBER_OF_TABLES + t;
-        Game gameToModify = hmGames.get(key);
-        gameToModify.setHandicap(handicap);
+    public boolean setGameHandicap(Game g, int handicap) throws RemoteException, TournamentException {
+        Game gameToModify = hmGames.get(g.getKey());
+        Game modifiedGame = gameToModify.withHandicap(handicap);
+        replaceGame(gameToModify, modifiedGame);
         return true;
     }
 
@@ -695,7 +675,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     public Game getGame(int roundNumber, Player player) throws RemoteException {
         ArrayList<Game> alG = this.gamesPlayedBy(player);
         for (Game g : alG) {
-            if (g.getRoundNumber() == roundNumber) {
+            if (g.getRound() == roundNumber) {
                 return g;
             }
         }
@@ -732,29 +712,29 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             return 0;
         }
         switch (g.getResult()) {
-            case Game.RESULT_BOTHLOSE:
-            case Game.RESULT_BOTHLOSE_BYDEF:
-            case Game.RESULT_UNKNOWN:
+            case BOTHLOSE:
+            case BOTHLOSE_BYDEF:
+            case UNKNOWN:
                 wX2 = 0;
                 break;
-            case Game.RESULT_WHITEWINS:
-            case Game.RESULT_WHITEWINS_BYDEF:
+            case WHITEWINS:
+            case WHITEWINS_BYDEF:
                 if (pIsWhite) {
                     wX2 = 2;
                 }
                 break;
-            case Game.RESULT_BLACKWINS:
-            case Game.RESULT_BLACKWINS_BYDEF:
+            case BLACKWINS:
+            case BLACKWINS_BYDEF:
                 if (!pIsWhite) {
                     wX2 = 2;
                 }
                 break;
-            case Game.RESULT_EQUAL:
-            case Game.RESULT_EQUAL_BYDEF:
+            case EQUAL:
+            case EQUAL_BYDEF:
                 wX2 = 1;
                 break;
-            case Game.RESULT_BOTHWIN:
-            case Game.RESULT_BOTHWIN_BYDEF:
+            case BOTHWIN:
+            case BOTHWIN_BYDEF:
                 wX2 = 2;
                 break;
         }
@@ -770,7 +750,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     public ArrayList<Game> gamesList(int roundNumber) throws RemoteException {
         ArrayList<Game> gL = new ArrayList<Game>();
         for (Game g : hmGames.values()) {
-            if (g.getRoundNumber() == roundNumber) {
+            if (g.getRound() == roundNumber) {
                 gL.add(g);
             }
         }
@@ -781,7 +761,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     public ArrayList<Game> gamesListBefore(int roundNumber) throws RemoteException {
         ArrayList<Game> gL = new ArrayList<Game>();
         for (Game g : hmGames.values()) {
-            if (g.getRoundNumber() < roundNumber) {
+            if (g.getRound() < roundNumber) {
                 gL.add(g);
             }
         }
@@ -877,7 +857,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         TournamentParameterSet tps = getTournamentParameterSet();
         int numberOfRounds = tps.getGeneralParameterSet().getNumberOfRounds();
         for (Game g : gamesList()) {
-            int r = g.getRoundNumber();
+            int r = g.getRound();
             if (r >= numberOfRounds) {
                 numberOfRounds = r + 1;
             }
@@ -1010,7 +990,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 ScoredPlayer sP1 = hmScoredPlayers.get(p1.getKeyString());
                 ScoredPlayer sP2 = hmScoredPlayers.get(p2.getKeyString());
 
-                Game g = gameBetween(sP1, sP2, roundNumber, alPreviousGames);
+                Game g = gameBetween(sP1, sP2, roundNumber, alPreviousGames).build();
                 alG.add(g);
             }
         }
@@ -1059,7 +1039,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         // It is half applied if one of wbBalance is 0 and the other is >=2
 
         long bwBalanceCost = 0;
-        Game g = gameBetween(sP1, sP2, roundNumber, alPreviousGames);
+        Game.Builder g = gameBetween(sP1, sP2, roundNumber, alPreviousGames);
         int potHd = g.getHandicap();
         if (potHd == 0) {
             int wb1 = Pairing.wbBalance(sP1, roundNumber - 1);
@@ -1335,13 +1315,13 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     }
 
     /**
-     * builds and return a new Game with everything defined except tableNumber
+     * builds and return a new Game.Builder with everything defined except tableNumber
      */
-    private Game gameBetween(ScoredPlayer sP1, ScoredPlayer sP2, int roundNumber, ArrayList<Game> alPreviousGames) {
+    private Game.Builder gameBetween(ScoredPlayer sP1, ScoredPlayer sP2, int roundNumber, ArrayList<Game> alPreviousGames) {
 
         HandicapParameterSet hdPS = tournamentParameterSet.getHandicapParameterSet();
 
-        Game g = new Game();
+        Game.Builder g = new Game.Builder();
 
         // handicap
         int hd = 0;
@@ -1408,8 +1388,8 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             }
         }
         g.setKnownColor(true);
-        g.setResult(Game.RESULT_UNKNOWN);
-        g.setRoundNumber(roundNumber);
+        g.setResult(Game.Result.UNKNOWN);
+        g.setRound(roundNumber);
 
         return g;
     }
@@ -1480,20 +1460,21 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         ArrayList<Game> alExistingGames = this.gamesList(roundNumber);
         int tN = -1;
         for (Game g : alGamesToRenumber) {
+            Game.Builder gb = g.builder();
             boolean bTableFound = false;
             while (!bTableFound) {
                 tN++;
                 boolean bTNOK = true;
                 for (Game oldG : alExistingGames) {
-                    if (oldG.getTableNumber() == tN) {
+                    if (oldG.getBoard() == tN) {
                         bTNOK = false;
                     }
                 }
                 if (bTNOK) {
-                    g.setTableNumber(tN);
+                    gb.setBoard(tN);
                     bTableFound = true;
                     try {
-                        this.addGame(g);
+                        this.addGame(gb.build());
                     } catch (RemoteException ex) {
                         Logger.getLogger(Tournament.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (TournamentException ex) {
@@ -1507,16 +1488,16 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     }
 
     @Override
-    public void setResult(Game g, int result) throws RemoteException {
-        Game game = this.getGame(g.getRoundNumber(), g.getTableNumber());
-        game.setResult(result);
+    public void setResult(Game g, Game.Result result) throws RemoteException, TournamentException {
+        Game game = this.getGame(g.getRound(), g.getBoard());
+        replaceGame(game, game.withResult(result));
         this.setChangeSinceLastSave(true);
     }
 
     @Override
-    public void setRoundNumber(Game g, int rn) throws RemoteException {
-        Game game = this.getGame(g.getRoundNumber(), g.getTableNumber());
-        game.setRoundNumber(rn);
+    public void setRoundNumber(Game g, int rn) throws RemoteException, TournamentException {
+        Game game = this.getGame(g.getRound(), g.getBoard());
+        replaceGame(game, game.withRound(rn));
         this.setChangeSinceLastSave(true);
     }
 
@@ -1551,7 +1532,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             }
 
             for (Game g : this.gamesList(r)) {
-                if (g.getResult() == Game.RESULT_UNKNOWN) {
+                if (g.getResult() == Game.Result.UNKNOWN) {
                     presCurrentRoundNumber = r;
                     break;
                 }
@@ -1825,7 +1806,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         // Find opp0;
         ArrayList<Game> alG = this.gamesPlayedBy(player0);
         for (Game g : alG) {
-            if (g.getRoundNumber() == roundNumber) {
+            if (g.getRound() == roundNumber) {
                 opp0 = this.opponent(g, player0);
                 break;
             }
@@ -1853,7 +1834,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             }
             ArrayList<Game> alG = this.gamesPlayedBy(p1, p2);
             for (Game g : alG) {
-                if (g.getRoundNumber() == roundNumber) {
+                if (g.getRound() == roundNumber) {
                     nbWX2 += this.getWX2(g, p1);
                     break;
                 }
@@ -1935,7 +1916,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             Player player0 = team.getTeamMember(roundNumber, 0);
             ArrayList<Game> alG = gamesPlayedBy(player0);
             for (Game game : alG) {
-                if (game.getRoundNumber() != roundNumber) {
+                if (game.getRound() != roundNumber) {
                     continue;
                 }
                 Player opponent0 = opponent(game, player0);
@@ -1945,7 +1926,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 }
                 if (team.getTeamName().compareTo(oppTeam.getTeamName()) < 0) { // Avoid double creation
 
-                    Match match = Match.buildMatch(game.getRoundNumber(), team, oppTeam, this);
+                    Match match = Match.buildMatch(game.getRound(), team, oppTeam, this);
                     if (match != null) {
                         alMatches.add(match);
                     }
@@ -1972,7 +1953,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                     continue;
                 }
                 if (team.getTeamName().compareTo(oppTeam.getTeamName()) < 0) { // Avoid double creation
-                    Match match = Match.buildMatch(game.getRoundNumber(), team, oppTeam, this);
+                    Match match = Match.buildMatch(game.getRound(), team, oppTeam, this);
                     if (match != null) {
                         alMatches.add(match);
                     }
@@ -2030,7 +2011,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
 
         for (int r = 0; r <= roundNumber - 1; r++) {
             Game g0 = this.getGame(r, pt0);
-            if (g0 != null && g0.getHandicap() == 0 && g0.isKnownColor()) {
+            if (g0 != null && g0.getHandicap() == 0 && g0.getKnownColor()) {
                 if (pt0.hasSameKeyString(g0.getWhitePlayer())) {
                     wbBalance0++;
                 } else {
@@ -2038,7 +2019,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 }
             }
             Game g1 = this.getGame(r, pt1);
-            if (g1 != null && g1.getHandicap() == 0 && g1.isKnownColor()) {
+            if (g1 != null && g1.getHandicap() == 0 && g1.getKnownColor()) {
                 if (pt1.hasSameKeyString(g1.getWhitePlayer())) {
                     wbBalance1++;
                 } else {
@@ -2065,11 +2046,15 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         alP.add(pt0);
         alP.add(pt1);
         ArrayList<Game> alG = this.makeAutomaticPairing(alP, roundNumber);
+        List<Game.Builder> gb = new ArrayList<>(alG.size());
+        for (int i = 0; i < alG.size(); i++) {
+            gb.set(i, alG.get(i).builder());
+        }
         if (alG.size() != 1){
             System.out.println("Internal issue in teamsPair()");
             return;
         }
-        Game game = alG.get(0);
+        Game.Builder game = gb.get(0);
 
 //        if (game.getHandicap() != 0){
         if (game.getHandicap() == 0){
@@ -2081,7 +2066,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 game.setBlackPlayer(pt0);
             }
         }
-        Game[] tabGames = new Game[teamSize];
+        Game.Builder[] tabGames = new Game.Builder[teamSize];
         tabGames[0] = game;
 
         // The other boards;
@@ -2098,7 +2083,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             System.out.println("Internal issue in teamsPair()");
             return;
         }
-        Game g = alG.get(0);
+        Game.Builder g = alG.get(0).builder();
         if(g.getHandicap() == 0){
             if (pt0IsWhite == (ib % 2 == 0)) {
                 g.setWhitePlayer(p0);
@@ -2117,9 +2102,9 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             if (tabGames[ib] == null) {
                 continue;
             }
-            tabGames[ib].setTableNumber(tn);
+            tabGames[ib].setBoard(tn);
             try {
-                this.addGame(tabGames[ib]);
+                this.addGame(tabGames[ib].build());
             } catch (TournamentException ex) {
                 Logger.getLogger(Tournament.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -2133,7 +2118,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         do {
             bTNOK = true;
             for (Game g : this.gamesList(roundNumber)) {
-                if (g.getTableNumber() == tn) {
+                if (g.getBoard() == tn) {
                     tn++;
                     bTNOK = false;
                 }
@@ -2222,7 +2207,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             if (bP == null) {
                 continue;
             }
-            int r = g.getRoundNumber();
+            int r = g.getRound();
             ScoredPlayer wSP = hmScoredPlayers.get(wP.getKeyString());
             ScoredPlayer bSP = hmScoredPlayers.get(bP.getKeyString());
             wSP.setParticipation(r, ScoredPlayer.PAIRED);
@@ -2244,7 +2229,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             if (bP == null) {
                 continue;
             }
-            int r = g.getRoundNumber();
+            int r = g.getRound();
             ScoredPlayer wSP = hmScoredPlayers.get(wP.getKeyString());
             ScoredPlayer bSP = hmScoredPlayers.get(bP.getKeyString());
             wSP.setGame(r, g);
@@ -2266,7 +2251,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
 
             // Points from games
             for (Game g : hmGames.values()) {
-                if (g.getRoundNumber() != r) {
+                if (g.getRound() != r) {
                     continue;
                 }
                 Player wP = g.getWhitePlayer();
@@ -2280,29 +2265,29 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 ScoredPlayer wSP = hmScoredPlayers.get(wP.getKeyString());
                 ScoredPlayer bSP = hmScoredPlayers.get(bP.getKeyString());
                 switch (g.getResult()) {
-                    case Game.RESULT_BOTHLOSE:
-                    case Game.RESULT_BOTHLOSE_BYDEF:
-                    case Game.RESULT_UNKNOWN:
+                    case BOTHLOSE:
+                    case BOTHLOSE_BYDEF:
+                    case UNKNOWN:
                         break;
-                    case Game.RESULT_WHITEWINS:
-                    case Game.RESULT_WHITEWINS_BYDEF:
+                    case WHITEWINS:
+                    case WHITEWINS_BYDEF:
                         wSP.setNBWX2(r, wSP.getNBWX2(r) + 2);
                         wSP.setMMSX2(r, wSP.getMMSX2(r) + 2);
                         break;
-                    case Game.RESULT_BLACKWINS:
-                    case Game.RESULT_BLACKWINS_BYDEF:
+                    case BLACKWINS:
+                    case BLACKWINS_BYDEF:
                         bSP.setNBWX2(r, bSP.getNBWX2(r) + 2);
                         bSP.setMMSX2(r, bSP.getMMSX2(r) + 2);
                         break;
-                    case Game.RESULT_EQUAL:
-                    case Game.RESULT_EQUAL_BYDEF:
+                    case EQUAL:
+                    case EQUAL_BYDEF:
                         wSP.setNBWX2(r, wSP.getNBWX2(r) + 1);
                         wSP.setMMSX2(r, wSP.getMMSX2(r) + 1);
                         bSP.setNBWX2(r, bSP.getNBWX2(r) + 1);
                         bSP.setMMSX2(r, bSP.getMMSX2(r) + 1);
                         break;
-                    case Game.RESULT_BOTHWIN:
-                    case Game.RESULT_BOTHWIN_BYDEF:
+                    case BOTHWIN:
+                    case BOTHWIN_BYDEF:
                         wSP.setNBWX2(r, wSP.getNBWX2(r) + 2);
                         wSP.setMMSX2(r, wSP.getMMSX2(r) + 2);
                         bSP.setNBWX2(r, bSP.getNBWX2(r) + 2);
@@ -2369,7 +2354,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
 
             // Points from games
             for (Game g : hmGames.values()) {
-                if (g.getRoundNumber() != r) {
+                if (g.getRound() != r) {
                     continue;
                 }
                 Player wP = g.getWhitePlayer();
@@ -2383,29 +2368,30 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 ScoredPlayer wSP = hmScoredPlayers.get(wP.getKeyString());
                 ScoredPlayer bSP = hmScoredPlayers.get(bP.getKeyString());
                 switch (g.getResult()) {
-                    case Game.RESULT_BOTHLOSE:
-                    case Game.RESULT_BOTHLOSE_BYDEF: // All "BYDEF" results are separately processed
-                    case Game.RESULT_WHITEWINS_BYDEF:
-                    case Game.RESULT_BLACKWINS_BYDEF:
-                    case Game.RESULT_EQUAL_BYDEF:
-                    case Game.RESULT_BOTHWIN_BYDEF:
-                    case Game.RESULT_UNKNOWN:
+                    case BOTHLOSE:
+                    case BOTHLOSE_BYDEF: // All "BYDEF" results are separately processed
+                    case WHITEWINS_BYDEF:
+                    case BLACKWINS_BYDEF:
+                    case EQUAL_BYDEF:
+                    case BOTHWIN_BYDEF:
+                    case UNKNOWN:
                         break;
-                    case Game.RESULT_WHITEWINS:
+                    case
+                        WHITEWINS:
                         wSP.setNBWVirtualX2(r, wSP.getNBWVirtualX2(r) + 2);
                         wSP.setMMSVirtualX2(r, wSP.getMMSVirtualX2(r) + 2);
                         break;
-                    case Game.RESULT_BLACKWINS:
+                    case BLACKWINS:
                         bSP.setNBWVirtualX2(r, bSP.getNBWVirtualX2(r) + 2);
                         bSP.setMMSVirtualX2(r, bSP.getMMSVirtualX2(r) + 2);
                         break;
-                    case Game.RESULT_EQUAL:
+                    case EQUAL:
                         wSP.setNBWVirtualX2(r, wSP.getNBWVirtualX2(r) + 1);
                         wSP.setMMSVirtualX2(r, wSP.getMMSVirtualX2(r) + 1);
                         bSP.setNBWVirtualX2(r, bSP.getNBWVirtualX2(r) + 1);
                         bSP.setMMSVirtualX2(r, bSP.getMMSVirtualX2(r) + 1);
                         break;
-                    case Game.RESULT_BOTHWIN:
+                    case BOTHWIN:
                         wSP.setNBWVirtualX2(r, wSP.getNBWVirtualX2(r) + 2);
                         wSP.setMMSVirtualX2(r, wSP.getMMSVirtualX2(r) + 2);
                         bSP.setNBWVirtualX2(r, bSP.getNBWVirtualX2(r) + 2);
@@ -2669,17 +2655,17 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                     extX2 += sOpp.getNBWX2(r) * coef;
                     boolean bWin = false;
                     if (spWasWhite
-                            && (g.getResult() == Game.RESULT_WHITEWINS
-                            || g.getResult() == Game.RESULT_WHITEWINS_BYDEF
-                            || g.getResult() == Game.RESULT_BOTHWIN
-                            || g.getResult() == Game.RESULT_BOTHWIN_BYDEF)) {
+                            && (g.getResult() == Game.Result.WHITEWINS
+                            || g.getResult() == Game.Result.WHITEWINS_BYDEF
+                            || g.getResult() == Game.Result.BOTHWIN
+                            || g.getResult() == Game.Result.BOTHWIN_BYDEF)) {
                         bWin = true;
                     }
                     if (!spWasWhite
-                            && (g.getResult() == Game.RESULT_BLACKWINS
-                            || g.getResult() == Game.RESULT_BLACKWINS_BYDEF
-                            || g.getResult() == Game.RESULT_BOTHWIN
-                            || g.getResult() == Game.RESULT_BOTHWIN_BYDEF)) {
+                            && (g.getResult() == Game.Result.BLACKWINS
+                            || g.getResult() == Game.Result.BLACKWINS_BYDEF
+                            || g.getResult() == Game.Result.BOTHWIN
+                            || g.getResult() == Game.Result.BOTHWIN_BYDEF)) {
                         bWin = true;
                     }
                     if (bWin) {
@@ -2901,7 +2887,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             }
         }
         for (Game g : this.hmGames.values()) {
-            if (g.getRoundNumber() > roundNumber) {
+            if (g.getRound() > roundNumber) {
                 continue;
             }
             Player wP = g.getWhitePlayer();
@@ -2924,12 +2910,12 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             if (numBP < 0) {
                 continue;
             }
-            int res = g.getResult();
-            if (res == Game.RESULT_WHITEWINS) {
+            Game.Result res = g.getResult();
+            if (res == Game.Result.WHITEWINS) {
                 pair[numWP][numBP]++;
                 pair[numBP][numWP]--;
             }
-            if (res == Game.RESULT_BLACKWINS) {
+            if (res == Game.Result.BLACKWINS) {
                 pair[numWP][numBP]--;
                 pair[numBP][numWP]++;
             }
@@ -3237,4 +3223,11 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
 
 		return new int[] {minSmms, maxSmms};
 	}
+
+	private void replaceGame(Game oldGame, Game newGame) throws RemoteException, TournamentException {
+	    if (oldGame.getKey() != newGame.getKey())
+	        throw new IllegalArgumentException("Keys do not match");
+	    removeGame(oldGame);
+	    addGame(newGame);
+    }
 }

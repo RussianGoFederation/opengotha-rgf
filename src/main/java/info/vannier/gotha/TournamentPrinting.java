@@ -3,13 +3,24 @@
  */
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.util.GothaLocale;
+
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.MediaSizeName;
+import javax.swing.JOptionPane;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.print.*;
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,13 +28,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.MediaSizeName;
-import javax.swing.JOptionPane;
-
-import ru.gofederation.gotha.util.GothaLocale;
 
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
@@ -966,18 +970,15 @@ public class TournamentPrinting implements Printable {
                 g.setColor(Color.BLACK);
             }
 
-            String strTN = "" + (game.getTableNumber() + 1);
+            String strTN = "" + (game.getBoard() + 1);
             x = usableX + usableWidth * (GL_TN_BEG + GL_TN_LEN) / GL_NBCAR;
             drawRightAlignedString(g, strTN, x, y);
 
             Player wP = game.getWhitePlayer();
             String strWP = wP.augmentedPlayerName(dpps);
             x = usableX + usableWidth * GL_WNF_BEG / GL_NBCAR;
-            int result = game.getResult();
-            if (result >= Game.RESULT_BYDEF) {
-                result -= Game.RESULT_BYDEF;
-            }
-            if (result == Game.RESULT_BOTHLOSE || result == Game.RESULT_EQUAL || result == Game.RESULT_BLACKWINS) {
+            Game.Result result = game.getResult().notByDef();
+            if (result == Game.Result.BOTHLOSE || result == Game.Result.EQUAL || result == Game.Result.BLACKWINS) {
                 g.setFont(new Font("Default", Font.PLAIN, fontSize));
             }
             g.drawString(strWP, x, y);
@@ -986,7 +987,7 @@ public class TournamentPrinting implements Printable {
             Player bP = game.getBlackPlayer();
             String strBP = bP.augmentedPlayerName(dpps);
             x = usableX + usableWidth * GL_BNF_BEG / GL_NBCAR;
-            if (result == Game.RESULT_BOTHLOSE || result == Game.RESULT_EQUAL || result == Game.RESULT_WHITEWINS) {
+            if (result == Game.Result.BOTHLOSE || result == Game.Result.EQUAL || result == Game.Result.WHITEWINS) {
                 g.setFont(new Font("Default", Font.PLAIN, fontSize));
             }
             g.drawString(strBP, x, y);
@@ -1077,10 +1078,10 @@ public class TournamentPrinting implements Printable {
             g.drawLine(x1, y2, x4, y2);
             yT = y1 + TournamentPrinting.RS_LINE_HEIGHT * actRatioY1000 / 1000 * 2 / 3;
             int xT = x1 + TournamentPrinting.RS_LEFTMARGIN * actRatioX1000 /1000;
-            g.drawString("Table : " + (game.getTableNumber() +1), xT, yT);
+            g.drawString("Table : " + (game.getBoard() +1), xT, yT);
             TournamentPrinting.drawCenterAlignedString(g, "Hd = " + game.getHandicap(), x2, x3, yT);
             xT = x3 + TournamentPrinting.RS_LEFTMARGIN * actRatioX1000 /1000;
-            g.drawString("Round : " + (game.getRoundNumber() +1), xT, yT);
+            g.drawString("Round : " + (game.getRound() +1), xT, yT);
 
             // Body
             y1 = yBase + TournamentPrinting.RS_COLOR * actRatioY1000 / 1000;
@@ -1256,8 +1257,6 @@ public class TournamentPrinting implements Printable {
     }
     /** Concatenates name and firtName
      * Shortens if necessary
-     * @param p
-     * @return
      */
 
     private int printAPageOfStandings(Graphics g, PageFormat pf, int pi) throws RemoteException {
@@ -1502,13 +1501,13 @@ public class TournamentPrinting implements Printable {
                         g.setColor(Color.BLACK);
                     }
                     Game game = tournament.getGame(roundNumber, p1);
-                    strTN = "" + (game.getTableNumber() + 1);
+                    strTN = "" + (game.getBoard() + 1);
                     x = usableX + usableWidth * (ML_TN_BEG + ML_TN_LEN) / ML_NBCAR;
                     drawRightAlignedString(g, strTN, x, yG);
 
                     String strP1Color = "";
                     String strP2Color = "";
-                    if (game.isKnownColor()){
+                    if (game.getKnownColor()){
                         if (game.getWhitePlayer().hasSameKeyString(p1)){
                             strP1Color = "(w)";
                             strP2Color = "(b)";

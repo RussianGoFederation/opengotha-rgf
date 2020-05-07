@@ -4,8 +4,23 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.printing.PairingPrinter;
+import ru.gofederation.gotha.ui.Dialog;
+import ru.gofederation.gotha.ui.PrinterSettings;
+import ru.gofederation.gotha.util.GothaLocale;
 
-import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -14,18 +29,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
-
-import ru.gofederation.gotha.printing.PairingPrinter;
-import ru.gofederation.gotha.ui.Dialog;
-import ru.gofederation.gotha.ui.PrinterSettings;
-import ru.gofederation.gotha.util.GothaLocale;
 
 /**
  *
@@ -163,7 +166,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
             String strResult = g.resultAsString(true);
             model.setValueAt(strResult, iG, RESULT_COL);
             int col = 0;
-            model.setValueAt("" + (g.getTableNumber() + 1), iG, col++);
+            model.setValueAt("" + (g.getBoard() + 1), iG, col++);
             Player wP = g.getWhitePlayer();
             model.setValueAt(wP.fullName(), iG, col++);
             Player bP = g.getBlackPlayer();
@@ -244,7 +247,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
                 Player wP = g.getWhitePlayer();
                 Player bP = g.getBlackPlayer();
 
-                boolean wb = this.wbOrder(processedRoundNumber, g.getTableNumber());
+                boolean wb = this.wbOrder(processedRoundNumber, g.getBoard());
                 Player p1 = wP;
                 Player p2 = bP;
                 String strP1Color = "(w)";
@@ -257,7 +260,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
                 }
                 String strResult = g.resultAsString(wb);
                 model.setValueAt(strResult, ln, RESULT_COL);
-                model.setValueAt("" + (g.getTableNumber() + 1), ln, JFrGamesResults.TABLE_NUMBER_COL);
+                model.setValueAt("" + (g.getBoard() + 1), ln, JFrGamesResults.TABLE_NUMBER_COL);
                 model.setValueAt(p1.fullName() + strP1Color, ln, JFrGamesResults.LEFT_PLAYER_COL);
                 model.setValueAt(p2.fullName() + strP2Color, ln, JFrGamesResults.RIGHT_PLAYER_COL);
                 model.setValueAt("" + g.getHandicap(), ln, JFrGamesResults.HANDICAP_COL);
@@ -358,74 +361,74 @@ public class JFrGamesResults extends javax.swing.JFrame {
             Logger.getLogger(JFrGamesResults.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        int oldResult = g.getResult();
-        int newResult = oldResult;
+        Game.Result oldResult = g.getResult();
+        Game.Result newResult = oldResult;
 
         boolean wb = this.wbOrder(processedRoundNumber, tn);
         if (this.ckbTeamOrder.isSelected()) wb = this.wbOrder(processedRoundNumber, tn);
         else wb = true;
 
         if ((c == LEFT_PLAYER_COL && wb) || (c == RIGHT_PLAYER_COL && !wb)) {
-            newResult = Game.RESULT_WHITEWINS;
+            newResult = Game.Result.WHITEWINS;
         } else if ((c == LEFT_PLAYER_COL && !wb) || (c == RIGHT_PLAYER_COL && wb)) {
-            newResult = Game.RESULT_BLACKWINS;
+            newResult = Game.Result.BLACKWINS;
         } else if (c == TABLE_NUMBER_COL) {
-            newResult = Game.RESULT_UNKNOWN;
+            newResult = Game.Result.UNKNOWN;
         } else if (c == RESULT_COL) {
             if (evt.getModifiers() == InputEvent.BUTTON3_MASK) {
-                if (oldResult == Game.RESULT_WHITEWINS) {
-                    newResult = Game.RESULT_WHITEWINS_BYDEF;
+                if (oldResult == Game.Result.WHITEWINS) {
+                    newResult = Game.Result.WHITEWINS_BYDEF;
                 }
-                if (oldResult == Game.RESULT_BLACKWINS) {
-                    newResult = Game.RESULT_BLACKWINS_BYDEF;
+                if (oldResult == Game.Result.BLACKWINS) {
+                    newResult = Game.Result.BLACKWINS_BYDEF;
                 }
-                if (oldResult == Game.RESULT_EQUAL) {
-                    newResult = Game.RESULT_EQUAL_BYDEF;
+                if (oldResult == Game.Result.EQUAL) {
+                    newResult = Game.Result.EQUAL_BYDEF;
                 }
-                if (oldResult == Game.RESULT_BOTHWIN) {
-                    newResult = Game.RESULT_BOTHWIN_BYDEF;
+                if (oldResult == Game.Result.BOTHWIN) {
+                    newResult = Game.Result.BOTHWIN_BYDEF;
                 }
-                if (oldResult == Game.RESULT_BOTHLOSE) {
-                    newResult = Game.RESULT_BOTHLOSE_BYDEF;
+                if (oldResult == Game.Result.BOTHLOSE) {
+                    newResult = Game.Result.BOTHLOSE_BYDEF;
                 }
-                if (oldResult == Game.RESULT_WHITEWINS_BYDEF) {
-                    newResult = Game.RESULT_WHITEWINS;
+                if (oldResult == Game.Result.WHITEWINS_BYDEF) {
+                    newResult = Game.Result.WHITEWINS;
                 }
-                if (oldResult == Game.RESULT_BLACKWINS_BYDEF) {
-                    newResult = Game.RESULT_BLACKWINS;
+                if (oldResult == Game.Result.BLACKWINS_BYDEF) {
+                    newResult = Game.Result.BLACKWINS;
                 }
-                if (oldResult == Game.RESULT_EQUAL_BYDEF) {
-                    newResult = Game.RESULT_EQUAL;
+                if (oldResult == Game.Result.EQUAL_BYDEF) {
+                    newResult = Game.Result.EQUAL;
                 }
-                if (oldResult == Game.RESULT_BOTHWIN_BYDEF) {
-                    newResult = Game.RESULT_BOTHWIN;
+                if (oldResult == Game.Result.BOTHWIN_BYDEF) {
+                    newResult = Game.Result.BOTHWIN;
                 }
-                if (oldResult == Game.RESULT_BOTHLOSE_BYDEF) {
-                    newResult = Game.RESULT_BOTHLOSE;
+                if (oldResult == Game.Result.BOTHLOSE_BYDEF) {
+                    newResult = Game.Result.BOTHLOSE;
                 }
             } else {
-                if (oldResult == Game.RESULT_UNKNOWN) {
-                    newResult = Game.RESULT_WHITEWINS;
-                } else if (oldResult == Game.RESULT_WHITEWINS) {
-                    newResult = Game.RESULT_BLACKWINS;
-                } else if (oldResult == Game.RESULT_BLACKWINS) {
-                    newResult = Game.RESULT_EQUAL;
-                } else if (oldResult == Game.RESULT_EQUAL) {
-                    newResult = Game.RESULT_BOTHWIN;
-                } else if (oldResult == Game.RESULT_BOTHWIN) {
-                    newResult = Game.RESULT_BOTHLOSE;
-                } else if (oldResult == Game.RESULT_BOTHLOSE) {
-                    newResult = Game.RESULT_WHITEWINS_BYDEF;
-                } else if (oldResult == Game.RESULT_WHITEWINS_BYDEF) {
-                    newResult = Game.RESULT_BLACKWINS_BYDEF;
-                } else if (oldResult == Game.RESULT_BLACKWINS_BYDEF) {
-                    newResult = Game.RESULT_EQUAL_BYDEF;
-                } else if (oldResult == Game.RESULT_EQUAL_BYDEF) {
-                    newResult = Game.RESULT_BOTHWIN_BYDEF;
-                } else if (oldResult == Game.RESULT_BOTHWIN_BYDEF) {
-                    newResult = Game.RESULT_BOTHLOSE_BYDEF;
-                } else if (oldResult == Game.RESULT_BOTHLOSE_BYDEF) {
-                    newResult = Game.RESULT_UNKNOWN;
+                if (oldResult == Game.Result.UNKNOWN) {
+                    newResult = Game.Result.WHITEWINS;
+                } else if (oldResult == Game.Result.WHITEWINS) {
+                    newResult = Game.Result.BLACKWINS;
+                } else if (oldResult == Game.Result.BLACKWINS) {
+                    newResult = Game.Result.EQUAL;
+                } else if (oldResult == Game.Result.EQUAL) {
+                    newResult = Game.Result.BOTHWIN;
+                } else if (oldResult == Game.Result.BOTHWIN) {
+                    newResult = Game.Result.BOTHLOSE;
+                } else if (oldResult == Game.Result.BOTHLOSE) {
+                    newResult = Game.Result.WHITEWINS_BYDEF;
+                } else if (oldResult == Game.Result.WHITEWINS_BYDEF) {
+                    newResult = Game.Result.BLACKWINS_BYDEF;
+                } else if (oldResult == Game.Result.BLACKWINS_BYDEF) {
+                    newResult = Game.Result.EQUAL_BYDEF;
+                } else if (oldResult == Game.Result.EQUAL_BYDEF) {
+                    newResult = Game.Result.BOTHWIN_BYDEF;
+                } else if (oldResult == Game.Result.BOTHWIN_BYDEF) {
+                    newResult = Game.Result.BOTHLOSE_BYDEF;
+                } else if (oldResult == Game.Result.BOTHLOSE_BYDEF) {
+                    newResult = Game.Result.UNKNOWN;
                 }
             }
         }
@@ -436,7 +439,7 @@ public class JFrGamesResults extends javax.swing.JFrame {
         try {
             tournament.setResult(g, newResult);
             this.tournamentChanged();
-        } catch (RemoteException ex) {
+        } catch (RemoteException | TournamentException ex) {
             Logger.getLogger(JFrGamesResults.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

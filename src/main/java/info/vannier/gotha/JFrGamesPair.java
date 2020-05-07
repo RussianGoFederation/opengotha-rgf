@@ -4,7 +4,18 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.printing.PairingPrinter;
+import ru.gofederation.gotha.ui.Dialog;
+import ru.gofederation.gotha.ui.PrinterSettings;
+import ru.gofederation.gotha.util.GothaLocale;
 
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.Point;
@@ -20,18 +31,6 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-
-import ru.gofederation.gotha.printing.PairingPrinter;
-import ru.gofederation.gotha.ui.Dialog;
-import ru.gofederation.gotha.ui.PrinterSettings;
-import ru.gofederation.gotha.util.GothaLocale;
 
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
 
@@ -344,7 +343,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
             }
             if (!playerFound) {
                 for (Game g : alG) {
-                    if (g.getRoundNumber() != r) {
+                    if (g.getRound() != r) {
                         continue;
                     }
                     if (g.getWhitePlayer().hasSameKeyString(p)) {
@@ -352,20 +351,18 @@ public class JFrGamesPair extends javax.swing.JFrame {
                         strOpponent = op.fullName();
                         strColor = "W";
                         strHd = "" + g.getHandicap();
-                        int result = g.getResult();
-                        if (result >= Game.RESULT_BYDEF) {
-                            result -= Game.RESULT_BYDEF;
-                        }
+                        Game.Result result = g.getResult();
+                        result = result.notByDef();
                         switch (result) {
-                            case Game.RESULT_WHITEWINS:
-                            case Game.RESULT_BOTHWIN:
+                            case WHITEWINS:
+                            case BOTHWIN:
                                 strRes = "+";
                                 break;
-                            case Game.RESULT_BLACKWINS:
-                            case Game.RESULT_BOTHLOSE:
+                            case BLACKWINS:
+                            case BOTHLOSE:
                                 strRes = "-";
                                 break;
-                            case Game.RESULT_EQUAL:
+                            case EQUAL:
                                 strRes = "=";
                                 break;
                             default:
@@ -378,15 +375,15 @@ public class JFrGamesPair extends javax.swing.JFrame {
                         strColor = "B";
                         strHd = "" + g.getHandicap();
                         switch (g.getResult()) {
-                            case Game.RESULT_BLACKWINS:
-                            case Game.RESULT_BOTHWIN:
+                            case BLACKWINS:
+                            case BOTHWIN:
                                 strRes = "+";
                                 break;
-                            case Game.RESULT_WHITEWINS:
-                            case Game.RESULT_BOTHLOSE:
+                            case WHITEWINS:
+                            case BOTHLOSE:
                                 strRes = "-";
                                 break;
-                            case Game.RESULT_EQUAL:
+                            case EQUAL:
                                 strRes = "=";
                                 break;
                             default:
@@ -422,7 +419,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
         for (Game g : alDisplayedGames) {
             Vector<String> row = new Vector<String>();
-            row.add("" + (g.getTableNumber() + 1));
+            row.add("" + (g.getBoard() + 1));
 
             Player wP = g.getWhitePlayer();
             if(wP == null) continue;
@@ -1022,7 +1019,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         try {
             tournament.setGameHandicap(g, hd);
             this.tournamentChanged();
-        } catch (RemoteException ex) {
+        } catch (RemoteException | TournamentException ex) {
             Logger.getLogger(JFrGamesPair.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1069,7 +1066,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         try {
             tournament.exchangeGameColors(g);
             this.tournamentChanged();
-        } catch (RemoteException ex) {
+        } catch (RemoteException | TournamentException ex) {
             Logger.getLogger(JFrGamesPair.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1236,7 +1233,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         if (questionableGame != null) {
             Player wP = questionableGame.getWhitePlayer();
             Player bP = questionableGame.getBlackPlayer();
-            int r = questionableGame.getRoundNumber();
+            int r = questionableGame.getRound();
 
             int bAnswer = JOptionPane.showConfirmDialog(this, locale.format("game.pairing.confirm_pairing_again", wP.fullName(), bP.fullName(), (r + 1)),
                     locale.getString("game.pairing.message"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -1247,17 +1244,18 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
         // Give a table number
         int tN = 0;
-        for (Game newG : alNewGames) {
+        for (int i = 0; i< alNewGames.size(); i++) {
+            final Game newG = alNewGames.get(i);
             boolean bTNOK;  // Table number OK
 
             do {
                 bTNOK = true;
                 try {
                     for (Game oldG : tournament.gamesList(processedRoundNumber)) {
-                        if (oldG.getRoundNumber() != processedRoundNumber) {
+                        if (oldG.getRound() != processedRoundNumber) {
                             continue;
                         }
-                        if (oldG.getTableNumber() == tN) {
+                        if (oldG.getBoard() == tN) {
                             tN++;
                             bTNOK = false;
                         }
@@ -1266,7 +1264,9 @@ public class JFrGamesPair extends javax.swing.JFrame {
                     Logger.getLogger(JFrGamesPair.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } while (!bTNOK);
-            newG.setTableNumber(tN++);
+            Game.Builder gb = newG.builder();
+            gb.setBoard(tN++);
+            alNewGames.set(i, gb.build());
         }
 
         // Renumber tables inside alNewGames
@@ -1387,8 +1387,8 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
         Game g1 = alSelectedGames.get(0);
         // Ask for a new number
-        int oldBegTN = g1.getTableNumber();
-        String strOldBegTN = "" + (g1.getTableNumber() + 1);
+        int oldBegTN = g1.getBoard();
+        String strOldBegTN = "" + (g1.getBoard() + 1);
         String strResponse = JOptionPane.showInputDialog(locale.format("game.pairing.shift.select_new_starting", strOldBegTN), strOldBegTN);
         int newBegTN = - 1;
         try{
@@ -1414,15 +1414,15 @@ public class JFrGamesPair extends javax.swing.JFrame {
         }
 
         ArrayList<Game> alGamesToRemove = new ArrayList<Game>();
-        ArrayList<Game> alGamesToAdd = new ArrayList<Game>();
+        ArrayList<Game.Builder> alGamesToAdd = new ArrayList<>();
 
         for (Game g : alGamesToConsider) {
-            int oldCurrentTN = g.getTableNumber();
+            int oldCurrentTN = g.getBoard();
             if (oldCurrentTN < oldBegTN) {
                 continue;
             }
             int newCurrentTN = oldCurrentTN + newBegTN - oldBegTN;
-            Game newG = new Game(g.getRoundNumber(), newCurrentTN, g.getWhitePlayer(), g.getBlackPlayer(), g.isKnownColor(), g.getHandicap(), g.getResult());
+            Game.Builder newG = new Game.Builder(g.getRound(), newCurrentTN, g.getWhitePlayer(), g.getBlackPlayer(), g.getKnownColor(), g.getHandicap(), g.getResult());
 
             if (newCurrentTN >= Gotha.MAX_NUMBER_OF_TABLES) {
                 JOptionPane.showMessageDialog(this, locale.format("game.pairing.error.shift_too_high", Gotha.MAX_NUMBER_OF_TABLES),
@@ -1443,9 +1443,9 @@ public class JFrGamesPair extends javax.swing.JFrame {
                 Logger.getLogger(JFrGamesPair.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        for (Game g : alGamesToAdd) {
+        for (Game.Builder g : alGamesToAdd) {
             try {
-                tournament.addGame(g);
+                tournament.addGame(g.build());
             } catch (TournamentException ex) {
                 Logger.getLogger(JFrGamesPair.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
@@ -1466,7 +1466,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
         Game g1 = alSelectedGames.get(0);
         // Ask for a new number
-        int oldTN = g1.getTableNumber();
+        int oldTN = g1.getBoard();
         String strOldTN = "" + (oldTN + 1);
         String strResponse = JOptionPane.showInputDialog(locale.getString("game.pairing.enter_board_number"), strOldTN);
         int newTN = -1;
@@ -1489,7 +1489,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
         try {
             ArrayList<Game> alGames = tournament.gamesList(this.processedRoundNumber);
             for (Game g : alGames) {
-                if (g.getTableNumber() == newTN) {
+                if (g.getBoard() == newTN) {
                     g2 = g;
                 }
             }
@@ -1498,10 +1498,10 @@ public class JFrGamesPair extends javax.swing.JFrame {
         }
         try {
             tournament.removeGame(g1);
-            g1.setTableNumber(newTN);
+            g1 = g1.withBoard(newTN);
             if (g2 != null) {
                 tournament.removeGame(g2);
-                g2.setTableNumber(oldTN);
+                g2 = g2.withBoard(oldTN);
                 tournament.addGame(g2);
             }
             tournament.addGame(g1);

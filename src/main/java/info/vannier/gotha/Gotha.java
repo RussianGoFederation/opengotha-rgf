@@ -51,7 +51,7 @@ public class Gotha {
     static final int MAX_NUMBER_OF_CATEGORIES = 9;
     static final int MAX_RANK = 8;      // =  9D
     static final int MIN_RANK = -30;    // = 30K
-    static final int MAX_NUMBER_OF_TABLES = MAX_NUMBER_OF_PLAYERS / 2;
+    public static final int MAX_NUMBER_OF_TABLES = MAX_NUMBER_OF_PLAYERS / 2;
     static final int MIN_NUMBER_OF_MEMBERS_BY_TEAM = 2;
     static final int MAX_NUMBER_OF_MEMBERS_BY_TEAM = 10;
     static final int MAX_NUMBER_OF_TEAMS = MAX_NUMBER_OF_PLAYERS / MAX_NUMBER_OF_MEMBERS_BY_TEAM;

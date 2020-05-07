@@ -5,8 +5,10 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.Game;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -91,7 +93,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
         pack();
     }
 
-    private void btnGenerateGamesActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnGenerateGamesActionPerformed(ActionEvent evt) {
         try {
             tournament.removeAllGames();
         } catch (RemoteException ex) {
@@ -121,8 +123,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
            for (int i = 0; i < numberOfPlayers / 2; i++){
                Player p1 = alPlayers.get(i);
                Player p2 = alPlayers.get ( (numberOfPlayers/2) + (i + r) % (numberOfPlayers/2));
-               Game g = new Game(r, i, p1, p2, true, 0, Game.RESULT_WHITEWINS);
-               g.setKnownColor(true);
+               Game g = new Game.Builder(r, i, p1, p2, true, 0, Game.Result.WHITEWINS).build();
                 try {
                     tournament.addGame(g);
                 } catch (RemoteException ex) {

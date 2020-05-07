@@ -17,14 +17,14 @@
 
 package ru.gofederation.gotha.printing;
 
+import info.vannier.gotha.GeneralParameterSet;
+import info.vannier.gotha.TournamentInterface;
+import ru.gofederation.gotha.model.Game;
+
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.rmi.RemoteException;
 import java.util.List;
-
-import info.vannier.gotha.Game;
-import info.vannier.gotha.GeneralParameterSet;
-import info.vannier.gotha.TournamentInterface;
 
 public class PairingPrinter extends TablePrinter {
     private final int boardCol = 0;

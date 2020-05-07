@@ -1,5 +1,7 @@
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.Game;
+
 import java.rmi.RemoteException;
 
 /**
@@ -32,7 +34,7 @@ public class Match implements java.io.Serializable{
     public static Match buildMatch(int roundNumber, Team team1, Team team2, TournamentInterface tournament)throws RemoteException{
         if (team1 == null) return null;
         if (team2 == null) return null;
-        
+
         Match match = new Match();
         match.teamSize = tournament.getTeamSize();
         match.roundNumber = roundNumber;
