@@ -1,9 +1,10 @@
 package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.HalfGame;
+import ru.gofederation.gotha.presenter.HalfGameResultsKt;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -411,80 +412,15 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
      * h being handicap, "0" ... "9"
      * @param tps Tournament parameter set. useful for placement criteria and for absent and values scores
      */
-public static String[][] halfGamesStrings(List<ScoredPlayer> alOrderedScoredPlayers, int roundNumber, TournamentParameterSet tps, boolean bFull) {
-        GeneralParameterSet gps = tps.getGeneralParameterSet();
-        // Prepare hmPos for fast retrieving
-        HashMap<String, Integer> hmPos = new HashMap<String, Integer>();
-        for (int i = 0; i < alOrderedScoredPlayers.size(); i++){
-            hmPos.put(alOrderedScoredPlayers.get(i).getKeyString(), i);
-        }
-        String[][] hG = new String[roundNumber +1][alOrderedScoredPlayers.size()];
-        for (int i = 0; i < alOrderedScoredPlayers.size(); i++){
-            ScoredPlayer sp = alOrderedScoredPlayers.get(i);
-            for(int r = 0; r <= roundNumber; r++){
-                String strOpp = "   0";
-                String strRes = " ";
-                String strTyp = "/";
-                String strCol = " ";
-                String strHd  = "0";
-
-                Game g = sp.gameArray[r];
-                if (g == null){
-                    strOpp = "   0";
-                    strCol = " ";
-                    strTyp = " ";
-                    strHd  = " ";
-                    if (sp.participation[r] == ScoredPlayer.NOT_ASSIGNED) strRes = "-";
-                    else{
-                        int res = 0;
-                        if (sp.participation[r] == ScoredPlayer.ABSENT)
-                            if (tps.tournamentType() == TournamentParameterSet.TYPE_MCMAHON) res = gps.getGenMMS2ValueAbsent();
-                            else res = gps.getGenNBW2ValueAbsent();
-                        else if (sp.participation[r] == ScoredPlayer.BYE)
-                            if (tps.tournamentType() == TournamentParameterSet.TYPE_MCMAHON) res = gps.getGenMMS2ValueBye();
-                            else res = gps.getGenNBW2ValueBye();
-                        if (res == 2) strRes = "+";
-                        else if (res == 1) strRes = "=";
-                        else strRes = "-";
-                    }
-                }
-                else{   //Real Game
-                   Player opp = null;
-                   Game.Result result = g.getResult();
-                   if (result == Game.Result.UNKNOWN) strTyp = "/";
-                   else strTyp = (result.isByDef()) ? "!" : "/";
-                   if (!bFull) strTyp ="";
-                   Game.Result res = result.notByDef();
-                   if (g.getWhitePlayer().hasSameKeyString(sp)){
-                       opp = g.getBlackPlayer();
-                       strCol = "w";
-                       if (res == Game.Result.WHITEWINS || res == Game.Result.BOTHWIN) strRes = "+";
-                       else if (res == Game.Result.BLACKWINS || res == Game.Result.BOTHLOSE) strRes = "-";
-                       else if (res == Game.Result.EQUAL) strRes = "=";
-                       else strRes = "?";
-                   }
-                   else{
-                       opp = g.getWhitePlayer();
-                       strCol = "b";
-                       if (res == Game.Result.BLACKWINS || res == Game.Result.BOTHWIN) strRes = "+";
-                       else if (res == Game.Result.WHITEWINS || res == Game.Result.BOTHLOSE) strRes = "-";
-                       else if (res == Game.Result.EQUAL) strRes = "=";
-                       else strRes = "?" ;
-
-                   }
-                   if (!g.getKnownColor()) strCol = "?";
-                   if (!bFull) strCol = "";
-                   int oppNum = hmPos.get(opp.getKeyString());
-                   strOpp = "    " + (oppNum +1);
-                   strOpp = strOpp.substring(strOpp.length() - 4);  // To have 4 chars exactly
-                   strHd = "" + g.getHandicap();
-                   if (!bFull) strHd = "";
-                }
-                hG[r][i] = strOpp + strRes + strTyp + strCol + strHd;
-
+    public static String[][] halfGamesStrings(List<ScoredPlayer> alOrderedScoredPlayers, int roundNumber, TournamentParameterSet tps, boolean bFull) {
+        HalfGame[][] halfGames = HalfGameResultsKt.halfGames(alOrderedScoredPlayers, roundNumber, tps);
+        String[][] hg = new String[roundNumber +1][alOrderedScoredPlayers.size()];
+        for (int i = 0; i < alOrderedScoredPlayers.size(); i++) {
+            for (int r = 0; r <= roundNumber; r++) {
+                hg[r][i] = halfGames[r][i].toPaddedString(bFull);
             }
         }
-        return hG;
+        return hg;
     }
 
     /**
