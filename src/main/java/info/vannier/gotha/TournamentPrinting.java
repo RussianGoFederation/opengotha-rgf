@@ -508,7 +508,7 @@ public class TournamentPrinting implements Printable {
         if (dpps.getGameFormat() == DPParameterSet.DP_GAME_FORMAT_FULL) bFull = true;
         else bFull = false;
 
-        this.halfGamesStrings = ScoredPlayer.halfGamesStrings(alOrderedScoredPlayers, roundNumber, tps, bFull);
+        this.halfGamesStrings = ScoredPlayer.halfGamesStrings(alOrderedScoredPlayers, roundNumber, tournament, bFull);
     }
 
     private void preparePrintMatchesList(){

@@ -17,14 +17,19 @@
 
 package ru.gofederation.gotha.presenter
 
-import info.vannier.gotha.*
+import info.vannier.gotha.DPParameterSet
+import info.vannier.gotha.PlacementCriterion
+import info.vannier.gotha.ScoredPlayer
+import info.vannier.gotha.TournamentInterface
+import info.vannier.gotha.TournamentParameterSet
+import ru.gofederation.gotha.model.HalfGame
 import javax.swing.table.AbstractTableModel
 
 class StandingsTableModel(
     private val tournament: TournamentInterface, private val tps: TournamentParameterSet, private val displayedRoundNumber: Int
 ) : AbstractTableModel() {
     private lateinit var players: List<ScoredPlayer>
-    private lateinit var games: Array<Array<String>>
+    private lateinit var games: Array<Array<HalfGame>>
     private lateinit var places: Array<String>
     private lateinit var columns: List<Column>
 
@@ -43,9 +48,7 @@ class StandingsTableModel(
             if (!dpps.isDisplayNPPlayers) { removeIf { !tournament.isPlayerImplied(it) } }
         }
 
-        val gameFormat = tps.dpParameterSet.gameFormat
-        val bFull = gameFormat != DPParameterSet.DP_GAME_FORMAT_SHORT
-        games = ScoredPlayer.halfGamesStrings(players, displayedRoundNumber, tps, bFull)
+        games = players.halfGames(displayedRoundNumber, tournament)
         places = ScoredPlayer.catPositionStrings(players, displayedRoundNumber, tps)
 
         columns = invalidateColumns()

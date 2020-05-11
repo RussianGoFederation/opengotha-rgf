@@ -410,10 +410,10 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
      * t (type) is either "/" for normal results or "!" for by default results
      * c being the colour, "w", "b" or "?"
      * h being handicap, "0" ... "9"
-     * @param tps Tournament parameter set. useful for placement criteria and for absent and values scores
+     * @param tournament Tournament. Used for placement criteria and for absent and values scores, and also for retrieving ScoredPlayers
      */
-    public static String[][] halfGamesStrings(List<ScoredPlayer> alOrderedScoredPlayers, int roundNumber, TournamentParameterSet tps, boolean bFull) {
-        HalfGame[][] halfGames = HalfGameResultsKt.halfGames(alOrderedScoredPlayers, roundNumber, tps);
+    public static String[][] halfGamesStrings(List<ScoredPlayer> alOrderedScoredPlayers, int roundNumber, TournamentInterface tournament, boolean bFull) {
+        HalfGame[][] halfGames = HalfGameResultsKt.halfGames(alOrderedScoredPlayers, roundNumber, tournament);
         String[][] hg = new String[roundNumber +1][alOrderedScoredPlayers.size()];
         for (int i = 0; i < alOrderedScoredPlayers.size(); i++) {
             for (int r = 0; r <= roundNumber; r++) {

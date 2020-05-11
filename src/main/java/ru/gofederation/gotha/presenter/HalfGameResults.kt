@@ -18,10 +18,11 @@
 package ru.gofederation.gotha.presenter
 
 import info.vannier.gotha.ScoredPlayer
-import info.vannier.gotha.TournamentParameterSet
+import info.vannier.gotha.TournamentInterface
 import ru.gofederation.gotha.model.HalfGame
 
-fun List<ScoredPlayer>.halfGames(roundNumber: Int, tps: TournamentParameterSet): Array<Array<HalfGame>> {
+fun List<ScoredPlayer>.halfGames(roundNumber: Int, tournament: TournamentInterface): Array<Array<HalfGame>> {
+    val tps = tournament.tournamentParameterSet
     val hmPos = this.mapIndexed { i, player -> player.keyString to i + 1 }.toMap()
     val hg = Array(roundNumber + 1) { Array(this.size) { HalfGame.EMPTY } }
 
@@ -36,7 +37,7 @@ fun List<ScoredPlayer>.halfGames(roundNumber: Int, tps: TournamentParameterSet):
                     HalfGame(tps, participation)
                 }
             } else {
-                HalfGame(hmPos, sp, g)
+                HalfGame(tournament, hmPos, sp, g)
             }
         }
     }

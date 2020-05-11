@@ -63,7 +63,7 @@ public class StandingsPrinter extends TablePrinter implements Printable {
         this.gps = tps.getGeneralParameterSet();
         this.round = round;
         this.playerList = tournament.orderedScoredPlayersList(round, pps);
-        this.games = ScoredPlayer.halfGamesStrings(this.playerList, round, tps, dps.getGameFormat() == DPParameterSet.DP_GAME_FORMAT_FULL);
+        this.games = ScoredPlayer.halfGamesStrings(this.playerList, round, tournament, dps.getGameFormat() == DPParameterSet.DP_GAME_FORMAT_FULL);
         this.places = ScoredPlayer.catPositionStrings(this.playerList, round, tps);
         this.placementCriteria = Arrays.stream(pps.getPlaCriteria())
             .filter(placementCriterion -> placementCriterion != PlacementCriterion.NUL)

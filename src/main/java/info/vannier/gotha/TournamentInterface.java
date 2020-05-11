@@ -1,5 +1,6 @@
 package info.vannier.gotha;
 
+import kotlin.Pair;
 import ru.gofederation.gotha.model.Game;
 
 import java.rmi.Remote;
@@ -152,4 +153,6 @@ public interface TournamentInterface extends Remote{
     public void addClubToClubsGroup(String groupName, String clubName) throws RemoteException;
     public void removeClubFromClubsGroup(String groupName, String clubName) throws RemoteException;
     public boolean playersAreInCommonGroup(Player p1, Player p2)throws RemoteException;
+
+    public Pair<ScoredPlayer, ScoredPlayer> scoredPlayers(Game game) throws RemoteException;
 }

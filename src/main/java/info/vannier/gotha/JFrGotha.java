@@ -17,6 +17,7 @@ import ru.gofederation.gotha.ui.PrinterSettings;
 import ru.gofederation.gotha.ui.RgfTournamentExportDialog;
 import ru.gofederation.gotha.ui.RgfTournamentImportDialog;
 import ru.gofederation.gotha.ui.TournamentOpener;
+import ru.gofederation.gotha.ui.component.StandingsTableCellRenderer;
 import ru.gofederation.gotha.util.GothaLocale;
 
 import javax.swing.DefaultComboBoxModel;
@@ -1178,11 +1179,13 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         DefaultTableModel model = (DefaultTableModel) tblTeamsStandings.getModel();
         model.setColumnCount(TEAM_ROUND0_RESULT_COL + Gotha.MAX_NUMBER_OF_ROUNDS + TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA);
 
+        final boolean longCellFormat =
+            tournament.getTournamentParameterSet().getDPParameterSet().getGameFormat() == DPParameterSet.DP_GAME_FORMAT_FULL;
         // Set the renderer for tblStandings
-        tblStandings.setDefaultRenderer(Object.class, new StandingsTableCellRenderer());
+        tblStandings.setDefaultRenderer(Object.class, new StandingsTableCellRenderer(longCellFormat));
         updateStandingsComponents();
         // Set the renderer for tblTeamsStandings
-        tblTeamsStandings.setDefaultRenderer(Object.class, new StandingsTableCellRenderer());
+        tblTeamsStandings.setDefaultRenderer(Object.class, new StandingsTableCellRenderer(longCellFormat));
         updateTeamsStandingsComponents();
 
     }
@@ -1344,6 +1347,8 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
 
         StandingsTableModel stm = new StandingsTableModel(tournament, displayedTPS, displayedRoundNumber);
         tblStandings.setModel(stm);
+        ((StandingsTableCellRenderer) tblStandings.getDefaultRenderer(Object.class))
+            .setRoundCellFormatLong(tps.getDPParameterSet().getGameFormat() == DPParameterSet.DP_GAME_FORMAT_FULL);
         tblStandings.clearSelection();
 
         List<? extends ITableColumn> columns = stm.getColumnIdentifiers();
@@ -1395,6 +1400,8 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         TeamPlacementParameterSet displayedTeamPPS = displayedTeamTPS.getTeamPlacementParameterSet();
         displayedTeamPPS.setPlaCriteria(displayedTeamCriteria);
 
+        ((StandingsTableCellRenderer) tblTeamsStandings.getDefaultRenderer(Object.class))
+            .setRoundCellFormatLong(tournament.getTournamentParameterSet().getDPParameterSet().getGameFormat() == DPParameterSet.DP_GAME_FORMAT_FULL);
 
         lastDisplayedTeamsStandingsUpdateTime = tournament.getCurrentTournamentTime();
         ScoredTeamsSet sts = tournament.getAnUpToDateScoredTeamsSet(displayedTeamPPS, displayedTeamRoundNumber);
@@ -2790,24 +2797,6 @@ class MyFileFilter extends FileFilter {
     @Override
     public String getDescription() {
         return description;
-    }
-}
-
-class StandingsTableCellRenderer extends JLabel implements TableCellRenderer {
-    // This method is called each time a cell in a column
-    // using this renderer needs to be rendered.
-
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value,
-            boolean isSelected, boolean hasFocus, int rowIndex, int colIndex) {
-        TableModel model = table.getModel();
-        setText("" + model.getValueAt(rowIndex, colIndex));
-        if (isSelected) {
-            setFont(this.getFont().deriveFont(Font.BOLD));
-        } else {
-            setFont(this.getFont().deriveFont(Font.PLAIN));
-        }
-        return this;
     }
 }
 

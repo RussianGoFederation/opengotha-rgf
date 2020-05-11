@@ -1595,7 +1595,7 @@ public class ExternalDocument {
             Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        String[][] hG = ScoredPlayer.halfGamesStrings(alOrderedScoredPlayers, roundNumber, tps, true);
+        String[][] hG = ScoredPlayer.halfGamesStrings(alOrderedScoredPlayers, roundNumber, tournament, true);
         String[] strPlace = ScoredPlayer.positionStrings(alOrderedScoredPlayers, roundNumber, tps);
         for (int iSP = 0; iSP < alOrderedScoredPlayers.size(); iSP++) {
             ScoredPlayer sP = alOrderedScoredPlayers.get(iSP);
@@ -1744,7 +1744,7 @@ public class ExternalDocument {
         boolean bFull = true;
         int gameFormat = tps.getDPParameterSet().getGameFormat();
         if (gameFormat == DPParameterSet.DP_GAME_FORMAT_SHORT) bFull = false;
-        String[][] hG = ScoredPlayer.halfGamesStrings(alOrderedScoredPlayers, roundNumber, tps, bFull);
+        String[][] hG = ScoredPlayer.halfGamesStrings(alOrderedScoredPlayers, roundNumber, tournament, bFull);
         String[] strPlace = ScoredPlayer.positionStrings(alOrderedScoredPlayers, roundNumber, tps);
         for (int iSP = 0; iSP < alOrderedScoredPlayers.size(); iSP++) {
             ScoredPlayer sP = alOrderedScoredPlayers.get(iSP);
@@ -2633,7 +2633,7 @@ public class ExternalDocument {
         int gameFormat = tps.getDPParameterSet().getGameFormat();
         if (gameFormat == DPParameterSet.DP_GAME_FORMAT_SHORT) bFull = false;
 
-        String[][] hG = ScoredPlayer.halfGamesStrings(alOrderedScoredPlayers, roundNumber, tps, bFull);
+        String[][] hG = ScoredPlayer.halfGamesStrings(alOrderedScoredPlayers, roundNumber, tournament, bFull);
         String[] strPlace = ScoredPlayer.positionStrings(alOrderedScoredPlayers, roundNumber, tps);
         try {
             for (int iSP = 0; iSP < alOrderedScoredPlayers.size(); iSP++) {

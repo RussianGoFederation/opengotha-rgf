@@ -18,15 +18,18 @@
 package ru.gofederation.gotha.model
 
 import info.vannier.gotha.ScoredPlayer
+import info.vannier.gotha.TournamentInterface
 import info.vannier.gotha.TournamentParameterSet
 
 data class HalfGame(
     val opponentNumber: Int,
     val result: Result,
     val type: Type,
+    val upDownStatus: UpDownStatus,
     val color: Color,
     val handicap: Int
 ) {
+
     enum class Type {
         REGULAR, BY_DEF, NO_GAME;
 
@@ -59,6 +62,39 @@ data class HalfGame(
         }
     }
 
+    enum class UpDownStatus {
+        NO_UPDOWN, UP, DOWN;
+
+        companion object {
+            operator fun invoke(a: ScoredPlayer, b: ScoredPlayer, tps: TournamentParameterSet, rn: Int): UpDownStatus {
+                val d = if (tps.tournamentType() == TournamentParameterSet.TYPE_MCMAHON) {
+                    if (rn > 0) {
+                        a.getMMSX2(rn - 1) - b.getMMSX2(rn - 1)
+                    } else {
+                        a.smms(tps.generalParameterSet) - b.smms(tps.generalParameterSet)
+                    }
+                } else {
+                    a.groupNumber - b.groupNumber
+                }
+
+                return when {
+                    d < 0 -> UP
+                    d > 0 -> DOWN
+                    else -> NO_UPDOWN
+                }
+            }
+
+            operator fun invoke(t: TournamentInterface, g: Game, sp: ScoredPlayer): UpDownStatus {
+                val players = t.scoredPlayers(g) ?: return NO_UPDOWN
+                return when {
+                    sp.hasSameKeyString(players.first) -> invoke(players.first, players.second, t.tournamentParameterSet, g.round)
+                    sp.hasSameKeyString(players.second) -> invoke(players.second, players.first, t.tournamentParameterSet, g.round)
+                    else -> NO_UPDOWN
+                }
+            }
+        }
+    }
+
     fun toPaddedString(long: Boolean) =
         if (long) toPaddedStringLong()
         else toPaddedStringShort()
@@ -84,7 +120,7 @@ data class HalfGame(
         }
 
     companion object {
-        val EMPTY = HalfGame(0, Result.LOSE, Type.NO_GAME, Color.UNKNOWN, 0)
+        val EMPTY = HalfGame(0, Result.LOSE, Type.NO_GAME, UpDownStatus.NO_UPDOWN, Color.UNKNOWN, 0)
 
         operator fun invoke(tps: TournamentParameterSet, participation: Int): HalfGame {
             val gps = tps.generalParameterSet
@@ -107,16 +143,18 @@ data class HalfGame(
                     1 -> Result.EQUAL
                     else -> Result.LOSE
                 },
+                upDownStatus = UpDownStatus.NO_UPDOWN,
                 color = Color.NOT_SET,
                 type = Type.NO_GAME,
                 handicap = 0
             )
         }
 
-        operator fun invoke(opponentLookup: Map<String, Int>, player: ScoredPlayer, game: Game): HalfGame {
+        operator fun invoke(tournament: TournamentInterface, opponentLookup: Map<String, Int>, player: ScoredPlayer, game: Game): HalfGame {
             val opponentNumber: Int
             val result: Result
             val color: Color
+            val upDownStatus = UpDownStatus(tournament, game, player)
 
             if (game.whitePlayer.hasSameKeyString(player)) {
                 opponentNumber = opponentLookup[game.blackPlayer.keyString] ?: 0
@@ -142,6 +180,7 @@ data class HalfGame(
                 opponentNumber = opponentNumber,
                 result = result,
                 type = if (game.result.isByDef()) Type.BY_DEF else Type.REGULAR,
+                upDownStatus = upDownStatus,
                 color = color,
                 handicap = game.handicap
             )

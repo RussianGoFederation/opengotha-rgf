@@ -1,5 +1,6 @@
 package info.vannier.gotha;
 
+import kotlin.Pair;
 import ru.gofederation.gotha.model.Game;
 import ru.gofederation.gotha.util.GothaLocale;
 
@@ -3229,5 +3230,29 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
 	        throw new IllegalArgumentException("Keys do not match");
 	    removeGame(oldGame);
 	    addGame(newGame);
+    }
+
+    /**
+     * Returns scored players of given game. White player first.
+     */
+    @Override
+    public Pair<ScoredPlayer, ScoredPlayer>scoredPlayers(Game game) throws RemoteException {
+	    List<ScoredPlayer> ospl = orderedScoredPlayersList(game.getRound(), getTournamentParameterSet().getPlacementParameterSet());
+	    ScoredPlayer white = null;
+	    ScoredPlayer black = null;
+	    String whiteKey = game.getWhitePlayer().getKeyString();
+	    String blackKey = game.getBlackPlayer().getKeyString();
+	    for (ScoredPlayer sp : ospl) {
+	        if (whiteKey.equals(sp.getKeyString())) {
+	            white = sp;
+            }
+	        if (blackKey.equals(sp.getKeyString())) {
+	            black = sp;
+            }
+	        if (white != null && black != null) {
+	            return new Pair(white, black);
+            }
+        }
+	    return null;
     }
 }
