@@ -23,6 +23,7 @@ import ru.gofederation.gotha.model.HalfGame
 import ru.gofederation.gotha.model.HalfGame.Color
 import ru.gofederation.gotha.model.HalfGame.Result
 import ru.gofederation.gotha.model.HalfGame.Type
+import ru.gofederation.gotha.model.HalfGame.UpDownStatus.NO_UPDOWN
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -70,10 +71,10 @@ class HalfGameTest {
     @Test
     fun testHalfGameToPaddedStringLong() {
         val data = listOf(
-            HalfGame(5, Result.LOSE, Type.REGULAR, Color.WHITE, 4) to "   5-/w4",
-            HalfGame(9999, Result.WIN, Type.BY_DEF, Color.BLACK, 0) to "9999+!b0",
-            HalfGame(16, Result.UNKNOWN, Type.REGULAR, Color.WHITE, 0) to "  16?/w0",
-            HalfGame(80, Result.UNKNOWN, Type.REGULAR, Color.UNKNOWN, 0) to "  80?/?0",
+            HalfGame(5, Result.LOSE, Type.REGULAR, NO_UPDOWN, Color.WHITE, 4) to "   5-/w4",
+            HalfGame(9999, Result.WIN, Type.BY_DEF, NO_UPDOWN, Color.BLACK, 0) to "9999+!b0",
+            HalfGame(16, Result.UNKNOWN, Type.REGULAR, NO_UPDOWN, Color.WHITE, 0) to "  16?/w0",
+            HalfGame(80, Result.UNKNOWN, Type.REGULAR, NO_UPDOWN, Color.UNKNOWN, 0) to "  80?/?0",
 
             testCase(true, ScoredPlayer.BYE, 2) to "   0+",
             testCase(true, ScoredPlayer.BYE, 1) to "   0=",
@@ -90,10 +91,10 @@ class HalfGameTest {
     @Test
     fun testHalfGameToPaddedStringShort() {
         val data = listOf(
-            HalfGame(5, Result.LOSE, Type.REGULAR, Color.WHITE, 4) to "   5-",
-            HalfGame(9999, Result.WIN, Type.BY_DEF, Color.BLACK, 0) to "9999+",
-            HalfGame(16, Result.UNKNOWN, Type.REGULAR, Color.WHITE, 0) to "  16?",
-            HalfGame(80, Result.UNKNOWN, Type.REGULAR, Color.UNKNOWN, 0) to "  80?",
+            HalfGame(5, Result.LOSE, Type.REGULAR, NO_UPDOWN, Color.WHITE, 4) to "   5-",
+            HalfGame(9999, Result.WIN, Type.BY_DEF, NO_UPDOWN, Color.BLACK, 0) to "9999+",
+            HalfGame(16, Result.UNKNOWN, Type.REGULAR, NO_UPDOWN, Color.WHITE, 0) to "  16?",
+            HalfGame(80, Result.UNKNOWN, Type.REGULAR, NO_UPDOWN, Color.UNKNOWN, 0) to "  80?",
 
             testCase(true, ScoredPlayer.BYE, 2) to "   0+",
             testCase(true, ScoredPlayer.BYE, 1) to "   0=",
