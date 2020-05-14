@@ -1,6 +1,7 @@
 package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.Rating;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -31,7 +32,7 @@ public class GameComparator implements Comparator<Game>, Serializable{
         Player bP1 = g1.getBlackPlayer();
         Player wP2 = g2.getWhitePlayer();
         Player bP2 = g2.getBlackPlayer();
-        int best1, best2;
+        Rating best1, best2;
         switch (gameOrderType){
             case TABLE_NUMBER_ORDER :
                 if (g1.getBoard() < g2.getBoard()) return -1;
@@ -59,11 +60,11 @@ public class GameComparator implements Comparator<Game>, Serializable{
                 if (mms1 > mms2) return -1;
                 // If mms1 = mms2, compare RATING
                 best1 = wP1.getRating();
-                if (bP1.getRating() > best1) best1 = bP1.getRating();
+                if (bP1.getRating().compareTo(best1) > 0) best1 = bP1.getRating();
                 best2 = wP2.getRating();
-                if (bP2.getRating() > best1) best2 = bP2.getRating();
-                if (best1 < best2) return 1;
-                if (best1 > best2) return -1;
+                if (bP2.getRating().compareTo(best1) > 0) best2 = bP2.getRating();
+                int d = best1.compareTo(best2);
+                if (d != 0) return d;
                 // last artificial criterion (to have a deterministic order
                 String str1 = wP1.getKeyString();
                 String str2 = wP2.getKeyString();

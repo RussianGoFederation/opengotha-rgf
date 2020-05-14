@@ -1,9 +1,10 @@
 package info.vannier.gotha;
 
 
-import java.util.Objects;
-
+import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
+
+import java.util.Objects;
 
 import static ru.gofederation.gotha.model.RatingOrigin.AGA;
 import static ru.gofederation.gotha.model.RatingOrigin.FFG;
@@ -140,8 +141,8 @@ public final class RatedPlayer {
             if (this.rawRating > -100 && this.rawRating < 100) stdRating = 2050;
         }
 
-        stdRating = Math.min(stdRating, Player.MAX_RATING);
-        stdRating = Math.max(stdRating, Player.MIN_RATING);
+        stdRating = Math.min(stdRating, Rating.MAX_RATING);
+        stdRating = Math.max(stdRating, Rating.MIN_RATING);
 
         return stdRating;
     }

@@ -271,7 +271,7 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
             Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
         }
         for(Player p : alPlayers){
-            p.setRating(p.getRating() + 2050);
+            p.setRating(p.getRating().plus(2050));
             try {
                 tournament.modifyPlayer(p, p);
             } catch (TournamentException ex) {
@@ -292,7 +292,7 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
         }
         for(Player p : alPlayers){
             if (p.getRatingOrigin() == EGF) continue;
-            p.setRating(p.getRating() + 2050);
+            p.setRating(p.getRating().plus(2050));
             try {
                 tournament.modifyPlayer(p, p);
             } catch (TournamentException ex) {

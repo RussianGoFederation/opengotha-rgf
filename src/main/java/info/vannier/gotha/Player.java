@@ -3,11 +3,11 @@
  */
 package info.vannier.gotha;
 
-import java.util.Date;
-
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
+
+import java.util.Date;
 
 import static ru.gofederation.gotha.model.RatingOrigin.AGA;
 import static ru.gofederation.gotha.model.RatingOrigin.FFG;
@@ -36,17 +36,7 @@ public class Player implements java.io.Serializable{
      */
     private int rank = -20;
 
-    /**
-     * Rating.
-     * from -900 to 2949
-     * If the rating comes from FFG, rating = FFGrating + 2050.
-     */
-    public static final int MIN_RATING = -900;
-    public static final int MAX_RATING = 2949;
-
-    private int rating = MIN_RATING;
-
-    private RatingOrigin ratingOrigin = UNDEF;
+    private Rating rating = Rating.minRating(UNDEF);
 
     /**
      * strGrade is relevant when player is registered from EGF rating list
@@ -98,8 +88,7 @@ public class Player implements java.io.Serializable{
         if(rank < Gotha.MIN_RANK || rank > Gotha.MAX_RANK) rank = Player.convertKDPToInt(strGrade);
         this.rank = rank;
 
-        this.rating = rating;
-        this.ratingOrigin = ratingOrigin;
+        this.rating = new Rating(ratingOrigin, rating);
 
         if (strGrade.equals("")) strGrade = Player.convertIntToKD(rank);
         strGrade = strGrade.toUpperCase();
@@ -138,7 +127,6 @@ public class Player implements java.io.Serializable{
         if (builder.getRank() < Gotha.MIN_RANK || builder.getRank() > Gotha.MAX_RANK) this.rank = Player.convertKDPToInt(builder.getGrade());
         else this.rank = builder.getRank();
         this.rating = builder.getRating();
-        this.ratingOrigin = builder.getRatingOrigin();
         if (builder.getGrade().equals("")) this.strGrade = Player.convertIntToKD(this.rank).toUpperCase();
         else this.strGrade = builder.getGrade().toUpperCase();
         this.smmsCorrection = builder.getSmmsCorrection();
@@ -169,7 +157,6 @@ public class Player implements java.io.Serializable{
         this.rgfId = p.getRgfId();
         this.rank = p.getRank();
         this.rating = p.getRating();
-        this.ratingOrigin = p.getRatingOrigin();
         this.strGrade = p.getStrGrade();
         this.smmsCorrection = p.getSmmsCorrection();
         this.smmsByHand = p.getSmmsByHand();
@@ -212,7 +199,6 @@ public class Player implements java.io.Serializable{
     }
 /** Concatenates name and firtName
      * Shortens if necessary
-     * @param p
      * @return
      */
     public String shortenedFullName(){
@@ -296,25 +282,20 @@ public class Player implements java.io.Serializable{
         else return false;
     }
 
-    public int getRating() {
+    public Rating getRating() {
         return rating;
     }
 
-    public void setRating(int val) {
-        if (val > Player.MAX_RATING) val = MAX_RATING;
-        if (val < Player.MIN_RATING) val = MIN_RATING;
-        this.rating = val;
+    public void setRating(Rating rating) {
+        this.rating = rating;
     }
 
     public RatingOrigin getRatingOrigin() {
-        return ratingOrigin;
+        return rating.getOrigin();
     }
 
-    public void setRatingOrigin(RatingOrigin val) {
-        this.ratingOrigin = val;
-    }
     public String getStrRawRating() {
-        int r = getRating();
+        int r = getRating().getValue();
         String strRR = "" + r;
         if (getRatingOrigin() == FFG){
             strRR = "" + (r - 2050);
@@ -633,8 +614,7 @@ public class Player implements java.io.Serializable{
         private boolean rgfAssessmentRating = true;
         private int rgfId = 0;
         private int rank = -20;
-        private int rating = MIN_RATING;
-        private RatingOrigin ratingOrigin = UNDEF;
+        private Rating rating = Rating.minRating(UNDEF);
         private String grade = "";
         private int smmsCorrection = 0;
         private int smmsByHand = -1;
@@ -767,17 +747,21 @@ public class Player implements java.io.Serializable{
             return this;
         }
 
-        public int getRating() {
+        public Rating getRating() {
             return rating;
         }
 
         public RatingOrigin getRatingOrigin() {
-            return ratingOrigin;
+            return rating.getOrigin();
+        }
+
+        public Builder setRating(Rating rating) {
+            this.rating = rating;
+            return this;
         }
 
         public Builder setRating(int rating, RatingOrigin ratingOrigin) {
-            this.rating = rating;
-            this.ratingOrigin = ratingOrigin;
+            this.rating = new Rating(ratingOrigin, rating);
             return this;
         }
 

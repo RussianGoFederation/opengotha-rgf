@@ -4,18 +4,16 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
-
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
+import ru.gofederation.gotha.model.Rating;
+import ru.gofederation.gotha.model.RatingListFactory;
+import ru.gofederation.gotha.model.RatingListType;
+import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;
+import ru.gofederation.gotha.printing.PlayerListPrinter;
+import ru.gofederation.gotha.ui.Dialog;
+import ru.gofederation.gotha.ui.PrinterSettings;
+import ru.gofederation.gotha.ui.RatingListControls;
+import ru.gofederation.gotha.ui.component.RatingListComboBox;
+import ru.gofederation.gotha.util.GothaLocale;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JLabel;
@@ -28,16 +26,17 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
-
-import ru.gofederation.gotha.model.RatingListFactory;
-import ru.gofederation.gotha.model.RatingListType;
-import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;
-import ru.gofederation.gotha.printing.PlayerListPrinter;
-import ru.gofederation.gotha.ui.Dialog;
-import ru.gofederation.gotha.ui.PrinterSettings;
-import ru.gofederation.gotha.ui.RatingListControls;
-import ru.gofederation.gotha.ui.component.RatingListComboBox;
-import ru.gofederation.gotha.util.GothaLocale;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 import static ru.gofederation.gotha.model.RatingOrigin.EGF;
 
@@ -393,15 +392,8 @@ public class JFrUpdateRatings extends javax.swing.JFrame implements RatingListCo
             try{
                 String strNewRating = (String)model.getValueAt(row, JFrUpdateRatings.NEWRATING_COL);
                 int newRating = Integer.parseInt(strNewRating);
-                if (newRating == p.getRating()){
-                    p.setEgfPin(egfPin);
-                    p.setRatingOrigin(EGF);
-                }
-                else{
-                    p.setEgfPin(egfPin);
-                    p.setRatingOrigin(EGF);
-                    p.setRating(newRating);
-                }
+                p.setEgfPin(egfPin);
+                p.setRating(new Rating(EGF, newRating));
                 tournament.modifyPlayer(p, p);
             }catch(Exception e){
                 continue;

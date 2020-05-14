@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import ru.gofederation.gotha.model.Game;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
 
 import javax.swing.JFileChooser;
@@ -629,11 +630,11 @@ public class ExternalDocument {
             if (importedDataVersion < 201L) {
                 rating += 2050;
             }
-            if (rating > Player.MAX_RATING) {
-                rating = Player.MAX_RATING;
+            if (rating > Rating.MAX_RATING) {
+                rating = Rating.MAX_RATING;
             }
-            if (rating < Player.MIN_RATING) {
-                rating = Player.MIN_RATING;
+            if (rating < Rating.MIN_RATING) {
+                rating = Rating.MIN_RATING;
             }
 
             String ratingOrigin = extractNodeValue(nnm, "ratingOrigin", "");
@@ -3143,7 +3144,7 @@ public class ExternalDocument {
             String strAgaId = p.getAgaId();
             String strAgaExpirationDate = p.getAgaExpirationDate();
             String strRank = Player.convertIntToKD(p.getRank());
-            String strRating = Integer.valueOf(p.getRating()).toString();
+            String strRating = Integer.valueOf(p.getRating().getValue()).toString();
             String strRatingOrigin = p.getRatingOrigin().toString();
             String strGrade = p.getStrGrade();
             String strSMMSCorrection = Integer.valueOf(p.getSmmsCorrection()).toString();

@@ -12,7 +12,7 @@ public class PlayerComparator implements Comparator<Player>, Serializable{
     public final static int RATING_ORDER = 5;
     public final static int AGAID_ORDER  = 11;
     public final static int SCORE_ORDER  = 101; // Not used in PlayerComparator itself. Used by JFrGamesPair
-    
+
     int playerOrderType = PlayerComparator.NO_ORDER;
     public PlayerComparator(int playerOrderType){
         this.playerOrderType = playerOrderType;
@@ -51,15 +51,15 @@ public class PlayerComparator implements Comparator<Player>, Serializable{
                 if (grp2.equals("p")) range2 = 100 + n2 - 1;
                 if (grp2.equals("d")) range2 = n2 - 1;
                 if (grp2.equals("k")) range2 = -n2;
-                    
+
                 if (range1 < range2) return 1;
                 if (range1 > range2) return -1;
                 c = p1.getName().toLowerCase().compareTo(p2.getName().toLowerCase());
                 if (c != 0) return c;
                 else return p1.getFirstName().toLowerCase().compareTo(p2.getFirstName().toLowerCase());
             case RATING_ORDER :
-                if (p1.getRating() < p2.getRating()) return 1;
-                if (p1.getRating() > p2.getRating()) return -1;
+                int r = p1.getRating().compareTo(p2.getRating());
+                if (r != 0) return r;
                 c = p1.getName().toLowerCase().compareTo(p2.getName().toLowerCase());
                 if (c != 0) return c;
                 else return p1.getFirstName().toLowerCase().compareTo(p2.getFirstName().toLowerCase());

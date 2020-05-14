@@ -22,7 +22,7 @@ public class Team implements java.io.Serializable{
     public Team(Team team){
         deepCopy(team);
     }
-    
+
     private void deepCopy(Team t){
         this.teamNumber = t.getTeamNumber();
         this.teamName = t.getTeamName();
@@ -65,7 +65,7 @@ public class Team implements java.io.Serializable{
             return teamMembers[roundNumber][boardNumber];
         }
     }
-    
+
     public int boardNumber(int roundNumber, Player player){
         int bn = -1;
         for (int ib = 0; ib <Gotha.MAX_NUMBER_OF_MEMBERS_BY_TEAM; ib++ ){
@@ -92,29 +92,29 @@ public class Team implements java.io.Serializable{
     public void setTeamNumber(int teamNumber) {
         this.teamNumber = teamNumber;
     }
-    
+
     /**
      * Starting from V3.28.04 where team members may be variable, meanRating means mean rating at first round
-     * @return 
+     * @return
      */
     public int meanRating(){
         int sum = 0;
         for (int ip = 0; ip < this.teamMembers[0].length; ip++){
             Player p = teamMembers[0][ip];
-            if (p != null) sum += p.getRating();
+            if (p != null) sum += p.getRating().getValue();
         }
         int mean = sum/teamMembers.length;
         return mean;
     }
     /**
      * Starting from V3.28.04 where team members may be variable, meanRating means mean rating at first round
-     * @return 
+     * @return
      */
     public int meanRating(int nbMembers){
         int sum = 0;
         for (int ip = 0; ip < this.teamMembers[0].length; ip++){
             Player p = teamMembers[0][ip];
-            if (p != null) sum += p.getRating();
+            if (p != null) sum += p.getRating().getValue();
         }
         int mean = sum/nbMembers;
         return mean;

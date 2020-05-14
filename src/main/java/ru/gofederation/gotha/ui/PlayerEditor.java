@@ -17,11 +17,38 @@
 
 package ru.gofederation.gotha.ui;
 
-import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
-
+import info.vannier.gotha.CountriesList;
+import info.vannier.gotha.Country;
+import info.vannier.gotha.GeneralParameterSet;
+import info.vannier.gotha.Gotha;
+import info.vannier.gotha.GothaImageLoader;
+import info.vannier.gotha.JFrPlayersManager;
+import info.vannier.gotha.Player;
+import info.vannier.gotha.PlayerException;
+import info.vannier.gotha.RatedPlayer;
+import info.vannier.gotha.TournamentInterface;
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.Rank;
+import ru.gofederation.gotha.model.Rating;
+import ru.gofederation.gotha.model.RatingOrigin;
+import ru.gofederation.gotha.util.GothaLocale;
 
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -47,36 +74,6 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
-
-import info.vannier.gotha.CountriesList;
-import info.vannier.gotha.Country;
-import info.vannier.gotha.GeneralParameterSet;
-import info.vannier.gotha.Gotha;
-import info.vannier.gotha.GothaImageLoader;
-import info.vannier.gotha.JFrPlayersManager;
-import info.vannier.gotha.Player;
-import info.vannier.gotha.PlayerException;
-import info.vannier.gotha.RatedPlayer;
-import info.vannier.gotha.TournamentInterface;
-import ru.gofederation.gotha.model.PlayerRegistrationStatus;
-import ru.gofederation.gotha.model.Rank;
-import ru.gofederation.gotha.model.RatingOrigin;
-import ru.gofederation.gotha.util.GothaLocale;
 
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
@@ -415,7 +412,7 @@ public class PlayerEditor extends JPanel {
         patronymic.setText(player.getPatronymic());
         birthday.setDate(player.getDateOfBirth());
 
-        int rating = player.getRating();
+        int rating = player.getRating().getValue();
         this.rating.setText(Integer.toString(rating));
         RatingOrigin ratingOrigin = player.getRatingOrigin();
         String strRatingOrigin = ratingOrigin.toString();
@@ -652,8 +649,8 @@ public class PlayerEditor extends JPanel {
             int newRating = oldRating;
             try {
                 newRating = ratingPanel.getRating();
-                if (newRating < Player.MIN_RATING) newRating = Player.MIN_RATING;
-                if (newRating > Player.MAX_RATING) newRating = Player.MAX_RATING;
+                if (newRating < Rating.MIN_RATING) newRating = Rating.MIN_RATING;
+                if (newRating > Rating.MAX_RATING) newRating = Rating.MAX_RATING;
             } catch (Exception e){
                 newRating = oldRating;
             }
@@ -784,7 +781,7 @@ public class PlayerEditor extends JPanel {
             strLine = strLine.replaceAll("<country>", p.getCountry());
             strLine = strLine.replaceAll("<club>", p.getClub());
             strLine = strLine.replaceAll("<rank>", Player.convertIntToKD(p.getRank()));
-            int rawRating = p.getRating();
+            int rawRating = p.getRating().getValue();
             RatingOrigin ratingOrigin = p.getRatingOrigin();
             if (ratingOrigin == FFG) {
                 rawRating -= 2050;

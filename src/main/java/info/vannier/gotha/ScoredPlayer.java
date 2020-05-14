@@ -344,7 +344,7 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
             case NUL    : return 0;                      // Null criterion
             case CAT    : return - category(generalParameterSet);// Category
             case RANK   : return getRank();      // Rank
-            case RATING : return getRating();    // Rating
+            case RATING : return getRating().getValue();    // Rating
             case NBW    : return (rn >= 0) ? nbwX2[rn] : 0;                     // Number of Wins
             case MMS    : return (rn >= 0) ? mmsX2[rn] : 2 * smms(generalParameterSet);  // McMahon score
             case STS    : return (rn >= 0) ? stsX2[rn] : 2 * smms(generalParameterSet);  // STS score

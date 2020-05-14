@@ -5,7 +5,25 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.Rating;
+import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;
+import ru.gofederation.gotha.printing.PlayerListPrinter;
+import ru.gofederation.gotha.ui.Dialog;
+import ru.gofederation.gotha.ui.FrameBase;
+import ru.gofederation.gotha.ui.PrinterSettings;
+import ru.gofederation.gotha.util.GothaLocale;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -20,25 +38,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.UIManager;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-
-import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;
-import ru.gofederation.gotha.printing.PlayerListPrinter;
-import ru.gofederation.gotha.ui.Dialog;
-import ru.gofederation.gotha.ui.FrameBase;
-import ru.gofederation.gotha.ui.PrinterSettings;
-import ru.gofederation.gotha.util.GothaLocale;
 
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
@@ -449,8 +448,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         int nbChanged = 0;
 
         for (Player p : alP){
-            int rating = p.getRating();
-            int newRank = Player.rankFromRating(p.getRatingOrigin(), rating);
+            int newRank = p.getRating().toRank();
             if (p.getRank() != newRank)
                 nbChanged++;
         }
@@ -462,7 +460,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         boolean bSomethingHasChanged = false;
         try {
             for (Player p : alP){
-                int rating = p.getRating();
+                int rating = p.getRating().toRank();
                 int newRank = Player.rankFromRating(p.getRatingOrigin(), rating);
                 p.setRank(newRank);
                 tournament.modifyPlayer(p, p);
@@ -488,7 +486,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         for (Player p : alP){
             int rank = p.getRank();
             int newRating = Player.ratingFromRank(p.getRatingOrigin(), rank);
-            if (p.getRating() != newRating)
+            if (p.getRating().getValue() != newRating)
                 nbChanged++;
         }
         int confirm;
@@ -502,8 +500,8 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             for (Player p : alP){
                 int rank = p.getRank();
                 int newRating = Player.ratingFromRank(p.getRatingOrigin(), rank);
-                if (p.getRating() != newRating){
-                    p.setRating(newRating);
+                if (p.getRating().getValue() != newRating){
+                    p.setRating(new Rating(p.getRating().getOrigin(), newRating));
                     tournament.modifyPlayer(p, p);
                     bSomethingHasChanged = true;
                 }
@@ -539,8 +537,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         boolean bSomethingHasChanged = false;
         try {
             for (Player p : alP){
-                int newRating = p.getRating() + delta;
-                p.setRating(newRating);
+                p.setRating(p.getRating().plus(delta));
                 tournament.modifyPlayer(p, p);
                 bSomethingHasChanged = true;
             }

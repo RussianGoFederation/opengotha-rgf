@@ -17,20 +17,19 @@
 
 package ru.gofederation.gotha.model;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-
-import info.vannier.gotha.Player;
 import info.vannier.gotha.RatedPlayer;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class EqualsAndHashTests {
     @ParameterizedTest
     @ValueSource(classes = {
         Rank.class,
+        Rating.class,
         RatedPlayer.class
     })
-    public void verifyRatedPlayer(Class<?> cls) {
+    public void verifyClass(Class<?> cls) {
         EqualsVerifier.forClass(cls).verify();
     }
 }
