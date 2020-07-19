@@ -89,14 +89,17 @@ distTar {
     compression = Compression.GZIP
 }
 
+def releaseSuffix = System.getenv('RELEASE_SUFFIX') ? System.getenv("RELEASE_SUFFIX") : ''
+
+distZip {
+    archiveFileName = "${rootProject.name}-jar-${project.version}${releaseSuffix}.zip"
+}
+
 runtime {
     options.set(['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages'])
     modules.set(['java.desktop', 'java.rmi', 'jdk.crypto.ec'])
-    imageZip.set(file("${buildDir}/${rootProject.name}-${project.version}.zip"))
-
-    targetPlatform('windows-x64', System.getenv('JDK_WINDOWS'))
-    targetPlatform('linux-x64', System.getenv('JDK_LINUX'))
-    targetPlatform('osx-x64', System.getenv('JDK_OSX'))
+    imageDir = file("$buildDir/${rootProject.name}-${project.version}${releaseSuffix}")
+    imageZip = file(file("${buildDir}/${rootProject.name}-${System.getProperty('os.name').split(' ').first()}-${project.version}${releaseSuffix}.zip"))
 }
 
 test {
