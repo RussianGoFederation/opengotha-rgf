@@ -1317,82 +1317,11 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
 
     /**
      * builds and return a new Game.Builder with everything defined except tableNumber
+     * @deprecated Use {@link ru.gofederation.gotha.model.GameKt#gameBetween} directly.
      */
+    @Deprecated
     private Game.Builder gameBetween(ScoredPlayer sP1, ScoredPlayer sP2, int roundNumber, ArrayList<Game> alPreviousGames) {
-
-        HandicapParameterSet hdPS = tournamentParameterSet.getHandicapParameterSet();
-
-        Game.Builder g = new Game.Builder();
-
-        // handicap
-        int hd = 0;
-        int pseudoRank1 = sP1.getRank();
-        int pseudoRank2 = sP2.getRank();
-        if (hdPS.isHdBasedOnMMS()) {
-            pseudoRank1 = sP1.getCritValue(PlacementCriterion.MMS, roundNumber - 1) / 2 + Gotha.MIN_RANK;
-            pseudoRank2 = sP2.getCritValue(PlacementCriterion.MMS, roundNumber - 1) / 2 + Gotha.MIN_RANK;
-        }
-        pseudoRank1 = Math.min(pseudoRank1, hdPS.getHdNoHdRankThreshold());
-        pseudoRank2 = Math.min(pseudoRank2, hdPS.getHdNoHdRankThreshold());
-        hd = pseudoRank1 - pseudoRank2;
-
-        if (hd > 0) {
-            hd = hd - hdPS.getHdCorrection();
-            if (hd < 0) {
-                hd = 0;
-            }
-        }
-        if (hd < 0) {
-            hd = hd + hdPS.getHdCorrection();
-            if (hd > 0) {
-                hd = 0;
-            }
-        }
-        if (hd > hdPS.getHdCeiling()) {
-            hd = hdPS.getHdCeiling();
-        }
-        if (hd < -hdPS.getHdCeiling()) {
-            hd = -hdPS.getHdCeiling();
-        }
-        Player p1 = null;
-        Player p2 = null;
-        try {
-            p1 = getPlayerByKeyString(sP1.getKeyString());
-            p2 = getPlayerByKeyString(sP2.getKeyString());
-        } catch (RemoteException ex) {
-            Logger.getLogger(Tournament.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (hd > 0) {
-            g.setWhitePlayer(p1);
-            g.setBlackPlayer(p2);
-            g.setHandicap(hd);
-        } else if (hd < 0) {
-            g.setWhitePlayer(p2);
-            g.setBlackPlayer(p1);
-            g.setHandicap(-hd);
-        } else { // hd == 0
-            g.setHandicap(0);
-            if (Pairing.wbBalance(sP1, roundNumber - 1) > Pairing.wbBalance(sP2, roundNumber - 1)) {
-                g.setWhitePlayer(p2);
-                g.setBlackPlayer(p1);
-            } else if (Pairing.wbBalance(sP1, roundNumber - 1) < Pairing.wbBalance(sP2, roundNumber - 1)) {
-                g.setWhitePlayer(p1);
-                g.setBlackPlayer(p2);
-            } else { // choose color from a det random
-                if (Pairing.detRandom(1, sP1, sP2) == 0) {
-                    g.setWhitePlayer(p1);
-                    g.setBlackPlayer(p2);
-                } else {
-                    g.setWhitePlayer(p2);
-                    g.setBlackPlayer(p1);
-                }
-            }
-        }
-        g.setKnownColor(true);
-        g.setResult(Game.Result.UNKNOWN);
-        g.setRound(roundNumber);
-
-        return g;
+        return ru.gofederation.gotha.model.GameKt.gameBetween(this, sP1, sP2, roundNumber);
     }
 
     @Override

@@ -36,8 +36,13 @@
 package ru.gofederation.gotha.model
 
 import info.vannier.gotha.Gotha
+import info.vannier.gotha.Pairing
+import info.vannier.gotha.PlacementCriterion
 import info.vannier.gotha.Player
+import info.vannier.gotha.ScoredPlayer
+import info.vannier.gotha.TournamentInterface
 import java.io.Serializable
+import java.lang.Integer.min
 
 /**
  * A game between two players.
@@ -230,4 +235,78 @@ data class Game private constructor (
 
         private fun Int.coerceHandicap() = this.coerceIn(0, 9)
     }
+}
+
+/**
+ * Creates a new [Game.Builder] with everything defined except tableNumber
+ */
+fun TournamentInterface.gameBetween(sp1: ScoredPlayer, sp2: ScoredPlayer, round: Int): Game.Builder {
+    val tps = this.tournamentParameterSet
+    val hdPs = tps.handicapParameterSet
+    val builder = Game.Builder(
+        knownColor = true,
+        result = Game.Result.UNKNOWN,
+        round = round
+    )
+
+    var pseudoRank1 = sp1.rank
+    var pseudoRank2 = sp2.rank
+    if (hdPs.isHdBasedOnMMS) {
+        pseudoRank1 = sp1.getCritValue(PlacementCriterion.MMS, round - 1) / 2 + Gotha.MIN_RANK
+        pseudoRank2 = sp2.getCritValue(PlacementCriterion.MMS, round - 1) / 2 + Gotha.MIN_RANK
+    }
+    pseudoRank1 = min(pseudoRank1, hdPs.hdNoHdRankThreshold)
+    pseudoRank2 = min(pseudoRank2, hdPs.hdNoHdRankThreshold)
+    var hd = pseudoRank1 - pseudoRank2
+    if (hd > 0) {
+        hd -= hdPs.hdCorrection
+        hd = hd.coerceAtLeast(0)
+    }
+    if (hd < 0) {
+        hd += hdPs.hdCorrection
+        hd = hd.coerceAtMost(0)
+    }
+    hd = hd.coerceIn(-hdPs.hdCeiling, hdPs.hdCeiling)
+
+    val p1 = getPlayerByKeyString(sp1.keyString)
+    val p2 = getPlayerByKeyString(sp2.keyString)
+
+    when {
+        (hd > 0) -> {
+            builder.whitePlayer = p1
+            builder.blackPlayer = p2
+            builder.handicap = hd
+        }
+        (hd < 0) -> {
+            builder.whitePlayer = p2
+            builder.blackPlayer = p1
+            builder.handicap = -hd
+        }
+        else -> {
+            builder.handicap = 0
+            val wbBalance = Pairing.wbBalance(sp1, round - 1) - Pairing.wbBalance(sp2, round - 1)
+            when {
+                wbBalance > 0 -> {
+                    builder.whitePlayer = p2
+                    builder.blackPlayer = p1
+                }
+                wbBalance < 0 -> {
+                    builder.whitePlayer = p1
+                    builder.blackPlayer = p2
+                }
+                else -> {
+                    // choose color from a det random
+                    if (Pairing.detRandom(1, sp1, sp2) == 0L) {
+                        builder.whitePlayer = p1
+                        builder.blackPlayer = p2
+                    } else {
+                        builder.whitePlayer = p2
+                        builder.blackPlayer = p1
+                    }
+                }
+            }
+        }
+    }
+
+    return builder
 }
