@@ -3,29 +3,35 @@
  */
 package info.vannier.gotha;
 
+import mu.KLogger;
+import mu.KotlinLogging;
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.util.GothaLocale;
 
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-
-import ru.gofederation.gotha.util.GothaLocale;
+import java.util.logging.SimpleFormatter;
 
 /**
  *
  * @author  Luc Vannier
  */
 public class JFrGothaStart extends javax.swing.JFrame {
+    private final KLogger logger = KotlinLogging.INSTANCE.logger(JFrGothaStart.class.getName());
 
 	private GothaLocale locale;
 
@@ -57,8 +63,35 @@ public class JFrGothaStart extends javax.swing.JFrame {
         Gotha.runningDirectory = dir;
         Gotha.exportDirectory = new File(Gotha.runningDirectory, "exportfiles");
         Gotha.exportHTMLDirectory = new File(Gotha.runningDirectory, "exportfiles/html");
+        setupLogging();
         initComponents();
         customInitComponents();
+    }
+
+    void setupLogging() {
+        try {
+            final File logPath = new File(Gotha.getRunningDirectory(), "logs");
+            logPath.mkdirs();
+            final File log = new File(logPath, String.format("OpenGotha.%1$tF.%1$tT.log", System.currentTimeMillis()));
+
+            final Formatter formatter = new SimpleFormatter() {
+                private static final String FORMAT = "%1$tF %1$tT %2$-7s %3$s%n";
+                @Override
+                public String format(LogRecord record) {
+                    return String.format(FORMAT, record.getMillis(), record.getLevel().toString(), record.getMessage());
+                }
+            };
+            final FileHandler fh = new FileHandler(log.getAbsolutePath());
+            fh.setFormatter(formatter);
+
+            Logger rootLogger = Logger.getLogger("");
+            rootLogger.addHandler(fh);
+            Logger.getLogger("info.vannier").setLevel(Level.ALL);
+            Logger.getLogger("ru.gofederation").setLevel(Level.ALL);
+        } catch (IOException e) {
+            // TODO: show error dialog
+            e.printStackTrace();
+        }
     }
 
     private void initComponents() {
