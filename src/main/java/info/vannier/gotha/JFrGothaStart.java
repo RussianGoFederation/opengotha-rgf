@@ -66,6 +66,8 @@ public class JFrGothaStart extends javax.swing.JFrame {
         setupLogging();
         initComponents();
         customInitComponents();
+
+        logger.info(Gotha.getGothaReleaseVersion() + " started");
     }
 
     void setupLogging() {
@@ -179,6 +181,7 @@ public class JFrGothaStart extends javax.swing.JFrame {
 
         if (grpRunningMode.getSelection() == this.rdbSAL.getModel()) {
             Gotha.runningMode = Gotha.RUNNING_MODE_SAL;
+            logger.info("Running in standalone mode");
         }
 
         if (grpRunningMode.getSelection() == this.rdbServer.getModel()) {
@@ -191,6 +194,8 @@ public class JFrGothaStart extends javax.swing.JFrame {
             System.setProperty("java.rmi.server.hostname", strIPAd);
 
             Gotha.runningMode = Gotha.RUNNING_MODE_SRV;
+
+            logger.info("Running in server mode. Listening on " + strIPAd);
         }
 
         if (grpRunningMode.getSelection() == this.rdbClient.getModel()) {
@@ -221,7 +226,11 @@ public class JFrGothaStart extends javax.swing.JFrame {
                 Logger.getLogger(JFrGothaStart.class.getName()).log(Level.SEVERE, null, ex);
             }
             Gotha.runningMode = Gotha.RUNNING_MODE_CLI;
+
+            logger.info("Rinning in client mode. Server name: " + Gotha.serverName + " Client name: " + Gotha.clientName);
         }
+
+        logger.info("Locale set to " + locale.getLocale().getDisplayName());
 
         // Log elements
         String strRM;
