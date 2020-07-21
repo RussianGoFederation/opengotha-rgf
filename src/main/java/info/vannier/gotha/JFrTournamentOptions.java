@@ -5,7 +5,21 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.RatingListType;
+import ru.gofederation.gotha.ui.TournamentDetailsPanel;
+import ru.gofederation.gotha.util.GothaLocale;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.ListModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.table.DefaultTableModel;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -20,22 +34,6 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.ListModel;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.table.DefaultTableModel;
-
-import ru.gofederation.gotha.model.RatingListType;
-import ru.gofederation.gotha.ui.TournamentDetailsPanel;
-import ru.gofederation.gotha.util.GothaLocale;
 
 import static ru.gofederation.gotha.ui.FrameBase.scaleFont;
 
@@ -756,33 +754,23 @@ public class JFrTournamentOptions extends JFrame {
         });
         pnlPla.add(cbxCrit4, "wrap unrel");
 
-        pnlGlossary.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.options.placement.criteria_glossary")));
-        pnlGlossary.setLayout(new MigLayout("fill"));
-
-        tblGlossary.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Name", "Short name", "Description"
-            }
-        ));
-        tblGlossary.setEnabled(false);
-        scpGlossary.setViewportView(tblGlossary);
-
-        pnlGlossary.add(scpGlossary);
-
-        pnlPla.add(pnlGlossary, "growx, spanx 4");
-
         txaWarning.setForeground(new java.awt.Color(255, 0, 51));
         txaWarning.setLineWrap(true);
         txaWarning.setOpaque(false);
         txaWarning.setEditable(false);
 
-        pnlPla.add(txaWarning);
+        pnlPla.add(txaWarning, "grow, spanx, wrap unrel");
+
+        pnlGlossary.setBorder(javax.swing.BorderFactory.createTitledBorder(locale.getString("tournament.options.placement.criteria_glossary")));
+        pnlGlossary.setLayout(new MigLayout("fill"));
+
+        tblGlossary.setModel(new javax.swing.table.DefaultTableModel(0, 3));
+        tblGlossary.setEnabled(false);
+        scpGlossary.setViewportView(tblGlossary);
+
+        pnlGlossary.add(scpGlossary, "grow");
+
+        pnlPla.add(pnlGlossary, "growx, spanx, wrap");
 
         tpnParameters.addTab(locale.getString("tournament.options.placement"), pnlPla);
     }
@@ -2396,9 +2384,9 @@ public class JFrTournamentOptions extends JFrame {
 
         // Fill Criterion Glossary JTable
 
-        JFrGotha.formatColumn(tblGlossary, CRITERION_NAME, locale.getString("tournament.options.placement.criterion_name"), 60, SwingConstants.LEFT, SwingConstants.LEFT);
-        JFrGotha.formatColumn(tblGlossary, CRITERION_SHORT_NAME, locale.getString("tournament.options.placement.criterion_short_name"), 50, SwingConstants.LEFT, SwingConstants.LEFT);
-        JFrGotha.formatColumn(tblGlossary, CRITERION_DESCRIPTION, locale.getString("tournament.options.placement.criterion_description"), 270, SwingConstants.LEFT, SwingConstants.LEFT);
+        JFrGotha.formatColumn(tblGlossary, CRITERION_NAME, locale.getString("tournament.options.placement.criterion_name"), 40, SwingConstants.LEFT, SwingConstants.LEFT);
+        JFrGotha.formatColumn(tblGlossary, CRITERION_SHORT_NAME, locale.getString("tournament.options.placement.criterion_short_name"), 40, SwingConstants.LEFT, SwingConstants.LEFT);
+        JFrGotha.formatColumn(tblGlossary, CRITERION_DESCRIPTION, locale.getString("tournament.options.placement.criterion_description"), 400, SwingConstants.LEFT, SwingConstants.LEFT);
 
         DefaultTableModel model = (DefaultTableModel)tblGlossary.getModel();
         while (model.getRowCount() > 0) model.removeRow(0);
