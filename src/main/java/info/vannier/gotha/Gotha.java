@@ -71,6 +71,7 @@ public class Gotha {
     static final int RUNNING_MODE_SRV = 2;          // Server
     public static final int RUNNING_MODE_CLI = 3;   // Client
     public static int runningMode = RUNNING_MODE_UNDEFINED;
+    public static final String TOURNAMENT_FILE_EXTENSION = "ogt";
     static String serverName = "";  // relevant only when in Client mode
     static String clientName = "";  // relevant in Client mode
     public static String strPreferences = "info/vannier/opengotha";

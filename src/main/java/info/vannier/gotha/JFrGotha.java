@@ -1684,7 +1684,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
-        File snFile = new File(Gotha.runningDirectory + "/tournamentfiles", shortName + "_work.xml");
+        File snFile = new File(Gotha.runningDirectory + "/tournamentfiles", shortName + "_work." + Gotha.TOURNAMENT_FILE_EXTENSION);
         saveTournament(snFile);
 
     }
@@ -1707,8 +1707,8 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             suffix = s.substring(i + 1).toLowerCase();
         }
         try {
-            if (suffix == null || !suffix.equals("xml")) {
-                f = new File(f.getCanonicalPath() + ".xml");
+            if (suffix == null || !suffix.equals(Gotha.TOURNAMENT_FILE_EXTENSION)) {
+                f = new File(f.getCanonicalPath() + "." + Gotha.TOURNAMENT_FILE_EXTENSION);
             }
         } catch (IOException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
@@ -1777,7 +1777,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
 
         fileChoice.setSelectedFile(new File(fn));
 
-        MyFileFilter mff = new MyFileFilter(new String[]{"xml"},
+        MyFileFilter mff = new MyFileFilter(new String[]{Gotha.TOURNAMENT_FILE_EXTENSION},
                 "Gotha Files(*.xml)");
         fileChoice.addChoosableFileFilter(mff);
         int result = fileChoice.showSaveDialog(this);
@@ -1837,7 +1837,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         } catch (RemoteException ex) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
-        File snFile = new File(Gotha.runningDirectory + "/tournamentfiles", shortName + ".xml");
+        File snFile = new File(Gotha.runningDirectory + "/tournamentfiles", shortName + "." + Gotha.TOURNAMENT_FILE_EXTENSION);
         String snFN;
         snFN = "" + snFile;
 
@@ -2151,7 +2151,7 @@ private void btnPrintTeamsStandingsActionPerformed(java.awt.event.ActionEvent ev
 
 
 private void mniOpenActionPerformed(java.awt.event.ActionEvent evt) {
-    File f = chooseAFile(new File(Gotha.runningDirectory, "tournamentfiles"), "xml");
+    File f = chooseAFile(new File(Gotha.runningDirectory, "tournamentfiles"), Gotha.TOURNAMENT_FILE_EXTENSION);
     if (f == null) {
         return;
     }
@@ -2235,7 +2235,7 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
             }
-            File tcFile = new File(Gotha.runningDirectory + "/tournamentfiles/copies", shortName + "_Copy.xml");
+            File tcFile = new File(Gotha.runningDirectory + "/tournamentfiles/copies", shortName + "_Copy." + Gotha.TOURNAMENT_FILE_EXTENSION);
             strTC = "" + tcFile;
         }
 
@@ -2335,7 +2335,7 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
         String strDir = Gotha.runningDirectory + "/tournamentfiles";
         String strNE = f.getName();
         String strFN = strNE.substring(0, strNE.indexOf("."));
-        String strWorkNE= strFN + "_work.xml";
+        String strWorkNE= strFN + "_work." + Gotha.TOURNAMENT_FILE_EXTENSION;
         String strDNE = strDir + "/" + strWorkNE;
         File fW = new File(strDNE);
 
