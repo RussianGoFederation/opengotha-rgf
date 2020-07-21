@@ -1,7 +1,10 @@
 package info.vannier.gotha;
 
 import kotlin.Pair;
+import mu.KLogger;
+import mu.KotlinLogging;
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.pairing.PairingCosts;
 import ru.gofederation.gotha.util.GothaLocale;
 
 import java.rmi.RemoteException;
@@ -19,6 +22,7 @@ import java.util.logging.Logger;
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
 
 public class Tournament extends UnicastRemoteObject implements TournamentInterface, java.io.Serializable {
+    final KLogger logger = KotlinLogging.INSTANCE.logger(Tournament.class.getName());
 
     private static final long serialVersionUID = Gotha.GOTHA_DATA_VERSION;
     /**
@@ -875,7 +879,18 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
 
     @Override
     public ArrayList<Game> makeAutomaticPairing(ArrayList<Player> alPlayersToPair, int roundNumber) throws RemoteException {
+        final long timeStart = System.currentTimeMillis(); // Used to measure pairing time
+
+        logger.info(() -> {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("Making automatic pairing. Round ").append(roundNumber + 1).append(", ").append(alPlayersToPair.size()).append(" players: [");
+            playerList(sb, alPlayersToPair);
+            sb.append("]");
+            return sb.toString();
+        });
+
         if (alPlayersToPair.size() % 2 != 0) {
+            logger.warn("Player list not even. Exiting.");
             return null;
         }
 
@@ -954,6 +969,19 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         ArrayList<Game> alG = pairAGroup(alRemainingPlayers, roundNumber, hmScoredPlayers, alPreviousGames);
         alGames.addAll(alG);
 
+        logger.info(() -> {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Automatic pairing done in ").append(System.currentTimeMillis() - timeStart).append("ms: [");
+            boolean first = true;
+            for (Game game: alG) {
+                if (!first) sb.append(", ");
+                first = false;
+                sb.append(game.getBlackPlayer().getKeyString()).append(" - ").append(game.getWhitePlayer().getKeyString());
+            }
+            sb.append("]");
+            return sb.toString();
+        });
+
         return alGames;
 
     }
@@ -962,11 +990,20 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             HashMap<String, ScoredPlayer> hmScoredPlayers,
             ArrayList<Game> alPreviousGames) {
 
+        logger.info(() -> {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Pairing a group of ").append(alGroupedPlayers.size()).append(" players [");
+            playerList(sb, alGroupedPlayers);
+            sb.append("]");
+            return sb.toString();
+        });
+
         int numberOfPlayersInGroup = alGroupedPlayers.size();
 
 //      Prepare infos about Score groups : sgSize, sgNumber and innerPosition
 //      And DUDD information
 
+        PairingCosts.Factory costsFactory = new PairingCosts.Factory(this, roundNumber);
         long[][] costs = new long[numberOfPlayersInGroup][numberOfPlayersInGroup];
         for (int i = 0; i < numberOfPlayersInGroup; i++) {
             costs[i][i] = 0;
@@ -975,7 +1012,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 Player p2 = alGroupedPlayers.get(j);
                 ScoredPlayer sP1 = hmScoredPlayers.get(p1.getKeyString());
                 ScoredPlayer sP2 = hmScoredPlayers.get(p2.getKeyString());
-                costs[i][j] = costs[j][i] = costValue(sP1, sP2, roundNumber, alPreviousGames);
+                costs[i][j] = costs[j][i] = costValue(costsFactory, sP1, sP2);
             }
         }
 
@@ -998,321 +1035,22 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         return alG;
     }
 
-    private long costValue(ScoredPlayer sP1, ScoredPlayer sP2, int roundNumber, ArrayList<Game> alPreviousGames) {
-        GeneralParameterSet gps = tournamentParameterSet.getGeneralParameterSet();
-        PairingParameterSet paiPS = tournamentParameterSet.getPairingParameterSet();
-
-        long cost = 1L;   // 1 is minimum value because 0 means "no matching allowed"
-
-        // Base Criterion 1 : Avoid Duplicating Game
-        // Did p1 and p2 already play ?
-        //
-        int numberOfPreviousGamesP1P2 = 0;
-
-        for (int r = 0; r < roundNumber; r++) {
-            Game g1 = sP1.getGame(r);
-            if (g1 == null) {
-                continue;
-            }
-            if (sP1.hasSameKeyString(g1.getWhitePlayer()) && sP2.hasSameKeyString(g1.getBlackPlayer())) {
-                numberOfPreviousGamesP1P2++;
-            }
-            if (sP1.hasSameKeyString(g1.getBlackPlayer()) && sP2.hasSameKeyString(g1.getWhitePlayer())) {
-                numberOfPreviousGamesP1P2++;
-            }
+    /**
+     * This helper function writes player list to strinb builder
+     */
+    private static void playerList(StringBuilder sb, List<Player> players) {
+        boolean first = true;
+        for (Player player : players) {
+            if (!first) sb.append(", ");
+            first = false;
+            sb.append(player.getKeyString());
         }
-        if (numberOfPreviousGamesP1P2 == 0) {
-            cost += paiPS.getPaiBaAvoidDuplGame();
-        }
+    }
 
-        // Base Criterion 2 : Random
-        long nR;
-        if (paiPS.isPaiBaDeterministic()) {
-            nR = Pairing.detRandom(paiPS.getPaiBaRandom(), sP1, sP2);
-        } else {
-            nR = Pairing.nonDetRandom(paiPS.getPaiBaRandom());
-        }
-        cost += nR;
-
-        // Base Criterion 3 : Balance W and B
-        // This cost is never applied if potential Handicap != 0
-        // It is fully applied if wbBalance(sP1) and wbBalance(sP2) are strictly of different signs
-        // It is half applied if one of wbBalance is 0 and the other is >=2
-
-        long bwBalanceCost = 0;
-        Game.Builder g = gameBetween(sP1, sP2, roundNumber, alPreviousGames);
-        int potHd = g.getHandicap();
-        if (potHd == 0) {
-            int wb1 = Pairing.wbBalance(sP1, roundNumber - 1);
-            int wb2 = Pairing.wbBalance(sP2, roundNumber - 1);
-            if (wb1 * wb2 < 0) {
-                bwBalanceCost = paiPS.getPaiBaBalanceWB();
-            } else if (wb1 == 0 && Math.abs(wb2) >= 2) {
-                bwBalanceCost = paiPS.getPaiBaBalanceWB() / 2;
-            } else if (wb2 == 0 && Math.abs(wb1) >= 2) {
-                bwBalanceCost = paiPS.getPaiBaBalanceWB() / 2;
-            }
-        }
-        cost += bwBalanceCost;
-
-
-        // Main Criterion 1 : Avoid mixing categories
-        long catCost = 0;
-        int numberOfCategories = gps.getNumberOfCategories();
-        if (numberOfCategories > 1) {
-            // cost is f(x) = (1-x) * (1 + kx) where  0<=x<=1 and k is the NX1 factor 0<=k<=1
-            double x = (double) Math.abs(sP1.category(gps) - sP2.category(gps)) / (double) numberOfCategories;
-            double k = paiPS.getPaiStandardNX1Factor();
-            catCost = (long) (paiPS.getPaiMaAvoidMixingCategories() * (1.0 - x) * (1.0 + k * x));
-            // But if both players have lost 1 or more games, that is less important (added in 3.11)
-        }
-
-        cost += catCost;
-
-        // Main Criterion 2 : Minimize score difference
-        long scoCost = 0;
-        int scoRange = sP1.numberOfGroups;
-        if (sP1.category(gps) == sP2.category(gps)) {
-            double x = (double) Math.abs(sP1.groupNumber - sP2.groupNumber) / (double) scoRange;
-            double k = paiPS.getPaiStandardNX1Factor();
-            scoCost = (long) (paiPS.getPaiMaMinimizeScoreDifference() * (1.0 - x) * (1.0 + k * x));
-        }
-        cost += scoCost;
-
-        // Main Criterion 3 : If different groups, make a directed Draw-up/Draw-down
-        // Modifs V3.44.05 (ideas from Tuomo Salo)
-        long duddCost = 0;
-        if (Math.abs(sP1.groupNumber - sP2.groupNumber) < 4
-                && sP1.groupNumber != sP2.groupNumber) {
-            // 5 scenarii
-            // scenario = 0 : Both players have already been drawn in the same sense
-            // scenario = 1 : One of the players has already been drawn in the same sense
-            // scenario = 2 : Normal conditions (does not correct anything and no previous drawn in the same sense)
-            //                This case also occurs if one DU/DD is increased, while one is compensated
-            // scenario = 3 : It corrects a previous DU/DD            //
-            // scenario = 4 : it corrects a previous DU/DD for both
-            int scenario = 2;
-            if (sP1.nbDU > 0 && sP1.groupNumber > sP2.groupNumber) {
-                scenario--;
-            }
-            if (sP1.nbDD > 0 && sP1.groupNumber < sP2.groupNumber) {
-                scenario--;
-            }
-            if (sP2.nbDU > 0 && sP2.groupNumber > sP1.groupNumber) {
-                scenario--;
-            }
-            if (sP2.nbDD > 0 && sP2.groupNumber < sP1.groupNumber) {
-                scenario--;
-            }
-
-            if (scenario != 0 && sP1.nbDU > 0 && sP1.nbDD < sP1.nbDU && sP1.groupNumber < sP2.groupNumber) {
-                scenario++;
-            }
-            if (scenario != 0 && sP1.nbDD > 0 && sP1.nbDU < sP1.nbDD && sP1.groupNumber > sP2.groupNumber) {
-                scenario++;
-            }
-            if (scenario != 0 && sP2.nbDU > 0 && sP2.nbDD < sP2.nbDU && sP2.groupNumber < sP1.groupNumber) {
-                scenario++;
-            }
-            if (scenario != 0 && sP2.nbDD > 0 && sP2.nbDU < sP2.nbDD && sP2.groupNumber > sP1.groupNumber) {
-                scenario++;
-            }
-
-
-            long duddWeight = paiPS.getPaiMaDUDDWeight() / 5;
-
-            ScoredPlayer upperSP = (sP1.groupNumber < sP2.groupNumber) ? sP1 : sP2;
-            ScoredPlayer lowerSP = (sP1.groupNumber < sP2.groupNumber) ? sP2 : sP1;
-            if (paiPS.getPaiMaDUDDUpperMode() == PairingParameterSet.PAIMA_DUDD_TOP) {
-                duddCost += duddWeight / 2 * (upperSP.groupSize - 1 - upperSP.innerPlacement) / upperSP.groupSize;
-            } else if (paiPS.getPaiMaDUDDUpperMode() == PairingParameterSet.PAIMA_DUDD_MID) {
-                duddCost += duddWeight / 2 * (upperSP.groupSize - 1 - Math.abs(2 * upperSP.innerPlacement - upperSP.groupSize + 1)) / upperSP.groupSize;
-            } else if (paiPS.getPaiMaDUDDUpperMode() == PairingParameterSet.PAIMA_DUDD_BOT) {
-                duddCost += duddWeight / 2 * (upperSP.innerPlacement) / upperSP.groupSize;
-            }
-            if (paiPS.getPaiMaDUDDLowerMode() == PairingParameterSet.PAIMA_DUDD_TOP) {
-                duddCost += duddWeight / 2 * (lowerSP.groupSize - 1 - lowerSP.innerPlacement) / lowerSP.groupSize;
-            } else if (paiPS.getPaiMaDUDDLowerMode() == PairingParameterSet.PAIMA_DUDD_MID) {
-                duddCost += duddWeight / 2 * (lowerSP.groupSize - 1 - Math.abs(2 * lowerSP.innerPlacement - lowerSP.groupSize + 1)) / lowerSP.groupSize;
-            } else if (paiPS.getPaiMaDUDDLowerMode() == PairingParameterSet.PAIMA_DUDD_BOT) {
-                duddCost += duddWeight / 2 * (lowerSP.innerPlacement) / lowerSP.groupSize;
-            }
-
-            if (scenario == 0) {
-                // Do nothing
-            }
-            else if (scenario == 1 ){
-                duddCost += 1 * duddWeight;
-            }
-            else if (scenario == 2 || (scenario > 2 && !paiPS.isPaiMaCompensateDUDD())) {
-                duddCost += 2 * duddWeight;
-            }
-            else if (scenario == 3) {
-                duddCost += 3 * duddWeight;
-            }
-            else if (scenario == 4) {
-                duddCost += 4 * duddWeight;
-            }
-
-        }
-        // But, if players come from different categories, decrease duddCost(added in 3.11)
-        int catGap = Math.abs(sP1.category(gps) - sP2.category(gps));
-        duddCost = duddCost / (catGap + 1) / (catGap + 1) / (catGap + 1) / (catGap + 1);
-
-        cost += duddCost;
-
-        // Main Criterion 4 : Seeding
-        long seedCost = 0;
-        if (sP1.groupNumber == sP2.groupNumber) {
-            int groupSize = sP1.groupSize;
-            int cla1 = sP1.innerPlacement;
-            int cla2 = sP2.innerPlacement;
-            long maxSeedingWeight = paiPS.getPaiMaMaximizeSeeding();
-            int currentSeedSystem = (roundNumber <= paiPS.getPaiMaLastRoundForSeedSystem1()) ? paiPS.getPaiMaSeedSystem1() : paiPS.getPaiMaSeedSystem2();
-            if (currentSeedSystem == PairingParameterSet.PAIMA_SEED_SPLITANDRANDOM) {
-                if ((2 * cla1 < groupSize && 2 * cla2 >= groupSize) || (2 * cla1 >= groupSize && 2 * cla2 < groupSize)) {
-                    long randRange = (long) (paiPS.getPaiMaMaximizeSeeding() * 0.2);
-                    long rand = Pairing.detRandom(randRange, sP1, sP2);
-                    seedCost = maxSeedingWeight - rand;
-                }
-            } else if (currentSeedSystem == PairingParameterSet.PAIMA_SEED_SPLITANDFOLD) {
-                // The best is to get cla1 + cla2 - (groupSize - 1) close to 0
-                int x = cla1 + cla2 - (groupSize - 1);
-                seedCost = maxSeedingWeight - (maxSeedingWeight * x / (groupSize - 1) * x / (groupSize - 1));
-            } else if (currentSeedSystem == PairingParameterSet.PAIMA_SEED_SPLITANDSLIP) {
-                // The best is to get 2 * |Cla1 - Cla2| - groupSize    close to 0
-                int x = 2 * Math.abs(cla1 - cla2) - groupSize;
-                seedCost = maxSeedingWeight - (maxSeedingWeight * x / groupSize * x / groupSize);
-            } else {
-                System.out.println("Internal Error on seed system");
-            }
-        }
-        cost += seedCost;
-
-        // Secondary Criteria
-        // Do we apply ?
-        // secCase = 0 : No player is above thresholds
-        // secCase = 1 : One player is above thresholds
-        // secCase = 2 : Both players are above thresholds
-        // pseudoMMS is MMS adjusted according to applying thresholds
-
-        int secCase = 0;
-        int nbw2Threshold;
-        if (paiPS.isPaiSeNbWinsThresholdActive()) {
-            nbw2Threshold = gps.getNumberOfRounds();
-        } else {
-            nbw2Threshold = 2 * gps.getNumberOfRounds();
-        }
-
-        int mmBar = gps.getGenMMBar() - Gotha.MIN_RANK;
-
-        int pseudoMMSSP1 = sP1.getCritValue(PlacementCriterion.MMS, roundNumber - 1) / 2;
-        int pseudoMMSSP2 = sP2.getCritValue(PlacementCriterion.MMS, roundNumber - 1) / 2;
-        int maxMMS = gps.getGenMMBar() + PlacementParameterSet.PLA_SMMS_CORR_MAX - Gotha.MIN_RANK + roundNumber;
-
-        int nbwSP1X2 = sP1.getCritValue(PlacementCriterion.NBW, roundNumber - 1);
-        int nbwSP2X2 = sP2.getCritValue(PlacementCriterion.NBW, roundNumber - 1);
-
-        boolean bStrongMMS = (2 * sP1.getRank() + sP1.getCritValue(PlacementCriterion.NBW, roundNumber - 1) >= 2 * paiPS.getPaiSeRankThreshold());
-        boolean bManyWins = nbwSP1X2 >= nbw2Threshold;
-        boolean bAboveMMBar = (sP1.smms(gps) >= mmBar && paiPS.isPaiSeBarThresholdActive());
-        if (bManyWins
-                || bStrongMMS
-                || bAboveMMBar) {
-            secCase++;
-            pseudoMMSSP1 = maxMMS;
-        }
-
-        bStrongMMS = (2 * sP2.getRank() + sP2.getCritValue(PlacementCriterion.NBW, roundNumber - 1) >= 2 * paiPS.getPaiSeRankThreshold());
-        bManyWins = nbwSP2X2 >= nbw2Threshold;
-        bAboveMMBar = (sP2.smms(gps) >= mmBar && paiPS.isPaiSeBarThresholdActive());
-        if (bManyWins
-                || bStrongMMS
-                || bAboveMMBar) {
-            secCase++;
-            pseudoMMSSP2 = maxMMS;
-        }
-
-        // Secondary Criterion 1 : Minimize handicap
-        long hdCost = 0;
-        int secRange;   // secRange is the maximum score difference between 2 players for this tournament
-        int tType = TournamentParameterSet.TYPE_UNDEFINED;
-        try {
-            tType = tournamentType();
-        } catch (RemoteException ex) {
-            Logger.getLogger(Tournament.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (tType == TournamentParameterSet.TYPE_MCMAHON) {
-            secRange = scoRange;
-        } else {
-            secRange = (gps.getGenMMBar() - gps.getGenMMFloor() + PlacementParameterSet.PLA_SMMS_CORR_MAX - PlacementParameterSet.PLA_SMMS_CORR_MIN) + roundNumber;
-        }
-
-        double x = (double) Math.abs(pseudoMMSSP1 - pseudoMMSSP2) / (double) secRange;
-        double k = paiPS.getPaiStandardNX1Factor();
-        hdCost = (long) (paiPS.getPaiSeMinimizeHandicap() * (1.0 - x) * (1.0 + k * x));
-
-        cost += hdCost;
-
-        // Secondary criteria 2,3 and 4 : Geographical Criteria
-        int countryFactor = paiPS.getPaiSePreferMMSDiffRatherThanSameCountry();
-        double xCountry = (double) Math.abs(countryFactor + 0.99) / (double) secRange;
-        if (xCountry > 1.0) {
-            xCountry = 1.0;
-        }
-        double malusCountry = (1.0 - k) * xCountry + k * xCountry * xCountry;
-
-        int clubsGroupFactor = paiPS.getPaiSePreferMMSDiffRatherThanSameClubsGroup();
-        double xClubsGroup = (double) Math.abs(clubsGroupFactor + 0.99) / (double) secRange;
-        if (xClubsGroup > 1.0) {
-            xClubsGroup = 1.0;
-        }
-        double malusClubsGroup = (1.0 - k) * xClubsGroup + k * xClubsGroup * xClubsGroup;
-
-        int clubFactor = paiPS.getPaiSePreferMMSDiffRatherThanSameClub();
-        double xClub = (double) Math.abs(clubFactor + 0.99) / (double) secRange;
-        if (xClub > 1.0) {
-            xClub = 1.0;
-        }
-        double malusClub = (1.0 - k) * xClub + k * xClub * xClub;
-
-        long geoMaxCost = paiPS.getPaiSeAvoidSameGeo();
-        long geoMinCost = (long) (geoMaxCost * (1.0 - Math.max(malusCountry, malusClub)));
-
-        double malusGeo = 0.0;
-
-        if (sP1.getCountry().compareTo(sP2.getCountry()) == 0) {
-            malusGeo = malusCountry;
-        }
-
-        boolean bCommonGroup = false;
-        try {
-            bCommonGroup = playersAreInCommonGroup(sP1, sP2);
-        } catch (RemoteException ex) {
-            Logger.getLogger(Tournament.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (bCommonGroup) {
-            malusGeo = Math.max(malusGeo, malusClubsGroup);
-        }
-
-        if (sP1.getClub().compareTo(sP2.getClub()) == 0) {
-            malusGeo = Math.max(malusGeo, malusClub);
-        }
-
-        long geoNominalCost = (long) (geoMaxCost * (1.0 - malusGeo));
-        long geoCost = geoNominalCost;
-        if (secCase == 0) {
-            geoCost = geoNominalCost;
-        }
-        if (secCase == 2) {
-            geoCost = geoMaxCost;
-        }
-        if (secCase == 1) {
-            geoCost = (geoMaxCost + geoNominalCost) /2;
-        }
-        cost += geoCost;
-
-        return cost;
+    private long costValue(PairingCosts.Factory factory, ScoredPlayer sp1, ScoredPlayer sp2) {
+        final PairingCosts costs = factory.costs(sp1, sp2);
+        logger.debug(() -> "Pairing cost for [" + sp1.getKeyString() + " - " + sp2.getKeyString() + "]: " + costs.sum() + " (" + costs.toString() + ")");
+        return costs.sum();
     }
 
     /**

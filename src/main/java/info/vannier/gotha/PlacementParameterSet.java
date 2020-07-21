@@ -28,8 +28,8 @@ public final class PlacementParameterSet implements java.io.Serializable{
 
     private PlacementCriterion[] plaCriteria;
 
-    final static int PLA_SMMS_CORR_MAX    =  2;
-    final static int PLA_SMMS_CORR_MIN    = -1;
+    public final static int PLA_SMMS_CORR_MAX    =  2;
+    public final static int PLA_SMMS_CORR_MIN    = -1;
 
     public PlacementParameterSet() {
         plaCriteria = new PlacementCriterion[PLA_MAX_NUMBER_OF_CRITERIA];

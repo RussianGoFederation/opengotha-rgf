@@ -10,7 +10,7 @@ public class PairingParameterSet implements java.io.Serializable{
      * with max number of games (8000),
      * with relative weight of this parameter (1/2)
      * PAIBA_MAX_AVOIDDUPLGAME should be strictly limited to 5 * 10^14
-     **/ 
+     **/
     static final long PAIBA_MAX_AVOIDDUPLGAME = 500000000000000L;   // 5 * 10^14
     /**
      * Max value for paiBaRandom.
@@ -20,24 +20,24 @@ public class PairingParameterSet implements java.io.Serializable{
     static final long PAIBA_MAX_RANDOM        =       1000000000L;   // 10^9
     static final long PAIBA_MAX_BALANCEWB     =          1000000L;   // 10^6
 
-    
-    private long paiBaAvoidDuplGame = PAIBA_MAX_AVOIDDUPLGAME;    
+
+    private long paiBaAvoidDuplGame = PAIBA_MAX_AVOIDDUPLGAME;
     private long paiBaRandom = 0;
     private boolean paiBaDeterministic = true;
     private long paiBaBalanceWB = PAIBA_MAX_BALANCEWB;
-    
+
     static final long PAIMA_MAX_AVOID_MIXING_CATEGORIES           =   20000000000000L;  // 2. 10^13
     // Ratio between PAIMA_MAX_MINIMIZE_SCORE_DIFFERENCE and PAIMA_MAX_AVOID_MIXING_CATEGORIES should stay below 1/ nbcat^2
     static final long PAIMA_MAX_MINIMIZE_SCORE_DIFFERENCE         =     100000000000L;  // 10^11
     static final long PAIMA_MAX_DUDD_WEIGHT                       =     PAIMA_MAX_MINIMIZE_SCORE_DIFFERENCE / 1000;  // Draw-ups Draw-downs
-    static final int  PAIMA_DUDD_TOP              = 1;
-    static final int  PAIMA_DUDD_MID              = 2;
-    static final int  PAIMA_DUDD_BOT              = 3;
-    
+    public static final int  PAIMA_DUDD_TOP              = 1;
+    public static final int  PAIMA_DUDD_MID              = 2;
+    public static final int  PAIMA_DUDD_BOT              = 3;
+
     static final long PAIMA_MAX_MAXIMIZE_SEEDING                  =         PAIMA_MAX_MINIMIZE_SCORE_DIFFERENCE / 20000;
-    static final int  PAIMA_SEED_SPLITANDRANDOM   = 1;
-    static final int  PAIMA_SEED_SPLITANDFOLD     = 2;
-    static final int  PAIMA_SEED_SPLITANDSLIP     = 3;
+    public static final int  PAIMA_SEED_SPLITANDRANDOM   = 1;
+    public static final int  PAIMA_SEED_SPLITANDFOLD     = 2;
+    public static final int  PAIMA_SEED_SPLITANDSLIP     = 3;
 
     private long paiMaAvoidMixingCategories             = PAIMA_MAX_AVOID_MIXING_CATEGORIES;
 
@@ -47,14 +47,14 @@ public class PairingParameterSet implements java.io.Serializable{
     private boolean paiMaCompensateDUDD                 = true;
     private int paiMaDUDDUpperMode                      = PAIMA_DUDD_MID;
     private int paiMaDUDDLowerMode                      = PAIMA_DUDD_MID;
-    
+
     private long paiMaMaximizeSeeding                   =         PAIMA_MAX_MAXIMIZE_SEEDING;      // 5 *10^6
     private int paiMaLastRoundForSeedSystem1            = 1;
-    private int paiMaSeedSystem1                        = PAIMA_SEED_SPLITANDRANDOM;                              
+    private int paiMaSeedSystem1                        = PAIMA_SEED_SPLITANDRANDOM;
     private int paiMaSeedSystem2                        = PAIMA_SEED_SPLITANDFOLD;
     private PlacementCriterion paiMaAdditionalPlacementCritSystem1 = PlacementCriterion.RATING;
     private PlacementCriterion paiMaAdditionalPlacementCritSystem2 = PlacementCriterion.NUL;
-         
+
     private boolean paiSeBarThresholdActive                  = true;        // Do not apply secondary criteria for players above bar
     private int paiSeRankThreshold                           = 0;           // Do not apply secondary criteria above 1D rank
     private boolean paiSeNbWinsThresholdActive               = true;        // Do not apply secondary criteria when nbWins >= nbRounds / 2
@@ -64,11 +64,11 @@ public class PairingParameterSet implements java.io.Serializable{
     private int  paiSePreferMMSDiffRatherThanSameCountry;    // Typically = 1
     private int  paiSePreferMMSDiffRatherThanSameClubsGroup; // Typically = 2
     private int  paiSePreferMMSDiffRatherThanSameClub;       // Typically = 3
-     
-    public PairingParameterSet() {   
+
+    public PairingParameterSet() {
     }
-    
-    public PairingParameterSet(PairingParameterSet paiPS) {  
+
+    public PairingParameterSet(PairingParameterSet paiPS) {
         paiBaAvoidDuplGame = paiPS.getPaiBaAvoidDuplGame();
         paiBaRandom = paiPS.getPaiBaRandom();
         paiBaDeterministic = paiPS.isPaiBaDeterministic();
@@ -81,7 +81,7 @@ public class PairingParameterSet implements java.io.Serializable{
         paiMaAdditionalPlacementCritSystem1 = paiPS.getPaiMaAdditionalPlacementCritSystem1();
         paiMaAdditionalPlacementCritSystem2 = paiPS.getPaiMaAdditionalPlacementCritSystem2();
     }
-    
+
     public long getPaiBaAvoidDuplGame() {
         return paiBaAvoidDuplGame;
     }
@@ -241,7 +241,7 @@ public class PairingParameterSet implements java.io.Serializable{
     public void setPaiSePreferMMSDiffRatherThanSameClubsGroup(int paiSePreferMMSDiffRatherThanSameClubsGroup) {
         this.paiSePreferMMSDiffRatherThanSameClubsGroup = paiSePreferMMSDiffRatherThanSameClubsGroup;
     }
-    
+
     public int getPaiSePreferMMSDiffRatherThanSameClub() {
         return paiSePreferMMSDiffRatherThanSameClub;
     }
@@ -267,27 +267,27 @@ public class PairingParameterSet implements java.io.Serializable{
     }
 
     public void initForMM() {
-        paiBaAvoidDuplGame                      =   PAIBA_MAX_AVOIDDUPLGAME;    
+        paiBaAvoidDuplGame                      =   PAIBA_MAX_AVOIDDUPLGAME;
         paiBaRandom                             =   0;
         paiBaDeterministic                      =   true;
         paiBaBalanceWB                          =   PAIBA_MAX_BALANCEWB;
-    
+
         paiMaAvoidMixingCategories              =   0;         // Not relevant in McMahon
 
         paiMaMinimizeScoreDifference            =   PAIMA_MAX_MINIMIZE_SCORE_DIFFERENCE;
 
         paiMaDUDDWeight                         =   PAIMA_MAX_DUDD_WEIGHT;
-            paiMaCompensateDUDD                 =   true;    
+            paiMaCompensateDUDD                 =   true;
             paiMaDUDDUpperMode                  =   PAIMA_DUDD_MID;
             paiMaDUDDLowerMode                  =   PAIMA_DUDD_MID;
-    
+
         paiMaMaximizeSeeding                    =   PAIMA_MAX_MAXIMIZE_SEEDING;      // 10^5
             paiMaLastRoundForSeedSystem1        =   1;
-            paiMaSeedSystem1                    =   PAIMA_SEED_SPLITANDRANDOM;                              
-            paiMaSeedSystem2                    =   PAIMA_SEED_SPLITANDFOLD; 
+            paiMaSeedSystem1                    =   PAIMA_SEED_SPLITANDRANDOM;
+            paiMaSeedSystem2                    =   PAIMA_SEED_SPLITANDFOLD;
             paiMaAdditionalPlacementCritSystem1 =   PlacementCriterion.RATING;
             paiMaAdditionalPlacementCritSystem2 =   PlacementCriterion.NUL;
-        
+
         paiSeBarThresholdActive                 =   true;         // Do not apply secondary criteria above bar
         paiSeRankThreshold                      =   0;           // Do not apply secondary criteria above 1D rank
         setPaiSeNbWinsThresholdActive(false);       // paiSeNbWinsThresholdActive not relevant in MM
@@ -299,12 +299,12 @@ public class PairingParameterSet implements java.io.Serializable{
         paiSePreferMMSDiffRatherThanSameClub    =   3;
     }
     public void initForSwiss(){
-        paiBaAvoidDuplGame                      =   PAIBA_MAX_AVOIDDUPLGAME;    
+        paiBaAvoidDuplGame                      =   PAIBA_MAX_AVOIDDUPLGAME;
         paiBaRandom                             =   0;
         paiBaDeterministic                      =   true;
         paiBaBalanceWB                          =   PAIBA_MAX_BALANCEWB;
-    
-        paiMaAvoidMixingCategories              =   0;          // Not relevant         
+
+        paiMaAvoidMixingCategories              =   0;          // Not relevant
 
         paiMaMinimizeScoreDifference            =   PAIMA_MAX_MINIMIZE_SCORE_DIFFERENCE;
 
@@ -312,56 +312,56 @@ public class PairingParameterSet implements java.io.Serializable{
             paiMaCompensateDUDD                 =   true;
             paiMaDUDDUpperMode                  =   PAIMA_DUDD_MID;
             paiMaDUDDLowerMode                  =   PAIMA_DUDD_MID;
-    
+
         paiMaMaximizeSeeding                    =   PAIMA_MAX_MAXIMIZE_SEEDING;      // 10^5
             paiMaLastRoundForSeedSystem1        =   1;
-            paiMaSeedSystem1                    =   PAIMA_SEED_SPLITANDSLIP;                              
-            paiMaSeedSystem2                    =   PAIMA_SEED_SPLITANDSLIP; 
+            paiMaSeedSystem1                    =   PAIMA_SEED_SPLITANDSLIP;
+            paiMaSeedSystem2                    =   PAIMA_SEED_SPLITANDSLIP;
             paiMaAdditionalPlacementCritSystem1 =   PlacementCriterion.RATING;
             paiMaAdditionalPlacementCritSystem2 =   PlacementCriterion.RATING;
-        
+
         paiSeBarThresholdActive                 =   true;           // Not relevant
-        paiSeRankThreshold                      =   -30;            // Do not apply secondary criteria above rank 
+        paiSeRankThreshold                      =   -30;            // Do not apply secondary criteria above rank
         setPaiSeNbWinsThresholdActive(true);           // Not Relevant
         paiSeDefSecCrit                         =   PAIMA_MAX_AVOID_MIXING_CATEGORIES;
-        paiSeMinimizeHandicap                   =   0;     
+        paiSeMinimizeHandicap                   =   0;
         paiSeAvoidSameGeo                       =   0;
         paiSePreferMMSDiffRatherThanSameCountry =   0;              // Not Relevant
         paiSePreferMMSDiffRatherThanSameClubsGroup =0;              // Not Relevant
         paiSePreferMMSDiffRatherThanSameClub    =   0;              // Not Relevant
     }
     public void initForSwissCat() {
-        paiBaAvoidDuplGame                      =   PAIBA_MAX_AVOIDDUPLGAME;    
+        paiBaAvoidDuplGame                      =   PAIBA_MAX_AVOIDDUPLGAME;
         paiBaRandom                             =   0;
         paiBaDeterministic                      =   true;
         paiBaBalanceWB                          =   PAIBA_MAX_BALANCEWB  ;
-    
-        paiMaAvoidMixingCategories              =   PAIMA_MAX_AVOID_MIXING_CATEGORIES;         
+
+        paiMaAvoidMixingCategories              =   PAIMA_MAX_AVOID_MIXING_CATEGORIES;
 
         paiMaMinimizeScoreDifference            =   PAIMA_MAX_MINIMIZE_SCORE_DIFFERENCE;
 
         paiMaDUDDWeight                         =   PAIMA_MAX_DUDD_WEIGHT;
-            paiMaCompensateDUDD                 =   true;    
+            paiMaCompensateDUDD                 =   true;
             paiMaDUDDUpperMode                  =   PAIMA_DUDD_MID;
             paiMaDUDDLowerMode                  =   PAIMA_DUDD_MID;
-            
+
         paiMaMaximizeSeeding                    =   PAIMA_MAX_MAXIMIZE_SEEDING;      // 10^5
             paiMaLastRoundForSeedSystem1        =   1;
-            paiMaSeedSystem1                    =   PAIMA_SEED_SPLITANDRANDOM;                              
-            paiMaSeedSystem2                    =   PAIMA_SEED_SPLITANDFOLD; 
+            paiMaSeedSystem1                    =   PAIMA_SEED_SPLITANDRANDOM;
+            paiMaSeedSystem2                    =   PAIMA_SEED_SPLITANDFOLD;
             paiMaAdditionalPlacementCritSystem1 =   PlacementCriterion.RATING;
             paiMaAdditionalPlacementCritSystem2 =   PlacementCriterion.NUL;
-        
+
         paiSeBarThresholdActive                 =   true;           // Not relevant
         paiSeRankThreshold                      =   0;           // Do not apply secondary criteria above 1D rank
         setPaiSeNbWinsThresholdActive(true);        // Do not apply secondary criteria when nbWins >= nbRounds / 2
         paiSeDefSecCrit                         =   PAIMA_MAX_AVOID_MIXING_CATEGORIES;
-        paiSeMinimizeHandicap                   =   paiSeDefSecCrit;     
+        paiSeMinimizeHandicap                   =   paiSeDefSecCrit;
         paiSeAvoidSameGeo                       =   paiSeDefSecCrit;
         paiSePreferMMSDiffRatherThanSameCountry =   1;
         paiSePreferMMSDiffRatherThanSameClubsGroup =2;
         paiSePreferMMSDiffRatherThanSameClub    =   3;
-    }    
+    }
 
     public long getPaiSeDefSecCrit() {
         return paiSeDefSecCrit;

@@ -4,6 +4,12 @@
  */
 package info.vannier.gotha;
 
+import javax.help.BadIDException;
+import javax.help.HelpBroker;
+import javax.help.HelpSet;
+import javax.help.HelpSetException;
+import javax.swing.ImageIcon;
+import javax.swing.JProgressBar;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.io.BufferedInputStream;
@@ -12,21 +18,26 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import javax.help.BadIDException;
-import javax.help.HelpBroker;
-import javax.help.HelpSet;
-import javax.help.HelpSetException;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JProgressBar;
 
 /**
  * Contains general purpose constants
@@ -50,7 +61,7 @@ public class Gotha {
     // Should definitely stay below 10, due to complexity issues in costValue function
     static final int MAX_NUMBER_OF_CATEGORIES = 9;
     static final int MAX_RANK = 8;      // =  9D
-    static final int MIN_RANK = -30;    // = 30K
+    public static final int MIN_RANK = -30;    // = 30K
     public static final int MAX_NUMBER_OF_TABLES = MAX_NUMBER_OF_PLAYERS / 2;
     static final int MIN_NUMBER_OF_MEMBERS_BY_TEAM = 2;
     static final int MAX_NUMBER_OF_MEMBERS_BY_TEAM = 10;
