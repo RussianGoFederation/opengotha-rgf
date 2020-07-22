@@ -12,7 +12,7 @@ import org.xml.sax.SAXException;
 import ru.gofederation.gotha.model.Game;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rating;
-import ru.gofederation.gotha.model.RatingOrigin;
+import ru.gofederation.gotha.model.RatingOriginKt;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -307,7 +307,7 @@ public class ExternalDocument {
                         "", // AGA Expiration Date
                         rk,
                         rt,
-                        RatingOrigin.fromString(strRatingOrigin),
+                        RatingOriginKt.asRatingOrigin(strRatingOrigin),
                         "",
                         0,
                         PlayerRegistrationStatus.fromString(strRg));
@@ -674,7 +674,7 @@ public class ExternalDocument {
                     .setAgaId(agaId, agaExpirationDate)
                     .setRgfId(rgfId)
                     .setRank(rank)
-                    .setRating(rating, RatingOrigin.fromString(ratingOrigin))
+                    .setRating(rating, RatingOriginKt.asRatingOrigin(ratingOrigin))
                     .setGrade(strGrade)
                     .setSmmsCorrection(smmsCorrection)
                     .setSmmsByHand(extractNodeIntValue(nnm, "forcedSmms", -1))

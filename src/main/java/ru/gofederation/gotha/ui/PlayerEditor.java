@@ -33,6 +33,7 @@ import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rank;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
+import ru.gofederation.gotha.model.RatingOriginKt;
 import ru.gofederation.gotha.util.GothaLocale;
 
 import javax.swing.BorderFactory;
@@ -553,7 +554,7 @@ public class PlayerEditor extends JPanel {
                 .setRgfId(rgfId)
                 .setRgfNew(rgfId == 0 && newRgf.isSelected())
                 .setRank(rank.getValue())
-                .setRating(rating, RatingOrigin.fromString(strOrigin))
+                .setRating(rating, RatingOriginKt.asRatingOrigin(strOrigin))
                 .setGrade(this.grade.getText())
                 .setSmmsCorrection(smmsCorrection)
                 .setSmmsByHand(getSmmsByHand())
