@@ -9,6 +9,8 @@ class Rank internal constructor(value: Int) : Comparable<Rank> {
     // TODO: make value private once Rating class is rewritten
     val value = value.coerceIn(kyuRange.first, proRange.last)
 
+    fun toRating(origin: RatingOrigin): Rating = origin.rankToRating(this)
+
     override fun compareTo(other: Rank): Int =
         this.value - other.value
 

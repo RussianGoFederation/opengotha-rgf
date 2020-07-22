@@ -4,6 +4,8 @@
 package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.Rank;
+import ru.gofederation.gotha.model.RankKt;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
 
@@ -36,7 +38,7 @@ public class Player implements java.io.Serializable{
      */
     private int rank = -20;
 
-    private Rating rating = Rating.minRating(UNDEF);
+    private Rating rating = new Rating(UNDEF, UNDEF.getMinRating());
 
     /**
      * strGrade is relevant when player is registered from EGF rating list
@@ -462,21 +464,21 @@ public class Player implements java.io.Serializable{
     /**
      * Converts rating to rank
      * rank = (rating + 1000)/100 - 30;
+     * @deprecated Use {@link Rating#toRank} directly
      */
+    @Deprecated
     public static int rankFromRating(RatingOrigin origin, int rating) {
-        return Rating.ratingToRank(origin, rating);
+        return new Rating(origin, rating).getValue();
     }
 
     /**
      * Converts rank to rating
      * rating = (rank + 30) *100 - 1000;
+     * @deprecated Use {@link Rank#toRating(RatingOrigin)} directly
      */
+    @Deprecated
     public static int ratingFromRank(RatingOrigin origin, int rank) {
-        if (origin.equals(RatingOrigin.RGF)) {
-            return Rating.rankToRating(origin, rank);
-        }
-
-        return (rank + 30) * 100 - 900;
+        return origin.rankToRating(RankKt.asRank(rank)).getValue();
     }
 
     /**
@@ -614,7 +616,7 @@ public class Player implements java.io.Serializable{
         private boolean rgfAssessmentRating = true;
         private int rgfId = 0;
         private int rank = -20;
-        private Rating rating = Rating.minRating(UNDEF);
+        private Rating rating = UNDEF.rating(UNDEF.getMinRating());
         private String grade = "";
         private int smmsCorrection = 0;
         private int smmsByHand = -1;

@@ -17,6 +17,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
+                implementation "io.github.microutils:kotlin-logging-common:$kotlin_logging_version"
             }
         }
         commonTest {
@@ -29,6 +30,7 @@ kotlin {
         jvm().compilations.main.defaultSourceSet {
             dependencies {
                 implementation kotlin('stdlib-jdk8')
+                implementation "io.github.microutils:kotlin-logging:$kotlin_logging_version"
             }
         }
         jvm().compilations.test.defaultSourceSet {

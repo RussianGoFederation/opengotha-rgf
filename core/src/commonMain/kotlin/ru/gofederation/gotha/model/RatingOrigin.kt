@@ -24,6 +24,10 @@ enum class RatingOrigin(val minRating: Int, val maxRating: Int) {
     /** Rating computed from rank  */
     INI(-900, 2949);
 
+    fun rating(rating: Int): Rating = Rating(this, rating)
+
+    fun clampRatingValue(rating: Int): Int = rating.coerceIn(minRating, maxRating)
+
     fun ratingToRank(rating: Int): Rank = when (this) {
         RGF -> {
             when (rating) {
@@ -35,6 +39,20 @@ enum class RatingOrigin(val minRating: Int, val maxRating: Int) {
         }
 
         else -> ((rating + 950) / 100 - 30).coerceIn(-30, 8).asRank()
+    }
+
+    fun rankToRating(rank: Rank): Rating = when (this) {
+        RGF -> {
+            val rating = when (val value = rank.value) {
+                in -30..-20 -> (value + 30) * 60
+                in -19..0 -> (value + 20) * 75 + 600
+                in 0..8 -> value * 100 + 2100
+                else -> throw IllegalStateException()
+            }
+            Rating(this, rating)
+        }
+
+        else -> Rating(this, (rank.value + 30) * 100 - 900)
     }
 
     override fun toString(): String {

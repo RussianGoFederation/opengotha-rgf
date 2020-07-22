@@ -448,7 +448,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         int nbChanged = 0;
 
         for (Player p : alP){
-            int newRank = p.getRating().toRank();
+            int newRank = p.getRating().toRank().getValue();
             if (p.getRank() != newRank)
                 nbChanged++;
         }
@@ -460,7 +460,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         boolean bSomethingHasChanged = false;
         try {
             for (Player p : alP){
-                int rating = p.getRating().toRank();
+                int rating = p.getRating().toRank().getValue();
                 int newRank = Player.rankFromRating(p.getRatingOrigin(), rating);
                 p.setRank(newRank);
                 tournament.modifyPlayer(p, p);

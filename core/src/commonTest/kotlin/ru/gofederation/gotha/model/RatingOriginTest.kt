@@ -31,4 +31,30 @@ class RatingOriginTest {
             assertEquals(expectedRank, actualRank)
         }
     }
+
+    @Test
+    fun `test RGF rank to rating conversion`() {
+        val data = sequence {
+            var rankValue = -30
+
+            (0..599 step 60).map { rating ->
+                yield(rating to rankValue)
+                rankValue++
+            }
+
+            (600..2099 step 75).map { rating ->
+                yield(rating to rankValue)
+                rankValue++
+            }
+
+            (2100..2999 step 100).map { rating ->
+                yield(rating to rankValue)
+                rankValue++
+            }
+        }
+
+        data.forEach { (rating, rankValue) ->
+            assertEquals(rating, RatingOrigin.RGF.rankToRating(Rank(rankValue)).value)
+        }
+    }
 }

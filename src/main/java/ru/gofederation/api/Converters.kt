@@ -27,7 +27,6 @@ import info.vannier.gotha.TournamentInterface
 import info.vannier.gotha.TournamentPlayerDoubleException
 import ru.gofederation.gotha.model.Game
 import ru.gofederation.gotha.model.PlayerRegistrationStatus
-import ru.gofederation.gotha.model.Rating
 import ru.gofederation.gotha.model.RatingOrigin
 
 fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<TournamentInterface, RgfTournamentImportReport> {
@@ -80,9 +79,9 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
                             builder.rgfId = application.playerId?:0
                         }
                         try {
-                            val rating = Rating.clampRating(RatingOrigin.RGF, Integer.parseInt(application.rating))
+                            val rating = RatingOrigin.RGF.clampRatingValue(Integer.parseInt(application.rating))
                             builder.setRating(rating, RatingOrigin.RGF)
-                            builder.rank = Rating.ratingToRank(RatingOrigin.RGF, rating)
+                            builder.rank = RatingOrigin.RGF.clampRatingValue(rating)
                         } catch (e: NumberFormatException) {
                             // NOOP is ok
                         }
@@ -115,7 +114,7 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
                         builder.isRgfNew = apiPlayer.newPlayer
                         builder.isRgfAssessmentRating = apiPlayer.assessmentRating
                         builder.setRating(apiPlayer.rating, RatingOrigin.RGF)
-                        builder.rank = Rating.ratingToRank(RatingOrigin.RGF, apiPlayer.rating)
+                        builder.rank = RatingOrigin.RGF.ratingToRank(apiPlayer.rating).value
                         builder.registrationStatus = PlayerRegistrationStatus.FINAL
                         builder.smmsByHand = apiPlayer.mm0_4
                     }.build()
