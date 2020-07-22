@@ -4,6 +4,8 @@
  */
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.Limits;
+
 import javax.help.BadIDException;
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
@@ -54,7 +56,7 @@ public class Gotha {
     static final long GOTHA_DATA_VERSION = 201L;
 
     // Should definitely stay below or equal to 32, due to internal limits in costValue() method
-    public static final int MAX_NUMBER_OF_ROUNDS = 20;
+    public static final int MAX_NUMBER_OF_ROUNDS = Limits.MAX_NUMBER_OF_ROUNDS;
     // Should definitely stay below 16000, due to internal limits in PairingParameterSet parameter values
     // Should definitely stay below 9999, due to printing issues
     static final int MAX_NUMBER_OF_PLAYERS = 1200;
