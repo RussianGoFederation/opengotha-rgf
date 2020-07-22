@@ -17,4 +17,5 @@
 
 rootProject.name = 'OpenGotha'
 
+include ':core'
 include ':rgf'

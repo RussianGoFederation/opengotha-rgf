@@ -114,6 +114,7 @@ test {
 }
 
 dependencies {
+    implementation project(':core')
     implementation project(':rgf')
     implementation group: 'com.ibm.icu', name: 'icu4j', version: '60.2'
     implementation group: 'com.miglayout', name: 'miglayout-swing', version: '5.2'
