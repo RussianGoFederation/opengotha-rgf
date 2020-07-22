@@ -76,28 +76,8 @@ class Rating(val origin: RatingOrigin, rating: Int) : Comparable<Rating> {
         }
 
         @JvmStatic
-        fun ratingToRank(origin: RatingOrigin, rating: Int): Int {
-            if (origin == RatingOrigin.RGF) {
-                if (rating < origin.minRating || rating > origin.maxRating) {
-                    throw IllegalArgumentException("Rating out of range")
-                }
-
-                if (rating < 600) {
-                    return rating / 60 - 30
-                }
-
-                if (rating < 2100) {
-                    return rating / 75 - 28
-                }
-
-                return rating / 100 - 21
-            } else {
-                var rk = (rating + 950) / 100 - 30
-                if (rk > 8) rk = 8
-                if (rk < -30) rk = -30
-                return rk
-            }
-        }
+        fun ratingToRank(origin: RatingOrigin, rating: Int): Int =
+            origin.ratingToRank(rating).value
 
         @JvmStatic
         fun rankToRating(origin: RatingOrigin, rank: Int): Int {

@@ -31,5 +31,10 @@ kotlin {
                 implementation kotlin('stdlib-jdk8')
             }
         }
+        jvm().compilations.test.defaultSourceSet {
+            dependencies {
+                implementation kotlin('test-junit')
+            }
+        }
     }
 }

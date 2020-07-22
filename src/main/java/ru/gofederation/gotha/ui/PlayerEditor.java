@@ -31,6 +31,7 @@ import info.vannier.gotha.TournamentInterface;
 import net.miginfocom.swing.MigLayout;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rank;
+import ru.gofederation.gotha.model.RankKt;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
 import ru.gofederation.gotha.model.RatingOriginKt;
@@ -659,7 +660,7 @@ public class PlayerEditor extends JPanel {
             if (newRating != oldRating){
                 this.rating.setText("" + newRating);
                 RatingOrigin ratingOrigin = ratingPanel.getOrigin();
-                String rank = Rank.fromRating(ratingOrigin, newRating).toString();
+                String rank = ratingOrigin.ratingToRank(newRating).toString();
                 this.rank.setText(rank);
                 this.grade.setText(rank);
                 this.ratingOrigin.setText("MAN");
