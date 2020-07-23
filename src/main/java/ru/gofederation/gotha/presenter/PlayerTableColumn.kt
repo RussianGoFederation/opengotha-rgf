@@ -45,7 +45,7 @@ sealed class PlayerTableColumn(header: String, prefWidth: Int) : GothaTableColum
     }
 
     class Rank() : PlayerTableColumn(GothaLocale.getCurrentLocale().tr("player.rank"), 50) {
-        override fun cellValue(obj: Player): Any = ru.gofederation.gotha.model.Rank.fromInt(obj.rank)
+        override fun cellValue(obj: Player): Any = obj.rank
     }
 
     class Rating() : PlayerTableColumn(GothaLocale.getCurrentLocale().tr("player.rating"), 50) {

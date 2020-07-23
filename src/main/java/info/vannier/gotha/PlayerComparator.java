@@ -26,8 +26,8 @@ public class PlayerComparator implements Comparator<Player>, Serializable{
                 if (c != 0) return c;
                 else return p1.getFirstName().toLowerCase().compareTo(p2.getFirstName().toLowerCase());
             case RANK_ORDER :
-                if (p1.getRank() < p2.getRank()) return 1;
-                if (p1.getRank() > p2.getRank()) return -1;
+                if (p1.getRank().compareTo(p2.getRank()) < 0) return 1;
+                if (p1.getRank().compareTo(p2.getRank()) > 0) return -1;
                 c = p1.getName().toLowerCase().compareTo(p2.getName().toLowerCase());
                 if (c != 0) return c;
                 else return p1.getFirstName().toLowerCase().compareTo(p2.getFirstName().toLowerCase());

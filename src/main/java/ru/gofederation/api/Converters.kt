@@ -81,7 +81,7 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
                         try {
                             val rating = RatingOrigin.RGF.clampRatingValue(Integer.parseInt(application.rating))
                             builder.setRating(rating, RatingOrigin.RGF)
-                            builder.rank = RatingOrigin.RGF.clampRatingValue(rating)
+                            builder.rank = builder.rating.toRank()
                         } catch (e: NumberFormatException) {
                             // NOOP is ok
                         }
@@ -114,7 +114,7 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
                         builder.isRgfNew = apiPlayer.newPlayer
                         builder.isRgfAssessmentRating = apiPlayer.assessmentRating
                         builder.setRating(apiPlayer.rating, RatingOrigin.RGF)
-                        builder.rank = RatingOrigin.RGF.ratingToRank(apiPlayer.rating).value
+                        builder.rank = builder.rating.toRank()
                         builder.registrationStatus = PlayerRegistrationStatus.FINAL
                         builder.smmsByHand = apiPlayer.mm0_4
                     }.build()

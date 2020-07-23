@@ -17,19 +17,13 @@
 
 package ru.gofederation.gotha.ui;
 
+import info.vannier.gotha.Player;
+import info.vannier.gotha.TournamentInterface;
 import net.miginfocom.swing.MigLayout;
-
-import java.awt.Component;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Consumer;
+import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.Rank;
+import ru.gofederation.gotha.util.GothaLocale;
+import ru.gofederation.gotha.util.TableColumnConfig;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -48,13 +42,17 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-
-import info.vannier.gotha.Player;
-import info.vannier.gotha.TournamentInterface;
-import ru.gofederation.gotha.model.PlayerRegistrationStatus;
-import ru.gofederation.gotha.model.Rank;
-import ru.gofederation.gotha.util.GothaLocale;
-import ru.gofederation.gotha.util.TableColumnConfig;
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
 
 public final class PlayerList extends JPanel {
     private final JTable table;
@@ -301,7 +299,7 @@ public final class PlayerList extends JPanel {
                     case REGISTRATION: return player.getRegisteringStatus() == PlayerRegistrationStatus.FINAL ? "F" : "P";
                     case LAST_NAME:    return player.getName();
                     case FIRST_NAME:   return player.getFirstName();
-                    case RANK:         return Rank.fromInt(player.getRank());
+                    case RANK:         return player.getRank();
                     case COUNTRY:      return player.getCountry();
                     case CLUB:         return player.getClub();
                     case RATING:       return player.getRating();

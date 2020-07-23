@@ -251,7 +251,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
             btnByePlayer.setText(">>>");
 
         } else {
-            String strRk = Player.convertIntToKD(byePlayer.getRank());
+            String strRk = byePlayer.getRank().toString();
             txfByePlayer.setText(byePlayer.fullName()
                     + " " + strRk + " " + byePlayer.getCountry() + " " + byePlayer.getClub());
 
@@ -465,7 +465,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
             Vector<String> row = new Vector<String>();
             row.add(p.fullName());
 
-            row.add(Player.convertIntToKD(p.getRank()));
+            row.add(p.getRank().toString());
 
             int mainScore2 = sp.getCritValue(mainCrit, processedRoundNumber - 1);
 

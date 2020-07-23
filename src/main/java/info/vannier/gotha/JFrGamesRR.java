@@ -394,7 +394,7 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
                 p = alDisplayedPlayers.get(iRow);
                 String strNP = p.fullName();
                 tbm.setValueAt(strNP, iRow, NAME_COL);
-                String strRank = Player.convertIntToKD(p.getRank());
+                String strRank = p.getRank().toString();
                 tbm.setValueAt(strRank, iRow, RANK_COL);
                 tbm.setValueAt("" + (iRow + 1), iRow, NUMBER_COL);
             }

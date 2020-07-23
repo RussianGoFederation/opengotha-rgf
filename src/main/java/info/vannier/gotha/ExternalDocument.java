@@ -1611,7 +1611,7 @@ public class ExternalDocument {
             strNF = strNF.substring(0, 25);
             strLine += " " + strNF;
 
-            String strRank = "   " + Player.convertIntToKD(sP.getRank());
+            String strRank = "   " + sP.getRank().toStringKD();
             strRank = strRank.substring(strRank.length() - 3);
             strLine += strRank;
 
@@ -1760,7 +1760,7 @@ public class ExternalDocument {
             strNF = strNF.substring(0, 30) + " ";
             strLine += " " + strNF;
 
-            String strRank = "   " + Player.convertIntToKD(sP.getRank());
+            String strRank = "   " + sP.getRank().toStringKD().toLowerCase();
             strRank = strRank.substring(strRank.length() - 3);
             strLine += strRank;
 
@@ -1923,7 +1923,7 @@ public class ExternalDocument {
         for (Iterator<ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
             ScoredPlayer sP = it.next();
             try {
-                output.write(sP.getAgaId() + "\t" + sP.getName() + ", " + sP.getFirstName() + "\t" + Player.convertIntToKD(sP.getRank()) + "\n");
+                output.write(sP.getAgaId() + "\t" + sP.getName() + ", " + sP.getFirstName() + "\t" + sP.getRank().toStringKD().toLowerCase() + "\n");
             } catch (IOException ex) {
                 Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -2049,7 +2049,7 @@ public class ExternalDocument {
             strLine = "";
             strLine += p.getName() + ";";
             strLine += p.getFirstName() + ";";
-            strLine += Player.convertIntToKD(p.getRank()) + ";";
+            strLine += p.getRank().toStringKD() + ";";
             strLine += p.getCountry() + ";";
             strLine += p.getClub() + ";";
 
@@ -3143,7 +3143,7 @@ public class ExternalDocument {
             String strFfgLicenceStatus = p.getFfgLicenceStatus();
             String strAgaId = p.getAgaId();
             String strAgaExpirationDate = p.getAgaExpirationDate();
-            String strRank = Player.convertIntToKD(p.getRank());
+            String strRank = p.getRank().toString();
             String strRating = Integer.valueOf(p.getRating().getValue()).toString();
             String strRatingOrigin = p.getRatingOrigin().toString();
             String strGrade = p.getStrGrade();

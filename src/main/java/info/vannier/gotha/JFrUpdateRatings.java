@@ -534,7 +534,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame implements RatingListCo
             model.setValueAt(p.getFirstName(), line, JFrUpdateRatings.FIRSTNAME_COL);
             model.setValueAt(p.getCountry(), line, JFrUpdateRatings.COUNTRY_COL);
             model.setValueAt(p.getClub(), line, JFrUpdateRatings.CLUB_COL);
-            model.setValueAt(Player.convertIntToKD(p.getRank()), line, JFrUpdateRatings.RANK_COL);
+            model.setValueAt(p.getRank().toString(), line, JFrUpdateRatings.RANK_COL);
             model.setValueAt(p.getRating(), line, JFrUpdateRatings.RATING_COL);
             model.setValueAt(p.getRatingOrigin(), line, JFrUpdateRatings.RATINGORIGIN_COL);
 

@@ -31,7 +31,6 @@ import info.vannier.gotha.TournamentInterface;
 import net.miginfocom.swing.MigLayout;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rank;
-import ru.gofederation.gotha.model.RankKt;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
 import ru.gofederation.gotha.model.RatingOriginKt;
@@ -436,7 +435,7 @@ public class PlayerEditor extends JPanel {
         String strCorr = "" + corr;
         if (corr > 0 ) strCorr = "+" + corr;
         this.smmsCorrection.setText(strCorr);
-        int rank = (player.getRank());
+        int rank = player.getRank().getValue();
         this.rank.setText(Player.convertIntToKD(rank));
         this.country.setSelectedItem(player.getCountry());
         this.club.setText(player.getClub());
@@ -782,7 +781,7 @@ public class PlayerEditor extends JPanel {
             strLine = strLine.replaceAll("<firstname>", p.getFirstName());
             strLine = strLine.replaceAll("<country>", p.getCountry());
             strLine = strLine.replaceAll("<club>", p.getClub());
-            strLine = strLine.replaceAll("<rank>", Player.convertIntToKD(p.getRank()));
+            strLine = strLine.replaceAll("<rank>", p.getRank().toString());
             int rawRating = p.getRating().getValue();
             RatingOrigin ratingOrigin = p.getRatingOrigin();
             if (ratingOrigin == FFG) {

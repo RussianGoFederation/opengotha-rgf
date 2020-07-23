@@ -237,8 +237,8 @@ fun TournamentInterface.gameBetween(sp1: ScoredPlayer, sp2: ScoredPlayer, round:
         round = round
     )
 
-    var pseudoRank1 = sp1.rank
-    var pseudoRank2 = sp2.rank
+    var pseudoRank1 = sp1.rank.value
+    var pseudoRank2 = sp2.rank.value
     if (hdPs.isHdBasedOnMMS) {
         pseudoRank1 = sp1.getCritValue(PlacementCriterion.MMS, round - 1) / 2 + Gotha.MIN_RANK
         pseudoRank2 = sp2.getCritValue(PlacementCriterion.MMS, round - 1) / 2 + Gotha.MIN_RANK

@@ -5,6 +5,7 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.Rank;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;
 import ru.gofederation.gotha.printing.PlayerListPrinter;
@@ -425,7 +426,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         if (confirm == JOptionPane.OK_OPTION){
             try {
                 for (Player p : alP){
-                     p.setRank(p.getRank() + deltaRank);
+                     p.setRank(p.getRank().plus(deltaRank));
                      tournament.modifyPlayer(p, p);
                 }
             } catch (RemoteException ex) {
@@ -448,8 +449,8 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         int nbChanged = 0;
 
         for (Player p : alP){
-            int newRank = p.getRating().toRank().getValue();
-            if (p.getRank() != newRank)
+            Rank newRank = p.getRating().toRank();
+            if (!p.getRank().equals(newRank))
                 nbChanged++;
         }
         int confirm;
@@ -484,9 +485,8 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         int nbChanged = 0;
 
         for (Player p : alP){
-            int rank = p.getRank();
-            int newRating = Player.ratingFromRank(p.getRatingOrigin(), rank);
-            if (p.getRating().getValue() != newRating)
+            Rating newRating = p.getRank().toRating(p.getRatingOrigin());
+            if (!p.getRating().equals(newRating))
                 nbChanged++;
         }
         int confirm;
@@ -498,10 +498,9 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         boolean bSomethingHasChanged = false;
         try {
             for (Player p : alP){
-                int rank = p.getRank();
-                int newRating = Player.ratingFromRank(p.getRatingOrigin(), rank);
-                if (p.getRating().getValue() != newRating){
-                    p.setRating(new Rating(p.getRating().getOrigin(), newRating));
+                Rating newRating = p.getRank().toRating(p.getRatingOrigin());
+                if (!p.getRating().equals(newRating)){
+                    p.setRating(newRating);
                     tournament.modifyPlayer(p, p);
                     bSomethingHasChanged = true;
                 }
@@ -858,7 +857,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             model.setValueAt(p.getFirstName(), line, JFrPlayersQuickCheck.FIRSTNAME_COL);
             model.setValueAt(p.getCountry(), line, JFrPlayersQuickCheck.COUNTRY_COL);
             model.setValueAt(p.getClub(), line, JFrPlayersQuickCheck.CLUB_COL);
-            model.setValueAt(Player.convertIntToKD(p.getRank()), line, JFrPlayersQuickCheck.RANK_COL);
+            model.setValueAt(p.getRank().toString(), line, JFrPlayersQuickCheck.RANK_COL);
             model.setValueAt(p.getRating(), line, JFrPlayersQuickCheck.RATING_COL);
             boolean[] bPart = p.getParticipating();
             for (int round = 0; round < numberOfRounds; round++){

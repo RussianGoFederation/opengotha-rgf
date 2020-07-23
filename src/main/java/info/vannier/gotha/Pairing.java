@@ -224,7 +224,7 @@ public class Pairing {
             int bal = nbDU[i] - nbDD[i];
             if (bal == 0){
                 String strBal = "" + bal;
-                strReport +="\nBAL " + p.fullName() + " " + Player.convertIntToKD(p.getRank()) + " balance = " + strBal +
+                strReport +="\nBAL " + p.fullName() + " " + p.getRank().toString() + " balance = " + strBal +
                         " " + nbDU[i] + "DU " + nbDD[i] + "DD";
             }
             if (bal != 0){
@@ -232,7 +232,7 @@ public class Pairing {
                 sumBal += Math.abs(bal);
                 String strBal = "" + bal;
                 if (bal > 0) strBal = "+" + bal;
-                strReport +="\nUNB " + p.fullName() + " " + Player.convertIntToKD(p.getRank()) + " balance = " + strBal +
+                strReport +="\nUNB " + p.fullName() + " " + p.getRank().toString() + " balance = " + strBal +
                         " " + nbDU[i] + "DU " + nbDD[i] + "DD";
             }
         }
@@ -322,7 +322,7 @@ public class Pairing {
             int bal = nbWeightedDU[i] - nbWeightedDD[i];
             if (bal == 0){
                 String strBal = "" + bal;
-                strReport +="\nBAL " + p.fullName() + " " + Player.convertIntToKD(p.getRank()) + " balance = " + strBal +
+                strReport +="\nBAL " + p.fullName() + " " + p.getRank().toString() + " balance = " + strBal +
                         " " + nbWeightedDU[i] + "WeightedDU " + nbWeightedDD[i] + "WeightedDD";
             }
             if (bal != 0){
@@ -330,7 +330,7 @@ public class Pairing {
                 sumBal += Math.abs(bal);
                 String strBal = "" + bal;
                 if (bal > 0) strBal = "+" + bal;
-                strReport +="\nUNB " + p.fullName() + " " + Player.convertIntToKD(p.getRank()) + " balance = " + strBal +
+                strReport +="\nUNB " + p.fullName() + " " + p.getRank().toString() + " balance = " + strBal +
                         " " + nbWeightedDU[i] + "WeightedDU " + nbWeightedDD[i] + "WeightedDD";
             }
         }
@@ -377,7 +377,7 @@ public class Pairing {
             }
             if (Math.abs(nbW - nbB) > unbalancedWBThreshold){
                 nbUnbalancedWBPlayers++;
-                strReport +="\n" + p.fullName() + " " + Player.convertIntToKD(p.getRank()) +
+                strReport +="\n" + p.fullName() + " " + p.getRank().toString() +
                         " " + nbW + "W " + nbB + "B";
 
             }

@@ -276,7 +276,7 @@ class PairingCosts(
             val nbwSP1X2 = sp1.getCritValue(PlacementCriterion.NBW, round - 1)
             val nbwSP2X2 = sp2.getCritValue(PlacementCriterion.NBW, round - 1)
 
-            var bStrongMMS = (2 * sp1.rank + sp1.getCritValue(PlacementCriterion.NBW, round - 1) >= 2 * pps.paiSeRankThreshold)
+            var bStrongMMS = (2 * sp1.rank.value + sp1.getCritValue(PlacementCriterion.NBW, round - 1) >= 2 * pps.paiSeRankThreshold)
             var bManyWins = nbwSP1X2 >= nbw2Threshold
             var bAboveMMBar = (sp1.smms(gps) >= mmBar && pps.isPaiSeBarThresholdActive)
             if (bManyWins
@@ -286,7 +286,7 @@ class PairingCosts(
                 pseudoMMSSP1 = maxMMS
             }
 
-            bStrongMMS = (2 * sp2.rank + sp2.getCritValue(PlacementCriterion.NBW, round - 1) >= 2 * pps.paiSeRankThreshold)
+            bStrongMMS = (2 * sp2.rank.value + sp2.getCritValue(PlacementCriterion.NBW, round - 1) >= 2 * pps.paiSeRankThreshold)
             bManyWins = nbwSP2X2 >= nbw2Threshold
             bAboveMMBar = (sp2.smms(gps) >= mmBar && pps.isPaiSeBarThresholdActive)
             if (bManyWins

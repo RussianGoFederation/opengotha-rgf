@@ -11,6 +11,12 @@ class Rank internal constructor(value: Int) : Comparable<Rank> {
 
     fun toRating(origin: RatingOrigin): Rating = origin.rankToRating(this)
 
+    operator fun plus(delta: Int): Rank = fromInt(value + delta)
+
+    operator fun minus(delta: Int): Rank = fromInt(value - delta)
+
+    operator fun minus(other: Rank): Int = this.value - other.value
+
     override fun compareTo(other: Rank): Int =
         this.value - other.value
 
@@ -23,11 +29,24 @@ class Rank internal constructor(value: Int) : Comparable<Rank> {
             false
         }
 
+    /**
+     * Returns this [Rank]'s string representation.
+     * Format: [30..1]K..[1..9]D..[1..9]P
+     */
     override fun toString(): String = when {
         kyuRange.contains(value) -> "${-value}K"
         danRange.contains(value) -> "${value + 1}D"
         proRange.contains(value) -> "${value - 8}P"
         else -> throw IllegalStateException("Value $value is not valid rank")
+    }
+
+    /**
+     * Returns this [Rank]'s string representation.
+     * Unlike [toString], "Pro" dans are shown as "9D"
+     */
+    fun toStringKD(): String = when {
+        kyuRange.contains(value) -> "${-value}K"
+        else -> "${(value+1).coerceIn(danRange)}D"
     }
 
     companion object {

@@ -17,21 +17,20 @@
 
 package ru.gofederation.gotha.printing;
 
+import info.vannier.gotha.DPParameterSet;
+import info.vannier.gotha.GeneralParameterSet;
+import info.vannier.gotha.PlacementCriterion;
+import info.vannier.gotha.PlacementParameterSet;
+import info.vannier.gotha.ScoredPlayer;
+import info.vannier.gotha.TournamentInterface;
+import info.vannier.gotha.TournamentParameterSet;
+import ru.gofederation.gotha.util.GothaLocale;
+
 import java.awt.print.Printable;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import info.vannier.gotha.DPParameterSet;
-import info.vannier.gotha.GeneralParameterSet;
-import info.vannier.gotha.PlacementCriterion;
-import info.vannier.gotha.PlacementParameterSet;
-import info.vannier.gotha.Player;
-import info.vannier.gotha.ScoredPlayer;
-import info.vannier.gotha.TournamentInterface;
-import info.vannier.gotha.TournamentParameterSet;
-import ru.gofederation.gotha.util.GothaLocale;
 
 public class StandingsPrinter extends TablePrinter implements Printable {
     private final List<ScoredPlayer> playerList;
@@ -151,7 +150,7 @@ public class StandingsPrinter extends TablePrinter implements Printable {
         } else if (column == clubCol) {
             return playerList.get(row).getClub();
         } else if (column == rankCol) {
-            return Player.convertIntToKD(playerList.get(row).getRank());
+            return playerList.get(row).getRank().toString();
         } else if (column == nbwCol) {
             return playerList.get(row).formatScore(PlacementCriterion.NBW, round);
         } else if (column >= firstRoundCol && column <= lastRoundCol) {

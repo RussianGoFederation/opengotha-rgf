@@ -496,8 +496,8 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
             Player wP = g.getWhitePlayer();
             Player bP = g.getBlackPlayer();
             int hd = g.getHandicap();
-            int wR = wP.getRank();
-            int bR = bP.getRank();
+            int wR = wP.getRank().getValue();
+            int bR = bP.getRank().getValue();
             if (hd > 0 && wR < bR){
                 String str = "Round " + (g.getRound() + 1) + " Table=" + (g.getBoard() + 1) + " " + wP.getName() + " " + wR + " - " + bP.getName() + " " + bR + "   hd = " + hd;
                 System.out.println(str);

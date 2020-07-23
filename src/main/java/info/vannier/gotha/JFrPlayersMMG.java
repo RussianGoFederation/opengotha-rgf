@@ -6,6 +6,11 @@ package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
 
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
@@ -14,11 +19,6 @@ import java.util.Collections;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -533,7 +533,7 @@ public class JFrPlayersMMG extends javax.swing.JFrame{
            Vector<String> row = new Vector<String>();
             row.add(p.getName());
             row.add(p.getFirstName());
-            row.add(Player.convertIntToKD(p.getRank()));
+            row.add(p.getRank().toString());
             row.add("" + p.getSmmsCorrection());
             row.add("" + p.getRating());
             model.addRow(row);
@@ -565,12 +565,12 @@ public class JFrPlayersMMG extends javax.swing.JFrame{
         if (smmsCorr < 2) p.setSmmsCorrection(smmsCorr + 1);
         else{
             int answer = JOptionPane.showConfirmDialog(this,
-                    p.fullName() + "'s rank is actually" + Player.convertIntToKD(p.getRank())
-                    + "\n" + "Do you want to set it to " + Player.convertIntToKD(p.getRank() + 1),
+                    p.fullName() + "'s rank is actually" + p.getRank().toString()
+                    + "\n" + "Do you want to set it to " + p.getRank().plus(1).toString(),
                     "Message",
                     JOptionPane.YES_NO_OPTION);
             if (answer == JOptionPane.YES_OPTION)
-                p.setRank(p.getRank() + 1);
+                p.setRank(p.getRank().plus(1));
         }
     }
 
@@ -579,12 +579,12 @@ public class JFrPlayersMMG extends javax.swing.JFrame{
         if (smmsCorr > -1) p.setSmmsCorrection(smmsCorr - 1);
         else{
             int answer = JOptionPane.showConfirmDialog(this,
-                    p.fullName() + "'s rank is actually" + Player.convertIntToKD(p.getRank())
-                    + "\n" + "Do you want to set it to " + Player.convertIntToKD(p.getRank() - 1),
+                    p.fullName() + "'s rank is actually " + p.getRank().toString()
+                    + "\n" + "Do you want to set it to " + p.getRank().minus(1).toString(),
                     "Message",
                     JOptionPane.QUESTION_MESSAGE);
             if (answer == JOptionPane.YES_OPTION)
-                p.setRank(p.getRank() - 1);
+                p.setRank(p.getRank().minus(1));
         }
     }
 

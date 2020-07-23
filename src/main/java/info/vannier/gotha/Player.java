@@ -36,7 +36,7 @@ public class Player implements java.io.Serializable{
     /**
      * Rank between -30 (30K) and +8 (9D)
      */
-    private int rank = -20;
+    private Rank rank = RankKt.asRank(-20);
 
     private Rating rating = new Rating(UNDEF, UNDEF.getMinRating());
 
@@ -88,7 +88,7 @@ public class Player implements java.io.Serializable{
         this.agaExpirationDate = agaExpirationDate;
         // If rank is out of limits, set it according to strGrade, if exists
         if(rank < Gotha.MIN_RANK || rank > Gotha.MAX_RANK) rank = Player.convertKDPToInt(strGrade);
-        this.rank = rank;
+        this.rank = RankKt.asRank(rank);
 
         this.rating = new Rating(ratingOrigin, rating);
 
@@ -126,10 +126,10 @@ public class Player implements java.io.Serializable{
         this.rgfNew = builder.isRgfNew();
         this.rgfAssessmentRating = builder.isRgfAssessmentRating();
         this.rgfId = builder.getRgfId();
-        if (builder.getRank() < Gotha.MIN_RANK || builder.getRank() > Gotha.MAX_RANK) this.rank = Player.convertKDPToInt(builder.getGrade());
+        if (builder.getRank().getValue() < Gotha.MIN_RANK || builder.getRank().getValue() > Gotha.MAX_RANK) this.rank = RankKt.asRank(Player.convertKDPToInt(builder.getGrade()));
         else this.rank = builder.getRank();
         this.rating = builder.getRating();
-        if (builder.getGrade().equals("")) this.strGrade = Player.convertIntToKD(this.rank).toUpperCase();
+        if (builder.getGrade().equals("")) this.strGrade = this.rank.toString().toUpperCase();
         else this.strGrade = builder.getGrade().toUpperCase();
         this.smmsCorrection = builder.getSmmsCorrection();
         this.smmsByHand = builder.getSmmsByHand();
@@ -247,13 +247,21 @@ public class Player implements java.io.Serializable{
         return strPl;
     }
 
-    public int getRank() {
+    public Rank getRank() {
         return rank;
     }
 
+    /**
+     * @deprecated use {@link #setRank(Rank) directly}
+     */
+    @Deprecated
     public void setRank(int rank) {
         if (rank > Gotha.MAX_RANK) return;
         if (rank < Gotha.MIN_RANK) return;
+        this.rank = RankKt.asRank(rank);
+    }
+
+    public void setRank(Rank rank) {
         this.rank = rank;
     }
 
@@ -363,7 +371,7 @@ public class Player implements java.io.Serializable{
        if (gps.getNumberOfCategories() <= 1) return 0;
        int[] cat = gps.getLowerCategoryLimits();
         for (int c = 0; c < cat.length; c++){
-            if (rank >= cat[c]) return c;
+            if (rank.getValue() >= cat[c]) return c;
         }
         return cat.length;
     }
@@ -391,7 +399,7 @@ public class Player implements java.io.Serializable{
 //        if (smms > bar + 30) smms = bar + 30;
 
         int zero = gps.getGenMMZero();
-        int smms = getRank() - zero;
+        int smms = getRank().getValue() - zero;
         int floor = gps.getGenMMFloor();
         int bar = gps.getGenMMBar();
 
@@ -615,7 +623,7 @@ public class Player implements java.io.Serializable{
         private boolean rgfNew = false;
         private boolean rgfAssessmentRating = true;
         private int rgfId = 0;
-        private int rank = -20;
+        private Rank rank = RankKt.asRank(-20);
         private Rating rating = UNDEF.rating(UNDEF.getMinRating());
         private String grade = "";
         private int smmsCorrection = 0;
@@ -740,11 +748,15 @@ public class Player implements java.io.Serializable{
             return rgfAssessmentRating;
         }
 
-        public int getRank() {
+        public Rank getRank() {
             return rank;
         }
 
         public Builder setRank(int rank) {
+            return setRank(RankKt.asRank(rank));
+        }
+
+        public Builder setRank(Rank rank) {
             this.rank = rank;
             return this;
         }

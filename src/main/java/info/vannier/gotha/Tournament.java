@@ -559,7 +559,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
     public int numberOfPlayersStrongerOrEqualTo(int rank) throws RemoteException {
         int nb = 0;
         for (Player p : hmPlayers.values()) {
-            if (p.getRank() >= rank) {
+            if (p.getRank().getValue() >= rank) {
                 nb++;
             }
         }
@@ -2306,7 +2306,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                     if (!spWasWhite) {
                         realHd = -realHd;
                     }
-                    int naturalHd = sp.getRank() - sOpp.getRank();
+                    int naturalHd = sp.getRank().minus(sOpp.getRank());
                     int coef = 0;
                     if (realHd - naturalHd <= 0) {
                         coef = 0;
