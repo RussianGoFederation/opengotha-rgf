@@ -413,34 +413,11 @@ public class Player implements java.io.Serializable{
 
     /**
      * Converts a String rank into an int rank
+     * @deprecated User {@link RankKt#asRank(String)}  directly.
      */
+    @Deprecated
     public static int convertKDPToInt(String strKDP) {
-        String strDraft = strKDP.trim();
-        if (strDraft.length() < 1) strDraft = " ";
-        char lastChar = strDraft.charAt(strDraft.length() - 1);
-        int rank = -99;
-        try{
-            int numPart = new Integer(strDraft.substring(0, strDraft.length() -1)).intValue();
-            if (lastChar >= 0x30 && lastChar <= 0x39){
-                lastChar ='k';
-                numPart = new Integer(strDraft.substring(0, strDraft.length())).intValue();
-            }
-            if (lastChar == 'k' || lastChar == 'K') rank = - numPart;
-            else if(lastChar == 'd' || lastChar == 'D') rank = numPart - 1;
-            else if(lastChar == 'p' || lastChar == 'P'){
-                if (numPart <= 3) rank = 6;
-                else if (numPart <= 6) rank = 7;
-                else rank = 8;
-            }
-            else rank = - numPart;
-            if (rank < -30) rank = -30;
-            if (rank > 8) rank = 8;
-        }
-        catch(NumberFormatException ex){
-//            Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
-            rank = -99;
-        }
-        return rank;
+        return RankKt.asRank(strKDP).getValue();
     }
 
     /**
@@ -460,13 +437,11 @@ public class Player implements java.io.Serializable{
 
     /**
      * Converts an int rank into a String rank
+     * @deprecated Use {@link RankKt#asRank(int)} directly
      */
+    @Deprecated
     public static String convertIntToKD(int rank) {
-        String strRank = "";
-
-        if (rank >=0) strRank  = "" + (rank +1) + "D";
-        if (rank < 0) strRank  = "" + (-rank)   + "K";
-        return strRank;
+        return RankKt.asRank(rank).toString();
     }
 
     /**
