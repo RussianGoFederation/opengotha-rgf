@@ -858,7 +858,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             model.setValueAt(p.getCountry(), line, JFrPlayersQuickCheck.COUNTRY_COL);
             model.setValueAt(p.getClub(), line, JFrPlayersQuickCheck.CLUB_COL);
             model.setValueAt(p.getRank().toString(), line, JFrPlayersQuickCheck.RANK_COL);
-            model.setValueAt(p.getRating(), line, JFrPlayersQuickCheck.RATING_COL);
+            model.setValueAt(p.getRating().getValue(), line, JFrPlayersQuickCheck.RATING_COL);
             boolean[] bPart = p.getParticipating();
             for (int round = 0; round < numberOfRounds; round++){
                 String strPart = "";

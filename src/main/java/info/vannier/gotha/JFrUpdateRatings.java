@@ -592,7 +592,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame implements RatingListCo
 
             TableModel model = table.getModel();
             if (colIndex == JFrUpdateRatings.RATING_COL){
-                int rating = (Integer) model.getValueAt(rowIndex, JFrUpdateRatings.RATING_COL);
+                int rating = ((Rating) model.getValueAt(rowIndex, JFrUpdateRatings.RATING_COL)).getValue();
                 String ratingOrigin = model.getValueAt(rowIndex, JFrUpdateRatings.RATINGORIGIN_COL).toString();
 
                 int newRating = -9999;
@@ -614,7 +614,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame implements RatingListCo
             }
 
             if (colIndex == JFrUpdateRatings.NEWRATING_COL){
-                Integer nRating = (Integer)model.getValueAt(rowIndex, JFrUpdateRatings.RATING_COL);
+                Integer nRating = ((Rating)model.getValueAt(rowIndex, JFrUpdateRatings.RATING_COL)).getValue();
                 int rating = nRating.intValue();
                 String ratingOrigin = model.getValueAt(rowIndex, JFrUpdateRatings.RATINGORIGIN_COL).toString();
 

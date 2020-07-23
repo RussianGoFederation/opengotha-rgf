@@ -49,7 +49,7 @@ sealed class PlayerTableColumn(header: String, prefWidth: Int) : GothaTableColum
     }
 
     class Rating() : PlayerTableColumn(GothaLocale.getCurrentLocale().tr("player.rating"), 50) {
-        override fun cellValue(obj: Player): Any = obj.rating
+        override fun cellValue(obj: Player): Any = obj.rating.value
     }
 
     class Participation(val round: Int) : PlayerTableColumn(round.toString(), 50) {

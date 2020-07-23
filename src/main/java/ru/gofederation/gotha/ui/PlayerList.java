@@ -22,6 +22,7 @@ import info.vannier.gotha.TournamentInterface;
 import net.miginfocom.swing.MigLayout;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rank;
+import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.util.GothaLocale;
 import ru.gofederation.gotha.util.TableColumnConfig;
 
@@ -302,7 +303,7 @@ public final class PlayerList extends JPanel {
                     case RANK:         return player.getRank();
                     case COUNTRY:      return player.getCountry();
                     case CLUB:         return player.getClub();
-                    case RATING:       return player.getRating();
+                    case RATING:       return player.getRating().getValue();
                     case GRADE:        return Rank.fromString(player.getStrGrade());
                     case SMMS:         return player.smms(tournament.getTournamentParameterSet().getGeneralParameterSet());
                     default:           return null;
@@ -317,8 +318,10 @@ public final class PlayerList extends JPanel {
         public Class getColumnClass(int column) {
             switch (getColumn(column)) {
                 case SMMS:
-                case RATING:
                     return Integer.class;
+
+                case RATING:
+                    return Rating.class;
 
                 case RANK:
                 case GRADE:
