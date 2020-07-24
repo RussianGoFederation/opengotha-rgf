@@ -1166,6 +1166,11 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         cbxTeamCrit5.setModel(new DefaultComboBoxModel<String>(TeamPlacementParameterSet.criteriaLongNames()));
         cbxTeamCrit6.setModel(new DefaultComboBoxModel<String>(TeamPlacementParameterSet.criteriaLongNames()));
 
+        final boolean longCellFormat = tournament != null &&
+            tournament.getTournamentParameterSet().getDPParameterSet().getGameFormat() == DPParameterSet.DP_GAME_FORMAT_FULL;
+        tblStandings.setDefaultRenderer(Object.class, new StandingsTableCellRenderer(longCellFormat));
+        tblTeamsStandings.setDefaultRenderer(Object.class, new StandingsTableCellRenderer(longCellFormat));
+
         if (tournament == null) {
             return;
         }
@@ -1181,13 +1186,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
         DefaultTableModel model = (DefaultTableModel) tblTeamsStandings.getModel();
         model.setColumnCount(TEAM_ROUND0_RESULT_COL + Gotha.MAX_NUMBER_OF_ROUNDS + TeamPlacementParameterSet.TPL_MAX_NUMBER_OF_CRITERIA);
 
-        final boolean longCellFormat =
-            tournament.getTournamentParameterSet().getDPParameterSet().getGameFormat() == DPParameterSet.DP_GAME_FORMAT_FULL;
-        // Set the renderer for tblStandings
-        tblStandings.setDefaultRenderer(Object.class, new StandingsTableCellRenderer(longCellFormat));
         updateStandingsComponents();
-        // Set the renderer for tblTeamsStandings
-        tblTeamsStandings.setDefaultRenderer(Object.class, new StandingsTableCellRenderer(longCellFormat));
         updateTeamsStandingsComponents();
 
     }
