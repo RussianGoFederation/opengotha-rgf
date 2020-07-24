@@ -278,6 +278,7 @@ public final class PlayerList extends JPanel {
         public String getColumnName(int col) {
             Column column = getColumn(col);
             switch (column) {
+                case ROW_N:        return locale.tr("nr");
                 case REGISTRATION: return locale.getString("R");
                 case LAST_NAME:    return locale.getString("player.last_name");
                 case FIRST_NAME:   return locale.getString("player.first_name");
@@ -297,6 +298,7 @@ public final class PlayerList extends JPanel {
                 Player player = getPlayer(row);
                 Column column = getColumn(col);
                 switch (column) {
+                    case ROW_N:        return row + 1;
                     case REGISTRATION: return player.getRegisteringStatus() == PlayerRegistrationStatus.FINAL ? "F" : "P";
                     case LAST_NAME:    return player.getName();
                     case FIRST_NAME:   return player.getFirstName();
@@ -333,6 +335,13 @@ public final class PlayerList extends JPanel {
         }
     }
 
+    private static class RowNumberCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            return super.getTableCellRendererComponent(table, row + 1, isSelected, hasFocus, row, column);
+        }
+    }
+
     private static class SmmsCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -351,6 +360,7 @@ public final class PlayerList extends JPanel {
     }
 
     public enum Column implements TableColumnConfig {
+        ROW_N(15, SwingConstants.RIGHT),
         REGISTRATION(10, SwingConstants.CENTER),
         LAST_NAME(110),
         FIRST_NAME(80),
@@ -385,10 +395,10 @@ public final class PlayerList extends JPanel {
 
         @Override
         public TableCellRenderer tableCellRenderer() {
-            if (this == SMMS) {
-                return new SmmsCellRenderer();
-            } else {
-                return TableColumnConfig.super.tableCellRenderer();
+            switch (this) {
+                case SMMS: return new SmmsCellRenderer();
+                case ROW_N: return new RowNumberCellRenderer();
+                default: return TableColumnConfig.super.tableCellRenderer();
             }
         }
     }
