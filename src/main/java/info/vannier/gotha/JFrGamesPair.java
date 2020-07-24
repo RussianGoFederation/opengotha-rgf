@@ -9,6 +9,7 @@ import ru.gofederation.gotha.printing.PairingPrinter;
 import ru.gofederation.gotha.ui.Dialog;
 import ru.gofederation.gotha.ui.PrinterSettings;
 import ru.gofederation.gotha.util.GothaLocale;
+import ru.gofederation.gotha.util.ScoreDisplayKt;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -469,7 +470,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
             int mainScore2 = sp.getCritValue(mainCrit, processedRoundNumber - 1);
 
-            row.add(Player.convertIntScoreToString(mainScore2, 2));
+            row.add(ScoreDisplayKt.formatScore(mainScore2, 2));
             row.add(p.getCountry());
             row.add(p.getClub());
             DefaultTableModel model = (DefaultTableModel) tblP.getModel();

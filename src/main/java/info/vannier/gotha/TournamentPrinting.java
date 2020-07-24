@@ -5,6 +5,7 @@ package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.Game;
 import ru.gofederation.gotha.util.GothaLocale;
+import ru.gofederation.gotha.util.ScoreDisplayKt;
 
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
@@ -1476,8 +1477,8 @@ public class TournamentPrinting implements Printable {
             g.drawString(strBTN, x, y);
             g.setFont(font);
 
-            String strWTeamNbW = Gotha.formatFractNumber(match.getWX2(match.getWhiteTeam()), 2);
-            String strBTeamNbW = Gotha.formatFractNumber(match.getWX2(match.getBlackTeam()), 2);
+            String strWTeamNbW = ScoreDisplayKt.formatScore(match.getWX2(match.getWhiteTeam()), 2);
+            String strBTeamNbW = ScoreDisplayKt.formatScore(match.getWX2(match.getBlackTeam()), 2);
             String strTeamResult = strWTeamNbW + "-" + strBTeamNbW;
             x = usableX + usableWidth * (ML_RES_BEG + ML_RES_LEN) / ML_NBCAR;
             drawRightAlignedString(g, strTeamResult, x, y);
@@ -1617,7 +1618,7 @@ public class TournamentPrinting implements Printable {
             for (int ic = 0; ic < numberOfCriteriaPrinted; ic++) {
                 int crit = criteria[ic];
                 int coef = TeamPlacementParameterSet.criterionCoef(crit);
-                String strCritValue = Gotha.formatFractNumber(st.getCritValue(ic), coef);
+                String strCritValue = ScoreDisplayKt.formatScore(st.getCritValue(ic), coef);
                 int xC = usableX + usableWidth * (cBeg + (ic + 1) * TST_CRIT_LEN) / numberOfCharactersInALine;
                 drawRightAlignedString(g, strCritValue, xC, y);
             }

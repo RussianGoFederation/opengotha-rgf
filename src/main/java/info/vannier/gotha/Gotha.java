@@ -200,30 +200,6 @@ public class Gotha {
         return newStr;
     }
 
-     /**
-     * converts a fractional Number defined by (value, coef) into a string representing value/coef
-     * fractional part will be formatted as : ½ ¼ ¾
-     */
-    public static String formatFractNumber(int value, int coef){
-         if (coef == -1)   // only Cat
-            return "" + (- value + 1);
-
-        int i1 = value / coef;
-        int f1 = value % coef;
-        String strI1 = "" + i1;
-        String strF1 = "";
-
-        if (coef == 2){
-            if (f1 == 1) strF1 = "½";
-        }
-        if (coef == 4){
-            if (f1 == 1) strF1 = "¼";
-            else if (f1 == 2) strF1 = "½";
-            else if (f1 == 3) strF1 = "¾";
-        }
-        return strI1 + strF1;
-    }
-
     public static String forceToASCII(String s){
         // Latin 9 upper
         s = s.replaceAll("[ÀÁÂÃÄÅ]", "A");  // 192 - 197

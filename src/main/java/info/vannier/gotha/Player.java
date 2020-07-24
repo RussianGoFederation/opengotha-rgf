@@ -422,21 +422,6 @@ public class Player implements java.io.Serializable{
     }
 
     /**
-     * Converts a IntScore to a String representing score /ratio
-     */
-    public static String convertIntScoreToString(int score, int ratio){
-        int fract = score % ratio;
-        int ent = score /ratio;
-        String strFract = "";
-        if (fract == 1 && ratio == 2) strFract = "½";
-        if (fract == 1 && ratio == 4) strFract = "¼";
-        if (fract == 3 && ratio == 4) strFract = "¾";
-        String strEnt = "" + ent;
-        if (score > 0 && score < ratio) strEnt = "";
-        return strEnt + strFract;
-    }
-
-    /**
      * Converts an int rank into a String rank
      * @deprecated Use {@link RankKt#asRank(int)} directly
      */

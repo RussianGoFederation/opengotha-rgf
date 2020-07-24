@@ -19,6 +19,7 @@ import ru.gofederation.gotha.ui.RgfTournamentImportDialog;
 import ru.gofederation.gotha.ui.TournamentOpener;
 import ru.gofederation.gotha.ui.component.StandingsTableCellRenderer;
 import ru.gofederation.gotha.util.GothaLocale;
+import ru.gofederation.gotha.util.ScoreDisplayKt;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -1466,7 +1467,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             for (int ic = 0; ic < this.displayedTeamCriteria.length; ic++) {
                 int crit = this.displayedTeamCriteria[ic].getUid();
                 int coef = TeamPlacementParameterSet.criterionCoef(crit);
-                String strCritValue = Gotha.formatFractNumber(st.getCritValue(ic), coef);
+                String strCritValue = ScoreDisplayKt.formatScore(st.getCritValue(ic), coef);
                 model.setValueAt(strCritValue, ist, TEAM_CRIT0_COL + ic);
             }
         }

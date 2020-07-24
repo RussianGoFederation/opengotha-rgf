@@ -18,6 +18,7 @@ import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOriginKt;
 import ru.gofederation.gotha.model.RgfId;
+import ru.gofederation.gotha.util.ScoreDisplayKt;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -2802,8 +2803,8 @@ public class ExternalDocument {
                 output.write("<td class=" + strPar + " align=\"left\">" + strBTN + "&nbsp;</td>");
                 output.write("<td class=" + strPar + " align=\"center\">" + "" + "&nbsp;</td>");
 
-                String strWTeamNbW = Gotha.formatFractNumber(m.getWX2(m.getWhiteTeam()), 2);
-                String strBTeamNbW = Gotha.formatFractNumber(m.getWX2(m.getBlackTeam()), 2);
+                String strWTeamNbW = ScoreDisplayKt.formatScore(m.getWX2(m.getWhiteTeam()), 2);
+                String strBTeamNbW = ScoreDisplayKt.formatScore(m.getWX2(m.getBlackTeam()), 2);
                 String strTeamResult = strWTeamNbW + "-" + strBTeamNbW;
                 output.write("<td class=" + strPar + " align=\"center\">" + strTeamResult + "&nbsp;</td>");
                 output.write("</tr>");
@@ -2960,7 +2961,7 @@ public class ExternalDocument {
                 for (int ic = 0; ic < tabCrit.length; ic++) {
                     TeamPlacementCriterion crit = tabCrit[ic];
                     int coef = crit.getCoef();
-                    String strCritValue = Gotha.formatFractNumber(st.getCritValue(ic), coef);
+                    String strCritValue = ScoreDisplayKt.formatScore(st.getCritValue(ic), coef);
                     output.write("<td class=" + strPar + strAlCenter + ">" + strCritValue + "</td>");
                 }
 

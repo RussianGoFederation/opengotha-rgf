@@ -9,6 +9,7 @@ import ru.gofederation.gotha.printing.PairingPrinter;
 import ru.gofederation.gotha.ui.Dialog;
 import ru.gofederation.gotha.ui.PrinterSettings;
 import ru.gofederation.gotha.util.GothaLocale;
+import ru.gofederation.gotha.util.ScoreDisplayKt;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -212,8 +213,8 @@ public class JFrGamesResults extends javax.swing.JFrame {
 //            String strTeamResult = strWTeamResult + "-" + strBTeamResult;
 //            model.setValueAt(strTeamResult, ln, RESULT_COL);
 
-            String strWTeamNbW = Gotha.formatFractNumber(m.getWX2(m.getWhiteTeam()), 2);
-            String strBTeamNbW = Gotha.formatFractNumber(m.getWX2(m.getBlackTeam()), 2);
+            String strWTeamNbW = ScoreDisplayKt.formatScore(m.getWX2(m.getWhiteTeam()), 2);
+            String strBTeamNbW = ScoreDisplayKt.formatScore(m.getWX2(m.getBlackTeam()), 2);
             model.setValueAt(strWTeamNbW + "-" + strBTeamNbW, ln, RESULT_COL);
 
             model.setValueAt("" + (cm.board0TableNumber + 1) + "---", ln, JFrGamesResults.TABLE_NUMBER_COL);

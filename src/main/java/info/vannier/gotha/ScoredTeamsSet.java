@@ -1,5 +1,7 @@
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.util.ScoreDisplayKt;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +35,7 @@ public class ScoredTeamsSet implements java.io.Serializable{
 
     // matches up to round roundNumber
     private ArrayList<Match> alMatches;
-    
+
     private TeamPlacementCriterion[] tabPlacementCriteria = null;
     private ArrayList<ScoredTeam> alOrderedScoredTeams = null;
     private String[][] tabHalfMatchString = null;
@@ -75,7 +77,7 @@ public class ScoredTeamsSet implements java.io.Serializable{
         if (pos == 0) return "" + (pos + 1);
         ScoredTeam previousST = alOrderedScoredTeams.get(pos - 1);
         for (int ic = 0; ic < this.tabPlacementCriteria.length; ic++){
-            if (st.getCritValue(ic) != previousST.getCritValue(ic)) return "" + (pos + 1);                
+            if (st.getCritValue(ic) != previousST.getCritValue(ic)) return "" + (pos + 1);
         }
         return "";
    }
@@ -102,7 +104,7 @@ public class ScoredTeamsSet implements java.io.Serializable{
         try {
             updateAlMatches(); // build all matches and alMatches
             updateTabPlacementCriteria();
-            updateOrderedScoredTeamsList();     
+            updateOrderedScoredTeamsList();
             updateTabHalfMatchString();
         } catch (RemoteException ex) {
             Logger.getLogger(ScoredTeamsSet.class.getName()).log(Level.SEVERE, null, ex);
@@ -278,7 +280,7 @@ public class ScoredTeamsSet implements java.io.Serializable{
                 case 2: strTS = "+"; break;
                 default: strTS = "?"; break;
             }
-            strNBW = Gotha.formatFractNumber(tabsNBWX2byTR[iwt][ir], 2);
+            strNBW = ScoreDisplayKt.formatScore(tabsNBWX2byTR[iwt][ir], 2);
             this.tabHalfMatchString[iwt][ir] = strOpp + strTS + "(" + strNBW + ")";
             // black Team
             strOpp = "" + (iwt + 1);
@@ -291,7 +293,7 @@ public class ScoredTeamsSet implements java.io.Serializable{
                 case 2: strTS = "+"; break;
                 default: strTS = "?"; break;
             }
-            strNBW = Gotha.formatFractNumber(tabsNBWX2byTR[ibt][ir], 2);
+            strNBW = ScoreDisplayKt.formatScore(tabsNBWX2byTR[ibt][ir], 2);
             this.tabHalfMatchString[ibt][ir] = strOpp + strTS + "(" + strNBW + ")";
         }
     }

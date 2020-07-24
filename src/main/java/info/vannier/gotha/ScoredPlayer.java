@@ -3,6 +3,7 @@ package info.vannier.gotha;
 import ru.gofederation.gotha.model.Game;
 import ru.gofederation.gotha.model.HalfGame;
 import ru.gofederation.gotha.presenter.HalfGameResultsKt;
+import ru.gofederation.gotha.util.ScoreDisplayKt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -387,20 +388,7 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
         if (coef == -1)   // only Cat
             return "" + (- value + 1);
 
-        int i1 = value / coef;
-        int f1 = value % coef;
-        String strI1 = "" + i1;
-        String strF1 = "";
-
-        if (coef == 2){
-            if (f1 == 1) strF1 = "½";
-        }
-        if (coef == 4){
-            if (f1 == 1) strF1 = "¼";
-            else if (f1 == 2) strF1 = "½";
-            else if (f1 == 3) strF1 = "¾";
-        }
-        return strI1 + strF1;
+        return ScoreDisplayKt.formatScore(value, coef);
     }
 
     /**
