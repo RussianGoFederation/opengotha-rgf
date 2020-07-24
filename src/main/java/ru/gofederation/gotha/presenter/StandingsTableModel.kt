@@ -74,6 +74,9 @@ class StandingsTableModel(
                 columns.add(Column(ColumnType.CLUB, "Cl"))
             }
 
+            // TODO: make this configurable
+            columns.add(Column(ColumnType.MM0, "MM0"))
+
             columns.add(Column(ColumnType.NBW, "NBW"))
 
             for (r in 0..displayedRoundNumber) {
@@ -107,6 +110,7 @@ class StandingsTableModel(
             ColumnType.GRADE -> players[row].strGrade
             ColumnType.COUNTRY -> players[row].country
             ColumnType.CLUB -> players[row].club
+            ColumnType.MM0 -> players[row].smms(tournament.tournamentParameterSet.generalParameterSet)
             ColumnType.NBW -> players[row].formatScore(PlacementCriterion.NBW, this.displayedRoundNumber)
             ColumnType.ROUND_RESULT -> games[(column as RoundColumn).round][row]
             ColumnType.CRITERION -> players[row].formatScore((column as PlaCritColumn).crit, this.displayedRoundNumber)
@@ -129,6 +133,7 @@ class StandingsTableModel(
         GRADE(45),
         COUNTRY(45),
         CLUB(45),
+        MM0(45),
         NBW(30),
         ROUND_RESULT(52),
         CRITERION(60)
