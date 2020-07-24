@@ -2401,6 +2401,9 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
             Logger.getLogger(JFrGotha.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        if (tournament != null) {
+            tpnGotha.setSelectedComponent(pnlControlPanel);
+        }
     }
 
     private void closeTournament() {
