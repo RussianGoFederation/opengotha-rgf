@@ -23,6 +23,7 @@ import info.vannier.gotha.ScoredPlayer
 import info.vannier.gotha.TournamentInterface
 import info.vannier.gotha.TournamentParameterSet
 import ru.gofederation.gotha.model.HalfGame
+import ru.gofederation.gotha.util.GothaLocale
 import javax.swing.table.AbstractTableModel
 
 class StandingsTableModel(
@@ -75,6 +76,9 @@ class StandingsTableModel(
             }
 
             // TODO: make this configurable
+            columns.add(Column(ColumnType.RATING, GothaLocale.getCurrentLocale().tr("player.rating")))
+
+            // TODO: make this configurable
             columns.add(Column(ColumnType.MM0, "MM0"))
 
             columns.add(Column(ColumnType.NBW, "NBW"))
@@ -110,6 +114,7 @@ class StandingsTableModel(
             ColumnType.GRADE -> players[row].strGrade
             ColumnType.COUNTRY -> players[row].country
             ColumnType.CLUB -> players[row].club
+            ColumnType.RATING -> players[row].rating.value
             ColumnType.MM0 -> players[row].smms(tournament.tournamentParameterSet.generalParameterSet)
             ColumnType.NBW -> players[row].formatScore(PlacementCriterion.NBW, this.displayedRoundNumber)
             ColumnType.ROUND_RESULT -> games[(column as RoundColumn).round][row]
@@ -133,6 +138,7 @@ class StandingsTableModel(
         GRADE(45),
         COUNTRY(45),
         CLUB(45),
+        RATING(45),
         MM0(45),
         NBW(30),
         ROUND_RESULT(52),
