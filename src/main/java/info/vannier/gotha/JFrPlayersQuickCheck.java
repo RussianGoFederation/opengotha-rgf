@@ -51,14 +51,15 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
     private static final long REFRESH_DELAY = 2000;
     private long lastComponentsUpdateTime = 0;
 
-    public  static final int REG_COL = 0;
-    private static final int NAME_COL = 1;
-    private static final int FIRSTNAME_COL = 2;
-    private static final int COUNTRY_COL = 3;
-    private static final int CLUB_COL = 4;
-    public static final int RANK_COL = 5;
-    public static final int RATING_COL = 6;
-    public static final int PARTICIPATING_COL0 = 7;
+    private static final int ROW_COL = 0;
+    public  static final int REG_COL = 1;
+    private static final int NAME_COL = 2;
+    private static final int FIRSTNAME_COL = 3;
+    private static final int COUNTRY_COL = 4;
+    private static final int CLUB_COL = 5;
+    public static final int RANK_COL = 6;
+    public static final int RATING_COL = 7;
+    public static final int PARTICIPATING_COL0 = 8;
 
     private int playersSortType = PlayerComparator.NAME_ORDER;
     private ArrayList<Player> alSelectedPlayersToKeepSelected = new ArrayList<Player>();
@@ -176,7 +177,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         lblPlFin.setText(locale.getString("player.players.registered_final"));
         pnlPlayersList.add(lblPlFin);
 
-        tblRegisteredPlayers.setModel(new javax.swing.table.DefaultTableModel(0, 7) {
+        tblRegisteredPlayers.setModel(new javax.swing.table.DefaultTableModel(0, 8) {
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return false;
             }
@@ -762,6 +763,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
     }
 
     private void initPnlRegisteredPlayers() {
+        JFrGotha.formatColumn(this.tblRegisteredPlayers, ROW_COL, locale.tr("nr"), 15, JLabel.RIGHT, JLabel.RIGHT);
         JFrGotha.formatColumn(this.tblRegisteredPlayers, REG_COL, "R", 10, JLabel.LEFT, JLabel.LEFT);
         JFrGotha.formatColumn(this.tblRegisteredPlayers, NAME_COL, locale.getString("player.last_name"),110, JLabel.LEFT, JLabel.LEFT);
         JFrGotha.formatColumn(this.tblRegisteredPlayers, FIRSTNAME_COL, locale.getString("player.first_name"), 80, JLabel.LEFT, JLabel.LEFT);
@@ -852,6 +854,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
 
         for (Player p:displayedPlayersList){
             int line = displayedPlayersList.indexOf(p);
+            model.setValueAt(line + 1, line, ROW_COL);
             model.setValueAt((p.getRegisteringStatus()==PRELIMINARY)?"P":"F", line, JFrPlayersQuickCheck.REG_COL);
             model.setValueAt(p.getName(), line, JFrPlayersQuickCheck.NAME_COL);
             model.setValueAt(p.getFirstName(), line, JFrPlayersQuickCheck.FIRSTNAME_COL);
