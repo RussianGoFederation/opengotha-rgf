@@ -132,6 +132,9 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
 
         initComponents();
 
+        /* This commented block opens the most recent tournament.
+        Temporarily disabled.
+
         if (Gotha.runningMode == Gotha.RUNNING_MODE_SAL || Gotha.runningMode == Gotha.RUNNING_MODE_SRV) {
             ArrayList<String> alRT = getRecentTournamentsList();
             if (alRT.size() >= 1) {
@@ -147,6 +150,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
                 }
             }
         }
+         */
         customInitComponents();
         setVisible(true);
 
