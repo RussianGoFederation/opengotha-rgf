@@ -18,6 +18,7 @@
 package ru.gofederation.gotha.ui.component
 
 import ru.gofederation.gotha.model.HalfGame
+import ru.gofederation.gotha.presenter.StandingsTableModel
 import java.awt.Color
 import java.awt.Component
 import java.awt.Font
@@ -57,7 +58,7 @@ class StandingsTableCellRenderer(
         }
     }
 
-    override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
+    override fun getTableCellRendererComponent(table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
         marker = 0
         when (value) {
             is HalfGame -> {
@@ -71,6 +72,8 @@ class StandingsTableCellRenderer(
 
         font = if (isSelected) font.deriveFont(Font.BOLD)
         else font.deriveFont(Font.PLAIN)
+
+        horizontalAlignment = (table.model as StandingsTableModel).getColumnIdentifiers()[column].type.horizontalAlignment
 
         return this
     }

@@ -24,6 +24,7 @@ import info.vannier.gotha.TournamentInterface
 import info.vannier.gotha.TournamentParameterSet
 import ru.gofederation.gotha.model.HalfGame
 import ru.gofederation.gotha.util.GothaLocale
+import javax.swing.SwingConstants
 import javax.swing.table.AbstractTableModel
 
 class StandingsTableModel(
@@ -131,18 +132,18 @@ class StandingsTableModel(
         return ""
     }
 
-    enum class ColumnType(internal val prefWidth: Int) {
-        NUMBER(45),
-        PLACE(30),
-        NAME(165),
-        GRADE(45),
-        COUNTRY(45),
-        CLUB(45),
-        RATING(45),
-        MM0(45),
-        NBW(30),
-        ROUND_RESULT(52),
-        CRITERION(60)
+    enum class ColumnType(internal val prefWidth: Int, val horizontalAlignment: Int) {
+        NUMBER(45, horizontalAlignment = SwingConstants.CENTER),
+        PLACE(30, horizontalAlignment = SwingConstants.CENTER),
+        NAME(165, horizontalAlignment = SwingConstants.LEFT),
+        GRADE(45, horizontalAlignment = SwingConstants.CENTER),
+        COUNTRY(45, horizontalAlignment = SwingConstants.LEFT),
+        CLUB(45, horizontalAlignment = SwingConstants.LEFT),
+        RATING(45, horizontalAlignment = SwingConstants.RIGHT),
+        MM0(45, horizontalAlignment = SwingConstants.CENTER),
+        NBW(30, horizontalAlignment = SwingConstants.CENTER),
+        ROUND_RESULT(52, horizontalAlignment = SwingConstants.CENTER),
+        CRITERION(60, horizontalAlignment = SwingConstants.CENTER)
 
     }
 
