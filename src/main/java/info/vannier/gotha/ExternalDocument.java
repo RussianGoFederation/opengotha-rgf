@@ -9,6 +9,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import ru.gofederation.gotha.model.FfgLicence;
+import ru.gofederation.gotha.model.FfgLicenceKt;
 import ru.gofederation.gotha.model.Game;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rating;
@@ -671,7 +673,7 @@ public class ExternalDocument {
                     .setCountry(country)
                     .setClub(club)
                     .setEgfPin(egfPin)
-                    .setFfgLicence(ffgLicence, ffgLicenceStatus)
+                    .setFfgLicence(FfgLicenceKt.ffgLicence(ffgLicence, ffgLicenceStatus))
                     .setAgaId(agaId, agaExpirationDate)
                     .setRgfId(new RgfId(rgfId, false, false))
                     .setRank(rank)
@@ -2278,7 +2280,7 @@ public class ExternalDocument {
                 output.write("<td class=" + strPar + " align=\"right\">" + (iP + 1) + "&nbsp;</td>");
                 String strPinLic = p.getEgfPin();
                 if (strPinLic.length() == 0) {
-                    strPinLic = p.getFfgLicence();
+                    strPinLic = p.getFfgLicence() != null ? p.getFfgLicence().getLicence() : "";
                 }
                 if (strPinLic.length() == 0) {
                     strPinLic = p.getAgaId();
@@ -3140,8 +3142,7 @@ public class ExternalDocument {
             String strCountry = p.getCountry();
             String strClub = p.getClub();
             String strEgfPin = p.getEgfPin();
-            String strFfgLicence = p.getFfgLicence();
-            String strFfgLicenceStatus = p.getFfgLicenceStatus();
+            FfgLicence ffgLicence = p.getFfgLicence();
             String strAgaId = p.getAgaId();
             String strAgaExpirationDate = p.getAgaExpirationDate();
             String strRank = p.getRank().toString();
@@ -3172,8 +3173,8 @@ public class ExternalDocument {
             emPlayer.setAttribute("country", strCountry);
             emPlayer.setAttribute("club", strClub);
             emPlayer.setAttribute("egfPin", strEgfPin);
-            emPlayer.setAttribute("ffgLicence", strFfgLicence);
-            emPlayer.setAttribute("ffgLicenceStatus", strFfgLicenceStatus);
+            emPlayer.setAttribute("ffgLicence", ffgLicence != null ? ffgLicence.getLicence() : "");
+            emPlayer.setAttribute("ffgLicenceStatus", ffgLicence != null ? ffgLicence.getStatus() : "");
             emPlayer.setAttribute("agaId", strAgaId);
             emPlayer.setAttribute("agaExpirationDate", strAgaExpirationDate);
             if (p.getRgfId() != null)

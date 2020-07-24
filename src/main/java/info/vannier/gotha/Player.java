@@ -4,6 +4,7 @@
 package info.vannier.gotha;
 
 import org.jetbrains.annotations.Nullable;
+import ru.gofederation.gotha.model.FfgLicence;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rank;
 import ru.gofederation.gotha.model.RankKt;
@@ -28,8 +29,7 @@ public class Player implements java.io.Serializable{
     private String country;
     private String club;
     private String egfPin;
-    private String ffgLicence;
-    private String ffgLicenceStatus;
+    private FfgLicence ffgLicence;
     private String agaId;
     private String agaExpirationDate;
     @Nullable
@@ -83,8 +83,11 @@ public class Player implements java.io.Serializable{
         if (club.length() > 4) throw new PlayerException("Club name should have at most 4 character");
         this.club = club;
         this.egfPin = egfPin;
-        this.ffgLicence = ffgLicence;
-        this.ffgLicenceStatus = ffgLicenceStatus;
+        if (ffgLicence.length() > 0) {
+            this.ffgLicence = new FfgLicence(ffgLicence, ffgLicenceStatus);
+        } else {
+            this.ffgLicence = null;
+        }
         this.agaId = agaId;
         this.agaExpirationDate = agaExpirationDate;
         // If rank is out of limits, set it according to strGrade, if exists
@@ -121,7 +124,6 @@ public class Player implements java.io.Serializable{
         this.club = builder.getClub();
         this.egfPin = builder.getEgfPin();
         this.ffgLicence = builder.getFfgLicence();
-        this.ffgLicenceStatus = builder.getFfgLicenceStatus();
         this.agaId = builder.getAgaId();
         this.agaExpirationDate = builder.getAgaExpirationDate();
         this.rgfId = builder.getRgfId();
@@ -151,7 +153,6 @@ public class Player implements java.io.Serializable{
         this.club = p.getClub();
         this.egfPin = p.getEgfPin();
         this.ffgLicence = p.getFfgLicence();
-        this.ffgLicenceStatus = p.getFfgLicenceStatus();
         this.agaId = p.getAgaId();
         this.agaExpirationDate = p.getAgaExpirationDate();
         this.rgfId = p.getRgfId();
@@ -482,7 +483,12 @@ public class Player implements java.io.Serializable{
      */
     public String getAnIdString(){
         String egfP = this.getEgfPin();
-        String ffgL = this.getFfgLicence();
+        String ffgL;
+        if (null != this.getFfgLicence()) {
+            ffgL = this.getFfgLicence().getLicence();
+        } else {
+            ffgL = null;
+        }
         String agaI  = this.getAgaId();
         if (egfP != null && egfP.length() > 0) return "EGF Pin : " + egfP;
         else if (ffgL != null && ffgL.length() > 0) return "FFG Licence : " + ffgL;
@@ -490,12 +496,8 @@ public class Player implements java.io.Serializable{
         return "";
     }
 
-    public String getFfgLicence() {
+    public FfgLicence getFfgLicence() {
         return ffgLicence;
-    }
-
-    public String getFfgLicenceStatus() {
-        return ffgLicenceStatus;
     }
 
     public String getEgfPin() {
@@ -573,7 +575,8 @@ public class Player implements java.io.Serializable{
         private String country = "";
         private String club = "";
         private String egfPin = "";
-        private String ffgLicence = "";
+        @Nullable
+        private FfgLicence ffgLicence = null;
         private String ffgLicenceStatus = "";
         private String agaId = "";
         private String agaExpirationDate = "";
@@ -649,17 +652,12 @@ public class Player implements java.io.Serializable{
             return this;
         }
 
-        public String getFfgLicence() {
+        public FfgLicence getFfgLicence() {
             return ffgLicence;
         }
 
-        public String getFfgLicenceStatus() {
-            return ffgLicenceStatus;
-        }
-
-        public Builder setFfgLicence(String ffgLicence, String ffgLicenceStatus) {
+        public Builder setFfgLicence(FfgLicence ffgLicence) {
             this.ffgLicence = ffgLicence;
-            this.ffgLicenceStatus = ffgLicenceStatus;
             return this;
         }
 

@@ -29,6 +29,7 @@ import info.vannier.gotha.PlayerException;
 import info.vannier.gotha.RatedPlayer;
 import info.vannier.gotha.TournamentInterface;
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.FfgLicence;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rank;
 import ru.gofederation.gotha.model.Rating;
@@ -440,18 +441,21 @@ public class PlayerEditor extends JPanel {
         this.rank.setText(Player.convertIntToKD(rank));
         this.country.setSelectedItem(player.getCountry());
         this.club.setText(player.getClub());
-        this.ffgLicence.setText(player.getFfgLicence());
-        this.ffgLicenceStatus.setText(player.getFfgLicenceStatus());
+        if (null != player.getFfgLicence()) {
+            final FfgLicence ffgLicence = player.getFfgLicence();
+            this.ffgLicence.setText(ffgLicence.getLicence());
+            this.ffgLicenceStatus.setText(ffgLicence.getStatus());
 
-        if (player.getFfgLicenceStatus().equals("-")) {
-            this.ffgLicenceStatusDescr.setText("Non licencié");
-            this.ffgLicenceStatusDescr.setForeground(Color.RED/* TODO: use some sort of theming */);
-        } else if (player.getFfgLicenceStatus().equals("C")){
-            this.ffgLicenceStatusDescr.setText("Licence loisir");
-            this.ffgLicenceStatusDescr.setForeground(Color.BLUE/* TODO: use some sort of theming */);
-        } else {
-            this.ffgLicenceStatusDescr.setText("");
-            this.ffgLicenceStatusDescr.setForeground(Color.BLACK/* TODO: use some sort of theming */);
+            if (ffgLicence.getStatus().equals("-")) {
+                this.ffgLicenceStatusDescr.setText("Non licencié");
+                this.ffgLicenceStatusDescr.setForeground(Color.RED/* TODO: use some sort of theming */);
+            } else if (ffgLicence.getStatus().equals("C")) {
+                this.ffgLicenceStatusDescr.setText("Licence loisir");
+                this.ffgLicenceStatusDescr.setForeground(Color.BLUE/* TODO: use some sort of theming */);
+            } else {
+                this.ffgLicenceStatusDescr.setText("");
+                this.ffgLicenceStatusDescr.setForeground(Color.BLACK/* TODO: use some sort of theming */);
+            }
         }
 
         String strEGFPin = player.getEgfPin();
@@ -550,7 +554,7 @@ public class PlayerEditor extends JPanel {
                 .setCountry(((String)this.country.getSelectedItem()))
                 .setClub(this.club.getText().trim())
                 .setEgfPin(this.egfPin.getText())
-                .setFfgLicence(this.ffgLicence.getText(), this.ffgLicenceStatus.getText())
+                .setFfgLicence(new FfgLicence(this.ffgLicence.getText(), this.ffgLicenceStatus.getText()))
                 .setAgaId(this.agaId.getText(), this.agaExpirationDate.getText())
                 .setRgfId(new RgfId(rgfId, rgfId == 0 && newRgf.isSelected(), false))
                 .setRank(rank.getValue())
