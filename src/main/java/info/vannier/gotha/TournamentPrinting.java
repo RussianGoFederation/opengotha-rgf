@@ -776,7 +776,7 @@ public class TournamentPrinting implements Printable {
                 strPinLic = player.getFfgLicence() != null ? player.getFfgLicence().getLicence() : "";
             }
             if (strPinLic.length() == 0) {
-                strPinLic = player.getAgaId();
+                strPinLic = player.getAgaId() != null ? player.getAgaId().getId() : "";
             }
             if (strPinLic.length() == 0) {
                 strPinLic = "--------";

@@ -9,6 +9,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import ru.gofederation.gotha.model.AgaId;
+import ru.gofederation.gotha.model.AgaIdKt;
 import ru.gofederation.gotha.model.FfgLicence;
 import ru.gofederation.gotha.model.FfgLicenceKt;
 import ru.gofederation.gotha.model.Game;
@@ -674,7 +676,7 @@ public class ExternalDocument {
                     .setClub(club)
                     .setEgfPin(egfPin)
                     .setFfgLicence(FfgLicenceKt.ffgLicence(ffgLicence, ffgLicenceStatus))
-                    .setAgaId(agaId, agaExpirationDate)
+                    .setAgaId(AgaIdKt.agaId(agaId, agaExpirationDate))
                     .setRgfId(new RgfId(rgfId, false, false))
                     .setRank(rank)
                     .setRating(rating, RatingOriginKt.asRatingOrigin(ratingOrigin))
@@ -1900,7 +1902,7 @@ public class ExternalDocument {
             } catch (RemoteException ex) {
                 Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
             }
-            p.setAgaId("" + newId);
+            p.setAgaId(AgaIdKt.agaId("" + newId, ""));
             somethingHasChanged = true;
             newId--;
         }
@@ -2009,7 +2011,7 @@ public class ExternalDocument {
     private static int getIntAgaId(ScoredPlayer sP) {
         int id;
         try {
-            id = Integer.parseInt(sP.getAgaId());
+            id = Integer.parseInt(sP.getAgaId().getId());
         } catch (Exception e) {
             id = 0;
         }
@@ -2283,7 +2285,7 @@ public class ExternalDocument {
                     strPinLic = p.getFfgLicence() != null ? p.getFfgLicence().getLicence() : "";
                 }
                 if (strPinLic.length() == 0) {
-                    strPinLic = p.getAgaId();
+                    strPinLic = p.getAgaId() != null ? p.getAgaId().getId() : "";
                 }
                 if (strPinLic.length() == 0) {
                     strPinLic = "--------";
@@ -3143,8 +3145,7 @@ public class ExternalDocument {
             String strClub = p.getClub();
             String strEgfPin = p.getEgfPin();
             FfgLicence ffgLicence = p.getFfgLicence();
-            String strAgaId = p.getAgaId();
-            String strAgaExpirationDate = p.getAgaExpirationDate();
+            AgaId agaId = p.getAgaId();
             String strRank = p.getRank().toString();
             String strRating = Integer.valueOf(p.getRating().getValue()).toString();
             String strRatingOrigin = p.getRatingOrigin().toString();
@@ -3175,8 +3176,8 @@ public class ExternalDocument {
             emPlayer.setAttribute("egfPin", strEgfPin);
             emPlayer.setAttribute("ffgLicence", ffgLicence != null ? ffgLicence.getLicence() : "");
             emPlayer.setAttribute("ffgLicenceStatus", ffgLicence != null ? ffgLicence.getStatus() : "");
-            emPlayer.setAttribute("agaId", strAgaId);
-            emPlayer.setAttribute("agaExpirationDate", strAgaExpirationDate);
+            emPlayer.setAttribute("agaId", agaId != null ? agaId.getId() : "");
+            emPlayer.setAttribute("agaExpirationDate",  agaId != null ? agaId.getExpirationDate() : "");
             if (p.getRgfId() != null)
                 emPlayer.setAttribute("rgfId", Integer.toString(p.getRgfId().getId()));
             emPlayer.setAttribute("rank", strRank);

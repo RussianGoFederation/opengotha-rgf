@@ -4,6 +4,7 @@
 package info.vannier.gotha;
 
 import org.jetbrains.annotations.Nullable;
+import ru.gofederation.gotha.model.AgaId;
 import ru.gofederation.gotha.model.FfgLicence;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rank;
@@ -30,8 +31,8 @@ public class Player implements java.io.Serializable{
     private String club;
     private String egfPin;
     private FfgLicence ffgLicence;
-    private String agaId;
-    private String agaExpirationDate;
+    @Nullable
+    private AgaId agaId;
     @Nullable
     private RgfId rgfId = null;
     /**
@@ -88,8 +89,11 @@ public class Player implements java.io.Serializable{
         } else {
             this.ffgLicence = null;
         }
-        this.agaId = agaId;
-        this.agaExpirationDate = agaExpirationDate;
+        if (agaId.length() > 0) {
+            this.agaId = new AgaId(agaId, agaExpirationDate);
+        } else {
+            this.agaId = null;
+        }
         // If rank is out of limits, set it according to strGrade, if exists
         if(rank < Gotha.MIN_RANK || rank > Gotha.MAX_RANK) rank = Player.convertKDPToInt(strGrade);
         this.rank = RankKt.asRank(rank);
@@ -125,7 +129,6 @@ public class Player implements java.io.Serializable{
         this.egfPin = builder.getEgfPin();
         this.ffgLicence = builder.getFfgLicence();
         this.agaId = builder.getAgaId();
-        this.agaExpirationDate = builder.getAgaExpirationDate();
         this.rgfId = builder.getRgfId();
         if (builder.getRank().getValue() < Gotha.MIN_RANK || builder.getRank().getValue() > Gotha.MAX_RANK) this.rank = RankKt.asRank(Player.convertKDPToInt(builder.getGrade()));
         else this.rank = builder.getRank();
@@ -154,7 +157,6 @@ public class Player implements java.io.Serializable{
         this.egfPin = p.getEgfPin();
         this.ffgLicence = p.getFfgLicence();
         this.agaId = p.getAgaId();
-        this.agaExpirationDate = p.getAgaExpirationDate();
         this.rgfId = p.getRgfId();
         this.rank = p.getRank();
         this.rating = p.getRating();
@@ -489,7 +491,7 @@ public class Player implements java.io.Serializable{
         } else {
             ffgL = null;
         }
-        String agaI  = this.getAgaId();
+        String agaI  = this.getAgaId() != null ? this.getAgaId().getId() : null;
         if (egfP != null && egfP.length() > 0) return "EGF Pin : " + egfP;
         else if (ffgL != null && ffgL.length() > 0) return "FFG Licence : " + ffgL;
         else if (agaI != null && agaI.length() > 0) return "AGA Id : " + agaI;
@@ -508,15 +510,12 @@ public class Player implements java.io.Serializable{
         this.egfPin = egfPin;
     }
 
-    public String getAgaId() {
+    @Nullable
+    public AgaId getAgaId() {
         return agaId;
     }
 
-    public String getAgaExpirationDate() {
-        return agaExpirationDate;
-    }
-
-    public void setAgaId(String agaId) {
+    public void setAgaId(AgaId agaId) {
         this.agaId = agaId;
     }
 
@@ -578,7 +577,8 @@ public class Player implements java.io.Serializable{
         @Nullable
         private FfgLicence ffgLicence = null;
         private String ffgLicenceStatus = "";
-        private String agaId = "";
+        @Nullable
+        private AgaId agaId = null;
         private String agaExpirationDate = "";
         @Nullable
         private RgfId rgfId = null;
@@ -661,17 +661,13 @@ public class Player implements java.io.Serializable{
             return this;
         }
 
-        public String getAgaId() {
+        @Nullable
+        public AgaId getAgaId() {
             return agaId;
         }
 
-        public String getAgaExpirationDate() {
-            return agaExpirationDate;
-        }
-
-        public Builder setAgaId(String agaId, String agaExpirationDate) {
+        public Builder setAgaId(AgaId getAgaId) {
             this.agaId = agaId;
-            this.agaExpirationDate = agaExpirationDate;
             return this;
         }
 

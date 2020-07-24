@@ -66,14 +66,14 @@ public class PlayerComparator implements Comparator<Player>, Serializable{
             case AGAID_ORDER :
                 int agaId1 = 0;
                 try{
-                    agaId1 = Integer.parseInt(p1.getAgaId());
+                    agaId1 = Integer.parseInt(p1.getAgaId() != null ? p1.getAgaId().getId() : "0");
                 }
                 catch(NumberFormatException e){
                     agaId1 = 0;
                 }
                 int agaId2 = 0;
                 try{
-                    agaId2 = Integer.parseInt(p2.getAgaId());
+                    agaId2 = Integer.parseInt(p1.getAgaId() != null ? p2.getAgaId().getId() : "0");
                 }
                 catch(NumberFormatException e){
                     agaId2 = 0;

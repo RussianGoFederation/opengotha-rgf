@@ -29,6 +29,8 @@ import info.vannier.gotha.PlayerException;
 import info.vannier.gotha.RatedPlayer;
 import info.vannier.gotha.TournamentInterface;
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.AgaId;
+import ru.gofederation.gotha.model.AgaIdKt;
 import ru.gofederation.gotha.model.FfgLicence;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rank;
@@ -473,10 +475,17 @@ public class PlayerEditor extends JPanel {
             this.expertAssessmentRgf.setSelected(false);
         }
 
-        this.agaId.setText(player.getAgaId());
-        String strDate = player.getAgaExpirationDate();
-        this.agaExpirationDate.setText(strDate);
-        if (Gotha.isDateExpired(strDate)) this.agaExpirationDate.setForeground(Color.red/* TODO: use some sort of theming */);
+        final AgaId agaId = player.getAgaId();
+        if (agaId != null) {
+            this.agaId.setText(agaId.getId());
+            String strDate = agaId.getExpirationDate();
+            this.agaExpirationDate.setText(strDate);
+            if (Gotha.isDateExpired(strDate))
+                this.agaExpirationDate.setForeground(Color.red/* TODO: use some sort of theming */);
+        } else {
+            this.agaId.setText("");
+            this.agaExpirationDate.setText("");
+        }
 
         if (player.getRegisteringStatus() == PlayerRegistrationStatus.FINAL) {
             this.registrationFinal.setSelected(true);
@@ -555,7 +564,7 @@ public class PlayerEditor extends JPanel {
                 .setClub(this.club.getText().trim())
                 .setEgfPin(this.egfPin.getText())
                 .setFfgLicence(new FfgLicence(this.ffgLicence.getText(), this.ffgLicenceStatus.getText()))
-                .setAgaId(this.agaId.getText(), this.agaExpirationDate.getText())
+                .setAgaId(AgaIdKt.agaId(this.agaId.getText(), this.agaExpirationDate.getText()))
                 .setRgfId(new RgfId(rgfId, rgfId == 0 && newRgf.isSelected(), false))
                 .setRank(rank.getValue())
                 .setRating(rating, RatingOriginKt.asRatingOrigin(strOrigin))
