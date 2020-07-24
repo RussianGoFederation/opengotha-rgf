@@ -13,6 +13,7 @@ import ru.gofederation.gotha.model.Game;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOriginKt;
+import ru.gofederation.gotha.model.RgfId;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -672,7 +673,7 @@ public class ExternalDocument {
                     .setEgfPin(egfPin)
                     .setFfgLicence(ffgLicence, ffgLicenceStatus)
                     .setAgaId(agaId, agaExpirationDate)
-                    .setRgfId(rgfId)
+                    .setRgfId(new RgfId(rgfId, false, false))
                     .setRank(rank)
                     .setRating(rating, RatingOriginKt.asRatingOrigin(ratingOrigin))
                     .setGrade(strGrade)
@@ -3175,8 +3176,8 @@ public class ExternalDocument {
             emPlayer.setAttribute("ffgLicenceStatus", strFfgLicenceStatus);
             emPlayer.setAttribute("agaId", strAgaId);
             emPlayer.setAttribute("agaExpirationDate", strAgaExpirationDate);
-            if (p.getRgfId() > 0)
-                emPlayer.setAttribute("rgfId", Integer.toString(p.getRgfId()));
+            if (p.getRgfId() != null)
+                emPlayer.setAttribute("rgfId", Integer.toString(p.getRgfId().getId()));
             emPlayer.setAttribute("rank", strRank);
             emPlayer.setAttribute("rating", strRating);
             emPlayer.setAttribute("ratingOrigin", strRatingOrigin);

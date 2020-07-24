@@ -28,6 +28,7 @@ import info.vannier.gotha.TournamentPlayerDoubleException
 import ru.gofederation.gotha.model.Game
 import ru.gofederation.gotha.model.PlayerRegistrationStatus
 import ru.gofederation.gotha.model.RatingOrigin
+import ru.gofederation.gotha.model.RgfId
 
 fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<TournamentInterface, RgfTournamentImportReport> {
     val tournament = Tournament()
@@ -76,7 +77,7 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
                         builder.firstName = application.firstName
                         builder.name = application.lastName
                         if (application.playerId != null) {
-                            builder.rgfId = application.playerId?:0
+                            builder.rgfId = RgfId(application.playerId?:0)
                         }
                         try {
                             val rating = RatingOrigin.RGF.clampRatingValue(Integer.parseInt(application.rating))
@@ -109,10 +110,12 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
                         builder.firstName = apiPlayer.firstName
                         builder.name = apiPlayer.lastName
                         if (apiPlayer.playerId != null) {
-                            builder.rgfId = apiPlayer.playerId ?: 0
+                            builder.rgfId = RgfId(
+                                apiPlayer.playerId ?: 0,
+                                newPlayer = apiPlayer.newPlayer,
+                                assessmentRating = apiPlayer.assessmentRating
+                            )
                         }
-                        builder.isRgfNew = apiPlayer.newPlayer
-                        builder.isRgfAssessmentRating = apiPlayer.assessmentRating
                         builder.setRating(apiPlayer.rating, RatingOrigin.RGF)
                         builder.rank = builder.rating.toRank()
                         builder.registrationStatus = PlayerRegistrationStatus.FINAL
@@ -183,11 +186,12 @@ fun gotha2rgf(gotha: TournamentInterface): RgfTournament {
     val playersMap = HashMap<String, RgfTournament.Player>()
     val players = gotha.orderedScoredPlayersList(finalRound, pps)
         .mapIndexed { index, scoredPlayer ->
+            val rgfId = scoredPlayer.rgfId ?: RgfId(0)
             val player = RgfTournament.Player(
                 id = index + 1,
-                playerId = if (scoredPlayer.rgfId > 0) scoredPlayer.rgfId else null,
-                newPlayer = scoredPlayer.isRgfNew,
-                assessmentRating = scoredPlayer.isRgfAssessmentRating,
+                playerId = if (rgfId.id > 0) scoredPlayer.rgfId.id else null,
+                newPlayer = rgfId.newPlayer,
+                assessmentRating = rgfId.assessmentRating,
                 firstName = scoredPlayer.firstName,
                 lastName = scoredPlayer.name,
                 patronymic = scoredPlayer.patronymic,

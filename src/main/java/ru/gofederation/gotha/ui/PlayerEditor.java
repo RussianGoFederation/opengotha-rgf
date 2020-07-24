@@ -34,6 +34,7 @@ import ru.gofederation.gotha.model.Rank;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
 import ru.gofederation.gotha.model.RatingOriginKt;
+import ru.gofederation.gotha.model.RgfId;
 import ru.gofederation.gotha.util.GothaLocale;
 
 import javax.swing.BorderFactory;
@@ -458,8 +459,8 @@ public class PlayerEditor extends JPanel {
         if (strEGFPin != null && strEGFPin.length() == 8 && Gotha.isPhotosDownloadEnabled())
             GothaImageLoader.loadImage("http://www.europeangodatabase.eu/EGD/Actions.php?key=" + strEGFPin, this.photo);
 
-        if (player.getRgfId() > 0) {
-            this.rgfId.setText(Integer.toString(player.getRgfId()));
+        if (player.getRgfId() != null) {
+            this.rgfId.setText(Integer.toString(player.getRgfId().getId()));
             this.newRgf.setEnabled(false);
         }
         if (player.getRatingOrigin() != RatingOrigin.RGF) {
@@ -551,8 +552,7 @@ public class PlayerEditor extends JPanel {
                 .setEgfPin(this.egfPin.getText())
                 .setFfgLicence(this.ffgLicence.getText(), this.ffgLicenceStatus.getText())
                 .setAgaId(this.agaId.getText(), this.agaExpirationDate.getText())
-                .setRgfId(rgfId)
-                .setRgfNew(rgfId == 0 && newRgf.isSelected())
+                .setRgfId(new RgfId(rgfId, rgfId == 0 && newRgf.isSelected(), false))
                 .setRank(rank.getValue())
                 .setRating(rating, RatingOriginKt.asRatingOrigin(strOrigin))
                 .setGrade(this.grade.getText())

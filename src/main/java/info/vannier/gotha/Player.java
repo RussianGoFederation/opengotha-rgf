@@ -3,11 +3,13 @@
  */
 package info.vannier.gotha;
 
+import org.jetbrains.annotations.Nullable;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rank;
 import ru.gofederation.gotha.model.RankKt;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
+import ru.gofederation.gotha.model.RgfId;
 
 import java.util.Date;
 
@@ -30,9 +32,8 @@ public class Player implements java.io.Serializable{
     private String ffgLicenceStatus;
     private String agaId;
     private String agaExpirationDate;
-    private boolean rgfNew;
-    private boolean rgfAssessmentRating;
-    private int rgfId;
+    @Nullable
+    private RgfId rgfId = null;
     /**
      * Rank between -30 (30K) and +8 (9D)
      */
@@ -123,8 +124,6 @@ public class Player implements java.io.Serializable{
         this.ffgLicenceStatus = builder.getFfgLicenceStatus();
         this.agaId = builder.getAgaId();
         this.agaExpirationDate = builder.getAgaExpirationDate();
-        this.rgfNew = builder.isRgfNew();
-        this.rgfAssessmentRating = builder.isRgfAssessmentRating();
         this.rgfId = builder.getRgfId();
         if (builder.getRank().getValue() < Gotha.MIN_RANK || builder.getRank().getValue() > Gotha.MAX_RANK) this.rank = RankKt.asRank(Player.convertKDPToInt(builder.getGrade()));
         else this.rank = builder.getRank();
@@ -155,7 +154,6 @@ public class Player implements java.io.Serializable{
         this.ffgLicenceStatus = p.getFfgLicenceStatus();
         this.agaId = p.getAgaId();
         this.agaExpirationDate = p.getAgaExpirationDate();
-        this.rgfNew = p.isRgfNew();
         this.rgfId = p.getRgfId();
         this.rank = p.getRank();
         this.rating = p.getRating();
@@ -520,27 +518,11 @@ public class Player implements java.io.Serializable{
         this.agaId = agaId;
     }
 
-    public boolean isRgfNew() {
-        return rgfNew;
-    }
-
-    public void setRgfNew(boolean rgfNew) {
-        this.rgfNew = rgfNew;
-    }
-
-    public boolean isRgfAssessmentRating() {
-        return rgfAssessmentRating;
-    }
-
-    public void setRgfAssessmentRating(boolean rgfAssessmentRating) {
-        this.rgfAssessmentRating = rgfAssessmentRating;
-    }
-
-    public void setRgfId(int rgfId) {
+    public void setRgfId(RgfId rgfId) {
         this.rgfId = rgfId;
     }
 
-    public int getRgfId() {
+    public RgfId getRgfId() {
         return rgfId;
     }
 
@@ -595,9 +577,8 @@ public class Player implements java.io.Serializable{
         private String ffgLicenceStatus = "";
         private String agaId = "";
         private String agaExpirationDate = "";
-        private boolean rgfNew = false;
-        private boolean rgfAssessmentRating = true;
-        private int rgfId = 0;
+        @Nullable
+        private RgfId rgfId = null;
         private Rank rank = RankKt.asRank(-20);
         private Rating rating = UNDEF.rating(UNDEF.getMinRating());
         private String grade = "";
@@ -696,31 +677,14 @@ public class Player implements java.io.Serializable{
             return this;
         }
 
-        public int getRgfId() {
+        @Nullable
+        public RgfId getRgfId() {
             return rgfId;
         }
 
-        public Builder setRgfId(int rgfId) {
+        public Builder setRgfId(RgfId rgfId) {
             this.rgfId = rgfId;
             return this;
-        }
-
-        public Builder setRgfNew(boolean rgfNew) {
-            this.rgfNew = rgfNew;
-            return this;
-        }
-
-        public boolean isRgfNew() {
-            return rgfNew;
-        }
-
-        public Builder setRgfAssessmentRating(boolean rgfAssessmentRating) {
-            this.rgfAssessmentRating = rgfAssessmentRating;
-            return this;
-        }
-
-        public boolean isRgfAssessmentRating() {
-            return rgfAssessmentRating;
         }
 
         public Rank getRank() {
