@@ -55,7 +55,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +66,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
 
 /**
@@ -2333,6 +2331,8 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
             return;
         }
 
+        /* Work file restoration [temporarily] disabled.
+
         // check whether a more recent work file has been saved for this tournament
         // Is there a work tournament ?
 
@@ -2351,6 +2351,7 @@ private void mniMemoryActionPerformed(java.awt.event.ActionEvent evt) {
             if (rep == JOptionPane.OK_OPTION) Files.copy(fW.toPath(), f.toPath(), REPLACE_EXISTING);
             else Files.delete(fW.toPath());
         }
+         */
 
 
         TournamentInterface t = Gotha.getTournamentFromFile(f);
