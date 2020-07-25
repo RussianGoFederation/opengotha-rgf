@@ -4,6 +4,7 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.EgfPinKt;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingListFactory;
 import ru.gofederation.gotha.model.RatingListType;
@@ -392,7 +393,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame implements RatingListCo
             try{
                 String strNewRating = (String)model.getValueAt(row, JFrUpdateRatings.NEWRATING_COL);
                 int newRating = Integer.parseInt(strNewRating);
-                p.setEgfPin(egfPin);
+                p.setEgfPin(EgfPinKt.egfPin(egfPin));
                 p.setRating(new Rating(EGF, newRating));
                 tournament.modifyPlayer(p, p);
             }catch(Exception e){

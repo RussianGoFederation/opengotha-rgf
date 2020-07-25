@@ -5,6 +5,8 @@ package info.vannier.gotha;
 
 import org.jetbrains.annotations.Nullable;
 import ru.gofederation.gotha.model.AgaId;
+import ru.gofederation.gotha.model.EgfPin;
+import ru.gofederation.gotha.model.EgfPinKt;
 import ru.gofederation.gotha.model.FfgLicence;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rank;
@@ -29,7 +31,8 @@ public class Player implements java.io.Serializable{
     private transient String keyString = null;
     private String country;
     private String club;
-    private String egfPin;
+    @Nullable
+    private EgfPin egfPin;
     private FfgLicence ffgLicence;
     @Nullable
     private AgaId agaId;
@@ -83,7 +86,7 @@ public class Player implements java.io.Serializable{
         this.country = country;
         if (club.length() > 4) throw new PlayerException("Club name should have at most 4 character");
         this.club = club;
-        this.egfPin = egfPin;
+        this.egfPin = EgfPinKt.egfPin(egfPin);
         if (ffgLicence.length() > 0) {
             this.ffgLicence = new FfgLicence(ffgLicence, ffgLicenceStatus);
         } else {
@@ -469,7 +472,7 @@ public class Player implements java.io.Serializable{
      * @return
      */
     public String getAnIdString(){
-        String egfP = this.getEgfPin();
+        String egfP = this.getEgfPin() != null ? this.getEgfPin().getPin() : null;
         String ffgL;
         if (null != this.getFfgLicence()) {
             ffgL = this.getFfgLicence().getLicence();
@@ -487,11 +490,12 @@ public class Player implements java.io.Serializable{
         return ffgLicence;
     }
 
-    public String getEgfPin() {
+    @Nullable
+    public EgfPin getEgfPin() {
         return egfPin;
     }
 
-    public void setEgfPin(String egfPin) {
+    public void setEgfPin(EgfPin egfPin) {
         this.egfPin = egfPin;
     }
 
@@ -558,7 +562,8 @@ public class Player implements java.io.Serializable{
         private Date dateOfBirth = null;
         private String country = "";
         private String club = "";
-        private String egfPin = "";
+        @Nullable
+        private EgfPin egfPin = null;
         @Nullable
         private FfgLicence ffgLicence = null;
         private String ffgLicenceStatus = "";
@@ -628,11 +633,11 @@ public class Player implements java.io.Serializable{
             return this;
         }
 
-        public String getEgfPin() {
+        public EgfPin getEgfPin() {
             return egfPin;
         }
 
-        public Builder setEgfPin(String egfPin) {
+        public Builder setEgfPin(EgfPin egfPin) {
             this.egfPin = egfPin;
             return this;
         }

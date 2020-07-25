@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import ru.gofederation.gotha.model.AgaId;
 import ru.gofederation.gotha.model.AgaIdKt;
+import ru.gofederation.gotha.model.EgfPinKt;
 import ru.gofederation.gotha.model.FfgLicence;
 import ru.gofederation.gotha.model.FfgLicenceKt;
 import ru.gofederation.gotha.model.Game;
@@ -675,7 +676,7 @@ public class ExternalDocument {
                     .setDateOfBirth(dateOfBirth)
                     .setCountry(country)
                     .setClub(club)
-                    .setEgfPin(egfPin)
+                    .setEgfPin(EgfPinKt.egfPin(egfPin))
                     .setFfgLicence(FfgLicenceKt.ffgLicence(ffgLicence, ffgLicenceStatus))
                     .setAgaId(AgaIdKt.agaId(agaId, agaExpirationDate))
                     .setRgfId(new RgfId(rgfId, false, false))
@@ -2281,7 +2282,7 @@ public class ExternalDocument {
                     strPar = "impair";
                 }
                 output.write("<td class=" + strPar + " align=\"right\">" + (iP + 1) + "&nbsp;</td>");
-                String strPinLic = p.getEgfPin();
+                String strPinLic = p.getEgfPin() != null ? p.getEgfPin().getPin() : "";
                 if (strPinLic.length() == 0) {
                     strPinLic = p.getFfgLicence() != null ? p.getFfgLicence().getLicence() : "";
                 }
@@ -3144,7 +3145,7 @@ public class ExternalDocument {
             Date dateOfBirth = p.getDateOfBirth();
             String strCountry = p.getCountry();
             String strClub = p.getClub();
-            String strEgfPin = p.getEgfPin();
+            String strEgfPin = p.getEgfPin() != null ? p.getEgfPin().getPin() : "";
             FfgLicence ffgLicence = p.getFfgLicence();
             AgaId agaId = p.getAgaId();
             String strRank = p.getRank().toString();

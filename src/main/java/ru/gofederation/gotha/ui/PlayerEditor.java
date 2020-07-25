@@ -31,6 +31,7 @@ import info.vannier.gotha.TournamentInterface;
 import net.miginfocom.swing.MigLayout;
 import ru.gofederation.gotha.model.AgaId;
 import ru.gofederation.gotha.model.AgaIdKt;
+import ru.gofederation.gotha.model.EgfPinKt;
 import ru.gofederation.gotha.model.FfgLicence;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rank;
@@ -460,7 +461,7 @@ public class PlayerEditor extends JPanel {
             }
         }
 
-        String strEGFPin = player.getEgfPin();
+        String strEGFPin = player.getEgfPin() != null ? player.getEgfPin().getPin() : null;
         this.egfPin.setText(strEGFPin);
         if (strEGFPin != null && strEGFPin.length() == 8 && Gotha.isPhotosDownloadEnabled())
             GothaImageLoader.loadImage("http://www.europeangodatabase.eu/EGD/Actions.php?key=" + strEGFPin, this.photo);
@@ -562,7 +563,7 @@ public class PlayerEditor extends JPanel {
                 .setDateOfBirth(this.birthday.getDate())
                 .setCountry(((String)this.country.getSelectedItem()))
                 .setClub(this.club.getText().trim())
-                .setEgfPin(this.egfPin.getText())
+                .setEgfPin(EgfPinKt.egfPin(this.egfPin.getText()))
                 .setFfgLicence(new FfgLicence(this.ffgLicence.getText(), this.ffgLicenceStatus.getText()))
                 .setAgaId(AgaIdKt.agaId(this.agaId.getText(), this.agaExpirationDate.getText()))
                 .setRgfId(new RgfId(rgfId, rgfId == 0 && newRgf.isSelected(), false))

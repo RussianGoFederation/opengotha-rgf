@@ -772,7 +772,7 @@ public class TournamentPrinting implements Printable {
             x = usableX + usableWidth * (PL_NUMBER_BEG + PL_NUMBER_LEN) / PL_NBCAR;
             drawRightAlignedString(g, strNumber, x, y);
 
-            String strPinLic = player.getEgfPin();
+            String strPinLic = player.getEgfPin() != null ? player.getEgfPin().getPin() : "";
             if (strPinLic.length() == 0) {
                 strPinLic = player.getFfgLicence() != null ? player.getFfgLicence().getLicence() : "";
             }

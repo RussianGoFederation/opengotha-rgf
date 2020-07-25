@@ -237,7 +237,7 @@ public class RatingList {
     }
 
     public RatedPlayer getRatedPlayer(Player p){
-        String egfPin = p.getEgfPin();
+        String egfPin = p.getEgfPin() != null ? p.getEgfPin().getPin() : "";
 
         if (!egfPin.equals("")){
             RatedPlayer rp = hmPinRatedPlayers.get(egfPin);
