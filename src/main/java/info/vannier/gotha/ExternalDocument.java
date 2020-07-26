@@ -1298,34 +1298,34 @@ public class ExternalDocument {
             String strResult = extractNodeValue(nnm, "result", "RESULT_UNKNOWN");
             Game.Result result = Game.Result.UNKNOWN;
             if (strResult.equals("RESULT_WHITEWINS")) {
-                result = Game.Result.WHITEWINS;
+                result = Game.Result.WHITE_WINS;
             }
             if (strResult.equals("RESULT_BLACKWINS")) {
-                result = Game.Result.BLACKWINS;
+                result = Game.Result.BLACK_WINS;
             }
             if (strResult.equals("RESULT_EQUAL")) {
                 result = Game.Result.EQUAL;
             }
             if (strResult.equals("RESULT_BOTHLOSE")) {
-                result = Game.Result.BOTHLOSE;
+                result = Game.Result.BOTH_LOSE;
             }
             if (strResult.equals("RESULT_BOTHWIN")) {
-                result = Game.Result.BOTHWIN;
+                result = Game.Result.BOTH_WIN;
             }
             if (strResult.equals("RESULT_WHITEWINS_BYDEF")) {
-                result = Game.Result.WHITEWINS_BYDEF;
+                result = Game.Result.WHITE_WINS_BYDEF;
             }
             if (strResult.equals("RESULT_BLACKWINS_BYDEF")) {
-                result = Game.Result.BLACKWINS_BYDEF;
+                result = Game.Result.BLACK_WINS_BYDEF;
             }
             if (strResult.equals("RESULT_EQUAL_BYDEF")) {
                 result = Game.Result.EQUAL_BYDEF;
             }
             if (strResult.equals("RESULT_BOTHLOSE_BYDEF")) {
-                result = Game.Result.BOTHLOSE_BYDEF;
+                result = Game.Result.BOTH_LOSE_BYDEF;
             }
             if (strResult.equals("RESULT_BOTHWIN_BYDEF")) {
-                result = Game.Result.BOTHWIN_BYDEF;
+                result = Game.Result.BOTH_WIN_BYDEF;
             }
 
             Game.Builder gb = new Game.Builder(roundNumber, tableNumber, wP, bP, true, handicap, result);
@@ -1435,27 +1435,27 @@ public class ExternalDocument {
                 g.setWhitePlayer(player);
                 g.setBlackPlayer(opponent);
                 if (phg.result == 1) {
-                    res = Game.Result.WHITEWINS;
+                    res = Game.Result.WHITE_WINS;
                 } else if (phg.result == -1) {
-                    res = Game.Result.BLACKWINS;
+                    res = Game.Result.BLACK_WINS;
                 }
                 g.setKnownColor(true);
             } else if (phg.color == 'b') {
                 g.setWhitePlayer(opponent);
                 g.setBlackPlayer(player);
                 if (phg.result == 1) {
-                    res = Game.Result.BLACKWINS;
+                    res = Game.Result.BLACK_WINS;
                 } else if (phg.result == -1) {
-                    res = Game.Result.WHITEWINS;
+                    res = Game.Result.WHITE_WINS;
                 }
                 g.setKnownColor(true);
             } else {
                 g.setWhitePlayer(player);
                 g.setBlackPlayer(opponent);
                 if (phg.result == 1) {
-                    res = Game.Result.WHITEWINS;
+                    res = Game.Result.WHITE_WINS;
                 } else if (phg.result == -1) {
-                    res = Game.Result.BLACKWINS;
+                    res = Game.Result.BLACK_WINS;
                 }
                 g.setKnownColor(false);
             }
@@ -1958,9 +1958,9 @@ public class ExternalDocument {
                 try {
                     Game g = it.next();
                     String result = "*";
-                    if (g.getResult() == Game.Result.WHITEWINS) {
+                    if (g.getResult() == Game.Result.WHITE_WINS) {
                         result = "W";
-                    } else if (g.getResult() == Game.Result.BLACKWINS) {
+                    } else if (g.getResult() == Game.Result.BLACK_WINS) {
                         result = "B";
                     } else {
                         result = "?";
@@ -3202,34 +3202,34 @@ public class ExternalDocument {
             String strHandicap = Integer.valueOf(g.getHandicap()).toString();
             String strResult;
             switch (g.getResult()) {
-                case WHITEWINS:
+                case WHITE_WINS:
                     strResult = "RESULT_WHITEWINS";
                     break;
-                case BLACKWINS:
+                case BLACK_WINS:
                     strResult = "RESULT_BLACKWINS";
                     break;
                 case EQUAL:
                     strResult = "RESULT_EQUAL";
                     break;
-                case BOTHWIN:
+                case BOTH_WIN:
                     strResult = "RESULT_BOTHWIN";
                     break;
-                case BOTHLOSE:
+                case BOTH_LOSE:
                     strResult = "RESULT_BOTHLOSE";
                     break;
-                case WHITEWINS_BYDEF:
+                case WHITE_WINS_BYDEF:
                     strResult = "RESULT_WHITEWINS_BYDEF";
                     break;
-                case BLACKWINS_BYDEF:
+                case BLACK_WINS_BYDEF:
                     strResult = "RESULT_BLACKWINS_BYDEF";
                     break;
                 case EQUAL_BYDEF:
                     strResult = "RESULT_EQUAL_BYDEF";
                     break;
-                case BOTHWIN_BYDEF:
+                case BOTH_WIN_BYDEF:
                     strResult = "RESULT_BOTHWIN_BYDEF";
                     break;
-                case BOTHLOSE_BYDEF:
+                case BOTH_LOSE_BYDEF:
                     strResult = "RESULT_BOTHLOSE_BYDEF";
                     break;
                 default:

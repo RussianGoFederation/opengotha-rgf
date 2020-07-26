@@ -228,13 +228,13 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         ArrayList<Game> alG = this.getAlGames(roundNumber);
         for (Game g : alG) {
             Game.Result res = g.getResult();
-            if (res == Game.Result.BLACKWINS_BYDEF
-                    || res == Game.Result.BOTHLOSE_BYDEF) {
+            if (res == Game.Result.BLACK_WINS_BYDEF
+                    || res == Game.Result.BOTH_LOSE_BYDEF) {
                 Player p = g.getWhitePlayer();
                 alP.add(p);
             }
-            if (res == Game.Result.WHITEWINS_BYDEF
-                    || res == Game.Result.BOTHLOSE_BYDEF) {
+            if (res == Game.Result.WHITE_WINS_BYDEF
+                    || res == Game.Result.BOTH_LOSE_BYDEF) {
                 Player p = g.getBlackPlayer();
                 alP.add(p);
             }
@@ -722,19 +722,19 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             return 0;
         }
         switch (g.getResult()) {
-            case BOTHLOSE:
-            case BOTHLOSE_BYDEF:
+            case BOTH_LOSE:
+            case BOTH_LOSE_BYDEF:
             case UNKNOWN:
                 wX2 = 0;
                 break;
-            case WHITEWINS:
-            case WHITEWINS_BYDEF:
+            case WHITE_WINS:
+            case WHITE_WINS_BYDEF:
                 if (pIsWhite) {
                     wX2 = 2;
                 }
                 break;
-            case BLACKWINS:
-            case BLACKWINS_BYDEF:
+            case BLACK_WINS:
+            case BLACK_WINS_BYDEF:
                 if (!pIsWhite) {
                     wX2 = 2;
                 }
@@ -743,8 +743,8 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             case EQUAL_BYDEF:
                 wX2 = 1;
                 break;
-            case BOTHWIN:
-            case BOTHWIN_BYDEF:
+            case BOTH_WIN:
+            case BOTH_WIN_BYDEF:
                 wX2 = 2;
                 break;
         }
@@ -1938,17 +1938,17 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 ScoredPlayer wSP = hmScoredPlayers.get(wP.getKeyString());
                 ScoredPlayer bSP = hmScoredPlayers.get(bP.getKeyString());
                 switch (g.getResult()) {
-                    case BOTHLOSE:
-                    case BOTHLOSE_BYDEF:
+                    case BOTH_LOSE:
+                    case BOTH_LOSE_BYDEF:
                     case UNKNOWN:
                         break;
-                    case WHITEWINS:
-                    case WHITEWINS_BYDEF:
+                    case WHITE_WINS:
+                    case WHITE_WINS_BYDEF:
                         wSP.setNBWX2(r, wSP.getNBWX2(r) + 2);
                         wSP.setMMSX2(r, wSP.getMMSX2(r) + 2);
                         break;
-                    case BLACKWINS:
-                    case BLACKWINS_BYDEF:
+                    case BLACK_WINS:
+                    case BLACK_WINS_BYDEF:
                         bSP.setNBWX2(r, bSP.getNBWX2(r) + 2);
                         bSP.setMMSX2(r, bSP.getMMSX2(r) + 2);
                         break;
@@ -1959,8 +1959,8 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                         bSP.setNBWX2(r, bSP.getNBWX2(r) + 1);
                         bSP.setMMSX2(r, bSP.getMMSX2(r) + 1);
                         break;
-                    case BOTHWIN:
-                    case BOTHWIN_BYDEF:
+                    case BOTH_WIN:
+                    case BOTH_WIN_BYDEF:
                         wSP.setNBWX2(r, wSP.getNBWX2(r) + 2);
                         wSP.setMMSX2(r, wSP.getMMSX2(r) + 2);
                         bSP.setNBWX2(r, bSP.getNBWX2(r) + 2);
@@ -2041,20 +2041,19 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 ScoredPlayer wSP = hmScoredPlayers.get(wP.getKeyString());
                 ScoredPlayer bSP = hmScoredPlayers.get(bP.getKeyString());
                 switch (g.getResult()) {
-                    case BOTHLOSE:
-                    case BOTHLOSE_BYDEF: // All "BYDEF" results are separately processed
-                    case WHITEWINS_BYDEF:
-                    case BLACKWINS_BYDEF:
+                    case BOTH_LOSE:
+                    case BOTH_LOSE_BYDEF: // All "BYDEF" results are separately processed
+                    case WHITE_WINS_BYDEF:
+                    case BLACK_WINS_BYDEF:
                     case EQUAL_BYDEF:
-                    case BOTHWIN_BYDEF:
+                    case BOTH_WIN_BYDEF:
                     case UNKNOWN:
                         break;
-                    case
-                        WHITEWINS:
+                    case WHITE_WINS:
                         wSP.setNBWVirtualX2(r, wSP.getNBWVirtualX2(r) + 2);
                         wSP.setMMSVirtualX2(r, wSP.getMMSVirtualX2(r) + 2);
                         break;
-                    case BLACKWINS:
+                    case BLACK_WINS:
                         bSP.setNBWVirtualX2(r, bSP.getNBWVirtualX2(r) + 2);
                         bSP.setMMSVirtualX2(r, bSP.getMMSVirtualX2(r) + 2);
                         break;
@@ -2064,7 +2063,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                         bSP.setNBWVirtualX2(r, bSP.getNBWVirtualX2(r) + 1);
                         bSP.setMMSVirtualX2(r, bSP.getMMSVirtualX2(r) + 1);
                         break;
-                    case BOTHWIN:
+                    case BOTH_WIN:
                         wSP.setNBWVirtualX2(r, wSP.getNBWVirtualX2(r) + 2);
                         wSP.setMMSVirtualX2(r, wSP.getMMSVirtualX2(r) + 2);
                         bSP.setNBWVirtualX2(r, bSP.getNBWVirtualX2(r) + 2);
@@ -2328,17 +2327,17 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                     extX2 += sOpp.getNBWX2(r) * coef;
                     boolean bWin = false;
                     if (spWasWhite
-                            && (g.getResult() == Game.Result.WHITEWINS
-                            || g.getResult() == Game.Result.WHITEWINS_BYDEF
-                            || g.getResult() == Game.Result.BOTHWIN
-                            || g.getResult() == Game.Result.BOTHWIN_BYDEF)) {
+                            && (g.getResult() == Game.Result.WHITE_WINS
+                            || g.getResult() == Game.Result.WHITE_WINS_BYDEF
+                            || g.getResult() == Game.Result.BOTH_WIN
+                            || g.getResult() == Game.Result.BOTH_WIN_BYDEF)) {
                         bWin = true;
                     }
                     if (!spWasWhite
-                            && (g.getResult() == Game.Result.BLACKWINS
-                            || g.getResult() == Game.Result.BLACKWINS_BYDEF
-                            || g.getResult() == Game.Result.BOTHWIN
-                            || g.getResult() == Game.Result.BOTHWIN_BYDEF)) {
+                            && (g.getResult() == Game.Result.BLACK_WINS
+                            || g.getResult() == Game.Result.BLACK_WINS_BYDEF
+                            || g.getResult() == Game.Result.BOTH_WIN
+                            || g.getResult() == Game.Result.BOTH_WIN_BYDEF)) {
                         bWin = true;
                     }
                     if (bWin) {
@@ -2584,11 +2583,11 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 continue;
             }
             Game.Result res = g.getResult();
-            if (res == Game.Result.WHITEWINS) {
+            if (res == Game.Result.WHITE_WINS) {
                 pair[numWP][numBP]++;
                 pair[numBP][numWP]--;
             }
-            if (res == Game.Result.BLACKWINS) {
+            if (res == Game.Result.BLACK_WINS) {
                 pair[numWP][numBP]--;
                 pair[numBP][numWP]++;
             }

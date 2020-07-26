@@ -255,25 +255,25 @@ private fun getCoef(player: ScoredPlayer, round: Int, crit: PlacementCriterion):
 }
 
 fun resultFromGotha(result: Game.Result) = when (result) {
-    Game.Result.BLACKWINS -> RgfTournament.Game.Result.PLAYER_1_WIN
-    Game.Result.WHITEWINS -> RgfTournament.Game.Result.PLAYER_2_WIN
-    Game.Result.BLACKWINS_BYDEF -> RgfTournament.Game.Result.PLAYER_1_WIN_BYREF
-    Game.Result.WHITEWINS_BYDEF -> RgfTournament.Game.Result.PLAYER_2_WIN_BYREF
+    Game.Result.BLACK_WINS -> RgfTournament.Game.Result.PLAYER_1_WIN
+    Game.Result.WHITE_WINS -> RgfTournament.Game.Result.PLAYER_2_WIN
+    Game.Result.BLACK_WINS_BYDEF -> RgfTournament.Game.Result.PLAYER_1_WIN_BYREF
+    Game.Result.WHITE_WINS_BYDEF -> RgfTournament.Game.Result.PLAYER_2_WIN_BYREF
     Game.Result.EQUAL -> RgfTournament.Game.Result.TIE
-    Game.Result.BOTHLOSE -> RgfTournament.Game.Result.BOTH_LOST
+    Game.Result.BOTH_LOSE -> RgfTournament.Game.Result.BOTH_LOST
     Game.Result.UNKNOWN -> RgfTournament.Game.Result.NOT_PLAYED
     Game.Result.EQUAL_BYDEF -> RgfTournament.Game.Result.TIE_BYREF
     else -> RgfTournament.Game.Result.UNKNOWN
 }
 
 fun RgfTournament.Game.Result.toGotha() = when (this) {
-    RgfTournament.Game.Result.PLAYER_1_WIN -> Game.Result.BLACKWINS
-    RgfTournament.Game.Result.PLAYER_2_WIN -> Game.Result.WHITEWINS
-    RgfTournament.Game.Result.PLAYER_1_WIN_BYREF -> Game.Result.BLACKWINS_BYDEF
-    RgfTournament.Game.Result.PLAYER_2_WIN_BYREF -> Game.Result.WHITEWINS_BYDEF
+    RgfTournament.Game.Result.PLAYER_1_WIN -> Game.Result.BLACK_WINS
+    RgfTournament.Game.Result.PLAYER_2_WIN -> Game.Result.WHITE_WINS
+    RgfTournament.Game.Result.PLAYER_1_WIN_BYREF -> Game.Result.BLACK_WINS_BYDEF
+    RgfTournament.Game.Result.PLAYER_2_WIN_BYREF -> Game.Result.WHITE_WINS_BYDEF
     RgfTournament.Game.Result.NOT_PLAYED -> Game.Result.UNKNOWN
     RgfTournament.Game.Result.TIE -> Game.Result.EQUAL
-    RgfTournament.Game.Result.BOTH_LOST -> Game.Result.BOTHLOSE
+    RgfTournament.Game.Result.BOTH_LOST -> Game.Result.BOTH_LOSE
     RgfTournament.Game.Result.UNKNOWN -> Game.Result.UNKNOWN
     RgfTournament.Game.Result.TIE_BYREF -> Game.Result.EQUAL_BYDEF
 }

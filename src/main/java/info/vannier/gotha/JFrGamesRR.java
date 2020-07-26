@@ -432,19 +432,19 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
             String strW = "w";
             String strB = "b";
             switch(res){
-                case WHITEWINS:
+                case WHITE_WINS:
                     strW = "+/" + strW;
                     strB = "-/" + strB;
                     break;
-                case WHITEWINS_BYDEF:
+                case WHITE_WINS_BYDEF:
                     strW = "+!" + strW;
                     strB = "-!" + strB;
                     break;
-                case BLACKWINS:
+                case BLACK_WINS:
                     strW = "-/" + strW;
                     strB = "+/" + strB;
                     break;
-                case BLACKWINS_BYDEF:
+                case BLACK_WINS_BYDEF:
                     strW = "-!" + strW;
                     strB = "+!" + strB;
                     break;
@@ -460,19 +460,19 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
                     strW = "?" + strW;
                     strB = "?" + strB;
                     break;
-                case BOTHWIN:
+                case BOTH_WIN:
                     strW = "+/" + strW;
                     strB = "+/" + strB;
                     break;
-                case BOTHWIN_BYDEF:
+                case BOTH_WIN_BYDEF:
                     strW = "+!" + strW;
                     strB = "+!" + strB;
                     break;
-                case BOTHLOSE:
+                case BOTH_LOSE:
                     strW = "-/" + strW;
                     strB = "-/" + strB;
                     break;
-                case BOTHLOSE_BYDEF:
+                case BOTH_LOSE_BYDEF:
                     strW = "-!" + strW;
                     strB = "-!" + strB;
                     break;
@@ -575,20 +575,20 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
             Game.Result oldResult = g.getResult();
             Game.Result newResult = Game.Result.UNKNOWN;
             if (oldResult == Game.Result.UNKNOWN){
-                if (p1.hasSameKeyString(g.getWhitePlayer())) newResult = Game.Result.WHITEWINS;
-                else newResult = Game.Result.BLACKWINS;
+                if (p1.hasSameKeyString(g.getWhitePlayer())) newResult = Game.Result.WHITE_WINS;
+                else newResult = Game.Result.BLACK_WINS;
             }
-            else if (oldResult == Game.Result.WHITEWINS){
-                if (p1.hasSameKeyString(g.getWhitePlayer())) newResult = Game.Result.BLACKWINS;
+            else if (oldResult == Game.Result.WHITE_WINS){
+                if (p1.hasSameKeyString(g.getWhitePlayer())) newResult = Game.Result.BLACK_WINS;
                 else newResult = Game.Result.EQUAL;
             }
-            else if (oldResult == Game.Result.BLACKWINS){
+            else if (oldResult == Game.Result.BLACK_WINS){
                 if (p1.hasSameKeyString(g.getWhitePlayer())) newResult = Game.Result.EQUAL;
-                else newResult = Game.Result.WHITEWINS;
+                else newResult = Game.Result.WHITE_WINS;
             }
-            else if (oldResult == Game.Result.EQUAL) newResult = Game.Result.BOTHWIN;
-            else if (oldResult == Game.Result.BOTHWIN) newResult = Game.Result.BOTHLOSE;
-            else if (oldResult == Game.Result.BOTHLOSE) newResult = Game.Result.UNKNOWN;
+            else if (oldResult == Game.Result.EQUAL) newResult = Game.Result.BOTH_WIN;
+            else if (oldResult == Game.Result.BOTH_WIN) newResult = Game.Result.BOTH_LOSE;
+            else if (oldResult == Game.Result.BOTH_LOSE) newResult = Game.Result.UNKNOWN;
 
             try {
                 tournament.setResult(g, newResult);

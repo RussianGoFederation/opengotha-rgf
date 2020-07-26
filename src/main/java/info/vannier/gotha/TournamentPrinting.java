@@ -982,7 +982,7 @@ public class TournamentPrinting implements Printable {
             String strWP = PlayerKt.augmentedPlayerName(wP, dpps);
             x = usableX + usableWidth * GL_WNF_BEG / GL_NBCAR;
             Game.Result result = game.getResult().notByDef();
-            if (result == Game.Result.BOTHLOSE || result == Game.Result.EQUAL || result == Game.Result.BLACKWINS) {
+            if (result == Game.Result.BOTH_LOSE || result == Game.Result.EQUAL || result == Game.Result.BLACK_WINS) {
                 g.setFont(new Font("Default", Font.PLAIN, fontSize));
             }
             g.drawString(strWP, x, y);
@@ -991,7 +991,7 @@ public class TournamentPrinting implements Printable {
             Player bP = game.getBlackPlayer();
             String strBP = PlayerKt.augmentedPlayerName(bP, dpps);
             x = usableX + usableWidth * GL_BNF_BEG / GL_NBCAR;
-            if (result == Game.Result.BOTHLOSE || result == Game.Result.EQUAL || result == Game.Result.WHITEWINS) {
+            if (result == Game.Result.BOTH_LOSE || result == Game.Result.EQUAL || result == Game.Result.WHITE_WINS) {
                 g.setFont(new Font("Default", Font.PLAIN, fontSize));
             }
             g.drawString(strBP, x, y);

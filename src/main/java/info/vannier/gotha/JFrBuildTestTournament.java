@@ -124,7 +124,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
            for (int i = 0; i < numberOfPlayers / 2; i++){
                Player p1 = alPlayers.get(i);
                Player p2 = alPlayers.get ( (numberOfPlayers/2) + (i + r) % (numberOfPlayers/2));
-               Game g = new Game.Builder(r, i, p1, p2, true, 0, Game.Result.WHITEWINS).build();
+               Game g = new Game.Builder(r, i, p1, p2, true, 0, Game.Result.WHITE_WINS).build();
                 try {
                     tournament.addGame(g);
                 } catch (RemoteException ex) {

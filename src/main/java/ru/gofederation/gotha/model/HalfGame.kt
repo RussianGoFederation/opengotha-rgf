@@ -160,8 +160,8 @@ data class HalfGame(
                 opponentNumber = opponentLookup[game.blackPlayer.keyString] ?: 0
                 color = if (game.knownColor) Color.WHITE else Color.UNKNOWN
                 result = when (game.result.notByDef()) {
-                    Game.Result.WHITEWINS, Game.Result.BOTHWIN -> Result.WIN
-                    Game.Result.BLACKWINS, Game.Result.BOTHLOSE -> Result.LOSE
+                    Game.Result.WHITE_WINS, Game.Result.BOTH_WIN -> Result.WIN
+                    Game.Result.BLACK_WINS, Game.Result.BOTH_LOSE -> Result.LOSE
                     Game.Result.EQUAL -> Result.EQUAL
                     else -> Result.UNKNOWN
                 }
@@ -169,8 +169,8 @@ data class HalfGame(
                 opponentNumber = opponentLookup[game.whitePlayer.keyString] ?: 0
                 color = if (game.knownColor) Color.BLACK else Color.UNKNOWN
                 result = when (game.result.notByDef()) {
-                    Game.Result.BLACKWINS, Game.Result.BOTHWIN -> Result.WIN
-                    Game.Result.WHITEWINS, Game.Result.BOTHLOSE -> Result.LOSE
+                    Game.Result.BLACK_WINS, Game.Result.BOTH_WIN -> Result.WIN
+                    Game.Result.WHITE_WINS, Game.Result.BOTH_LOSE -> Result.LOSE
                     Game.Result.EQUAL -> Result.EQUAL
                     else -> Result.UNKNOWN
                 }

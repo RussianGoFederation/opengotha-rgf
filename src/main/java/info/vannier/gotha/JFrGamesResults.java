@@ -371,65 +371,65 @@ public class JFrGamesResults extends javax.swing.JFrame {
         else wb = true;
 
         if ((c == LEFT_PLAYER_COL && wb) || (c == RIGHT_PLAYER_COL && !wb)) {
-            newResult = Game.Result.WHITEWINS;
+            newResult = Game.Result.WHITE_WINS;
         } else if ((c == LEFT_PLAYER_COL && !wb) || (c == RIGHT_PLAYER_COL && wb)) {
-            newResult = Game.Result.BLACKWINS;
+            newResult = Game.Result.BLACK_WINS;
         } else if (c == TABLE_NUMBER_COL) {
             newResult = Game.Result.UNKNOWN;
         } else if (c == RESULT_COL) {
             if (evt.getModifiers() == InputEvent.BUTTON3_MASK) {
-                if (oldResult == Game.Result.WHITEWINS) {
-                    newResult = Game.Result.WHITEWINS_BYDEF;
+                if (oldResult == Game.Result.WHITE_WINS) {
+                    newResult = Game.Result.WHITE_WINS_BYDEF;
                 }
-                if (oldResult == Game.Result.BLACKWINS) {
-                    newResult = Game.Result.BLACKWINS_BYDEF;
+                if (oldResult == Game.Result.BLACK_WINS) {
+                    newResult = Game.Result.BLACK_WINS_BYDEF;
                 }
                 if (oldResult == Game.Result.EQUAL) {
                     newResult = Game.Result.EQUAL_BYDEF;
                 }
-                if (oldResult == Game.Result.BOTHWIN) {
-                    newResult = Game.Result.BOTHWIN_BYDEF;
+                if (oldResult == Game.Result.BOTH_WIN) {
+                    newResult = Game.Result.BOTH_WIN_BYDEF;
                 }
-                if (oldResult == Game.Result.BOTHLOSE) {
-                    newResult = Game.Result.BOTHLOSE_BYDEF;
+                if (oldResult == Game.Result.BOTH_LOSE) {
+                    newResult = Game.Result.BOTH_LOSE_BYDEF;
                 }
-                if (oldResult == Game.Result.WHITEWINS_BYDEF) {
-                    newResult = Game.Result.WHITEWINS;
+                if (oldResult == Game.Result.WHITE_WINS_BYDEF) {
+                    newResult = Game.Result.WHITE_WINS;
                 }
-                if (oldResult == Game.Result.BLACKWINS_BYDEF) {
-                    newResult = Game.Result.BLACKWINS;
+                if (oldResult == Game.Result.BLACK_WINS_BYDEF) {
+                    newResult = Game.Result.BLACK_WINS;
                 }
                 if (oldResult == Game.Result.EQUAL_BYDEF) {
                     newResult = Game.Result.EQUAL;
                 }
-                if (oldResult == Game.Result.BOTHWIN_BYDEF) {
-                    newResult = Game.Result.BOTHWIN;
+                if (oldResult == Game.Result.BOTH_WIN_BYDEF) {
+                    newResult = Game.Result.BOTH_WIN;
                 }
-                if (oldResult == Game.Result.BOTHLOSE_BYDEF) {
-                    newResult = Game.Result.BOTHLOSE;
+                if (oldResult == Game.Result.BOTH_LOSE_BYDEF) {
+                    newResult = Game.Result.BOTH_LOSE;
                 }
             } else {
                 if (oldResult == Game.Result.UNKNOWN) {
-                    newResult = Game.Result.WHITEWINS;
-                } else if (oldResult == Game.Result.WHITEWINS) {
-                    newResult = Game.Result.BLACKWINS;
-                } else if (oldResult == Game.Result.BLACKWINS) {
+                    newResult = Game.Result.WHITE_WINS;
+                } else if (oldResult == Game.Result.WHITE_WINS) {
+                    newResult = Game.Result.BLACK_WINS;
+                } else if (oldResult == Game.Result.BLACK_WINS) {
                     newResult = Game.Result.EQUAL;
                 } else if (oldResult == Game.Result.EQUAL) {
-                    newResult = Game.Result.BOTHWIN;
-                } else if (oldResult == Game.Result.BOTHWIN) {
-                    newResult = Game.Result.BOTHLOSE;
-                } else if (oldResult == Game.Result.BOTHLOSE) {
-                    newResult = Game.Result.WHITEWINS_BYDEF;
-                } else if (oldResult == Game.Result.WHITEWINS_BYDEF) {
-                    newResult = Game.Result.BLACKWINS_BYDEF;
-                } else if (oldResult == Game.Result.BLACKWINS_BYDEF) {
+                    newResult = Game.Result.BOTH_WIN;
+                } else if (oldResult == Game.Result.BOTH_WIN) {
+                    newResult = Game.Result.BOTH_LOSE;
+                } else if (oldResult == Game.Result.BOTH_LOSE) {
+                    newResult = Game.Result.WHITE_WINS_BYDEF;
+                } else if (oldResult == Game.Result.WHITE_WINS_BYDEF) {
+                    newResult = Game.Result.BLACK_WINS_BYDEF;
+                } else if (oldResult == Game.Result.BLACK_WINS_BYDEF) {
                     newResult = Game.Result.EQUAL_BYDEF;
                 } else if (oldResult == Game.Result.EQUAL_BYDEF) {
-                    newResult = Game.Result.BOTHWIN_BYDEF;
-                } else if (oldResult == Game.Result.BOTHWIN_BYDEF) {
-                    newResult = Game.Result.BOTHLOSE_BYDEF;
-                } else if (oldResult == Game.Result.BOTHLOSE_BYDEF) {
+                    newResult = Game.Result.BOTH_WIN_BYDEF;
+                } else if (oldResult == Game.Result.BOTH_WIN_BYDEF) {
+                    newResult = Game.Result.BOTH_LOSE_BYDEF;
+                } else if (oldResult == Game.Result.BOTH_LOSE_BYDEF) {
                     newResult = Game.Result.UNKNOWN;
                 }
             }

@@ -59,12 +59,12 @@ public class Gotha {
     public static final int MAX_NUMBER_OF_ROUNDS = Limits.MAX_NUMBER_OF_ROUNDS;
     // Should definitely stay below 16000, due to internal limits in PairingParameterSet parameter values
     // Should definitely stay below 9999, due to printing issues
-    static final int MAX_NUMBER_OF_PLAYERS = 1200;
+    static final int MAX_NUMBER_OF_PLAYERS = Limits.MAX_NUMBER_OF_PLAYERS;
     // Should definitely stay below 10, due to complexity issues in costValue function
     static final int MAX_NUMBER_OF_CATEGORIES = 9;
     static final int MAX_RANK = 8;      // =  9D
     public static final int MIN_RANK = -30;    // = 30K
-    public static final int MAX_NUMBER_OF_TABLES = MAX_NUMBER_OF_PLAYERS / 2;
+    public static final int MAX_NUMBER_OF_TABLES = Limits.MAX_NUMBER_OF_BOARDS;
     static final int MIN_NUMBER_OF_MEMBERS_BY_TEAM = 2;
     static final int MAX_NUMBER_OF_MEMBERS_BY_TEAM = 10;
     static final int MAX_NUMBER_OF_TEAMS = MAX_NUMBER_OF_PLAYERS / MAX_NUMBER_OF_MEMBERS_BY_TEAM;

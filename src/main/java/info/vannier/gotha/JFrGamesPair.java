@@ -357,12 +357,12 @@ public class JFrGamesPair extends javax.swing.JFrame {
                         Game.Result result = g.getResult();
                         result = result.notByDef();
                         switch (result) {
-                            case WHITEWINS:
-                            case BOTHWIN:
+                            case WHITE_WINS:
+                            case BOTH_WIN:
                                 strRes = "+";
                                 break;
-                            case BLACKWINS:
-                            case BOTHLOSE:
+                            case BLACK_WINS:
+                            case BOTH_LOSE:
                                 strRes = "-";
                                 break;
                             case EQUAL:
@@ -378,12 +378,12 @@ public class JFrGamesPair extends javax.swing.JFrame {
                         strColor = "B";
                         strHd = "" + g.getHandicap();
                         switch (g.getResult()) {
-                            case BLACKWINS:
-                            case BOTHWIN:
+                            case BLACK_WINS:
+                            case BOTH_WIN:
                                 strRes = "+";
                                 break;
-                            case WHITEWINS:
-                            case BOTHLOSE:
+                            case WHITE_WINS:
+                            case BOTH_LOSE:
                                 strRes = "-";
                                 break;
                             case EQUAL:
