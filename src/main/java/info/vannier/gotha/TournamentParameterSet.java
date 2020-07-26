@@ -5,41 +5,43 @@
 
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.PlacementCriterion;
+
 /**
  *
  * @author Luc Vannier
  */
 public class TournamentParameterSet implements java.io.Serializable{
     private static final long serialVersionUID = Gotha.GOTHA_DATA_VERSION;
-    
+
     public final static int TYPE_UNDEFINED       = 0;
     public final static int TYPE_MCMAHON         = 1;
     public final static int TYPE_SWISS           = 2;
     public final static int TYPE_SWISSCAT        = 3;
-    
+
     private GeneralParameterSet generalParameterSet = new GeneralParameterSet();
     private HandicapParameterSet handicapParameterSet = new HandicapParameterSet();
     private PlacementParameterSet placementParameterSet = new PlacementParameterSet();
     private PairingParameterSet pairingParameterSet = new PairingParameterSet();
     private DPParameterSet dpParameterSet = new DPParameterSet();
     private PublishParameterSet publishParameterSet = new PublishParameterSet();
-    
+
 
     /** Creates a new instance of TournamentParameterSet */
     public TournamentParameterSet() {
     }
-    
+
     /** Creates a new instance of TournamentParameterSet, tps' clone */
     public TournamentParameterSet(TournamentParameterSet tps) {
         generalParameterSet    = new GeneralParameterSet  (tps.getGeneralParameterSet());
         handicapParameterSet   = new HandicapParameterSet (tps.getHandicapParameterSet());
         placementParameterSet  = new PlacementParameterSet(tps.getPlacementParameterSet());
         pairingParameterSet    = new PairingParameterSet  (tps.getPairingParameterSet());
-        dpParameterSet         = new DPParameterSet       (tps.getDPParameterSet()); 
+        dpParameterSet         = new DPParameterSet       (tps.getDPParameterSet());
         publishParameterSet    = new PublishParameterSet(tps.getPublishParameterSet());
     }
 
-    public int tournamentType(){    
+    public int tournamentType(){
         PlacementParameterSet pps = this.getPlacementParameterSet();
         if (pps == null) return TournamentParameterSet.TYPE_UNDEFINED;
         PlacementCriterion[] plaCrit = pps.getPlaCriteria();
@@ -55,7 +57,7 @@ public class TournamentParameterSet implements java.io.Serializable{
     public void initBase(){
         initBase("Undefined", "Undefined", "", "", new java.util.Date (),  new java.util.Date (), 5, 1);
     }
-    
+
     public void initBase(String shortName, String name, String location, String director,
             java.util.Date beginDate, java.util.Date endDate, int numberOfRounds,  int numberOfCategories) {
         generalParameterSet.initBase(shortName, name, location, director,
@@ -137,5 +139,5 @@ public class TournamentParameterSet implements java.io.Serializable{
     public void setGeneralParameterSet(GeneralParameterSet generalParameterSet) {
         this.generalParameterSet = generalParameterSet;
     }
-    
+
 }

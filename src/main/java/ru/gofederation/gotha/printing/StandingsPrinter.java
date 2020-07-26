@@ -19,11 +19,11 @@ package ru.gofederation.gotha.printing;
 
 import info.vannier.gotha.DPParameterSet;
 import info.vannier.gotha.GeneralParameterSet;
-import info.vannier.gotha.PlacementCriterion;
 import info.vannier.gotha.PlacementParameterSet;
 import info.vannier.gotha.ScoredPlayer;
 import info.vannier.gotha.TournamentInterface;
 import info.vannier.gotha.TournamentParameterSet;
+import ru.gofederation.gotha.model.PlacementCriterion;
 import ru.gofederation.gotha.util.GothaLocale;
 
 import java.awt.print.Printable;

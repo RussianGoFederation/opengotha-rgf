@@ -5,6 +5,7 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.PlacementCriterion;
 import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.model.RatingListType;
 import ru.gofederation.gotha.ui.TournamentDetailsPanel;
@@ -2397,7 +2398,7 @@ public class JFrTournamentOptions extends JFrame {
             Vector<String> row = new Vector<String>();
             row.add(pCrit.getLongName());
             row.add(pCrit.getShortName());
-            row.add(pCrit.getDescription(locale));
+            row.add(locale.getDescription(pCrit));
 
             model.addRow(row);
         }

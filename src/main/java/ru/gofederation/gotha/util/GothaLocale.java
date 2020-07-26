@@ -18,13 +18,13 @@
 package ru.gofederation.gotha.util;
 
 import com.ibm.icu.text.MessageFormat;
-
-import java.text.DateFormat;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import ru.gofederation.gotha.model.PlacementCriterion;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataListener;
+import java.text.DateFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public enum GothaLocale implements ComboBoxModel<GothaLocale>, I18N {
     EN(Locale.forLanguageTag("en")), // Default locale comes first. Should always be EN.
@@ -109,6 +109,10 @@ public enum GothaLocale implements ComboBoxModel<GothaLocale>, I18N {
     @Override
     public String tr(String key, Object... args) {
         return getFormat(key).format(args);
+    }
+
+    public String getDescription(PlacementCriterion crit) {
+        return tr("pps." + crit.name());
     }
 
     @Override

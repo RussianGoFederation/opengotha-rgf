@@ -15,6 +15,7 @@ import ru.gofederation.gotha.model.EgfPinKt;
 import ru.gofederation.gotha.model.FfgLicence;
 import ru.gofederation.gotha.model.FfgLicenceKt;
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.PlacementCriterion;
 import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.model.PlayerJvmKt;
 import ru.gofederation.gotha.model.PlayerKt;

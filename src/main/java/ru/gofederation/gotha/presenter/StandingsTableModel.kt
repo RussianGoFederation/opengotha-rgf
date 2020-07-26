@@ -18,11 +18,11 @@
 package ru.gofederation.gotha.presenter
 
 import info.vannier.gotha.DPParameterSet
-import info.vannier.gotha.PlacementCriterion
 import info.vannier.gotha.ScoredPlayer
 import info.vannier.gotha.TournamentInterface
 import info.vannier.gotha.TournamentParameterSet
 import ru.gofederation.gotha.model.HalfGame
+import ru.gofederation.gotha.model.PlacementCriterion
 import ru.gofederation.gotha.util.GothaLocale
 import javax.swing.SwingConstants
 import javax.swing.table.AbstractTableModel

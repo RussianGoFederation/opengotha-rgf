@@ -5,6 +5,7 @@ package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.PlacementCriterion;
 import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.printing.PairingPrinter;
 import ru.gofederation.gotha.ui.Dialog;

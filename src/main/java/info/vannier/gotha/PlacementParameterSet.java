@@ -17,9 +17,10 @@
 
 package info.vannier.gotha;
 
-import java.util.Arrays;
-
+import ru.gofederation.gotha.model.PlacementCriterion;
 import ru.gofederation.gotha.util.GothaLocale;
+
+import java.util.Arrays;
 
 public final class PlacementParameterSet implements java.io.Serializable{
     private static final long serialVersionUID = Gotha.GOTHA_DATA_VERSION;
@@ -169,7 +170,7 @@ public final class PlacementParameterSet implements java.io.Serializable{
     public static String criterionDescription(int uid, GothaLocale locale) {
         PlacementCriterion criterion = PlacementCriterion.fromUid(uid);
         if (null != criterion)
-            return criterion.getDescription(locale);
+            return locale.getDescription(criterion);
         return "";
     }
 

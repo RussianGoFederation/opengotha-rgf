@@ -18,13 +18,13 @@
 package ru.gofederation.api
 
 import info.vannier.gotha.GeneralParameterSet
-import info.vannier.gotha.PlacementCriterion
 import info.vannier.gotha.ScoredPlayer
 import info.vannier.gotha.Tournament
 import info.vannier.gotha.TournamentException
 import info.vannier.gotha.TournamentInterface
 import info.vannier.gotha.TournamentPlayerDoubleException
 import ru.gofederation.gotha.model.Game
+import ru.gofederation.gotha.model.PlacementCriterion
 import ru.gofederation.gotha.model.Player
 import ru.gofederation.gotha.model.PlayerRegistrationStatus
 import ru.gofederation.gotha.model.RatingOrigin

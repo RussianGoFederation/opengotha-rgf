@@ -1,5 +1,7 @@
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.PlacementCriterion;
+
 public class PairingParameterSet implements java.io.Serializable{
     private static final long serialVersionUID = Gotha.GOTHA_DATA_VERSION;
     // Standard NX1 factor ( = Rather N X 1 than 1 X N)

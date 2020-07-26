@@ -2,6 +2,7 @@ package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.Game;
 import ru.gofederation.gotha.model.HalfGame;
+import ru.gofederation.gotha.model.PlacementCriterion;
 import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.presenter.HalfGameResultsKt;
 import ru.gofederation.gotha.util.ScoreDisplayKt;

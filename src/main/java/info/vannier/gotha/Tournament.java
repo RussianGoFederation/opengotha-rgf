@@ -4,6 +4,7 @@ import kotlin.Pair;
 import mu.KLogger;
 import mu.KotlinLogging;
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.PlacementCriterion;
 import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.pairing.PairingCosts;
 import ru.gofederation.gotha.util.GothaLocale;

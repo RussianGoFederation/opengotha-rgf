@@ -1,5 +1,7 @@
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.PlacementCriterion;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;

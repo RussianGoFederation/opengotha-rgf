@@ -4,6 +4,7 @@
 package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.PlacementCriterion;
 import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.model.PlayerKt;
 import ru.gofederation.gotha.util.GothaLocale;
@@ -1857,7 +1858,7 @@ public class TournamentPrinting implements Printable {
                 ln++;
                 y = usableY + (4 + ln) * lineHeight;
                 String strCrit = plaCrit[crit].getLongName();
-                String strDescr = plaCrit[crit].getDescription(locale);
+                String strDescr = locale.getDescription(plaCrit[crit]);
                 Font italFont = new Font("Default", Font.ITALIC, fontSize);
                 g.setFont(italFont);
                 g.drawString(strCrit + " = " + strDescr, x, y);
@@ -1900,7 +1901,7 @@ public class TournamentPrinting implements Printable {
                     ln++;
                     y = usableY + (4 + ln) * lineHeight;
                     String strCrit = plaCrit[crit].getLongName();
-                    String strDescr = plaCrit[crit].getDescription(locale);
+                    String strDescr = locale.getDescription(plaCrit[crit]);
                     Font italFont = new Font("Default", Font.ITALIC, fontSize);
                     g.setFont(italFont);
                     g.drawString(strCrit + " = " + strDescr, x, y);

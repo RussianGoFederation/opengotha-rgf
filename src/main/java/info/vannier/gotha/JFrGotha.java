@@ -7,6 +7,7 @@ package info.vannier.gotha;
 import net.miginfocom.swing.MigLayout;
 import ru.gofederation.gotha.io.TableXlsxExporter;
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.PlacementCriterion;
 import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.presenter.ITableColumn;
 import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;

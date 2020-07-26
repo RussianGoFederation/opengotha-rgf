@@ -1,6 +1,7 @@
 package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.PlacementCriterion;
 import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.model.Rating;
 
