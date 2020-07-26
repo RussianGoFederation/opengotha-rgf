@@ -4,20 +4,7 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.table.TableModel;
-
+import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.model.RatingListFactory;
 import ru.gofederation.gotha.model.RatingListType;
 import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;
@@ -30,6 +17,17 @@ import ru.gofederation.gotha.ui.RatingListControls;
 import ru.gofederation.gotha.ui.RatingListSearch;
 import ru.gofederation.gotha.ui.SmmsByHand;
 import ru.gofederation.gotha.util.GothaLocale;
+
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.table.TableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.FINAL;
 import static ru.gofederation.gotha.model.PlayerRegistrationStatus.PRELIMINARY;
@@ -45,7 +43,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
     private final static int PLAYER_MODE_NEW = 1;
     private final static int PLAYER_MODE_MODIF = 2;
     private int playerMode = PLAYER_MODE_NEW;
-    private Player playerInModification = null;
+    private Player.Builder playerInModification = null;
     /**  current Tournament */
     private TournamentInterface tournament;
     /** Rating List */
@@ -255,7 +253,7 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         this.playerMode = JFrPlayersManager.PLAYER_MODE_MODIF;
         playerEditor.setMode(PlayerEditor.Mode.MODIFY);
         playerEditor.setPlayer(player);
-        playerInModification = player;
+        playerInModification = player.toBuilder();
         this.playerEditor.setPlayer(player);
         this.btnRegister.setText(locale.getString("player.btn_save"));
     }
@@ -398,9 +396,11 @@ public class JFrPlayersManager extends javax.swing.JFrame implements RatingListC
         } else if (this.playerMode == JFrPlayersManager.PLAYER_MODE_MODIF) {
             try {
                 if (tournament.isPlayerImplied(player)){
-                    player.setRegisteringStatus(FINAL);
+                    Player.Builder pb = player.toBuilder();
+                    pb.setRegisteringStatus(FINAL);
+                    player = pb.build();
                 }
-                tournament.modifyPlayer(playerInModification, player);
+                tournament.modifyPlayer(playerInModification.build(), player);
                 resetRatingListControls();
             } catch (RemoteException ex) {
                 resetRatingListControls();

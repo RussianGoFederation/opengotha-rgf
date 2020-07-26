@@ -5,6 +5,7 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.Player;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -312,9 +313,8 @@ public class JFrPlayersMMG extends javax.swing.JFrame{
             return;
         }
         for (Player p : alPlayers){
-            p.setSmmsCorrection(0);
             try {
-                tournament.modifyPlayer(p, p);
+                tournament.modifyPlayer(p, pb -> pb.setSmmsCorrection(0));
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrPlayersMMG.class.getName()).log(Level.SEVERE, null, ex);
             } catch (TournamentException ex) {
@@ -334,9 +334,8 @@ public class JFrPlayersMMG extends javax.swing.JFrame{
             return;
         }
         for (Player p : alSelectedPlayers){
-            decrementSMMS(p);
             try {
-                tournament.modifyPlayer(p, p);
+                decrementSMMS(p);
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrPlayersMMG.class.getName()).log(Level.SEVERE, null, ex);
             } catch (TournamentException ex) {
@@ -357,9 +356,8 @@ public class JFrPlayersMMG extends javax.swing.JFrame{
             return;
         }
         for (Player p : alSelectedPlayers){
-            decrementSMMS(p);
             try {
-                tournament.modifyPlayer(p, p);
+                decrementSMMS(p);
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrPlayersMMG.class.getName()).log(Level.SEVERE, null, ex);
             } catch (TournamentException ex) {
@@ -379,9 +377,8 @@ public class JFrPlayersMMG extends javax.swing.JFrame{
             return;
         }
         for (Player p : alSelectedPlayers){
-            incrementSMMS(p);
             try {
-                tournament.modifyPlayer(p, p);
+                incrementSMMS(p);
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrPlayersMMG.class.getName()).log(Level.SEVERE, null, ex);
             } catch (TournamentException ex) {
@@ -401,9 +398,8 @@ public class JFrPlayersMMG extends javax.swing.JFrame{
             return;
         }
         for (Player p : alSelectedPlayers){
-            incrementSMMS(p);
             try {
-                tournament.modifyPlayer(p, p);
+                incrementSMMS(p);
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrPlayersMMG.class.getName()).log(Level.SEVERE, null, ex);
             } catch (TournamentException ex) {
@@ -423,9 +419,8 @@ public class JFrPlayersMMG extends javax.swing.JFrame{
             return;
         }
         for (Player p : alSelectedPlayers){
-            decrementSMMS(p);
             try {
-                tournament.modifyPlayer(p, p);
+                decrementSMMS(p);
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrPlayersMMG.class.getName()).log(Level.SEVERE, null, ex);
             } catch (TournamentException ex) {
@@ -446,9 +441,8 @@ public class JFrPlayersMMG extends javax.swing.JFrame{
             return;
         }
         for (Player p : alSelectedPlayers){
-            incrementSMMS(p);
             try {
-                tournament.modifyPlayer(p, p);
+                incrementSMMS(p);
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrPlayersMMG.class.getName()).log(Level.SEVERE, null, ex);
             } catch (TournamentException ex) {
@@ -560,9 +554,13 @@ public class JFrPlayersMMG extends javax.swing.JFrame{
         return alSelectedPlayers;
     }
 
-    private void incrementSMMS(Player p){
+    private void incrementSMMS(Player p) throws RemoteException, TournamentException {
         int smmsCorr = p.getSmmsCorrection();
-        if (smmsCorr < 2) p.setSmmsCorrection(smmsCorr + 1);
+        if (smmsCorr < 2) {
+            try {
+                tournament.modifyPlayer(p, pb -> pb.setSmmsCorrection(smmsCorr + 1));
+            } catch (RemoteException | TournamentException e) { }
+        }
         else{
             int answer = JOptionPane.showConfirmDialog(this,
                     p.fullName() + "'s rank is actually" + p.getRank().toString()
@@ -570,13 +568,13 @@ public class JFrPlayersMMG extends javax.swing.JFrame{
                     "Message",
                     JOptionPane.YES_NO_OPTION);
             if (answer == JOptionPane.YES_OPTION)
-                p.setRank(p.getRank().plus(1));
+                tournament.modifyPlayer(p, pb -> pb.setRank(pb.getRank().plus(1)));
         }
     }
 
-    private void decrementSMMS(Player p){
+    private void decrementSMMS(Player p) throws RemoteException, TournamentException {
         int smmsCorr = p.getSmmsCorrection();
-        if (smmsCorr > -1) p.setSmmsCorrection(smmsCorr - 1);
+        if (smmsCorr > -1) tournament.modifyPlayer(p, pb -> pb.setSmmsCorrection(smmsCorr - 1));
         else{
             int answer = JOptionPane.showConfirmDialog(this,
                     p.fullName() + "'s rank is actually " + p.getRank().toString()
@@ -584,7 +582,7 @@ public class JFrPlayersMMG extends javax.swing.JFrame{
                     "Message",
                     JOptionPane.QUESTION_MESSAGE);
             if (answer == JOptionPane.YES_OPTION)
-                p.setRank(p.getRank().minus(1));
+                tournament.modifyPlayer(p, pb -> pb.setRank(p.getRank().minus(1)));
         }
     }
 

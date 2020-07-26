@@ -6,6 +6,7 @@ package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.util.GothaLocale;
 
 import javax.swing.JCheckBox;
@@ -255,18 +256,17 @@ public class JFrDiscardRounds extends javax.swing.JFrame {
                 Logger.getLogger(JFrDiscardRounds.class.getName()).log(Level.SEVERE, null, ex);
             }
             for (Player p: alP){
-                boolean[] bPart = p.getParticipating();
+                Player.Builder pb = p.toBuilder();
                 newR = -1;
                 for (int oldR = 0; oldR < nbRounds; oldR++){
                     if(!bRoundsToKeep[oldR]) continue;
                     newR++;
                     if (newR == oldR) continue;
-                    bPart[newR] = bPart[oldR];
-                    bPart[oldR] = true;
+                    pb.setParticipating(newR, pb.isParticipating(oldR));
+                    pb.setParticipating(oldR, true);
                 }
-                p.setParticipating(bPart);
                 try {
-                    tournament.modifyPlayer(p, p);
+                    tournament.modifyPlayer(p, pb.build());
                 } catch (TournamentException ex) {
                     Logger.getLogger(JFrDiscardRounds.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (RemoteException ex) {

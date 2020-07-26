@@ -24,8 +24,6 @@ import info.vannier.gotha.GeneralParameterSet;
 import info.vannier.gotha.Gotha;
 import info.vannier.gotha.GothaImageLoader;
 import info.vannier.gotha.JFrPlayersManager;
-import info.vannier.gotha.Player;
-import info.vannier.gotha.PlayerException;
 import info.vannier.gotha.RatedPlayer;
 import info.vannier.gotha.TournamentInterface;
 import net.miginfocom.swing.MigLayout;
@@ -33,8 +31,12 @@ import ru.gofederation.gotha.model.AgaId;
 import ru.gofederation.gotha.model.AgaIdKt;
 import ru.gofederation.gotha.model.EgfPinKt;
 import ru.gofederation.gotha.model.FfgLicence;
+import ru.gofederation.gotha.model.Player;
+import ru.gofederation.gotha.model.PlayerJvmKt;
+import ru.gofederation.gotha.model.PlayerKt;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rank;
+import ru.gofederation.gotha.model.RankKt;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOrigin;
 import ru.gofederation.gotha.model.RatingOriginKt;
@@ -355,7 +357,7 @@ public class PlayerEditor extends JPanel {
         this.smmsCorrection.setText("0");
         this.rating.setText(Integer.toString(stdRating));
         this.agaId.setText(player.getAgaId());
-        int rank = Player.rankFromRating(ratingOrigin, stdRating);
+        int rank = new Rating(ratingOrigin, stdRating).getValue();
         if (rankFromGrade) rank = Player.convertKDPToInt(player.getStrGrade());
         this.rank.setText(Player.convertIntToKD(rank));
         this.grade.setText(player.getStrGrade());
@@ -416,16 +418,16 @@ public class PlayerEditor extends JPanel {
         firstName.setText(player.getFirstName());
         lastName.setText(player.getName());
         patronymic.setText(player.getPatronymic());
-        birthday.setDate(player.getDateOfBirth());
+        birthday.setDate(PlayerJvmKt.getDateOfBirthJvm(player));
 
         int rating = player.getRating().getValue();
         this.rating.setText(Integer.toString(rating));
-        RatingOrigin ratingOrigin = player.getRatingOrigin();
+        RatingOrigin ratingOrigin = player.getRating().getOrigin();
         String strRatingOrigin = ratingOrigin.toString();
-        if (ratingOrigin == RatingOrigin.FFG) strRatingOrigin += " : " + player.getStrRawRating();
-        if (ratingOrigin == RatingOrigin.AGA) strRatingOrigin += " : " + player.getStrRawRating();
+        if (ratingOrigin == RatingOrigin.FFG) strRatingOrigin += " : " + PlayerKt.getStrRawRating(player);
+        if (ratingOrigin == RatingOrigin.AGA) strRatingOrigin += " : " + PlayerKt.getStrRawRating(player);
         this.ratingOrigin.setText(strRatingOrigin);
-        this.grade.setText(player.getStrGrade());
+        this.grade.setText(player.getGrade().toString());
 
         if (player.isSmmsByHand()) {
             this.smmsByHand.setSelected(true);
@@ -470,7 +472,7 @@ public class PlayerEditor extends JPanel {
             this.rgfId.setText(Integer.toString(player.getRgfId().getId()));
             this.newRgf.setEnabled(false);
         }
-        if (player.getRatingOrigin() != RatingOrigin.RGF) {
+        if (player.getRating().getOrigin() != RatingOrigin.RGF) {
             this.expertAssessmentRgf.setSelected(true);
         } else {
             this.expertAssessmentRgf.setSelected(false);
@@ -502,10 +504,9 @@ public class PlayerEditor extends JPanel {
         this.registrationPreliminary.setEnabled(!bImplied);
         this.registrationFinal.setEnabled(!bImplied);
 
-        boolean[] bPart = player.getParticipating();
         for (int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++) {
             try {
-                participation[r].setSelected(bPart[r]);
+                participation[r].setSelected(player.isParticipating(r));
                 participation[r].setEnabled(!tournament.isPlayerImpliedInRound(player, r));
             } catch (RemoteException ex) {
                 Logger.getLogger(PlayerEditor.class.getName()).log(Level.SEVERE, null, ex);
@@ -536,7 +537,7 @@ public class PlayerEditor extends JPanel {
             rating = Integer.parseInt(this.rating.getText());
         } catch (Exception e){
             strOrigin = "INI";
-            rating = Player.ratingFromRank(RatingOrigin.RGF, rank.getValue()); // TODO: somehow set proper origin
+            rating = rank.toRating(RatingOrigin.RGF).getValue(); // TODO: somehow set proper origin
         }
 
         int smmsCorrection;
@@ -555,45 +556,39 @@ public class PlayerEditor extends JPanel {
             // Noop is ok
         }
 
+        Player.Builder b = new Player.Builder();
+        b.setName(this.lastName.getText());
+        b.setFirstName(this.firstName.getText());
+        b.setPatronymic(this.patronymic.getText());
+        PlayerJvmKt.setDateOfBirthJvm(b, this.birthday.getDate());
+        b.setCountry(((String)this.country.getSelectedItem()));
+        b.setClub(this.club.getText().trim());
+        b.setEgfPin(EgfPinKt.egfPin(this.egfPin.getText()));
+        b.setFfgLicence(new FfgLicence(this.ffgLicence.getText(), this.ffgLicenceStatus.getText()));
+        b.setAgaId(AgaIdKt.agaId(this.agaId.getText(), this.agaExpirationDate.getText()));
+        b.setRgfId(new RgfId(rgfId, rgfId == 0 && newRgf.isSelected(), false));
+        b.setRank(rank);
+        b.setRating(RatingOriginKt.asRatingOrigin(strOrigin).rating(rating));
+        b.setGrade(RankKt.asRank(this.grade.getText()));
+        b.setSmmsCorrection(smmsCorrection);
+        b.setSmmsByHand(getSmmsByHand());
+        b.setRegisteringStatus(registration);
+
+        int nbRounds = 0;
         try {
-            p = new Player.Builder()
-                .setName(this.lastName.getText())
-                .setFirstName(this.firstName.getText())
-                .setPatronymic(this.patronymic.getText())
-                .setDateOfBirth(this.birthday.getDate())
-                .setCountry(((String)this.country.getSelectedItem()))
-                .setClub(this.club.getText().trim())
-                .setEgfPin(EgfPinKt.egfPin(this.egfPin.getText()))
-                .setFfgLicence(new FfgLicence(this.ffgLicence.getText(), this.ffgLicenceStatus.getText()))
-                .setAgaId(AgaIdKt.agaId(this.agaId.getText(), this.agaExpirationDate.getText()))
-                .setRgfId(new RgfId(rgfId, rgfId == 0 && newRgf.isSelected(), false))
-                .setRank(rank.getValue())
-                .setRating(rating, RatingOriginKt.asRatingOrigin(strOrigin))
-                .setGrade(this.grade.getText())
-                .setSmmsCorrection(smmsCorrection)
-                .setSmmsByHand(getSmmsByHand())
-                .setRegistrationStatus(registration)
-                .build();
-
-            boolean[] bPart = new boolean[Gotha.MAX_NUMBER_OF_ROUNDS];
-
-            int nbRounds = 0;
-            try {
-                nbRounds = tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds();
-            } catch (RemoteException ex) {
-                Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            for (int i = 0; i < nbRounds; i++) {
-                bPart[i] = participation[i].isSelected();
-            }
-            for (int i = nbRounds; i < Gotha.MAX_NUMBER_OF_ROUNDS; i++) {
-                bPart[i] = participation[nbRounds - 1].isSelected();
-            }
-            p.setParticipating(bPart);
-        } catch (PlayerException pe) {
-            JOptionPane.showMessageDialog(this, pe.getMessage(), "Message", JOptionPane.ERROR_MESSAGE);
-            return null;
+            nbRounds = tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds();
+        } catch (RemoteException ex) {
+            Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        for (int i = 0; i < nbRounds; i++) {
+            b.setParticipating(i, participation[i].isSelected());
+        }
+        for (int i = nbRounds; i < Gotha.MAX_NUMBER_OF_ROUNDS; i++) {
+            b.setParticipating(i, participation[nbRounds - 1].isSelected());
+        }
+
+        p = b.build();
+
         if (mode == Mode.NEW) {
             Preferences prefs = Preferences.userRoot().node(Gotha.strPreferences + "/playersmanager");
             prefs.put("defaultregistration", registration.toString());
@@ -797,13 +792,12 @@ public class PlayerEditor extends JPanel {
             strLine = strLine.replaceAll("<club>", p.getClub());
             strLine = strLine.replaceAll("<rank>", p.getRank().toString());
             int rawRating = p.getRating().getValue();
-            RatingOrigin ratingOrigin = p.getRatingOrigin();
+            RatingOrigin ratingOrigin = p.getRating().getOrigin();
             if (ratingOrigin == FFG) {
                 rawRating -= 2050;
             }
             strLine = strLine.replaceAll("<rating>", Integer.valueOf(rawRating).toString());
             strLine = strLine.replaceAll("<ratingorigin>", ratingOrigin.toString());
-            boolean[] bPart = p.getParticipating();
             String strPart = "";
             int nbRounds = 0;
             try {
@@ -812,7 +806,7 @@ public class PlayerEditor extends JPanel {
                 Logger.getLogger(JFrPlayersManager.class.getName()).log(Level.SEVERE, null, ex);
             }
             for (int r = 0; r < nbRounds; r++) {
-                if (bPart[r]) {
+                if (p.isParticipating(r)) {
                     strPart += " " + (r + 1);
                 } else {
                     strPart += " -";

@@ -6,6 +6,7 @@ package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.ui.FrameBase;
 import ru.gofederation.gotha.util.GothaLocale;
 
@@ -647,22 +648,19 @@ private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {
         }
 
         // Force participation to true
-        boolean[] bPart1 = p1.getParticipating();
-        if (!bPart1[availableRound]){
-            bPart1[availableRound] = true;
+        int availableRoundFinal = availableRound;
+        if (!p1.isParticipating(availableRound)){
             try {
-                tournament.modifyPlayer(p1, p1);
+                tournament.modifyPlayer(p1, pb -> pb.setParticipating(availableRoundFinal, true));
             } catch (TournamentException ex) {
                 Logger.getLogger(JFrGamesRR.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrGamesRR.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        boolean[] bPart2 = p2.getParticipating();
-        if (!bPart2[availableRound]){
-            bPart2[availableRound] = true;
+        if (!p2.isParticipating(availableRound)){
             try {
-                tournament.modifyPlayer(p2, p2);
+                tournament.modifyPlayer(p2, pb -> pb.setParticipating(availableRoundFinal, true));
             } catch (TournamentException ex) {
                 Logger.getLogger(JFrGamesRR.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {

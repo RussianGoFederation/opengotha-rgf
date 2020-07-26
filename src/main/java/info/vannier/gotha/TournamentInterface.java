@@ -2,11 +2,13 @@ package info.vannier.gotha;
 
 import kotlin.Pair;
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.Player;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 public interface TournamentInterface extends Remote{
 
@@ -43,6 +45,7 @@ public interface TournamentInterface extends Remote{
     public boolean removePlayer(Player p)  throws TournamentException, RemoteException;
     public void removeAllPlayers()  throws RemoteException;
     public void modifyPlayer(Player p, Player modifiedPlayer )  throws TournamentException, RemoteException;
+    public void modifyPlayer(Player p, Consumer<Player.Builder> f) throws TournamentException, RemoteException;
     public Player getPlayerByKeyString(String keyString) throws RemoteException;
     public Player getPlayerByObsoleteCanonicalName(String canonicalName) throws RemoteException;
     public Player homonymPlayerOf(Player p)  throws RemoteException;

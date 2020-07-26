@@ -1,7 +1,10 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.Player;
+import ru.gofederation.gotha.util.GothaLocale;
 
+import javax.swing.JOptionPane;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,8 +13,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import ru.gofederation.gotha.util.GothaLocale;
 
 /**
  *

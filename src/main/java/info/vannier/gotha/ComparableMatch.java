@@ -2,6 +2,7 @@
 package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.Player;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;

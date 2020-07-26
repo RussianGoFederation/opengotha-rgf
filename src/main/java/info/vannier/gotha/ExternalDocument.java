@@ -15,7 +15,11 @@ import ru.gofederation.gotha.model.EgfPinKt;
 import ru.gofederation.gotha.model.FfgLicence;
 import ru.gofederation.gotha.model.FfgLicenceKt;
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.Player;
+import ru.gofederation.gotha.model.PlayerJvmKt;
+import ru.gofederation.gotha.model.PlayerKt;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
+import ru.gofederation.gotha.model.RankKt;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingOriginKt;
 import ru.gofederation.gotha.model.RgfId;
@@ -51,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -190,7 +195,7 @@ public class ExternalDocument {
 
             Player p;
             try {
-                p = new Player(
+                Player.Builder pb = new Player(
                         strNa,
                         strFi,
                         strCountry,
@@ -205,13 +210,9 @@ public class ExternalDocument {
                         INI,
                         "",
                         0,
-                        FINAL);
-                boolean[] bPart = new boolean[Gotha.MAX_NUMBER_OF_ROUNDS];
-                for (int i = 0; i < Gotha.MAX_NUMBER_OF_ROUNDS; i++) {
-                    bPart[i] = true;
-                }
-                p.setParticipating(bPart);
-            } catch (PlayerException pe) {
+                        FINAL).toBuilder();
+                p = pb.build();
+            } catch (Exception pe) {
                 JOptionPane.showMessageDialog(null, pe.getMessage(), "Message", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -228,8 +229,9 @@ public class ExternalDocument {
             if (opponentNumber < 0) {
                 int playerNumber = phg.playerNumber;
                 int roundNumber = phg.roundNumber;
-                Player p = alPlayers.get(playerNumber);
+                Player.Builder p = alPlayers.get(playerNumber).toBuilder();
                 p.setParticipating(roundNumber, false);
+                alPlayers.set(playerNumber, p.build());
                 alPotentialHalfGames.remove(i);
             }
         }
@@ -318,12 +320,7 @@ public class ExternalDocument {
                         "",
                         0,
                         PlayerRegistrationStatus.fromString(strRg));
-                boolean[] bPart = new boolean[Gotha.MAX_NUMBER_OF_ROUNDS];
-                for (int i = 0; i < Gotha.MAX_NUMBER_OF_ROUNDS; i++) {
-                    bPart[i] = true;
-                }
-                p.setParticipating(bPart);
-            } catch (PlayerException pe) {
+            } catch (Exception pe) {
                 JOptionPane.showMessageDialog(null, pe.getMessage(), "Message", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -669,28 +666,28 @@ public class ExternalDocument {
             String registeringStatus = extractNodeValue(nnm, "registeringStatus", FINAL.toString());
             Player p = null;
             try {
-                p = new Player.Builder()
-                    .setName(name)
-                    .setFirstName(firstName)
-                    .setPatronymic(patronymic)
-                    .setDateOfBirth(dateOfBirth)
-                    .setCountry(country)
-                    .setClub(club)
-                    .setEgfPin(EgfPinKt.egfPin(egfPin))
-                    .setFfgLicence(FfgLicenceKt.ffgLicence(ffgLicence, ffgLicenceStatus))
-                    .setAgaId(AgaIdKt.agaId(agaId, agaExpirationDate))
-                    .setRgfId(new RgfId(rgfId, false, false))
-                    .setRank(rank)
-                    .setRating(rating, RatingOriginKt.asRatingOrigin(ratingOrigin))
-                    .setGrade(strGrade)
-                    .setSmmsCorrection(smmsCorrection)
-                    .setSmmsByHand(extractNodeIntValue(nnm, "forcedSmms", -1))
-                    .setRegistrationStatus(PlayerRegistrationStatus.fromString(registeringStatus))
-                    .build();
-            } catch (PlayerException ex) {
+                Player.Builder pb = new Player.Builder();
+                pb.setName(name);
+                pb.setFirstName(firstName);
+                pb.setPatronymic(patronymic);
+                PlayerJvmKt.setDateOfBirthJvm(pb, dateOfBirth);
+                pb.setCountry(country);
+                pb.setClub(club);
+                pb.setEgfPin(EgfPinKt.egfPin(egfPin));
+                pb.setFfgLicence(FfgLicenceKt.ffgLicence(ffgLicence, ffgLicenceStatus));
+                pb.setAgaId(AgaIdKt.agaId(agaId, agaExpirationDate));
+                pb.setRgfId(new RgfId(rgfId, false, false));
+                pb.setRank(RankKt.asRank(rank));
+                pb.setRating(RatingOriginKt.asRatingOrigin(ratingOrigin).rating(rating));
+                pb.setGrade(RankKt.asRank(strGrade));
+                pb.setSmmsCorrection(smmsCorrection);
+                pb.setSmmsByHand(extractNodeIntValue(nnm, "forcedSmms", -1));
+                pb.setRegisteringStatus(PlayerRegistrationStatus.fromString(registeringStatus));
+                pb.setParticipating(participating);
+                p = pb.build();
+            } catch (Exception ex) {
                 Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
             }
-            p.setParticipating(participating);
 
             alPlayers.add(p);
         }
@@ -1885,7 +1882,7 @@ public class ExternalDocument {
         // For each player without an agaId, find an available Id, starting from 99999 and decreasing
         // To find a not assigned one, search alOrderedScoredPlayers starting from upper index and decreasing
         int iMax = alOrderedScoredPlayers.size() - 1;
-        int newId = 99999;
+        final AtomicInteger newId = new AtomicInteger(99999);
 
         boolean somethingHasChanged = false;
         for (Iterator<ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
@@ -1894,19 +1891,18 @@ public class ExternalDocument {
                 continue;
             }
             // newId should stay above the id assigned to iMax
-            while (newId == getIntAgaId(alOrderedScoredPlayers.get(iMax))) {
-                newId--;
+            while (newId.get() == getIntAgaId(alOrderedScoredPlayers.get(iMax))) {
+                newId.decrementAndGet();
                 iMax--;
             }
-            Player p = null;
             try {
-                p = tournament.getPlayerByKeyString(sP.getKeyString());
-            } catch (RemoteException ex) {
+                Player p = tournament.getPlayerByKeyString(sP.getKeyString());
+                tournament.modifyPlayer(p, pb -> pb.setAgaId(AgaIdKt.agaId("" + newId.get(), "")));
+            } catch (RemoteException | TournamentException ex) {
                 Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
             }
-            p.setAgaId(AgaIdKt.agaId("" + newId, ""));
             somethingHasChanged = true;
-            newId--;
+            newId.decrementAndGet();
         }
 
         if (somethingHasChanged){
@@ -2298,14 +2294,14 @@ public class ExternalDocument {
                 output.write("<td class=" + strPar + " align=\"center\">" + p.getCountry() + "</td>");
                 output.write("<td class=" + strPar + " align=\"center\">" + p.getClub() + "</td>");
                 //String strRk = Player.convertIntToKD(p.getRank());
-                String strGr = p.getStrGrade();
+                String strGr = p.getGrade().toString();
 //                output.write("<td class=" + strPar + " align=\"center\">" + strRk + "</td>");
                 output.write("<td class=" + strPar + " align=\"center\">" + strGr + "</td>");
                 String strMM = "" + p.smms(tournament.getTournamentParameterSet().getGeneralParameterSet());
                 output.write("<td class=" + strPar + " align=\"center\">" + strMM + "</td>");
                 String strRt = "" + p.getRating();
                 output.write("<td class=" + strPar + " align=\"center\">" + strRt + "</td>");
-                String strPart = Player.convertParticipationToString(p, tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds());
+                String strPart = p.getParticipatingString(tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds());
                 output.write("<td class=\"" + strPar + " participation\"" + "align=\"center\">" + strPart + "&nbsp;</td>");
                 output.write("</tr>");
             }
@@ -2519,10 +2515,10 @@ public class ExternalDocument {
                 String strTN = "" + (g.getBoard() + 1);
                 output.write("<td class=" + strPar + ">" + strTN + "</td>");
                 Player wP = g.getWhitePlayer();
-                String strWP = wP.augmentedPlayerName(dpps);
+                String strWP = PlayerKt.augmentedPlayerName(wP, dpps);
                 output.write("<td class=" + strPar + " align=\"left\">" + strWP + "&nbsp;</td>");
                 Player bP = g.getBlackPlayer();
-                String strBP = bP.augmentedPlayerName(dpps);
+                String strBP = PlayerKt.augmentedPlayerName(bP, dpps);
                 output.write("<td class=" + strPar + " align=\"left\">" + strBP + "&nbsp;</td>");
                 String strHd = "" + g.getHandicap();
                 output.write("<td class=" + strPar + " align=\"center\">" + strHd + "&nbsp;</td>");
@@ -2660,7 +2656,7 @@ public class ExternalDocument {
                 String strNF = sP.fullName();
                 output.write("<td class=" + strPar + ">" + strNF + "</td>");
 //                String strRank = Player.convertIntToKD(sP.getRank());
-                String strGrade = sP.getStrGrade();
+                String strGrade = sP.getGrade().toString();
                 output.write("<td class=" + strPar + strAlCenter + ">" + strGrade + "</td>");
 
                 if (tps.getDPParameterSet().isDisplayCoCol()){
@@ -2840,9 +2836,9 @@ public class ExternalDocument {
                             }
                         }
 
-                        String strNF = p1.augmentedPlayerName(dpps);
+                        String strNF = PlayerKt.augmentedPlayerName(p1, dpps);
                         output.write("<td class=" + strPar + " align=\"left\">" + strP1Color + " " + strNF + "&nbsp;</td>");
-                        strNF = p2.augmentedPlayerName(dpps);
+                        strNF = PlayerKt.augmentedPlayerName(p2, dpps);
                         output.write("<td class=" + strPar + " align=\"left\">" + strP2Color + " " + strNF + "&nbsp;</td>");
 
                         String strHd = "" + game.getHandicap();
@@ -3142,7 +3138,7 @@ public class ExternalDocument {
             String strName = p.getName();
             String strFirstName = p.getFirstName();
             String strPatronymic = p.getPatronymic();
-            Date dateOfBirth = p.getDateOfBirth();
+            Date dateOfBirth = PlayerJvmKt.getDateOfBirthJvm(p);
             String strCountry = p.getCountry();
             String strClub = p.getClub();
             String strEgfPin = p.getEgfPin() != null ? p.getEgfPin().getPin() : "";
@@ -3150,18 +3146,10 @@ public class ExternalDocument {
             AgaId agaId = p.getAgaId();
             String strRank = p.getRank().toString();
             String strRating = Integer.valueOf(p.getRating().getValue()).toString();
-            String strRatingOrigin = p.getRatingOrigin().toString();
-            String strGrade = p.getStrGrade();
+            String strRatingOrigin = p.getRating().getOrigin().toString();
+            String strGrade = p.getGrade().toString();
             String strSMMSCorrection = Integer.valueOf(p.getSmmsCorrection()).toString();
-            boolean[] part = p.getParticipating();
-            String strParticipating = "";
-            for (int r = 0; r < Gotha.MAX_NUMBER_OF_ROUNDS; r++) {
-                if (part[r]) {
-                    strParticipating += "1";
-                } else {
-                    strParticipating += "0";
-                }
-            }
+            String strParticipating = p.getParticipatingString(Gotha.MAX_NUMBER_OF_ROUNDS, '1', '0');
             String strRegisteringStatus = p.getRegisteringStatus().toString();
 
             Element emPlayer = document.createElement("Player");

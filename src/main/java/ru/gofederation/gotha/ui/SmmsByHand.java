@@ -17,12 +17,12 @@
 
 package ru.gofederation.gotha.ui;
 
+import info.vannier.gotha.GeneralParameterSet;
+import info.vannier.gotha.TournamentException;
+import info.vannier.gotha.TournamentInterface;
 import net.miginfocom.swing.MigLayout;
-
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import ru.gofederation.gotha.model.Player;
+import ru.gofederation.gotha.util.GothaLocale;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -32,11 +32,10 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import info.vannier.gotha.GeneralParameterSet;
-import info.vannier.gotha.Player;
-import info.vannier.gotha.TournamentInterface;
-import ru.gofederation.gotha.util.GothaLocale;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public final class SmmsByHand extends JPanel {
     private final TournamentInterface tournament;
@@ -75,9 +74,11 @@ public final class SmmsByHand extends JPanel {
                 GeneralParameterSet gps = tournament.getTournamentParameterSet().getGeneralParameterSet();
                 for (int i = 0; i <= selectedRows[selectedRows.length - 1]; i++) {
                     Player player = playerList.getPlayer(i);
-                    player.setSmmsByHand(player.smms(gps) + 1);
+                    Player.Builder builder = player.toBuilder();
+                    builder.setSmmsByHand(player.smms(gps) + 1);
+                    tournament.modifyPlayer(player, builder.build());
                 }
-            } catch (RemoteException e) {
+            } catch (TournamentException | RemoteException e) {
                 // TODO
             }
             setTournamentUpdateTime();
@@ -175,7 +176,9 @@ public final class SmmsByHand extends JPanel {
     private void setZero(List<Player> players) {
         playerList.preserveSelection(() -> {
             for (Player player : players) {
-                player.setSmmsByHand(0);
+                try {
+                    tournament.modifyPlayer(player, pb -> pb.setSmmsByHand(0));
+                } catch (TournamentException | RemoteException e) { }
             }
             setTournamentUpdateTime();
         });
@@ -184,7 +187,9 @@ public final class SmmsByHand extends JPanel {
     private void setDefault(List<Player> players) {
         playerList.preserveSelection(() -> {
             for (Player player : players) {
-                player.setSmmsByHand(-1);
+                try {
+                    tournament.modifyPlayer(player, pb -> pb.setSmmsByHand(-1));
+                } catch (TournamentException | RemoteException e) { }
             }
             setTournamentUpdateTime();
         });
@@ -194,11 +199,15 @@ public final class SmmsByHand extends JPanel {
         playerList.preserveSelection(() -> {
             try {
                 GeneralParameterSet gps = tournament.getTournamentParameterSet().getGeneralParameterSet();
-                for (Player player : players) {
-                    int smms = player.smms(gps) + delta;
-                    if (smms < 0) smms = 0;
-                    player.setSmmsByHand(smms);
-                }
+                try {
+                    for (Player player : players) {
+                        tournament.modifyPlayer(player, pb -> {
+                            int smms = player.smms(gps) + delta;
+                            if (smms < 0) smms = 0;
+                            pb.setSmmsByHand(smms);
+                        });
+                    }
+                } catch (TournamentException | RemoteException e) { }
                 setTournamentUpdateTime();
             } catch (RemoteException e) {
                 // TODO

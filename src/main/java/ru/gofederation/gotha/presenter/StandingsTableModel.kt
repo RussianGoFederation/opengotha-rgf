@@ -112,7 +112,7 @@ class StandingsTableModel(
             ColumnType.NUMBER -> "${row + 1}"
             ColumnType.PLACE -> places[row]
             ColumnType.NAME -> players[row].fullName()
-            ColumnType.GRADE -> players[row].strGrade
+            ColumnType.GRADE -> players[row].grade.toString()
             ColumnType.COUNTRY -> players[row].country
             ColumnType.CLUB -> players[row].club
             ColumnType.RATING -> players[row].rating.value

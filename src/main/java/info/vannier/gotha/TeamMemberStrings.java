@@ -1,5 +1,7 @@
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.Player;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,19 +20,19 @@ public class TeamMemberStrings {
     public String strClub;
     public String strRating;
     public String strMembership;
-    
+
     public static TeamMemberStrings[] buildTeamMemberStrings(TournamentInterface tournament) throws RemoteException{
         TeamMemberStrings[] arTMS = new TeamMemberStrings
                 [Gotha.MAX_NUMBER_OF_TEAMS * (Gotha.MAX_NUMBER_OF_MEMBERS_BY_TEAM * Gotha.MAX_NUMBER_OF_ROUNDS +1)];
-        
+
         ArrayList<Team> alTeams = tournament.teamsList();
         int teamSize = tournament.getTeamSize();
         int numberOfRounds = tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds();
 
         TeamComparator teamComparator = new TeamComparator(TeamComparator.TEAM_NUMBER_ORDER, teamSize);
         Collections.sort(alTeams, teamComparator);
-        
-        int numTS = 0; 
+
+        int numTS = 0;
         for (Team team : alTeams) {
             TeamMemberStrings tMS = new TeamMemberStrings();
             tMS.strTeamNumber  = "" + (team.getTeamNumber() + 1);
@@ -41,9 +43,9 @@ public class TeamMemberStrings {
             tMS.strClub        = "";
             tMS.strRating      = "";
             tMS.strMembership  = "";
-            
+
             arTMS[numTS++] = tMS;
-            
+
             for (int ib = 0; ib < teamSize; ib++){
                 ArrayList<Player> alP = tournament.playersList(team, ib);
                 if (alP.isEmpty()) alP.add(null);
@@ -64,12 +66,12 @@ public class TeamMemberStrings {
                         tMS.strCountry     = p.getCountry();
                         tMS.strClub        = p.getClub();
                         tMS.strRating      = "" + p.getRating();
-                        
+
                         boolean[] bM = tournament.membership(p, team, ib);
                         tMS.strMembership  = "";
                         for (int r = 0; r < numberOfRounds; r++){
-                            tMS.strMembership += bM[r] ? "+" : "-"; 
-                        }                       
+                            tMS.strMembership += bM[r] ? "+" : "-";
+                        }
                     }
                     arTMS[numTS++] = tMS;
                 }
@@ -77,5 +79,5 @@ public class TeamMemberStrings {
         }
         return arTMS;
     }
-    
+
 }

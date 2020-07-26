@@ -17,7 +17,7 @@
 
 package ru.gofederation.gotha.presenter
 
-import info.vannier.gotha.Player
+import ru.gofederation.gotha.model.Player
 
 class PlayersQuickCheckTableModel(players: List<Player>, numberOfRounds: Int) : GothaTableModel<Player>(players, listOf(
     PlayerTableColumn.Registration(),

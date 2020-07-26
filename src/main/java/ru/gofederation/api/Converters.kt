@@ -19,13 +19,13 @@ package ru.gofederation.api
 
 import info.vannier.gotha.GeneralParameterSet
 import info.vannier.gotha.PlacementCriterion
-import info.vannier.gotha.Player
 import info.vannier.gotha.ScoredPlayer
 import info.vannier.gotha.Tournament
 import info.vannier.gotha.TournamentException
 import info.vannier.gotha.TournamentInterface
 import info.vannier.gotha.TournamentPlayerDoubleException
 import ru.gofederation.gotha.model.Game
+import ru.gofederation.gotha.model.Player
 import ru.gofederation.gotha.model.PlayerRegistrationStatus
 import ru.gofederation.gotha.model.RatingOrigin
 import ru.gofederation.gotha.model.RgfId
@@ -81,7 +81,7 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
                         }
                         try {
                             val rating = RatingOrigin.RGF.clampRatingValue(Integer.parseInt(application.rating))
-                            builder.setRating(rating, RatingOrigin.RGF)
+                            builder.rating = RatingOrigin.RGF.rating(rating)
                             builder.rank = builder.rating.toRank()
                         } catch (e: NumberFormatException) {
                             // NOOP is ok
@@ -116,9 +116,9 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
                                 assessmentRating = apiPlayer.assessmentRating
                             )
                         }
-                        builder.setRating(apiPlayer.rating, RatingOrigin.RGF)
+                        builder.rating = RatingOrigin.RGF.rating(apiPlayer.rating)
                         builder.rank = builder.rating.toRank()
-                        builder.registrationStatus = PlayerRegistrationStatus.FINAL
+                        builder.registeringStatus = PlayerRegistrationStatus.FINAL
                         builder.smmsByHand = apiPlayer.mm0_4
                     }.build()
                     playersMap[apiPlayer.id] = player
@@ -186,12 +186,11 @@ fun gotha2rgf(gotha: TournamentInterface): RgfTournament {
     val playersMap = HashMap<String, RgfTournament.Player>()
     val players = gotha.orderedScoredPlayersList(finalRound, pps)
         .mapIndexed { index, scoredPlayer ->
-            val rgfId = scoredPlayer.rgfId ?: RgfId(0)
             val player = RgfTournament.Player(
                 id = index + 1,
-                playerId = if (rgfId.id > 0) scoredPlayer.rgfId.id else null,
-                newPlayer = rgfId.newPlayer,
-                assessmentRating = rgfId.assessmentRating,
+                playerId = scoredPlayer.rgfId?.id,
+                newPlayer = scoredPlayer.rgfId?.newPlayer ?: false,
+                assessmentRating = scoredPlayer.rgfId?.assessmentRating ?: false,
                 firstName = scoredPlayer.firstName,
                 lastName = scoredPlayer.name,
                 patronymic = scoredPlayer.patronymic,

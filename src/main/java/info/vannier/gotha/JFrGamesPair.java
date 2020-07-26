@@ -5,6 +5,7 @@ package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.printing.PairingPrinter;
 import ru.gofederation.gotha.ui.Dialog;
 import ru.gofederation.gotha.ui.PrinterSettings;
@@ -202,7 +203,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
 
         for (Player p : hmPlayers.values()) {
             if (p.getRegisteringStatus() != FINAL
-                    || !p.getParticipating()[processedRoundNumber]) {
+                    || !p.isParticipating(processedRoundNumber)) {
                 alNotPairablePlayers.add(p);
                 hmPairablePlayers.remove(p.getKeyString());
             }
@@ -326,7 +327,7 @@ public class JFrGamesPair extends javax.swing.JFrame {
             String strHd = "";
             String strRes = "";
             boolean playerFound = false;
-            if (!p.getParticipating()[r]) {
+            if (!p.isParticipating(r)) {
                 strOpponent = locale.getString("game.pairing.not_participating");
                 playerFound = true;
             }

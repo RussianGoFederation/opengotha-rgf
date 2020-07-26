@@ -5,13 +5,15 @@
 
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.tps.GeneralParameterSetInterface;
+
 import java.util.Date;
 
 /**
  *
  * @author Luc Vannier
  */
-public class GeneralParameterSet implements java.io.Serializable{
+public class GeneralParameterSet implements GeneralParameterSetInterface, java.io.Serializable {
     private static final long serialVersionUID = Gotha.GOTHA_DATA_VERSION;
 
     final static int GEN_MM_FLOOR_MIN   = -30;  // 30K
@@ -269,6 +271,7 @@ public class GeneralParameterSet implements java.io.Serializable{
         this.numberOfRounds = numberOfRounds;
     }
 
+    @Override
     public int getNumberOfCategories() {
         return numberOfCategories;
     }
@@ -305,6 +308,7 @@ public class GeneralParameterSet implements java.io.Serializable{
         }
     }
 
+    @Override
     public int[] getLowerCategoryLimits() {
         if (lowerCategoryLimits == null) return null;
         int[] lcl = new int[lowerCategoryLimits.length];
@@ -321,6 +325,7 @@ public class GeneralParameterSet implements java.io.Serializable{
         System.arraycopy(lowerCategoryLimits, 0, this.lowerCategoryLimits, 0, lowerCategoryLimits.length);
     }
 
+    @Override
     public int getGenMMBar() {
         return genMMBar;
     }
@@ -329,6 +334,7 @@ public class GeneralParameterSet implements java.io.Serializable{
         this.genMMBar = genMMBar;
     }
 
+    @Override
     public int getGenMMFloor() {
         return genMMFloor;
     }
@@ -337,6 +343,7 @@ public class GeneralParameterSet implements java.io.Serializable{
         this.genMMFloor = genMMFloor;
     }
 
+    @Override
     public int getGenMMZero() {
         return genMMZero;
     }

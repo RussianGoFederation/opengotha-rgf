@@ -9,6 +9,8 @@
 package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.Player;
+import ru.gofederation.gotha.model.RankKt;
 import ru.gofederation.gotha.model.RatingListType;
 
 import javax.swing.JOptionPane;
@@ -271,9 +273,8 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
             Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
         }
         for(Player p : alPlayers){
-            p.setRating(p.getRating().plus(2050));
             try {
-                tournament.modifyPlayer(p, p);
+                tournament.modifyPlayer(p, pb -> pb.setRating(pb.getRating().plus(2050)));
             } catch (TournamentException ex) {
                 Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
@@ -291,10 +292,9 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
             Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
         }
         for(Player p : alPlayers){
-            if (p.getRatingOrigin() == EGF) continue;
-            p.setRating(p.getRating().plus(2050));
+            if (p.getRating().getOrigin() == EGF) continue;
             try {
-                tournament.modifyPlayer(p, p);
+                tournament.modifyPlayer(p, pb -> pb.setRating(pb.getRating().plus(2050)));
             } catch (TournamentException ex) {
                 Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
@@ -323,11 +323,11 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
             String newName = Gotha.forceToASCII(p.getName());
             String newFirstName = Gotha.forceToASCII(p.getFirstName());
             if (!newName.equals(p.getName()) || !newFirstName.equals(p.getFirstName())){
-                Player newPlayer = new Player(p);
-                newPlayer.setName(newName);
-                newPlayer.setFirstName(newFirstName);
                 try {
-                    tournament.modifyPlayer(p, newPlayer);
+                    tournament.modifyPlayer(p, pb -> {
+                        pb.setName(newName);
+                        pb.setFirstName(newFirstName);
+                    });
                 } catch (RemoteException ex) {
                     Logger.getLogger(JFrPlayersMMG.class.getName()).log(Level.SEVERE, null, ex);
                     continue;
@@ -371,12 +371,11 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
                 if(!strName.equals(rp.getName())) continue;
                 if(!strFirstName.equals(rp.getFirstName())) continue;
                 bFound = true;
-                String oldStrGrade = p.getStrGrade();
+                String oldStrGrade = p.getGrade().toString();
                 String newStrGrade = rp.getStrGrade();
-                p.setStrGrade(newStrGrade);
                 if (!newStrGrade.equals("") && !newStrGrade.equals(oldStrGrade)){
                     try {
-                        tournament.modifyPlayer(p, p);
+                        tournament.modifyPlayer(p, pb -> pb.setGrade(RankKt.asRank(newStrGrade)));
                     } catch (TournamentException ex) {
                         Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (RemoteException ex) {
@@ -419,9 +418,8 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
             }
 
         for (Player  p: alPlayers){
-            p.setParticipating(bPart);
             try {
-                tournament.modifyPlayer(p, p);
+                tournament.modifyPlayer(p, pb -> pb.setParticipating(bPart));
             } catch (TournamentException ex) {
                 Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
@@ -443,11 +441,9 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
         }
 
         for (Player  p: alPlayers){
-            String strCountry = p.getCountry();
-            strCountry = strCountry.toUpperCase();
-            p.setCountry(strCountry);
+            String strCountry = p.getCountry().toUpperCase();
             try {
-                tournament.modifyPlayer(p, p);
+                tournament.modifyPlayer(p, pb -> pb.setCountry(strCountry));
             } catch (TournamentException ex) {
                 Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
@@ -472,10 +468,9 @@ public class JFrExperimentalTools extends javax.swing.JFrame {
             String strClub1 = strClub.substring(0,1).toUpperCase();
             String strClub2 = "";
             if (strClub.length() > 1) strClub2 = strClub.substring(1).toLowerCase();
-            strClub = strClub1 + strClub2;
-            p.setClub(strClub);
+            String strClubFinal = strClub1 + strClub2;
             try {
-                tournament.modifyPlayer(p, p);
+                tournament.modifyPlayer(p, pb -> pb.setClub(strClubFinal));
             } catch (TournamentException ex) {
                 Logger.getLogger(JFrExperimentalTools.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {

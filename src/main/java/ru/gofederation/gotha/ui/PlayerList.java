@@ -17,9 +17,9 @@
 
 package ru.gofederation.gotha.ui;
 
-import info.vannier.gotha.Player;
 import info.vannier.gotha.TournamentInterface;
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.model.PlayerRegistrationStatus;
 import ru.gofederation.gotha.model.Rank;
 import ru.gofederation.gotha.model.Rating;
@@ -306,7 +306,7 @@ public final class PlayerList extends JPanel {
                     case COUNTRY:      return player.getCountry();
                     case CLUB:         return player.getClub();
                     case RATING:       return player.getRating().getValue();
-                    case GRADE:        return Rank.fromString(player.getStrGrade());
+                    case GRADE:        return player.getGrade();
                     case SMMS:         return player.smms(tournament.getTournamentParameterSet().getGeneralParameterSet());
                     default:           return null;
                 }

@@ -1,6 +1,7 @@
 package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.model.Rating;
 
 import java.io.Serializable;

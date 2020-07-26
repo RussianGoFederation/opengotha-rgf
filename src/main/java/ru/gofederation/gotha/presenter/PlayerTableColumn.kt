@@ -17,7 +17,7 @@
 
 package ru.gofederation.gotha.presenter
 
-import info.vannier.gotha.Player
+import ru.gofederation.gotha.model.Player
 import ru.gofederation.gotha.model.PlayerRegistrationStatus
 import ru.gofederation.gotha.util.GothaLocale
 
@@ -53,6 +53,6 @@ sealed class PlayerTableColumn(header: String, prefWidth: Int) : GothaTableColum
     }
 
     class Participation(val round: Int) : PlayerTableColumn(round.toString(), 50) {
-        override fun cellValue(obj: Player): Any = if (obj.participating[round - 1]) "V" else ""
+        override fun cellValue(obj: Player): Any = if (obj.isParticipating(round - 1)) "V" else ""
     }
 }

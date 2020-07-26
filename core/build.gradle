@@ -18,6 +18,7 @@ kotlin {
             dependencies {
                 implementation kotlin('stdlib-common')
                 implementation "io.github.microutils:kotlin-logging-common:$kotlin_logging_version"
+                api "com.soywiz.korlibs.klock:klock:$klock_version"
             }
         }
         commonTest {
@@ -31,6 +32,7 @@ kotlin {
             dependencies {
                 implementation kotlin('stdlib-jdk8')
                 implementation "io.github.microutils:kotlin-logging:$kotlin_logging_version"
+                api "com.soywiz.korlibs.klock:klock-jvm:$klock_version"
             }
         }
         jvm().compilations.test.defaultSourceSet {

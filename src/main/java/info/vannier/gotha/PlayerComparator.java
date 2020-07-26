@@ -1,5 +1,7 @@
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.Player;
+
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -32,28 +34,9 @@ public class PlayerComparator implements Comparator<Player>, Serializable{
                 if (c != 0) return c;
                 else return p1.getFirstName().toLowerCase().compareTo(p2.getFirstName().toLowerCase());
             case GRADE_ORDER :
-                int range1 = 0; // -30 to -1 for kyu, 0 to 8 for dan, 100 to 108  for pro
-                String str1 = p1.getStrGrade();
-                str1 = str1.trim();
-                String grp1 = str1.substring(str1.length() - 1, str1.length());
-                grp1 = grp1.toLowerCase();
-                int n1 = new Integer(str1.substring(0, str1.length() - 1)).intValue();
-                if (grp1.equals("p")) range1 = 100 + n1 - 1;
-                if (grp1.equals("d")) range1 = n1 - 1;
-                if (grp1.equals("k")) range1 = -n1;
+                int gd = p1.getGrade().minus(p2.getGrade());
+                if (gd != 0) return -gd;
 
-                int range2 = 0; // -30 to -1 for kyu, 0 to 8 for dan, 100 to 108  for pro
-                String str2 = p2.getStrGrade();
-                str2 = str2.trim();
-                String grp2 = str2.substring(str2.length() - 1, str2.length());
-                grp2 = grp2.toLowerCase();
-                int n2 = new Integer(str2.substring(0, str2.length() - 1)).intValue();
-                if (grp2.equals("p")) range2 = 100 + n2 - 1;
-                if (grp2.equals("d")) range2 = n2 - 1;
-                if (grp2.equals("k")) range2 = -n2;
-
-                if (range1 < range2) return 1;
-                if (range1 > range2) return -1;
                 c = p1.getName().toLowerCase().compareTo(p2.getName().toLowerCase());
                 if (c != 0) return c;
                 else return p1.getFirstName().toLowerCase().compareTo(p2.getFirstName().toLowerCase());

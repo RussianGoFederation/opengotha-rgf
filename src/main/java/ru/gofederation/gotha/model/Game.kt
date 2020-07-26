@@ -20,7 +20,6 @@ package ru.gofederation.gotha.model
 import info.vannier.gotha.Gotha
 import info.vannier.gotha.Pairing
 import info.vannier.gotha.PlacementCriterion
-import info.vannier.gotha.Player
 import info.vannier.gotha.ScoredPlayer
 import info.vannier.gotha.TournamentInterface
 import java.io.Serializable

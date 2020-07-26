@@ -4,6 +4,8 @@
 package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.Player;
+import ru.gofederation.gotha.model.PlayerKt;
 import ru.gofederation.gotha.util.GothaLocale;
 import ru.gofederation.gotha.util.ScoreDisplayKt;
 
@@ -804,7 +806,7 @@ public class TournamentPrinting implements Printable {
             x = usableX + usableWidth * PL_NF_BEG / PL_NBCAR;
             g.drawString(strNF, x, y);
 
-            String strGr = player.getStrGrade();
+            String strGr = player.getGrade().toString();
             x = usableX + usableWidth * (PL_GRADE_BEG + PL_GRADE_LEN) / PL_NBCAR;
             drawRightAlignedString(g, strGr, x, y);
 
@@ -826,7 +828,7 @@ public class TournamentPrinting implements Printable {
             x = usableX + usableWidth * PL_CLUB_BEG / PL_NBCAR;
             g.drawString(strClub, x, y);
 
-            String strPart = Player.convertParticipationToString(player, tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds());
+            String strPart = player.getParticipatingString(tournament.getTournamentParameterSet().getGeneralParameterSet().getNumberOfRounds());
             x = usableX + usableWidth * PL_PART_BEG / PL_NBCAR;
             fontCourier = new Font("Courier New", Font.BOLD, fontSize);
             g.setFont(fontCourier);
@@ -976,7 +978,7 @@ public class TournamentPrinting implements Printable {
             drawRightAlignedString(g, strTN, x, y);
 
             Player wP = game.getWhitePlayer();
-            String strWP = wP.augmentedPlayerName(dpps);
+            String strWP = PlayerKt.augmentedPlayerName(wP, dpps);
             x = usableX + usableWidth * GL_WNF_BEG / GL_NBCAR;
             Game.Result result = game.getResult().notByDef();
             if (result == Game.Result.BOTHLOSE || result == Game.Result.EQUAL || result == Game.Result.BLACKWINS) {
@@ -986,7 +988,7 @@ public class TournamentPrinting implements Printable {
             g.setFont(font);
 
             Player bP = game.getBlackPlayer();
-            String strBP = bP.augmentedPlayerName(dpps);
+            String strBP = PlayerKt.augmentedPlayerName(bP, dpps);
             x = usableX + usableWidth * GL_BNF_BEG / GL_NBCAR;
             if (result == Game.Result.BOTHLOSE || result == Game.Result.EQUAL || result == Game.Result.WHITEWINS) {
                 g.setFont(new Font("Default", Font.PLAIN, fontSize));
@@ -1105,7 +1107,7 @@ public class TournamentPrinting implements Printable {
             yT = y1 + TournamentPrinting.RS_LINE_HEIGHT * actRatioY1000 / 1000 * 2 / 3;
 
             Player wP = game.getWhitePlayer();;
-            String strWP = wP.augmentedPlayerName(dpps);
+            String strWP = PlayerKt.augmentedPlayerName(wP, dpps);
 
             // Adjust font
             FontMetrics fm = g.getFontMetrics(font);
@@ -1122,7 +1124,7 @@ public class TournamentPrinting implements Printable {
             g.setFont(font);
 
             Player bP = game.getBlackPlayer();;
-            String strBP = bP.augmentedPlayerName(dpps);
+            String strBP = PlayerKt.augmentedPlayerName(bP, dpps);
             // Adjust font
             wdt = fm.stringWidth(strBP);
             if (wdt > x4 - x3) {
@@ -1220,7 +1222,7 @@ public class TournamentPrinting implements Printable {
                 strReason = "No Final Registration";
             } else if (player.hasSameKeyString(tournament.getByePlayer(roundNumber))) {
                 strReason = "Bye player";
-            } else if (!player.getParticipating(roundNumber)) {
+            } else if (!player.isParticipating(roundNumber)) {
                 strReason = "Not participating";
             } else {
                 strReason = "Not paired";
@@ -1243,7 +1245,7 @@ public class TournamentPrinting implements Printable {
             x = usableX + usableWidth * NPL_NF_BEG / NPL_NBCAR;
             g.drawString(strNF, x, y);
 
-            String strGr = player.getStrGrade();
+            String strGr = player.getGrade().toString();
             x = usableX + usableWidth * (NPL_GRADE_BEG + NPL_GRADE_LEN) / NPL_NBCAR;
             drawRightAlignedString(g, strGr, x, y);
         }
@@ -1352,7 +1354,7 @@ public class TournamentPrinting implements Printable {
             x = usableX + usableWidth * this.stNFBeg / numberOfCharactersInALine;
             g.drawString(strNF, x, y);
 
-            String strGr = sp.getStrGrade();
+            String strGr = sp.getGrade().toString();
             x = usableX + usableWidth * (this.stGrBeg + ST_GR_LEN) / numberOfCharactersInALine;
             drawRightAlignedString(g, strGr, x, y);
 
@@ -1519,13 +1521,13 @@ public class TournamentPrinting implements Printable {
                         }
                     }
 
-                    String strNF = p1.augmentedPlayerName(dpps);
+                    String strNF = PlayerKt.augmentedPlayerName(p1, dpps);
                     if (!game.isWinner(p1)) g.setFont(new Font("Default", Font.PLAIN, gameFontSize));
                     x = usableX + usableWidth * TournamentPrinting.ML_WTN_BEG / TournamentPrinting.ML_NBCAR;
                     g.drawString(strNF + strP1Color, x, yG);
                     g.setFont(gameFont);
 
-                    strNF = p2.augmentedPlayerName(dpps);
+                    strNF = PlayerKt.augmentedPlayerName(p2, dpps);
                     if (!game.isWinner(p2)) g.setFont(new Font("Default", Font.PLAIN, gameFontSize));
                     x = usableX + usableWidth * TournamentPrinting.ML_BTN_BEG / TournamentPrinting.ML_NBCAR;
                     g.drawString(strNF + strP2Color, x, yG);

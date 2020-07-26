@@ -5,6 +5,7 @@ package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
 import ru.gofederation.gotha.model.EgfPinKt;
+import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.model.RatingListFactory;
 import ru.gofederation.gotha.model.RatingListType;
@@ -393,9 +394,10 @@ public class JFrUpdateRatings extends javax.swing.JFrame implements RatingListCo
             try{
                 String strNewRating = (String)model.getValueAt(row, JFrUpdateRatings.NEWRATING_COL);
                 int newRating = Integer.parseInt(strNewRating);
-                p.setEgfPin(EgfPinKt.egfPin(egfPin));
-                p.setRating(new Rating(EGF, newRating));
-                tournament.modifyPlayer(p, p);
+                tournament.modifyPlayer(p, pb -> {
+                    pb.setEgfPin(EgfPinKt.egfPin(egfPin));
+                    pb.setRating(new Rating(EGF, newRating));
+                });
             }catch(Exception e){
                 continue;
             }
@@ -537,7 +539,7 @@ public class JFrUpdateRatings extends javax.swing.JFrame implements RatingListCo
             model.setValueAt(p.getClub(), line, JFrUpdateRatings.CLUB_COL);
             model.setValueAt(p.getRank().toString(), line, JFrUpdateRatings.RANK_COL);
             model.setValueAt(p.getRating(), line, JFrUpdateRatings.RATING_COL);
-            model.setValueAt(p.getRatingOrigin(), line, JFrUpdateRatings.RATINGORIGIN_COL);
+            model.setValueAt(p.getRating().getOrigin(), line, JFrUpdateRatings.RATINGORIGIN_COL);
 
             //Find the player in rating list
             RatedPlayer rp = ratingList.getRatedPlayer(p);

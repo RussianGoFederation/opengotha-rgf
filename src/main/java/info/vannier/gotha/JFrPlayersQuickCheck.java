@@ -5,6 +5,7 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.model.Rank;
 import ru.gofederation.gotha.model.Rating;
 import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;
@@ -37,6 +38,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -427,8 +429,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         if (confirm == JOptionPane.OK_OPTION){
             try {
                 for (Player p : alP){
-                     p.setRank(p.getRank().plus(deltaRank));
-                     tournament.modifyPlayer(p, p);
+                     tournament.modifyPlayer(p, pb -> pb.setRank(p.getRank().plus(deltaRank)));
                 }
             } catch (RemoteException ex) {
                 Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
@@ -462,10 +463,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         boolean bSomethingHasChanged = false;
         try {
             for (Player p : alP){
-                int rating = p.getRating().toRank().getValue();
-                int newRank = Player.rankFromRating(p.getRatingOrigin(), rating);
-                p.setRank(newRank);
-                tournament.modifyPlayer(p, p);
+                tournament.modifyPlayer(p, pb -> pb.setRank(pb.getRating().toRank()));
                 bSomethingHasChanged = true;
             }
         } catch (RemoteException ex) {
@@ -486,7 +484,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         int nbChanged = 0;
 
         for (Player p : alP){
-            Rating newRating = p.getRank().toRating(p.getRatingOrigin());
+            Rating newRating = p.getRank().toRating(p.getRating().getOrigin());
             if (!p.getRating().equals(newRating))
                 nbChanged++;
         }
@@ -499,10 +497,9 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         boolean bSomethingHasChanged = false;
         try {
             for (Player p : alP){
-                Rating newRating = p.getRank().toRating(p.getRatingOrigin());
+                Rating newRating = p.getRank().toRating(p.getRating().getOrigin());
                 if (!p.getRating().equals(newRating)){
-                    p.setRating(newRating);
-                    tournament.modifyPlayer(p, p);
+                    tournament.modifyPlayer(p, pb -> pb.setRating(newRating));
                     bSomethingHasChanged = true;
                 }
             }
@@ -529,7 +526,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         try{
             delta = Integer.parseInt(strResponse);
         }catch(Exception e){
-            delta = 0;
+            return;
         }
 
         if (delta == 0) return;
@@ -537,8 +534,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
         boolean bSomethingHasChanged = false;
         try {
             for (Player p : alP){
-                p.setRating(p.getRating().plus(delta));
-                tournament.modifyPlayer(p, p);
+                tournament.modifyPlayer(p, pb -> pb.setRating(pb.getRating().plus(delta)));
                 bSomethingHasChanged = true;
             }
         } catch (RemoteException ex) {
@@ -564,8 +560,7 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
                 else{
                     try {
                         if (!tournament.isPlayerImplied(p)){
-                            p.setRegisteringStatus(PRELIMINARY);
-                            tournament.modifyPlayer(p, p);
+                            tournament.modifyPlayer(p, pb -> pb.setRegisteringStatus(PRELIMINARY));
                             nbPlayersMod++;
                         }
                     } catch (RemoteException ex) {
@@ -585,9 +580,8 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             int nbPlayersMod = 0;
             for (Player p : alP){
                 if (p.getRegisteringStatus() != FINAL){
-                    p.setRegisteringStatus(FINAL);
                     try {
-                        tournament.modifyPlayer(p, p);
+                        tournament.modifyPlayer(p, pb -> pb.setRegisteringStatus(FINAL));
                     } catch (RemoteException ex) {
                         Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (TournamentException ex) {
@@ -652,19 +646,19 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             String name = (String)tblRegisteredPlayers.getModel().getValueAt(iRow, NAME_COL);
             String firstName = (String)tblRegisteredPlayers.getModel().getValueAt(iRow, FIRSTNAME_COL);
             Player p = null;
+            AtomicReference<String> strPart = new AtomicReference<>("");
             try {
                 p = tournament.getPlayerByKeyString(name + firstName);
-            } catch (RemoteException ex) {
+                System.out.println("p = " + p.getName() + " " + p.getFirstName());
+                tournament.modifyPlayer(p, (pb) -> {
+                    boolean bP = pb.switchParticipating(round);
+                    if (bP) strPart.set("V");
+                });
+            } catch (RemoteException | TournamentException ex) {
                 Logger.getLogger(JFrPlayersQuickCheck.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("p = " + p.getName() + " " + p.getFirstName());
-            boolean part[] = p.getParticipating();
-            boolean bP = part[round];
-            p.setParticipating(round, !bP);
-            String strPart = "";
-            if (bP) strPart = "V";
             DefaultTableModel model = (DefaultTableModel)tblRegisteredPlayers.getModel();
-            model.setValueAt(strPart, iRow, iCol);
+            model.setValueAt(strPart.get(), iRow, iCol);
             this.tournamentChanged();
 
         }
@@ -862,10 +856,9 @@ public class JFrPlayersQuickCheck extends javax.swing.JFrame{
             model.setValueAt(p.getClub(), line, JFrPlayersQuickCheck.CLUB_COL);
             model.setValueAt(p.getRank().toString(), line, JFrPlayersQuickCheck.RANK_COL);
             model.setValueAt(p.getRating().getValue(), line, JFrPlayersQuickCheck.RATING_COL);
-            boolean[] bPart = p.getParticipating();
             for (int round = 0; round < numberOfRounds; round++){
                 String strPart = "";
-                if (bPart[round]) strPart = "V";
+                if (p.isParticipating(round)) strPart = "V";
                 model.setValueAt(strPart, line, JFrPlayersQuickCheck.PARTICIPATING_COL0 + round);
             }
         }

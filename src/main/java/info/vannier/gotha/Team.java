@@ -1,5 +1,7 @@
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.Player;
+
 /**
  *
  * @author Luc Vannier

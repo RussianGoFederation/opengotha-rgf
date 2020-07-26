@@ -4,6 +4,7 @@ import kotlin.Pair;
 import mu.KLogger;
 import mu.KotlinLogging;
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.pairing.PairingCosts;
 import ru.gofederation.gotha.util.GothaLocale;
 
@@ -16,6 +17,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -189,7 +191,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
                 continue;
             }
 
-            if (!p.getParticipating(roundNumber)) {
+            if (!p.isParticipating(roundNumber)) {
                 alNotPP.add(p);
             }
         }
@@ -208,7 +210,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             if (p.getRegisteringStatus() != FINAL) {
                 continue;
             }
-            if (!p.getParticipating(roundNumber)) {
+            if (!p.isParticipating(roundNumber)) {
                 continue;
             }
 
@@ -228,16 +230,12 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             if (res == Game.Result.BLACKWINS_BYDEF
                     || res == Game.Result.BOTHLOSE_BYDEF) {
                 Player p = g.getWhitePlayer();
-                Player copyP = new Player();
-                copyP.deepCopy(p);
-                alP.add(copyP);
+                alP.add(p);
             }
             if (res == Game.Result.WHITEWINS_BYDEF
                     || res == Game.Result.BOTHLOSE_BYDEF) {
                 Player p = g.getBlackPlayer();
-                Player copyP = new Player();
-                copyP.deepCopy(p);
-                alP.add(copyP);
+                alP.add(p);
             }
 
         }
@@ -485,13 +483,19 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         // Detect if a differentPlayer with same key string already exists
         if (homonymPlayer == playerToModify || homonymPlayer == null) {
             hmPlayers.remove(playerToModify.getKeyString());
-            playerToModify.deepCopy(modifiedPlayer);
-            hmPlayers.put(playerToModify.getKeyString(), playerToModify);
+            hmPlayers.put(modifiedPlayer.getKeyString(), modifiedPlayer);
             this.setChangeSinceLastSave(true);
         } else {
             throw new TournamentException("Player " + p.fullName() + " " + "could not be modified" + "\n" + "A player named" + " " + homonymPlayer.fullName()
                     + " " + "already exists in the tournament");
         }
+    }
+
+    @Override
+    public void modifyPlayer(Player p, Consumer<Player.Builder> f) throws TournamentException, RemoteException {
+        Player.Builder pb = p.toBuilder();
+        f.accept(pb);
+        modifyPlayer(p, pb.build());
     }
 
     /**
@@ -1185,7 +1189,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         for (int r = 0; r < numberOfRounds; r++) {
             int numberOfNotParticipatingPlayers = 0;
             for (Player p : hmPlayers.values()) {
-                if (!p.getParticipating()[r]) {
+                if (!p.isParticipating(r)) {
                     numberOfNotParticipatingPlayers++;
                 }
             }
@@ -1452,7 +1456,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
             if (p.getRegisteringStatus() != FINAL){
                 return false;
             }
-            if (!p.getParticipating(roundNumber)){
+            if (!p.isParticipating(roundNumber)){
                 return false;
             }
         }
@@ -1859,7 +1863,7 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         // ****************
         for (ScoredPlayer sp : this.hmScoredPlayers.values()) {
             for (int r = 0; r < numberOfRoundsToCompute; r++) {
-                if (!sp.getParticipating()[r]) {
+                if (!sp.isParticipating(r)) {
                     sp.setParticipation(r, ScoredPlayer.ABSENT);
                 } else {
                     sp.setParticipation(r, ScoredPlayer.NOT_ASSIGNED);    // As an initial status

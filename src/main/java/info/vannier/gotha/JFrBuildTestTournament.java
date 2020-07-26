@@ -6,6 +6,7 @@ package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.Player;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -192,7 +193,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
                             "FR", "76Ro",
                             "123456789", "87654321","", "99999", "",
                             rank,  rank * 100 -50, INI, "", 0, FINAL);
-                } catch (PlayerException ex) {
+                } catch (Exception ex) {
                                 Logger.getLogger(JFrBuildTestTournament.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
@@ -216,7 +217,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
                             "FR", "76Ro",
                             "123456789", "87654321","", "99999", "",
                             rank,  rank * 100 -50, INI, "", 0, FINAL);
-                } catch (PlayerException ex) {
+                } catch (Exception ex) {
                                 Logger.getLogger(JFrBuildTestTournament.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
@@ -239,7 +240,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
                             "DE", "Ham",
                             "123456789", "87654321","", "99999", "",
                             rank,  rank * 100 -50, INI, "", 0, FINAL);
-                } catch (PlayerException ex) {
+                } catch (Exception ex) {
                                 Logger.getLogger(JFrBuildTestTournament.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
@@ -263,7 +264,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
                             "NL", "Ams",
                             "xxxyyyzzz", "07235000", "", "99999", "",
                             rank,  rank * 100 -50, INI, "", 0, FINAL);
-                } catch (PlayerException ex) {
+                } catch (Exception ex) {
                                 Logger.getLogger(JFrBuildTestTournament.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
@@ -287,7 +288,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
                             "NL", generateName(i/8),
                             "xxxyyyzzz", "07235000", "", "99999", "",
                             rank,  rank * 100 -50, INI, "", 0, FINAL);
-                } catch (PlayerException ex) {
+                } catch (Exception ex) {
                                 Logger.getLogger(JFrBuildTestTournament.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
@@ -311,7 +312,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
                             "FR", "76Ro",
                             "xxxyyyzzz", "07235000", "", "99999", "",
                             rank,  (rank + 20) * 100 - i, EGF, "", 0, FINAL);
-                } catch (PlayerException ex) {
+                } catch (Exception ex) {
                                 Logger.getLogger(JFrBuildTestTournament.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
@@ -335,7 +336,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
                             "NL", "Ams",
                             "xxxyyyzzz", "07235000", "", "99999", "",
                             rank,  rank * 100 -50, INI, "", 0, FINAL);
-                } catch (PlayerException ex) {
+                } catch (Exception ex) {
                                 Logger.getLogger(JFrBuildTestTournament.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
@@ -360,7 +361,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
                             "FR", "76Ro",
                             "xxxyyyzzz", "07235000", "", "99999", "",
                             rank,  rank * 100 - i, FFG, "", 0, FINAL);
-                } catch (PlayerException ex) {
+                } catch (Exception ex) {
                                 Logger.getLogger(JFrBuildTestTournament.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
@@ -383,7 +384,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
                             "NL", "Ams",
                             "xxxyyyzzz", "07235000", "", "99999", "",
                             rank,  rank * 100 -i, FFG, "", 0, FINAL);
-                } catch (PlayerException ex) {
+                } catch (Exception ex) {
                                 Logger.getLogger(JFrBuildTestTournament.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
@@ -407,7 +408,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
                             "NL", "Ams",
                             "xxxyyyzzz", "07235000", "", "99999", "",
                             rank,  rank * 100 -i, FFG, "", 0, FINAL);
-                } catch (PlayerException ex) {
+                } catch (Exception ex) {
                                 Logger.getLogger(JFrBuildTestTournament.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
@@ -431,7 +432,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
                             "FR", "76Ro",
                             "123456789", "87654321", "", "99999", "",
                             rank,  rank * 100 -50, INI, "", 0, FINAL);
-                } catch (PlayerException ex) {
+                } catch (Exception ex) {
                                 Logger.getLogger(JFrBuildTestTournament.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
@@ -455,7 +456,7 @@ public class JFrBuildTestTournament extends javax.swing.JFrame{
                             "FR", "76Ro",
                             "123456789", "87654321", "", "99999", "",
                             rank,  rank * 100 -50, INI, "", 0, FINAL);
-                } catch (PlayerException ex) {
+                } catch (Exception ex) {
                                 Logger.getLogger(JFrBuildTestTournament.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {

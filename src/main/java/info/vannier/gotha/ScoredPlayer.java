@@ -2,6 +2,7 @@ package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.Game;
 import ru.gofederation.gotha.model.HalfGame;
+import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.presenter.HalfGameResultsKt;
 import ru.gofederation.gotha.util.ScoreDisplayKt;
 
@@ -264,9 +265,6 @@ public class ScoredPlayer extends Player implements java.io.Serializable{
     }
     public void setSDC(int value){
         sdc = value;
-    }
-
-    public ScoredPlayer(){
     }
 
     public ScoredPlayer(GeneralParameterSet gps, Player player) {

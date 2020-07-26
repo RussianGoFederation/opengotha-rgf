@@ -7,6 +7,7 @@ package info.vannier.gotha;
 import net.miginfocom.swing.MigLayout;
 import ru.gofederation.gotha.io.TableXlsxExporter;
 import ru.gofederation.gotha.model.Game;
+import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.presenter.ITableColumn;
 import ru.gofederation.gotha.presenter.PlayersQuickCheckTableModel;
 import ru.gofederation.gotha.presenter.StandingsTableModel;
@@ -1496,7 +1497,7 @@ public class JFrGotha extends javax.swing.JFrame implements TournamentOpener {
             // Number of participants
             int nbParticipants = 0;
             for (Player p : alPlayers) {
-                if (p.getParticipating()[r]) {
+                if (p.isParticipating(r)) {
                     nbParticipants++;
                     // Assigned players, games, etc.
                 }

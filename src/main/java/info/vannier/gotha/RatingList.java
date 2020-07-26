@@ -7,6 +7,9 @@
 
 package info.vannier.gotha;
 
+import ru.gofederation.gotha.model.Player;
+import ru.gofederation.gotha.model.RatingListType;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,8 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import ru.gofederation.gotha.model.RatingListType;
 
 import static ru.gofederation.gotha.model.RatingOrigin.AGA;
 import static ru.gofederation.gotha.model.RatingOrigin.EGF;

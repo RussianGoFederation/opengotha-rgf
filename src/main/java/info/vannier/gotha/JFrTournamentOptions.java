@@ -5,6 +5,7 @@
 package info.vannier.gotha;
 
 import net.miginfocom.swing.MigLayout;
+import ru.gofederation.gotha.model.Player;
 import ru.gofederation.gotha.model.RatingListType;
 import ru.gofederation.gotha.ui.TournamentDetailsPanel;
 import ru.gofederation.gotha.util.GothaLocale;
