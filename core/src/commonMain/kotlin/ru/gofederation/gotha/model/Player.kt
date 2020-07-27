@@ -3,6 +3,7 @@ package ru.gofederation.gotha.model
 import com.soywiz.klock.Date
 import ru.gofederation.gotha.Limits
 import ru.gofederation.gotha.model.tps.GeneralParameterSetInterface
+import ru.gofederation.gotha.util.Serializable
 import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
@@ -24,7 +25,7 @@ open class Player private constructor(
     val smmsByHand: Int,
     private val participating: BooleanArray, // private to prevent external changes
     val registeringStatus: PlayerRegistrationStatus
-) {
+) : Serializable {
     val keyString = computeKeyString("$name$firstName")
 
     constructor(player: Player) : this(player.toBuilder())

@@ -1,11 +1,12 @@
 package ru.gofederation.gotha.model
 
+import ru.gofederation.gotha.util.Serializable
 import kotlin.jvm.JvmStatic
 
 fun Int.asRank(): Rank = Rank.fromInt(this)
 fun String.asRank(): Rank = Rank.fromString(this)
 
-class Rank internal constructor(value: Int) : Comparable<Rank> {
+class Rank internal constructor(value: Int) : Comparable<Rank>, Serializable {
     // TODO: make value private once Rating class is rewritten
     val value = value.coerceIn(kyuRange.first, proRange.last)
 

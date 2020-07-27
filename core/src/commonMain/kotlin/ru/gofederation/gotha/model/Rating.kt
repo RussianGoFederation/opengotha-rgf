@@ -1,8 +1,9 @@
 package ru.gofederation.gotha.model
 
 import mu.KotlinLogging
+import ru.gofederation.gotha.util.Serializable
 
-class Rating(val origin: RatingOrigin, rating: Int) : Comparable<Rating> {
+class Rating(val origin: RatingOrigin, rating: Int) : Comparable<Rating>, Serializable {
     val value = rating.coerceIn(origin.minRating, origin.maxRating)
 
     operator fun plus(delta: Int): Rating = Rating(origin, value + delta)

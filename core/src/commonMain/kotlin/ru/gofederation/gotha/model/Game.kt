@@ -1,6 +1,7 @@
 package ru.gofederation.gotha.model
 
 import ru.gofederation.gotha.Limits
+import ru.gofederation.gotha.util.Serializable
 
 /**
  * A game between two [Player]s.
@@ -21,7 +22,7 @@ data class Game internal constructor (
     val knownColor: Boolean,
     val handicap: Int,
     val result: Result
-) {
+) : Serializable {
     init {
         require(board >= 0 && board < Limits.MAX_NUMBER_OF_BOARDS)
         require(round >= 0 && round < Limits.MAX_NUMBER_OF_ROUNDS)
