@@ -483,8 +483,23 @@ public class Tournament extends UnicastRemoteObject implements TournamentInterfa
         Player homonymPlayer = homonymPlayerOf(modifiedPlayer);
         // Detect if a differentPlayer with same key string already exists
         if (homonymPlayer == playerToModify || homonymPlayer == null) {
+            List<Game> games = gamesPlayedBy(playerToModify);
             hmPlayers.remove(playerToModify.getKeyString());
             hmPlayers.put(modifiedPlayer.getKeyString(), modifiedPlayer);
+            for (Game game : games) {
+                if (game.getWhitePlayer().hasSameKeyString(playerToModify)) {
+                    Game.Builder gb = game.builder();
+                    gb.setWhitePlayer(modifiedPlayer);
+                    Game newGame = gb.build();
+                    this.replaceGame(game, newGame);
+                }
+                if (game.getBlackPlayer().hasSameKeyString(playerToModify)) {
+                    Game.Builder gb = game.builder();
+                    gb.setBlackPlayer(modifiedPlayer);
+                    Game newGame = gb.build();
+                    this.replaceGame(game, newGame);
+                }
+            }
             this.setChangeSinceLastSave(true);
         } else {
             throw new TournamentException("Player " + p.fullName() + " " + "could not be modified" + "\n" + "A player named" + " " + homonymPlayer.fullName()
