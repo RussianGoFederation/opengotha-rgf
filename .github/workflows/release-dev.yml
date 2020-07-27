@@ -77,5 +77,5 @@ jobs:
             assets+=("-a" "$asset")
           done
           tag_name="testing"
-          hub release create "${assets[@]}" -p -m "Testing release #${{ github.run_number }}" -m "This release is meant for testing purposes. Do not use in real tournaments." "$tag_name"
+          hub release create "${assets[@]}" -p -t dev -m "Testing release #${{ github.run_number }}" -m "This release is meant for testing purposes. Do not use in real tournaments." "$tag_name"
 
