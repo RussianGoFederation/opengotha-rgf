@@ -22,10 +22,10 @@ import info.vannier.gotha.Gotha
 import info.vannier.gotha.Pairing
 import info.vannier.gotha.PairingParameterSet
 import info.vannier.gotha.PlacementParameterSet
-import info.vannier.gotha.ScoredPlayer
 import info.vannier.gotha.TournamentInterface
 import info.vannier.gotha.TournamentParameterSet
 import ru.gofederation.gotha.model.PlacementCriterion
+import ru.gofederation.gotha.model.ScoredPlayer
 import ru.gofederation.gotha.model.gameBetween
 import ru.gofederation.gotha.model.samePlayers
 import kotlin.math.abs

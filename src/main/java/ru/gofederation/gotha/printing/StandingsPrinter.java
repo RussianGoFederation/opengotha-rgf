@@ -25,6 +25,7 @@ import info.vannier.gotha.TournamentInterface;
 import info.vannier.gotha.TournamentParameterSet;
 import ru.gofederation.gotha.model.PlacementCriterion;
 import ru.gofederation.gotha.util.GothaLocale;
+import ru.gofederation.gotha.util.ScoreDisplayKt;
 
 import java.awt.print.Printable;
 import java.rmi.RemoteException;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class StandingsPrinter extends TablePrinter implements Printable {
-    private final List<ScoredPlayer> playerList;
+    private final List<ru.gofederation.gotha.model.ScoredPlayer> playerList;
     private final GothaLocale locale;
     private final GeneralParameterSet gps;
     private final int round;
@@ -152,11 +153,11 @@ public class StandingsPrinter extends TablePrinter implements Printable {
         } else if (column == rankCol) {
             return playerList.get(row).getRank().toString();
         } else if (column == nbwCol) {
-            return playerList.get(row).formatScore(PlacementCriterion.NBW, round);
+            return ScoreDisplayKt.formatScore(playerList.get(row), PlacementCriterion.NBW, round);
         } else if (column >= firstRoundCol && column <= lastRoundCol) {
             return games[column - firstRoundCol][row].trim();
         } else if (column >= firstPlaCritCol && column <= lastPlaCritCol) {
-            return playerList.get(row).formatScore(placementCriteria.get(column - firstPlaCritCol), round);
+            return ScoreDisplayKt.formatScore(playerList.get(row), placementCriteria.get(column - firstPlaCritCol), round);
         } else {
             return "";
         }

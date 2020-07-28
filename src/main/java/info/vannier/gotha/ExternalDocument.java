@@ -1586,13 +1586,13 @@ public class ExternalDocument {
         }
 
         // Contents
-        ArrayList<ScoredPlayer> alOrderedScoredPlayers = null;
+        ArrayList<ru.gofederation.gotha.model.ScoredPlayer> alOrderedScoredPlayers = null;
         int roundNumber = gps.getNumberOfRounds() - 1;
         try {
             alOrderedScoredPlayers = tournament.orderedScoredPlayersList(roundNumber, pps);
             // Eliminate non-players
-            for (Iterator<ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
-                ScoredPlayer sP = it.next();
+            for (Iterator<ru.gofederation.gotha.model.ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
+                ru.gofederation.gotha.model.ScoredPlayer sP = it.next();
                 if (!tournament.isPlayerImplied(sP)) {
                     it.remove();
                 }
@@ -1604,7 +1604,7 @@ public class ExternalDocument {
         String[][] hG = ScoredPlayer.halfGamesStrings(alOrderedScoredPlayers, roundNumber, tournament, true);
         String[] strPlace = ScoredPlayer.positionStrings(alOrderedScoredPlayers, roundNumber, tps);
         for (int iSP = 0; iSP < alOrderedScoredPlayers.size(); iSP++) {
-            ScoredPlayer sP = alOrderedScoredPlayers.get(iSP);
+            ru.gofederation.gotha.model.ScoredPlayer sP = alOrderedScoredPlayers.get(iSP);
 
             String strLine = "";
 
@@ -1732,13 +1732,13 @@ public class ExternalDocument {
         }
 
         // Contents
-        ArrayList<ScoredPlayer> alOrderedScoredPlayers = null;
+        ArrayList<ru.gofederation.gotha.model.ScoredPlayer> alOrderedScoredPlayers = null;
         int roundNumber = gps.getNumberOfRounds() - 1;
         try {
             alOrderedScoredPlayers = tournament.orderedScoredPlayersList(roundNumber, pps);
             // Eliminate non-players
-            for (Iterator<ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
-                ScoredPlayer sP = it.next();
+            for (Iterator<ru.gofederation.gotha.model.ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
+                ru.gofederation.gotha.model.ScoredPlayer sP = it.next();
                 if (!tournament.isPlayerImplied(sP)) {
                     it.remove();
                 }
@@ -1753,7 +1753,7 @@ public class ExternalDocument {
         String[][] hG = ScoredPlayer.halfGamesStrings(alOrderedScoredPlayers, roundNumber, tournament, bFull);
         String[] strPlace = ScoredPlayer.positionStrings(alOrderedScoredPlayers, roundNumber, tps);
         for (int iSP = 0; iSP < alOrderedScoredPlayers.size(); iSP++) {
-            ScoredPlayer sP = alOrderedScoredPlayers.get(iSP);
+            ru.gofederation.gotha.model.ScoredPlayer sP = alOrderedScoredPlayers.get(iSP);
 
             String strLine = "";
 
@@ -1787,7 +1787,7 @@ public class ExternalDocument {
             strLine += " " + strClub;
 
             for (int c = 0; c < tabCrit.length; c++) {
-                String strCritValue = sP.formatScore(tabCrit[c], roundNumber);
+                String strCritValue = ScoreDisplayKt.formatScore(sP, tabCrit[c], roundNumber);
                 // Make strings with exactly 4 characters
                 strCritValue = strCritValue.trim();
                 if (strCritValue.length() > 4) {
@@ -1867,7 +1867,7 @@ public class ExternalDocument {
             Logger.getLogger(ExternalDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        ArrayList<ScoredPlayer> alOrderedScoredPlayers = null;
+        ArrayList<ru.gofederation.gotha.model.ScoredPlayer> alOrderedScoredPlayers = null;
         int roundNumber = gps.getNumberOfRounds() - 1;
         try {
             // Build alOrderedScoredPlayers which will be a work copy
@@ -1886,8 +1886,8 @@ public class ExternalDocument {
         final AtomicInteger newId = new AtomicInteger(99999);
 
         boolean somethingHasChanged = false;
-        for (Iterator<ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
-            ScoredPlayer sP = it.next();
+        for (Iterator<ru.gofederation.gotha.model.ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
+            ru.gofederation.gotha.model.ScoredPlayer sP = it.next();
             if (getIntAgaId(sP) > 0) {
                 continue;
             }
@@ -1924,8 +1924,8 @@ public class ExternalDocument {
         pc = new PlayerComparator(PlayerComparator.AGAID_ORDER);
         Collections.sort(alOrderedScoredPlayers, pc);
 
-        for (Iterator<ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
-            ScoredPlayer sP = it.next();
+        for (Iterator<ru.gofederation.gotha.model.ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
+            ru.gofederation.gotha.model.ScoredPlayer sP = it.next();
             try {
                 output.write(sP.getAgaId() + "\t" + sP.getName() + ", " + sP.getFirstName() + "\t" + sP.getRank().toStringKD().toLowerCase() + "\n");
             } catch (IOException ex) {
@@ -2007,7 +2007,7 @@ public class ExternalDocument {
         }
     }
 
-    private static int getIntAgaId(ScoredPlayer sP) {
+    private static int getIntAgaId(ru.gofederation.gotha.model.ScoredPlayer sP) {
         int id;
         try {
             id = Integer.parseInt(sP.getAgaId().getId());
@@ -2616,7 +2616,7 @@ public class ExternalDocument {
 
 
         // Contents
-        ArrayList<ScoredPlayer> alOrderedScoredPlayers = null;
+        ArrayList<ru.gofederation.gotha.model.ScoredPlayer> alOrderedScoredPlayers = null;
 //        int roundNumber = gps.getNumberOfRounds() - 1;
         try {
             alOrderedScoredPlayers = tournament.orderedScoredPlayersList(roundNumber, pps);
@@ -2624,8 +2624,8 @@ public class ExternalDocument {
             DPParameterSet dpps = tps.getDPParameterSet();
             if (!dpps.isDisplayNPPlayers()){
                 // Eliminate non-players
-                for (Iterator<ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
-                    ScoredPlayer sP = it.next();
+                for (Iterator<ru.gofederation.gotha.model.ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
+                    ru.gofederation.gotha.model.ScoredPlayer sP = it.next();
                     if (!tournament.isPlayerImplied(sP)) {
                         it.remove();
                     }
@@ -2644,7 +2644,7 @@ public class ExternalDocument {
             for (int iSP = 0; iSP < alOrderedScoredPlayers.size(); iSP++) {
                 output.write("\n<tr>");
                 String strPar = "pair";
-                ScoredPlayer sP = alOrderedScoredPlayers.get(iSP);
+                ru.gofederation.gotha.model.ScoredPlayer sP = alOrderedScoredPlayers.get(iSP);
                 if (iSP % 2 == 0) {
                     strPar = "impair";
                 }
@@ -2670,7 +2670,7 @@ public class ExternalDocument {
                     output.write("<td class=" + strPar + strAlCenter + ">" + strClub + "</td>");
                 }
 
-                output.write("<td class=" + strPar + strAlCenter + ">" + sP.formatScore(PlacementCriterion.NBW, roundNumber) + "</td>");
+                output.write("<td class=" + strPar + strAlCenter + ">" + ScoreDisplayKt.formatScore(sP, PlacementCriterion.NBW, roundNumber) + "</td>");
 
                 for (int r = 0; r <= roundNumber; r++) {
                     String strHG = hG[r][iSP];
@@ -2680,7 +2680,7 @@ public class ExternalDocument {
                     output.write("<td class=" + strPar + strAlCenter + ">" + strHG + "</td>");
                 }
                 for (int c = 0; c < tabCrit.length; c++) {
-                    String strCritValue = sP.formatScore(tabCrit[c], roundNumber);
+                    String strCritValue = ScoreDisplayKt.formatScore(sP, tabCrit[c], roundNumber);
                     output.write("<td class=" + strPar + strAlCenter + ">" + strCritValue + "</td>");
 
                 }

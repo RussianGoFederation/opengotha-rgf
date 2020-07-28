@@ -18,7 +18,6 @@
 package ru.gofederation.api
 
 import info.vannier.gotha.GeneralParameterSet
-import info.vannier.gotha.ScoredPlayer
 import info.vannier.gotha.Tournament
 import info.vannier.gotha.TournamentException
 import info.vannier.gotha.TournamentInterface
@@ -29,6 +28,7 @@ import ru.gofederation.gotha.model.Player
 import ru.gofederation.gotha.model.PlayerRegistrationStatus
 import ru.gofederation.gotha.model.RatingOrigin
 import ru.gofederation.gotha.model.RgfId
+import ru.gofederation.gotha.model.ScoredPlayer
 
 fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<TournamentInterface, RgfTournamentImportReport> {
     val tournament = Tournament()
@@ -44,7 +44,7 @@ fun RgfTournament.rgf2gotha(importMode: RgfTournament.ImportMode): Pair<Tourname
         gps.beginDate = this.startDate.toJvmDate()
         gps.endDate = this.endDate.toJvmDate()
         gps.rgfId = this.id ?: 0
-        gps.numberOfRounds = this.roundCount ?: 5
+        gps.setNumberOfRounds(this.roundCount ?: 5)
         this.timing?.also { timing ->
             gps.basicTime = timing.basicTime
             when (timing) {

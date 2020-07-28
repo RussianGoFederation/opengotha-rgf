@@ -1,6 +1,7 @@
 package info.vannier.gotha;
 
 import ru.gofederation.gotha.model.PlacementCriterion;
+import ru.gofederation.gotha.model.ScoredPlayer;
 
 import java.io.Serializable;
 import java.util.Arrays;

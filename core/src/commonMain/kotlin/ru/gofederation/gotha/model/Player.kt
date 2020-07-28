@@ -128,7 +128,9 @@ open class Player private constructor(
             smms.coerceIn(floor - zero, bar - zero) + smmsCorrection
         }
 
-    fun hasSameKeyString(other: Player) = this.keyString == other.keyString
+    fun hasSameKeyString(other: Player?) =
+        if (other != null) this.keyString == other.keyString
+        else false
 
     fun fullName(): String = "$name $firstName"
 

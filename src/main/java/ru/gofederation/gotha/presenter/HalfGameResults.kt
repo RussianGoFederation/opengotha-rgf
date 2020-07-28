@@ -17,9 +17,9 @@
 
 package ru.gofederation.gotha.presenter
 
-import info.vannier.gotha.ScoredPlayer
 import info.vannier.gotha.TournamentInterface
 import ru.gofederation.gotha.model.HalfGame
+import ru.gofederation.gotha.model.ScoredPlayer
 
 fun List<ScoredPlayer>.halfGames(roundNumber: Int, tournament: TournamentInterface): Array<Array<HalfGame>> {
     val tps = tournament.tournamentParameterSet

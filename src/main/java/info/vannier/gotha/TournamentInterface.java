@@ -3,6 +3,7 @@ package info.vannier.gotha;
 import kotlin.Pair;
 import ru.gofederation.gotha.model.Game;
 import ru.gofederation.gotha.model.Player;
+import ru.gofederation.gotha.model.ScoredPlayer;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

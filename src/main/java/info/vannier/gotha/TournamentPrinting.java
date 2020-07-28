@@ -208,7 +208,7 @@ public class TournamentPrinting implements Printable {
     ArrayList<Team> alTeamsToPrint;
     TeamMemberStrings[] arTMS;
     // For Standings
-    private ArrayList<ScoredPlayer> alOrderedScoredPlayers;
+    private ArrayList<ru.gofederation.gotha.model.ScoredPlayer> alOrderedScoredPlayers;
     private String[][] halfGamesStrings;
     private int[] criteria;
     private String[] strPlace;
@@ -497,8 +497,8 @@ public class TournamentPrinting implements Printable {
             this.alOrderedScoredPlayers = tournament.orderedScoredPlayersList(roundNumber, pps);
             if (!dpps.isDisplayNPPlayers()){
                 // Eliminate non-players
-                for (Iterator<ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
-                    ScoredPlayer sP = it.next();
+                for (Iterator<ru.gofederation.gotha.model.ScoredPlayer> it = alOrderedScoredPlayers.iterator(); it.hasNext();) {
+                    ru.gofederation.gotha.model.ScoredPlayer sP = it.next();
                     if (!tournament.isPlayerImplied(sP)) {
                         it.remove();
                     }
@@ -1327,7 +1327,7 @@ public class TournamentPrinting implements Printable {
             if (playerNumber >= this.alOrderedScoredPlayers.size()) {
                 break;
             }
-            ScoredPlayer sp = alOrderedScoredPlayers.get(playerNumber);
+            ru.gofederation.gotha.model.ScoredPlayer sp = alOrderedScoredPlayers.get(playerNumber);
 
             if (this.printSubType == TournamentPublishing.SUBTYPE_ST_CAT && sp.category(gps) != curCat) {
                 break;
@@ -1371,7 +1371,7 @@ public class TournamentPrinting implements Printable {
                 g.drawString(strCl, x, y);
             }
 
-            String strNbW = sp.formatScore(PlacementCriterion.NBW, roundNumber);
+            String strNbW = ScoreDisplayKt.formatScore(sp, PlacementCriterion.NBW, roundNumber);
             x = usableX + usableWidth * (this.stNbWBeg + ST_NBW_LEN) / numberOfCharactersInALine;
             drawRightAlignedString(g, strNbW, x, y);
 
@@ -1383,7 +1383,7 @@ public class TournamentPrinting implements Printable {
 
             int numberOfCriteriaPrinted = criteria.length;
             for (int iC = 0; iC < numberOfCriteriaPrinted; iC++) {
-                String strCritValue = sp.formatScore(PlacementCriterion.fromUid(criteria[iC]), roundNumber);
+                String strCritValue = ScoreDisplayKt.formatScore(sp, PlacementCriterion.fromUid(criteria[iC]), roundNumber);
                 x = usableX + usableWidth * (this.stCrit0Beg + (iC + 1) * (ST_CRIT_LEN + ST_PADDING)) / numberOfCharactersInALine;
                 TournamentPrinting.drawRightAlignedString(g, strCritValue, x, y);
             }

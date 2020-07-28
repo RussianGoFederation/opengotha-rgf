@@ -263,6 +263,7 @@ public class GeneralParameterSet implements GeneralParameterSetInterface, java.i
         this.rgfId = rgfId;
     }
 
+    @Override
     public int getNumberOfRounds() {
         return numberOfRounds;
     }

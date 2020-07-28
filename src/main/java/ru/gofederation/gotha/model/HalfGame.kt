@@ -17,7 +17,6 @@
 
 package ru.gofederation.gotha.model
 
-import info.vannier.gotha.ScoredPlayer
 import info.vannier.gotha.TournamentInterface
 import info.vannier.gotha.TournamentParameterSet
 

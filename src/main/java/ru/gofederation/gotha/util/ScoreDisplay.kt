@@ -1,5 +1,14 @@
 package ru.gofederation.gotha.util
 
+import ru.gofederation.gotha.model.PlacementCriterion
+import ru.gofederation.gotha.model.ScoredPlayer
+
+fun ScoredPlayer.formatScore(crit: PlacementCriterion, round: Int): String =
+    crit.formatScore(this.getCritValue(crit, round))
+
+fun PlacementCriterion.formatScore(score: Int): String =
+    score.formatScore(this.coef)
+
 /**
  * Converts an Int to a String representing score / [ratio]
  * fractional part will be formatted as : ½ ¼ ¾

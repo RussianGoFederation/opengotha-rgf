@@ -149,7 +149,7 @@ class TournamentDetailsPanel(
                     return@addChangeListener
                 }
 
-                tournament.tournamentParameterSet.generalParameterSet.numberOfRounds = newNbRounds
+                tournament.tournamentParameterSet.generalParameterSet.setNumberOfRounds(newNbRounds)
                 tournament.lastTournamentModificationTime = tournament.currentTournamentTime
             }
         }

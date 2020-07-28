@@ -18,12 +18,13 @@
 package ru.gofederation.gotha.presenter
 
 import info.vannier.gotha.DPParameterSet
-import info.vannier.gotha.ScoredPlayer
 import info.vannier.gotha.TournamentInterface
 import info.vannier.gotha.TournamentParameterSet
 import ru.gofederation.gotha.model.HalfGame
 import ru.gofederation.gotha.model.PlacementCriterion
+import ru.gofederation.gotha.model.ScoredPlayer
 import ru.gofederation.gotha.util.GothaLocale
+import ru.gofederation.gotha.util.formatScore
 import javax.swing.SwingConstants
 import javax.swing.table.AbstractTableModel
 
@@ -51,7 +52,7 @@ class StandingsTableModel(
         }
 
         games = players.halfGames(displayedRoundNumber, tournament)
-        places = ScoredPlayer.catPositionStrings(players, displayedRoundNumber, tps)
+        places = info.vannier.gotha.ScoredPlayer.catPositionStrings(players, displayedRoundNumber, tps)
 
         columns = invalidateColumns()
 
@@ -119,7 +120,7 @@ class StandingsTableModel(
             ColumnType.MM0 -> players[row].smms(tournament.tournamentParameterSet.generalParameterSet)
             ColumnType.NBW -> players[row].formatScore(PlacementCriterion.NBW, this.displayedRoundNumber)
             ColumnType.ROUND_RESULT -> games[(column as RoundColumn).round][row]
-            ColumnType.CRITERION -> players[row].formatScore((column as PlaCritColumn).crit, this.displayedRoundNumber)
+            ColumnType.CRITERION -> players[row].getCritValue((column as PlaCritColumn).crit, this.displayedRoundNumber).formatScore((column).crit.coef)
         }
     }
 
