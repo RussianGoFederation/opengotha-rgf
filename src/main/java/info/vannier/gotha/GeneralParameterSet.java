@@ -370,6 +370,7 @@ public class GeneralParameterSet implements GeneralParameterSetInterface, java.i
         this.genNBW2ValueBye = genNBW2ValueBye;
     }
 
+    @Override
     public int getGenMMS2ValueAbsent() {
         return genMMS2ValueAbsent;
     }
@@ -378,6 +379,7 @@ public class GeneralParameterSet implements GeneralParameterSetInterface, java.i
         this.genMMS2ValueAbsent = genMMS2ValueAbsent;
     }
 
+    @Override
     public int getGenMMS2ValueBye() {
         return genMMS2ValueBye;
     }
@@ -499,6 +501,7 @@ public class GeneralParameterSet implements GeneralParameterSetInterface, java.i
     /**
      * @return the roundDownNBWMMS
      */
+    @Override
     public boolean isGenRoundDownNBWMMS() {
         return genRoundDownNBWMMS;
     }
@@ -513,6 +516,7 @@ public class GeneralParameterSet implements GeneralParameterSetInterface, java.i
     /**
      * @return the countNotPlayedGamesAsHalfPoint
      */
+    @Override
     public boolean isGenCountNotPlayedGamesAsHalfPoint() {
         return genCountNotPlayedGamesAsHalfPoint;
     }

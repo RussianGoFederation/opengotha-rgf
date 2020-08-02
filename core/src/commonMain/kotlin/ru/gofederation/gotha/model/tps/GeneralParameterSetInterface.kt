@@ -8,4 +8,10 @@ interface GeneralParameterSetInterface {
     val genMMZero: Int
     val genMMFloor: Int
     val genMMBar: Int
+    val genMMS2ValueAbsent: Int
+    val genMMS2ValueBye: Int
+    val genNBW2ValueAbsent: Int
+    val genNBW2ValueBye: Int
+    val isGenRoundDownNBWMMS: Boolean
+    val isGenCountNotPlayedGamesAsHalfPoint: Boolean
 }

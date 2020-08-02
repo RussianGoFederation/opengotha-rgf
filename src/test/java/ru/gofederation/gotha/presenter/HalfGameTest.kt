@@ -17,13 +17,13 @@
 
 package ru.gofederation.gotha.presenter
 
-import info.vannier.gotha.ScoredPlayer
 import info.vannier.gotha.TournamentParameterSet
 import ru.gofederation.gotha.model.HalfGame
 import ru.gofederation.gotha.model.HalfGame.Color
 import ru.gofederation.gotha.model.HalfGame.Result
 import ru.gofederation.gotha.model.HalfGame.Type
 import ru.gofederation.gotha.model.HalfGame.UpDownStatus.NO_UPDOWN
+import ru.gofederation.gotha.model.ScoredPlayer
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -35,15 +35,15 @@ class HalfGameTest {
 
         val tps = TournamentParameterSet()
         if (pt == 2) {
-            tps.generalParameterSet.genMMS2ValueAbsent = 0
-            tps.generalParameterSet.genNBW2ValueAbsent = 0
-            tps.generalParameterSet.genMMS2ValueBye = 0
-            tps.generalParameterSet.genNBW2ValueBye = 0
+            tps.generalParameterSet.setGenMMS2ValueAbsent(0)
+            tps.generalParameterSet.setGenNBW2ValueAbsent(0)
+            tps.generalParameterSet.setGenMMS2ValueBye(0)
+            tps.generalParameterSet.setGenNBW2ValueBye(0)
         } else {
-            tps.generalParameterSet.genMMS2ValueAbsent = 2
-            tps.generalParameterSet.genNBW2ValueAbsent = 2
-            tps.generalParameterSet.genMMS2ValueBye = 2
-            tps.generalParameterSet.genNBW2ValueBye = 2
+            tps.generalParameterSet.setGenMMS2ValueAbsent(2)
+            tps.generalParameterSet.setGenNBW2ValueAbsent(2)
+            tps.generalParameterSet.setGenMMS2ValueBye(2)
+            tps.generalParameterSet.setGenNBW2ValueBye(2)
         }
 
         if (mm) {
@@ -53,11 +53,11 @@ class HalfGameTest {
         }
 
         if (participation == ScoredPlayer.ABSENT) {
-            if (mm) tps.generalParameterSet.genMMS2ValueAbsent = pt
-            else tps.generalParameterSet.genNBW2ValueAbsent = pt
+            if (mm) tps.generalParameterSet.setGenMMS2ValueAbsent(pt)
+            else tps.generalParameterSet.setGenNBW2ValueAbsent(pt)
         } else if (participation == ScoredPlayer.BYE) {
-            if (mm) tps.generalParameterSet.genMMS2ValueBye = pt
-            else tps.generalParameterSet.genNBW2ValueBye = pt
+            if (mm) tps.generalParameterSet.setGenMMS2ValueBye(pt)
+            else tps.generalParameterSet.setGenNBW2ValueBye(pt)
         }
 
         return tps

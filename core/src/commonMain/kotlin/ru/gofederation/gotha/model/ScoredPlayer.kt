@@ -1,8 +1,10 @@
 package ru.gofederation.gotha.model
 
 import ru.gofederation.gotha.model.tps.GeneralParameterSetInterface
+import ru.gofederation.gotha.util.intArrayWithPrevious
+import ru.gofederation.gotha.util.min2sum
+import ru.gofederation.gotha.util.sumByIndexed
 import kotlin.jvm.JvmField
-import kotlin.jvm.JvmStatic
 
 /**
  * ScoredPlayer represents a player and all useful scoring information (nbw, mms, ... dc, sdc)
@@ -12,63 +14,298 @@ import kotlin.jvm.JvmStatic
  *
  * ScoredPlayer does not contain any information about pairing
  */
-class ScoredPlayer(private val gps: GeneralParameterSetInterface, player: Player) : Player(player) {
+class ScoredPlayer(private val gps: GeneralParameterSetInterface, player: Player, games: List<Game>, players: Map<String, ScoredPlayer>, byePlayers: Array<Player?>) : Player(player) {
     private val numberOfRounds = gps.numberOfRounds
 
     /** for each round, participation can be : [ABSENT], [NOT_ASSIGNED], [BYE] or [PAIRED] */
-    private val participation = IntArray(numberOfRounds)
+    private val participation by lazy {
+        IntArray(numberOfRounds) { round ->
+            when {
+                !player.isParticipating(round) -> ABSENT
+                getGame(round) != null -> PAIRED
+                player.hasSameKeyString(byePlayers[round]) -> BYE
+                else -> NOT_ASSIGNED
+            }
+        }
+    }
     /** [Game]s played by this player  */
-    private val gameArray = Array<Game?>(numberOfRounds) { null }
+    private val gameArray by lazy {
+        Array<Game?>(numberOfRounds) { round ->
+            games.firstOrNull { game ->
+                game.round == round && game.hasPlayer(player)
+            }
+        }
+    }
 
     // First level scores
     /** number of wins * 2 */
-    private var nbwX2 = IntArray(numberOfRounds)
+    private val nbwX2 by lazy {
+        var score = 0
+        var nbPtsNBW2AbsentOrBye = 0
+        IntArray(numberOfRounds) { round ->
+            score += getGame(round)?.getWX2(player) ?: 0
+            nbPtsNBW2AbsentOrBye += when (getParticipation(round)) {
+                ABSENT -> gps.genNBW2ValueAbsent
+                BYE -> gps.genNBW2ValueBye
+                else -> 0
+            }
+            score +
+                if (gps.isGenRoundDownNBWMMS) (nbPtsNBW2AbsentOrBye / 2) * 2
+                else nbPtsNBW2AbsentOrBye
+        }
+    }
     /** mcmahon score * 2 */
-    private val mmsX2 = IntArray(numberOfRounds)
+    private val mmsX2 by lazy {
+        var score = smms(gps) * 2
+        var nbPtsMMS2AbsentOrBye = 0
+        IntArray(numberOfRounds) { round ->
+            score += getGame(round)?.getWX2(player) ?: 0
+            nbPtsMMS2AbsentOrBye += when (getParticipation(round)) {
+                ABSENT -> gps.genMMS2ValueAbsent
+                BYE -> gps.genMMS2ValueBye
+                else -> 0
+            }
+            score + if (gps.isGenRoundDownNBWMMS) (nbPtsMMS2AbsentOrBye / 2) * 2
+            else nbPtsMMS2AbsentOrBye
+        }
+    }
     /** strasbourg score * 2 */
-    private val stsX2 = IntArray(numberOfRounds)
+    private val stsX2 by lazy {
+        val score = IntArray(numberOfRounds) { round -> getMMSX2(round) }
+        val nbRounds = gps.numberOfRounds
+        // If player is in topgroup and always winner up to quarterfinal, increase by 2 * 2
+        if (score[nbRounds - 3] == 2 * (30 + gps.genMMBar + nbRounds - 2)) {
+            score[nbRounds - 3] += 4
+            score[nbRounds - 2] += 4
+            score[nbRounds - 1] += 4
+        }
+        // if player is in topgroup and always winner up to semifinal,    increase by 2 * 2
+        if (score[nbRounds - 2] == 2 * (30 + gps.genMMBar + nbRounds - 1)) {
+            score[nbRounds - 2] += 4
+            score[nbRounds - 1] += 4
+        }
+        score
+    }
     // Virtual scores : half points are given for not played games
     /** number of wins * 2 */
-    private var nbwVirtualX2 = IntArray(numberOfRounds)
+    private val nbwVirtualX2 by lazy {
+        var prevScore = 0
+        var nbVPX2 = 0
+        IntArray(numberOfRounds) { round ->
+            if (!gameWasPlayed(round)) nbVPX2++
+            prevScore += getGame(round)?.let { game ->
+                when (game.result) {
+                    Game.Result.WHITE_WINS -> if (game.whitePlayer.hasSameKeyString(player)) 2 else 0
+                    Game.Result.BLACK_WINS -> if (game.blackPlayer.hasSameKeyString(player)) 2 else 0
+                    Game.Result.EQUAL -> 1
+                    Game.Result.BOTH_WIN -> 2
+                    else -> 0
+                }
+            } ?: 0
+            prevScore + nbVPX2
+        }
+    }
     /** mcmahon score * 2 */
-    private val mmsVirtualX2 = IntArray(numberOfRounds)
+    private val mmsVirtualX2 by lazy {
+        val smms = smms(gps)
+        IntArray(numberOfRounds) { round -> getNBWVirtualX2(round) + smms }
+    }
     /** Strasbourg score * 2 */
     private val stsVirtualX2 = IntArray(numberOfRounds)
 
     // Second level scores
     /** Sum of successive nbw2 */
-    private var cuswX2 = IntArray(numberOfRounds)
+    private val cuswX2 by lazy {
+        intArrayWithPrevious(numberOfRounds) { round, prevValue ->
+            getNBWX2(round) + prevValue
+        }
+    }
     /** Sum of successive mms2 */
-    private val cusmX2 = IntArray(numberOfRounds)
+    private val cusmX2 by lazy {
+        intArrayWithPrevious(numberOfRounds) { round, prevValue ->
+            getMMSX2(round) + prevValue
+        }
+    }
     /** Sum of Opponents nbw2 */
-    private val soswX2 = IntArray(numberOfRounds)
+    private val soswX2 by lazy {
+        val virtual = gps.isGenCountNotPlayedGamesAsHalfPoint
+        IntArray(numberOfRounds) { round ->
+            oswX2(round, virtual).sum()
+        }
+    }
     /** Sum of (n-1) Opponents nbw2 */
-    private val soswM1X2 = IntArray(numberOfRounds)
+    private val soswM1X2 by lazy {
+        val virtual = gps.isGenCountNotPlayedGamesAsHalfPoint
+        IntArray(numberOfRounds) { round ->
+            val oswX2 = oswX2(round, virtual)
+            getSOSWX2(round) - (oswX2.min() ?: 0)
+        }
+    }
     /** Sum of (n-2) Opponents nbw2 */
-    private val soswM2X2 = IntArray(numberOfRounds)
+    private val soswM2X2 by lazy {
+        val virtual = gps.isGenCountNotPlayedGamesAsHalfPoint
+        IntArray(numberOfRounds) { round ->
+            if (round <= 1) {
+                0
+            } else {
+                val oswX2 = oswX2(round, virtual)
+                getSOSWX2(round) - oswX2.min2sum()
+            }
+        }
+    }
     /** Sum of Defeated Opponents nbw2 X2 */
-    private val sdswX4 = IntArray(numberOfRounds)
+    private val sdswX4 by lazy {
+        val virtual = gps.isGenCountNotPlayedGamesAsHalfPoint
+        IntArray(numberOfRounds) { round ->
+            (0..round)
+                .map { rr -> getGame(rr)?.getOpponent(player)?.keyString }
+                .map { keyString -> players[keyString] }
+                .sumByIndexed { r, player ->
+                    if (null != player) {
+                        val game = player.getGame(r)
+                        game!!.getWX2(game.getOpponent(player)) *
+                            if (virtual) player.getNBWVirtualX2(round)
+                            else player.getNBWX2(round)
+                    } else {
+                        0
+                    }
+                }
+        }
+    }
     /** Sum of Opponents mms2 */
-    private val sosmX2 = IntArray(numberOfRounds)
+    private val sosmX2 by lazy {
+        val virtual = gps.isGenCountNotPlayedGamesAsHalfPoint
+        IntArray(numberOfRounds) { round ->
+            osmX2(round, virtual).sum()
+        }
+    }
     /** Sum of (n-1) Opponents mms2 */
-    private val sosmM1X2 = IntArray(numberOfRounds)
+    private val sosmM1X2 by lazy {
+        val virtual = gps.isGenCountNotPlayedGamesAsHalfPoint
+        IntArray(numberOfRounds) { round ->
+            if (round <= 1) {
+                0
+            } else {
+                val osmX2 = osmX2(round, virtual)
+                osmX2.sum() - (osmX2.min() ?: 0)
+            }
+        }
+    }
     /** Sum of (n-2) Opponents mms2 */
-    private val sosmM2X2 = IntArray(numberOfRounds)
+    private val sosmM2X2 by lazy {
+        val virtual = gps.isGenCountNotPlayedGamesAsHalfPoint
+        IntArray(numberOfRounds) { round ->
+            if (round <= 1) {
+                0
+            } else {
+                val osmX2 = osmX2(round, virtual)
+                osmX2.sum() - osmX2.min2sum()
+            }
+        }
+    }
     /** Sum of Defeated Opponents mms2 X2 */
-    private val sdsmX4 = IntArray(numberOfRounds)
+    private val sdsmX4 by lazy {
+        val virtual = gps.isGenCountNotPlayedGamesAsHalfPoint
+        IntArray(numberOfRounds) { round ->
+            val osmX2 = osmX2(round, virtual)
+            osmX2.mapIndexed { rr, osm ->
+                val game = getGame(rr)
+                osm * (game?.getWX2(this) ?: 0)
+            }.sum()
+        }
+    }
     /** Sum of Opponents sts2 */
-    private val sostsX2 = IntArray(numberOfRounds)
+    private val sostsX2 by lazy {
+        val virtual = gps.isGenCountNotPlayedGamesAsHalfPoint
+        val smmsX2 = 2 * smms(gps)
+        IntArray(numberOfRounds) { round ->
+            (0..round)
+                .map { rr ->
+                    val opp = opponents[rr]
+                    when {
+                        null == opp -> smmsX2
+                        virtual -> opp.getSTSVirtualX2(round)
+                        else -> opp.getSTSX2(round)
+                    }
+                }
+                .sum()
+        }
+    }
 
     /** Exploits tentes (based on nbw2, with a weight factor) */
-    private val extX2 = IntArray(numberOfRounds)
-    /** Exploits reussis(based on nbw2, with a weight factor) */
-    private val exrX2 = IntArray(numberOfRounds)
+    private val extX2 by lazy {
+        IntArray(numberOfRounds) { round ->
+            var extx2 = 0
+            for (rr in 0..round) {
+                val game = getGame(rr) ?: continue
+                val opp = opponents[rr] ?: continue
+                val realHd = game.handicap
+                val naturalHd = rank - opp.rank
+                val coef = when {
+                    realHd - naturalHd < 0 -> 0
+                    realHd - naturalHd == 0 -> 1
+                    realHd - naturalHd == 1 -> 2
+                    else -> 3
+                }
+                extx2 += opp.getNBWX2(round) * coef
+            }
+            extx2
+        }
+    }
+    /** Exploits reussis (based on nbw2, with a weight factor) */
+    private val exrX2 by lazy {
+        IntArray(numberOfRounds) { round ->
+            var exrx2 = 0
+            for (rr in 0..round) {
+                val game = getGame(rr) ?: continue
+                val opp = opponents[rr] ?: continue
+                val spWasWhite = game.whitePlayer.hasSameKeyString(this)
+                val realHd = game.handicap
+                val naturalHd = rank - opp.rank
+                val coef = when {
+                    realHd - naturalHd < 0 -> 0
+                    realHd - naturalHd == 0 -> 1
+                    realHd - naturalHd == 1 -> 2
+                    else -> 3
+                }
+                var bwin = false
+                if (spWasWhite && (game.result == Game.Result.WHITE_WINS ||
+                        game.result == Game.Result.WHITE_WINS_BYDEF ||
+                        game.result == Game.Result.BOTH_WIN ||
+                        game.result == Game.Result.BOTH_WIN_BYDEF)) {
+                    bwin = true
+                }
+                if (!spWasWhite && (game.result == Game.Result.BLACK_WINS ||
+                        game.result == Game.Result.BLACK_WINS_BYDEF ||
+                        game.result == Game.Result.BOTH_WIN ||
+                        game.result == Game.Result.BOTH_WIN_BYDEF)) {
+                    bwin = true
+                }
+                if (bwin) exrx2 += opp.getNBWX2(round) * coef
+            }
+            exrx2
+        }
+    }
 
     // Third level scores
     /** Sum of opponents sosw2 * 2 */
-    private val ssswX2 = IntArray(numberOfRounds)
+    private val ssswX2 by lazy {
+        IntArray(numberOfRounds) { round ->
+            (0..round).fold(0) { sososwX2, rr ->
+                val opp = opponents[rr]
+                sososwX2 + (opp?.getSOSWX2(round) ?: 0)
+            }
+        }
+    }
     /** Sum of opponents sosm2 * 2 */
-    private val sssmX2 = IntArray(numberOfRounds)
+    private val sssmX2 by lazy {
+        IntArray(numberOfRounds) { round ->
+            (0..round).fold(0) { sososmX2, rr ->
+                val opp = opponents[rr]
+                sososmX2 + (opp?.getSOSMX2(round) ?: 2 * smms(gps) * (round + 1))
+            }
+        }
+    }
 
     // Special Scores
     /** Direct Confrontation */
@@ -90,194 +327,136 @@ class ScoredPlayer(private val gps: GeneralParameterSetInterface, player: Player
     @JvmField
     var nbDD = 0 // Number of Draw-downs
 
-    fun getParticipation(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) participation[rn] else 0
+    private val opponents by lazy {
+        Array<ScoredPlayer?>(numberOfRounds) { round ->
+            players[getGame(round)?.getOpponent(this)?.keyString]
+        }
     }
 
-    fun setParticipation(rn: Int, participation: Int) {
-        if (isValidRoundNumber(rn)) this.participation[rn] = participation
+    private inline fun oswX2(round: Int, virtual: Boolean) =
+        IntArray(round + 1) { rr ->
+            val opp = opponents[rr]
+            when {
+                opp == null -> 0
+                virtual -> opp.getNBWVirtualX2(round)
+                else -> opp.getNBWX2(round)
+            }
+        }
+
+    private inline fun osmX2(round: Int, virtual: Boolean): IntArray {
+        val smmsX2 = 2 * smms(gps)
+        return IntArray(round + 1) { rr ->
+            val game = getGame(rr)
+            val opp = opponents[rr]
+            when {
+                opp == null -> smmsX2
+                virtual -> opp.getMMSVirtualX2(round)
+                else -> opp.getMMSX2(round)
+            } + when {
+                game == null -> 0
+                game.whitePlayer.hasSameKeyString(this) -> 2 * game.handicap
+                game.blackPlayer.hasSameKeyString(this) -> -2 * game.handicap
+                else -> 0
+            }
+        }
     }
 
-    fun getGame(rn: Int): Game? {
-        return if (isValidRoundNumber(rn)) gameArray[rn] else null
+    fun getParticipation(round: Int): Int {
+        return if (isValidRoundNumber(round)) participation[round] else 0
     }
 
-    fun setGame(rn: Int, g: Game?) {
-        if (isValidRoundNumber(rn)) gameArray[rn] = g
+    fun getGame(round: Int): Game? {
+        return if (isValidRoundNumber(round)) gameArray[round] else null
     }
 
-    fun gameWasPlayed(rn: Int): Boolean {
-        val (_, _, _, _, _, _, result) = getGame(rn) ?: return false
+    private fun gameWasPlayed(round: Int): Boolean {
+        val (_, _, _, _, _, _, result) = getGame(round) ?: return false
         // not paired
         return result.gameWasPlayer()
     }
 
-    fun getNBWX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) nbwX2[rn] else 0
+    fun getNBWX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) nbwX2[round] else 0
     }
 
-    fun setNBWX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) nbwX2[rn] = value
+    fun getMMSX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) mmsX2[round] else 0
     }
 
-    fun getMMSX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) mmsX2[rn] else 0
+    fun getSTSX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) stsX2[round] else 0
     }
 
-    fun setMMSX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) mmsX2[rn] = value
+    fun getNBWVirtualX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) nbwVirtualX2[round] else 0
     }
 
-    fun getSTSX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) stsX2[rn] else 0
+    fun getMMSVirtualX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) mmsVirtualX2[round] else 0
     }
 
-    fun setSTSX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) stsX2[rn] = value
+    fun getSTSVirtualX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) stsVirtualX2[round] else 0
     }
 
-    fun getNBWVirtualX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) nbwVirtualX2[rn] else 0
+    fun getCUSWX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) cuswX2[round] else 0
     }
 
-    fun setNBWVirtualX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) nbwVirtualX2[rn] = value
+    fun getCUSMX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) cusmX2[round] else 0
     }
 
-    fun getMMSVirtualX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) mmsVirtualX2[rn] else 0
+    fun getSOSWX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) soswX2[round] else 0
     }
 
-    fun setMMSVirtualX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) mmsVirtualX2[rn] = value
+    fun getSOSWM1X2(round: Int): Int {
+        return if (isValidRoundNumber(round)) soswM1X2[round] else 0
     }
 
-    fun getSTSVirtualX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) stsVirtualX2[rn] else 0
+    fun getSOSWM2X2(round: Int): Int {
+        return if (isValidRoundNumber(round)) soswM2X2[round] else 0
     }
 
-    fun setSTSVirtualX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) stsVirtualX2[rn] = value
+    fun getSDSWX4(round: Int): Int {
+        return if (isValidRoundNumber(round)) sdswX4[round] else 0
     }
 
-    fun getCUSWX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) cuswX2[rn] else 0
+    fun getSOSMX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) sosmX2[round] else 0
     }
 
-    fun setCUSWX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) cuswX2[rn] = value
+    fun getSOSMM1X2(round: Int): Int {
+        return if (isValidRoundNumber(round)) sosmM1X2[round] else 0
     }
 
-    fun getCUSMX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) cusmX2[rn] else 0
+    fun getSOSMM2X2(round: Int): Int {
+        return if (isValidRoundNumber(round)) sosmM2X2[round] else 0
     }
 
-    fun setCUSMX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) cusmX2[rn] = value
+    fun getSDSMX4(round: Int): Int {
+        return if (isValidRoundNumber(round)) sdsmX4[round] else 0
     }
 
-    fun getSOSWX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) soswX2[rn] else 0
+    fun getSOSTSX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) sostsX2[round] else 0
     }
 
-    fun setSOSWX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) soswX2[rn] = value
+    fun getEXTX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) extX2[round] else 0
     }
 
-    fun getSOSWM1X2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) soswM1X2[rn] else 0
+    fun getEXRX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) exrX2[round] else 0
     }
 
-    fun setSOSWM1X2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) soswM1X2[rn] = value
+    fun getSSSWX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) ssswX2[round] else 0
     }
 
-    fun getSOSWM2X2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) soswM2X2[rn] else 0
-    }
-
-    fun setSOSWM2X2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) soswM2X2[rn] = value
-    }
-
-    fun getSDSWX4(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) sdswX4[rn] else 0
-    }
-
-    fun setSDSWX4(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) sdswX4[rn] = value
-    }
-
-    fun getSOSMX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) sosmX2[rn] else 0
-    }
-
-    fun setSOSMX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) sosmX2[rn] = value
-    }
-
-    fun getSOSMM1X2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) sosmM1X2[rn] else 0
-    }
-
-    fun setSOSMM1X2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) sosmM1X2[rn] = value
-    }
-
-    fun getSOSMM2X2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) sosmM2X2[rn] else 0
-    }
-
-    fun setSOSMM2X2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) sosmM2X2[rn] = value
-    }
-
-    fun getSDSMX4(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) sdsmX4[rn] else 0
-    }
-
-    fun setSDSMX4(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) sdsmX4[rn] = value
-    }
-
-    fun getSOSTSX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) sostsX2[rn] else 0
-    }
-
-    fun setSOSTSX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) sostsX2[rn] = value
-    }
-
-    fun getEXTX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) extX2[rn] else 0
-    }
-
-    fun setEXTX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) extX2[rn] = value
-    }
-
-    fun getEXRX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) exrX2[rn] else 0
-    }
-
-    fun setEXRX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) exrX2[rn] = value
-    }
-
-    fun getSSSWX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) ssswX2[rn] else 0
-    }
-
-    fun setSSSWX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) ssswX2[rn] = value
-    }
-
-    fun getSSSMX2(rn: Int): Int {
-        return if (isValidRoundNumber(rn)) sssmX2[rn] else 0
-    }
-
-    fun setSSSMX2(rn: Int, value: Int) {
-        if (isValidRoundNumber(rn)) sssmX2[rn] = value
+    fun getSSSMX2(round: Int): Int {
+        return if (isValidRoundNumber(round)) sssmX2[round] else 0
     }
 
     fun getDC(): Int {
@@ -339,5 +518,27 @@ class ScoredPlayer(private val gps: GeneralParameterSetInterface, player: Player
         const val BYE = -1
         /** For a given round and a given player, qualifies the fact that this player has been assigned to a real game */
         const val PAIRED = 1
+
+        /**
+         * Returns 2 if [Game] was won (incl. "both won") by [player], 1 for equal result and 0 otherwise
+         */
+        private inline fun Game.getWX2(player: Player?): Int = when (result) {
+            Game.Result.BOTH_LOSE,
+            Game.Result.BOTH_LOSE_BYDEF,
+            Game.Result.UNKNOWN ->
+                0
+            Game.Result.WHITE_WINS_BYDEF,
+            Game.Result.WHITE_WINS ->
+                if (whitePlayer.hasSameKeyString(player)) 2 else 0
+            Game.Result.BLACK_WINS_BYDEF,
+            Game.Result.BLACK_WINS ->
+                if (blackPlayer.hasSameKeyString(player)) 2 else 0
+            Game.Result.EQUAL_BYDEF,
+            Game.Result.EQUAL ->
+                1
+            Game.Result.BOTH_WIN_BYDEF,
+            Game.Result.BOTH_WIN ->
+                2
+        }
     }
 }

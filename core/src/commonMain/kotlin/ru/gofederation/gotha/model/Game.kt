@@ -32,6 +32,8 @@ data class Game internal constructor (
     val key: Int
         get() = round * Limits.MAX_NUMBER_OF_BOARDS + board
 
+    fun hasPlayer(player: Player) = whitePlayer.hasSameKeyString(player) || blackPlayer.hasSameKeyString(player)
+
     fun isWinner(player: Player) = when {
         player.hasSameKeyString(whitePlayer) -> {
             when(result) {
@@ -115,6 +117,12 @@ data class Game internal constructor (
             handicap = handicap,
             result = result
         )
+    }
+
+    fun getOpponent(player: Player): Player? = when {
+        whitePlayer.hasSameKeyString(player) -> blackPlayer
+        blackPlayer.hasSameKeyString(player) -> whitePlayer
+        else -> null
     }
 
     enum class Result(val code: Int, private val str: String) {
