@@ -65,7 +65,8 @@ jobs:
           set -e
           hub release delete testing || true
           hub tag -d testing || true
-          git push origin :refs/tags/testing || true
+          git tag testing ||
+          git push origin --tags || true
       - name: Create testing release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
