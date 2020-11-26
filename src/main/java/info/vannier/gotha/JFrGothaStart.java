@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -74,7 +76,8 @@ public class JFrGothaStart extends javax.swing.JFrame {
         try {
             final File logPath = new File(Gotha.getRunningDirectory(), "logs");
             logPath.mkdirs();
-            final File log = new File(logPath, String.format("OpenGotha.%1$tF.%1$tT.log", System.currentTimeMillis()));
+            final File log = new File(logPath,
+                new SimpleDateFormat("'OpenGotha_'yyyy-MM-dd_HH-mm-ss'.log'").format(new Date()));
 
             final Formatter formatter = new SimpleFormatter() {
                 private static final String FORMAT = "%1$tF %1$tT %2$-7s %3$s%n";
