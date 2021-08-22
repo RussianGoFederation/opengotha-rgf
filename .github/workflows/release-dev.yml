@@ -57,25 +57,24 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-      - name: Delete previous testing release
+      - name: Delete previous release
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: testing
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -e
-          hub release delete testing || true
-          hub tag -d testing || true
-          git tag testing ||
-          git push origin --tags || true
-      - name: Create testing release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -x
-          assets=()
-          for asset in ./OpenGotha*/*.zip; do
-            assets+=("-a" "$asset")
-          done
-          tag_name="testing"
-          hub release create "${assets[@]}" -p -t dev -m "Testing release #${{ github.run_number }}" -m "This release is meant for testing purposes. Do not use in real tournaments." "$tag_name"
-
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: ~/artifacts
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ~/artifacts/**/*.zip
+          commit: dev
+          body: "This release is meant for testing purposes. Do not use in real tournaments."
+          name: "Testing release #${{ github.run_number }}"
+          prerelease: true
+          tag: testing
+          token: ${{ secrets.GITHUB_TOKEN }}
